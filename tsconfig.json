@@ -1,7 +1,31 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    // 기본 설정
+    "esModuleInterop": true,// CommonJS 모듈에서 exports로 내보낸 객체를 ECMAScript 모듈에서 import 구문을 사용하여 가능
+    "lib": ["dom", "ES2017"],// 브라우저 환경에서는 DOM 및 ECMAScript 관련 라이브러리 필요
+    "target": "ES2015",// 컴파일된 JavaScript의 대상 ECMAScript 버전 (ES5, ES6, ES2017 등)
+
+    // 모듈 관련 설정
+    "module": "ESNext",// 모듈 시스템.
+    "moduleResolution": "node",// 경로 해석 방식을 Node.js와 동일하게 설정 (npm 모듈 해석 지원)
+    "isolatedModules": true,//각 TypeScript 파일을 독립적인 모듈로 처리
+
+    // 엄격한 타입 검사 및 린팅
+    "forceConsistentCasingInFileNames": true,//파일 이름에서 대소문자 불일치 문제 방지
+    "noFallthroughCasesInSwitch": true, //switch에서 break가 없어 발생하는 문제 방지
+    "noImplicitAny": true,// `any` 타입 사용을 금지하여 타입 안전성을 높임
+    "noUnusedLocals": true, //사용되지 않는 지역 변수를 허용하지 않도록 설정
+    "noUnusedParameters": true, //사용되지 않는 함수 파라미터를 허용하지 않도록 설정
+    "strict": true,// TypeScript가 엄격한 타입 검사를 적용하도록 설정
+    "strictNullChecks": true,// `null` 및 `undefined`에 대한 엄격한 타입 검사를 활성화
+
+    // JSX 설정
+    "jsx": "react-jsx",// JSX 문법을 지원하기 위한 설정 (React 사용 시 필수)
+
+    // 다운레벨링 및 기타
+    "downlevelIteration": true,// TypeScript에서 최신 기능을 사용할 수 있도록 실행 환경과 호환되지 않는 부분을 다운레벨링
+    "noEmit": true, //TypeScript 컴파일 후 JavaScript 파일을 생성하지 않도록 설정
+    "resolveJsonModule": true,//json 파일을 모듈로 가져올 수 있음
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
