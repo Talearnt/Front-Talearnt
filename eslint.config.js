@@ -52,13 +52,16 @@ export default [
             // 5. custom hook (파일 명이 **.hook)
             ["^.+\\.hook$"],
 
-            // 6. 컴포넌트 (components 폴더에서 가져올 것)
-            ["^components(/.*|$)"],
+            // 6. 컴포넌트
+            ["^.+[A-Z].*"],
 
             // 7. json이나 상수들
             ["^.+\\.(json|constants)$"], // JSON 파일이나 상수 관련 파일
 
-            // 8. css/scss 파일
+            // 8. 타입 파일 (파일명이 .type로 끝나는 경우)
+            ["^.+\\.type$"],
+
+            // 9. css/scss 파일
             ["^.+\\.(css|scss)$"]
           ]
         }
