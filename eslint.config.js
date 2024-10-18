@@ -38,30 +38,33 @@ export default [
         {
           groups: [
             // 1. React 관련 패키지
-            ["^react", "^@?\\w"],
+            ["^react"],
 
             // 2. 라이브러리
-            ["^\\w"], // 기본 패키지 (예: lodash, axios 등)
+            ["^\\w"],
 
-            // 3. api 파일 (파일 명이 **.api로 시작)
+            // 3. api 파일
             ["^.+\\.api$"],
 
-            // 4. util 함수 (카멜케이스로 함수명, **.utils일 수도 있고 아닐 수도 있음)
-            ["^.+\\.(utils|[a-z]+[A-Z].*)$"], // .utils로 끝나거나 카멜케이스 함수명
+            // 4. util 함수
+            ["^.*/(util|.*.util)$"],
 
-            // 5. custom hook (파일 명이 **.hook)
-            ["^.+\\.hook$"],
+            // 5. custom hook
+            ["^.*/(hook|.*.hook)$"],
 
             // 6. 컴포넌트
-            ["^.+[A-Z].*"],
+            ["^.+/components/.*/[A-Z].*$"],
 
-            // 7. json이나 상수들
-            ["^.+\\.(json|constants)$"], // JSON 파일이나 상수 관련 파일
+            // 7. json, 상수
+            ["^.+\\.(json|constants)$"],
 
-            // 8. 타입 파일 (파일명이 .type로 끝나는 경우)
+            // 8. 이미지
+            ["^.+\\.(svg)$"],
+
+            // 9. 타입
             ["^.+\\.type$"],
 
-            // 9. css/scss 파일
+            // 10. css
             ["^.+\\.(css|scss)$"]
           ]
         }
