@@ -104,15 +104,15 @@ export default [
         "warn",
         {
           selector: "variable",
-          format: ["strictCamelCase", "UPPER_CASE"] // 변수 이름 규칙
+          format: ["camelCase", "UPPER_CASE"] // 변수 이름 규칙
         },
         {
           selector: "function",
-          format: ["strictCamelCase", "PascalCase"] // 함수 이름 규칙
+          format: ["camelCase", "PascalCase"] // 함수 이름 규칙
         },
         {
           selector: "parameter",
-          format: ["strictCamelCase"] // 파라미터 이름 규칙
+          format: ["camelCase"] // 파라미터 이름 규칙
         },
         {
           selector: "typeAlias",
