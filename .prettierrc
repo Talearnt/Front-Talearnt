@@ -11,7 +11,7 @@
   "useTabs": false,
   "overrides": [
     {
-      "files": ["*.html", "*.scss", "*.ts", "*.tsx", "*.json", "*.yml"]
+      "files": ["*.html", "*.scss", "*.ts", "*.tsx", "*.json", "*.yml", "*.js"]
     }
   ]
 }
