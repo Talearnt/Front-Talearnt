@@ -32,3 +32,10 @@ export const getAPI = async <T>(
 
   return (await instance.get<T>(`${url}${queryParameter}`)).data;
 };
+
+export const postAPI = async <T>(
+  url: string,
+  data?: Record<string, string | number | Record<string, unknown>>
+): Promise<T> => {
+  return (await instance.post<T>(url, data)).data;
+};
