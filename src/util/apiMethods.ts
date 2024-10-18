@@ -47,3 +47,6 @@ export const patchAPI = async <T>(
   url: string,
   data?: Record<string, string | number | Record<string, unknown> | unknown[]>
 ): Promise<T> => (await instance.patch<T>(url, data)).data;
+
+export const deleteAPI = async <T>(url: string): Promise<T> =>
+  (await instance.delete<T>(url)).data;
