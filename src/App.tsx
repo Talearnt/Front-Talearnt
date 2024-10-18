@@ -1,21 +1,9 @@
 import { useState } from "react";
-import dayjs from "dayjs";
-
-import { testApi } from "./hook/test.api";
-
-import { useTestHook } from "./hook/test.hook";
-
-import "./App.css";
-import { Button } from "./components/button/Button";
-import Default from "./components/Default/Default";
-
-import test from "./json/test.json";
-
-import { TestType } from "./hook/test.type";
 
 import reactLogo from "./assets/react.svg";
-import { test } from "./utils/util";
 import viteLogo from "/vite.svg";
+
+import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);

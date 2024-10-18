@@ -1,10 +1,10 @@
-import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import reactHooks from "eslint-plugin-react-hooks";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import tseslint from "typescript-eslint";
+import eslint from "@eslint/js";
 
 export default [
   eslint.configs.recommended,
