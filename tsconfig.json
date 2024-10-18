@@ -19,8 +19,9 @@
     "strict": true, // TypeScript가 엄격한 타입 검사를 적용하도록 설정
     "strictNullChecks": true, // `null` 및 `undefined`에 대한 엄격한 타입 검사를 활성화
 
-    // JSX 설정
+    // JSX 및 경로 설정
     "jsx": "react-jsx", // JSX 문법을 지원하기 위한 설정 (React 사용 시 필수)
+    "baseUrl": "./src",
 
     // 다운레벨링 및 기타
     "downlevelIteration": true, // TypeScript에서 최신 기능을 사용할 수 있도록 실행 환경과 호환되지 않는 부분을 다운레벨링
