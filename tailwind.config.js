@@ -1,5 +1,5 @@
 export default {
-  content: ["./src/**/*.tsx"], // 모든 JavaScript 및 TypeScript 파일을 포함
+  content: ["./src/**/*.tsx"],
   theme: {
     extend: {}
   },
