@@ -21,7 +21,12 @@
 
     // JSX 및 경로 설정
     "jsx": "react-jsx", // JSX 문법을 지원하기 위한 설정 (React 사용 시 필수)
-    "baseUrl": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
+    },
 
     // 다운레벨링 및 기타
     "downlevelIteration": true, // TypeScript에서 최신 기능을 사용할 수 있도록 실행 환경과 호환되지 않는 부분을 다운레벨링

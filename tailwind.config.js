@@ -3,6 +3,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        "talearnt-primary": "#1B76FF",
         "talearnt-blue": {
           100: "#E5F0FF",
           200: "#B2D1FF",

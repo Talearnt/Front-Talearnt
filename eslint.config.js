@@ -41,13 +41,13 @@ export default [
             ["^react"],
 
             // 2. 라이브러리
-            ["^\\w"],
+            ["^[@\\w]"],
 
             // 3. api 파일
             ["^.+\\.api$"],
 
             // 4. util 함수
-            ["^.*/(util|.*.util)$"],
+            ["^@utils/.*|^.*/(util|.*.util)$"],
 
             // 5. custom hook
             ["^.*/(hook|.*.hook)$"],
