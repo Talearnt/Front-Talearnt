@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 
 import { cva, VariantProps } from "class-variance-authority";
 
-import { classNames } from "@/util/classNames";
+import { classNames } from "@utils/classNames";
 
 const buttonVariants = cva(
   "flex justify-center items-center min-w-[120px] min-h-[50px] rounded-[12px] cursor-pointer",
