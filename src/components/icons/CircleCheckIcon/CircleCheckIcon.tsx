@@ -3,8 +3,7 @@ import { classNames } from "@utils/classNames";
 import { CommonIconProps } from "@/common/common.type";
 
 /**
- * 돋보기 아이콘
- * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
+ * 동그란 체크 아이콘
  * size 변경은 scale에 배수를 넣어주면 됨
  *
  * @param {string | undefined} className
@@ -13,12 +12,7 @@ import { CommonIconProps } from "@/common/common.type";
  * @returns {JSX.Element}
  * @constructor
  */
-
-function SearchIcon({
-  className = "stroke-talearnt-primary",
-  scale = 1,
-  ...props
-}: CommonIconProps) {
+function CircleCheckIcon({ className, scale = 1, ...props }: CommonIconProps) {
   const size = scale * 24;
 
   return (
@@ -31,13 +25,22 @@ function SearchIcon({
       className={classNames(className)}
       {...props}
     >
+      <circle
+        cx="12"
+        cy="12"
+        r="11.3"
+        stroke="stroke-talearnt-gray-500"
+        strokeWidth="1.4"
+      />
       <path
-        d="M17.3269 17.44L20.8 20.8M19.68 11.84C19.68 16.1699 16.1699 19.68 11.84 19.68C7.51009 19.68 4 16.1699 4 11.84C4 7.51009 7.51009 4 11.84 4C16.1699 4 19.68 7.51009 19.68 11.84Z"
-        strokeWidth="2"
+        d="M7 12L10.5 15L16.5 10"
+        stroke="stroke-talearnt-gray-500"
+        strokeWidth="1.4"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-export { SearchIcon };
+export { CircleCheckIcon };
