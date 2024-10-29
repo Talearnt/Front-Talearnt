@@ -2,6 +2,14 @@ import { ComponentProps } from "react";
 
 import { classNames } from "@utils/classNames";
 
+/**
+ * 로고 아이콘
+ *
+ * @param {string | undefined} className
+ * @param {Omit<React.ComponentProps<"svg">, "className">} props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function LogoIcon({ className, ...props }: ComponentProps<"svg">) {
   return (
     <svg

@@ -28,6 +28,17 @@ const caretIconVariants = cva<CaretIconVariantsType>("", {
   }
 });
 
+/**
+ * 꼬리 없는 화살표 아이콘
+ * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
+ * direction은 화살표가 가르킬 방향
+ *
+ * @param {string | undefined} className
+ * @param {"top" | "right" | "bottom" | "left"} direction
+ * @param {Omit<CaretIconProps, "className" | "direction">} props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function CaretIcon({
   className = "stroke-talearnt-gray-500",
   direction,
