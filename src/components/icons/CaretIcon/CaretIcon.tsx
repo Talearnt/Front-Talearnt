@@ -1,10 +1,20 @@
 import { ComponentProps } from "react";
 
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-const caretIconVariants = cva("", {
+import { CustomVariantProps } from "@/common/common.type";
+
+type CaretIconVariantsType = Record<
+  "direction",
+  Record<"top" | "right" | "bottom" | "left", string>
+>;
+
+type CaretIconProps = ComponentProps<"svg"> &
+  CustomVariantProps<CaretIconVariantsType>;
+
+const caretIconVariants = cva<CaretIconVariantsType>("", {
   variants: {
     direction: {
       top: "rotate-180",
@@ -17,9 +27,6 @@ const caretIconVariants = cva("", {
     direction: "bottom"
   }
 });
-
-type CaretIconProps = ComponentProps<"svg"> &
-  VariantProps<typeof caretIconVariants>;
 
 function CaretIcon({
   className = "stroke-talearnt-gray-500",
