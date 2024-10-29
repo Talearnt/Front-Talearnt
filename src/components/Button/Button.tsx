@@ -33,6 +33,19 @@ const buttonVariants = cva<ButtonVariantsType>(
   }
 );
 
+/**
+ * Button 컴포넌트
+ * filled - 포인트 배경 / 흰색 글자
+ * outlined - 흰색 배경 / 검정 글자 / 회색 테두리
+ * outlined-blue - 흰색 배경 / 포인트 글자 / 포인트 테두리
+ *
+ * @param {string | undefined} className
+ * @param {"filled" | "outlined" | "outlined-blue"} buttonStyle
+ * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null} children
+ * @param {Omit<ButtonProps, "className" | "children" | "buttonStyle">} props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Button({ className, buttonStyle, children, ...props }: ButtonProps) {
   return (
     <button

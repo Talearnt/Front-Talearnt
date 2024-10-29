@@ -2,6 +2,15 @@ import { ComponentProps } from "react";
 
 import { classNames } from "@utils/classNames";
 
+/**
+ * 돋보기 아이콘
+ * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
+ *
+ * @param {string | undefined} className
+ * @param {Omit<React.ComponentProps<"svg">, "className">} props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function SearchIcon({
   className = "stroke-talearnt-primary",
   ...props
