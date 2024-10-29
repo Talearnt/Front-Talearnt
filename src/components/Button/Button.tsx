@@ -1,10 +1,20 @@
 import { ComponentProps } from "react";
 
-import { cva, VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-const buttonVariants = cva(
+import { CustomVariantProps } from "@/common/common.type";
+
+type ButtonVariantsType = Record<
+  "buttonStyle",
+  Record<"filled" | "outlined" | "outlined-blue", string>
+>;
+
+type ButtonProps = ComponentProps<"button"> &
+  CustomVariantProps<ButtonVariantsType>;
+
+const buttonVariants = cva<ButtonVariantsType>(
   "flex justify-center items-center min-w-[120px] min-h-[50px] rounded-[12px] cursor-pointer",
   {
     variants: {
@@ -22,9 +32,6 @@ const buttonVariants = cva(
     }
   }
 );
-
-type ButtonProps = ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>;
 
 function Button({ className, buttonStyle, children, ...props }: ButtonProps) {
   return (
