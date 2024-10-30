@@ -40,7 +40,7 @@ const caretIconVariants = cva<CaretIconVariantsType>("", {
  * @constructor
  */
 function CaretIcon({
-  className = "stroke-talearnt-gray-500",
+  className,
   direction,
   scale = 1,
   ...props
@@ -54,7 +54,10 @@ function CaretIcon({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(caretIconVariants({ className, direction }))}
+      className={classNames(
+        "stroke-talearnt-gray-500",
+        caretIconVariants({ className, direction })
+      )}
       {...props}
     >
       <path

@@ -14,11 +14,7 @@ import { CommonIconProps } from "@/common/common.type";
  * @constructor
  */
 
-function SearchIcon({
-  className = "stroke-talearnt-primary",
-  scale = 1,
-  ...props
-}: CommonIconProps) {
+function SearchIcon({ className, scale = 1, ...props }: CommonIconProps) {
   const size = scale * 24;
 
   return (
@@ -28,7 +24,7 @@ function SearchIcon({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(className)}
+      className={classNames("stroke-talearnt-primary", className)}
       {...props}
     >
       <path
