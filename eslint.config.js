@@ -29,6 +29,13 @@ export default [
       "react-hooks": reactHooks, // React Hooks 관련 규칙 플러그인
       "simple-import-sort": simpleImportSort // import 정렬 플러그인
     },
+    settings: {
+      "import/resolver": {
+        typescript: {
+          alwaysTryTypes: true // node_modules/@types에서도 모듈을 찾습니다.
+        }
+      }
+    },
     rules: {
       ...reactHooks.configs.recommended.rules, // React Hooks 규칙 가져오기
       "@typescript-eslint/consistent-type-definitions": "off",
