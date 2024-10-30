@@ -4,30 +4,30 @@ import { classNames } from "@utils/classNames";
 
 import { CommonIconProps, CustomVariantProps } from "@/common/common.type";
 
-type CaretIconVariantsType = Record<
+type CircleCaretIconVariantsType = Record<
   "direction",
   Record<"top" | "right" | "bottom" | "left", string>
 >;
 
-type CaretIconProps = CommonIconProps &
-  CustomVariantProps<CaretIconVariantsType>;
+type CircleCaretIconProps = CommonIconProps &
+  CustomVariantProps<CircleCaretIconVariantsType>;
 
-const caretIconVariants = cva<CaretIconVariantsType>("", {
+const circleCaretIconVariants = cva<CircleCaretIconVariantsType>("", {
   variants: {
     direction: {
-      top: "rotate-180",
-      right: "-rotate-90",
-      bottom: "rotate-0",
-      left: "rotate-90"
+      top: "-rotate-90",
+      right: "rotate-0",
+      bottom: "rotate-90",
+      left: "rotate-180"
     }
   },
   defaultVariants: {
-    direction: "bottom"
+    direction: "right"
   }
 });
 
 /**
- * 꼬리 없는 화살표 아이콘
+ * 동그란 화살표 아이콘
  * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
  * direction은 화살표가 가르킬 방향
  * size 변경은 scale에 배수를 넣어주면 됨
@@ -39,26 +39,27 @@ const caretIconVariants = cva<CaretIconVariantsType>("", {
  * @returns {JSX.Element}
  * @constructor
  */
-function CaretIcon({
+function CircleCaretIcon({
   className = "stroke-talearnt-gray-500",
   direction,
   scale = 1,
   ...props
-}: CaretIconProps) {
-  const size = scale * 24;
+}: CircleCaretIconProps) {
+  const size = scale * 30;
 
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(caretIconVariants({ className, direction }))}
+      className={classNames(circleCaretIconVariants({ className, direction }))}
       {...props}
     >
+      <circle cx="15" cy="15" r="14.3" strokeWidth="1.4" />
       <path
-        d="M16.5 9.5L11.5 14.5L6.5 9.5"
+        d="M13 9L19 15L13 21"
         strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -67,4 +68,4 @@ function CaretIcon({
   );
 }
 
-export { CaretIcon };
+export { CircleCaretIcon };
