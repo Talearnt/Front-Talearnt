@@ -40,7 +40,7 @@ const circleCaretIconVariants = cva<CircleCaretIconVariantsType>("", {
  * @constructor
  */
 function CircleCaretIcon({
-  className = "stroke-talearnt-gray-500",
+  className,
   direction,
   scale = 1,
   ...props
@@ -54,7 +54,10 @@ function CircleCaretIcon({
       viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(circleCaretIconVariants({ className, direction }))}
+      className={classNames(
+        "stroke-talearnt-gray-500",
+        circleCaretIconVariants({ className, direction })
+      )}
       {...props}
     >
       <circle cx="15" cy="15" r="14.3" strokeWidth="1.4" />
