@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-import { CustomVariantProps } from "@/common/common.type";
+import { CustomVariantProps } from "@common/common.type";
 
 type ButtonVariantsType = Record<
   "buttonStyle",
@@ -20,7 +20,7 @@ const buttonVariants = cva<ButtonVariantsType>(
     variants: {
       buttonStyle: {
         filled:
-          "bg-button-primary text-white hover:bg-button-hover disabled:bg-button-disabled disabled:text-text-disabled",
+          "bg-button-primary text-white hover:bg-button-hover disabled:bg-button-disabled disabled:text-gray-500",
         outlined:
           "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 disabled:text-gray-500",
         "outlined-blue":
