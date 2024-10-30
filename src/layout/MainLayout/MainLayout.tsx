@@ -1,6 +1,5 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
-import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 
@@ -23,10 +22,22 @@ function MainLayout() {
           <SearchIcon className={"absolute top-2 right-4 cursor-pointer"} />
         </div>
         <div className={"flex gap-[16px] h-[40px]"}>
-          <Button buttonStyle={"outlined"} className={"w-[106px]"}>
+          <Link
+            className={
+              "flex justify-center items-center w-[100px] rounded-[12px] bg-white border border-gray-300 text-gray-900 hover:bg-gray-50"
+            }
+            to={"sign-in"}
+          >
             로그인
-          </Button>
-          <Button className={"w-[120px]"}>회원가입</Button>
+          </Link>
+          <Link
+            className={
+              "flex justify-center items-center w-[120px] rounded-[12px] bg-talearnt-primary text-white hover:bg-button-hover"
+            }
+            to={"sign-up"}
+          >
+            회원가입
+          </Link>
         </div>
       </header>
       <main>
