@@ -14,7 +14,11 @@ import { CommonIconProps } from "@/common/common.type";
  * @constructor
  */
 
-function SearchIcon({ className, scale = 1, ...props }: CommonIconProps) {
+function SearchIcon({
+  className = "stroke-talearnt-primary",
+  scale = 1,
+  ...props
+}: CommonIconProps) {
   const size = scale * 24;
 
   return (
