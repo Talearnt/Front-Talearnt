@@ -42,15 +42,6 @@ export default {
           primary: "#1B76FF",
           disabled: "#EDEDED",
           hover: "#4D94FF"
-        },
-        text: {
-          black: "#212121",
-          gray: "#7A7A7A",
-          disabled: "#ADADAD",
-          point: "#1B76FF",
-          blue: "#4D94FF",
-          error: "#FF2727",
-          red: "#FF5C5C"
         }
       }
     }
