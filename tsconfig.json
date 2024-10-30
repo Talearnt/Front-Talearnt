@@ -11,11 +11,14 @@
     "isolatedModules": true, //각 TypeScript 파일을 독립적인 모듈로 처리
 
     // 엄격한 타입 검사 및 린팅
+    "declaration": true, //TypeScript 컴파일러가 .d.ts 타입 정의 파일을 생성
+    "declarationDir": "dist", //생성된 .d.ts 파일이 저장될 디렉터리
     "forceConsistentCasingInFileNames": true, //파일 이름에서 대소문자 불일치 문제 방지
     "noFallthroughCasesInSwitch": true, //switch에서 break가 없어 발생하는 문제 방지
     "noImplicitAny": true, // `any` 타입 사용을 금지하여 타입 안전성을 높임
     "noUnusedLocals": true, //사용되지 않는 지역 변수를 허용하지 않도록 설정
     "noUnusedParameters": true, //사용되지 않는 함수 파라미터를 허용하지 않도록 설정
+    "skipLibCheck": true, //.d.ts 파일에서 타입 검사를 건너뜀
     "strict": true, // TypeScript가 엄격한 타입 검사를 적용하도록 설정
     "strictNullChecks": true, // `null` 및 `undefined`에 대한 엄격한 타입 검사를 활성화
 
@@ -28,6 +31,7 @@
       "@layout/*": ["src/layout/*"],
       "@utils/*": ["src/utils/*"]
     },
+    "typeRoots": ["./node_modules/@types", "./src/declareTypes"], // 추가된 types 폴더 경로
 
     // 다운레벨링 및 기타
     "downlevelIteration": true, // TypeScript에서 최신 기능을 사용할 수 있도록 실행 환경과 호환되지 않는 부분을 다운레벨링
