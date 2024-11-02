@@ -15,16 +15,16 @@ type ButtonProps = ComponentProps<"button"> &
   CustomVariantProps<ButtonVariantsType>;
 
 const buttonVariants = cva<ButtonVariantsType>(
-  "flex justify-center items-center rounded-[12px] px-4 py-2 cursor-pointer",
+  "flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-[1.125rem] font-medium",
   {
     variants: {
       buttonStyle: {
         filled:
-          "bg-button-primary text-white hover:bg-button-hover disabled:bg-button-disabled disabled:text-gray-500",
+          "bg-talearnt-Primary_01 text-talearnt-BG_Background hover:bg-talearnt-PrimaryBG_02 disabled:bg-talearnt-BG_Up_02 disabled:text-talearnt-Text_04",
         outlined:
-          "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 disabled:text-gray-500",
+          "bg-talearnt-BG_Background text-talearnt-Text_02 border border-talearnt-Icon_02 disabled:text-talearnt-Text_04",
         "outlined-blue":
-          "bg-white text-talearnt-primary border border-talearnt-primary disabled:text-gray-500 disabled:border-gray-300"
+          "bg-talearnt-BG_Background text-talearnt-Primary_01 border border-talearnt-Primary_01 disabled:text-talearnt-Text_04"
       }
     },
     defaultVariants: {
