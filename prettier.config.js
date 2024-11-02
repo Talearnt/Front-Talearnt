@@ -13,5 +13,6 @@ export default {
     {
       files: ["*.html", "*.scss", "*.ts", "*.tsx", "*.json", "*.yml", "*.js"]
     }
-  ]
+  ],
+  plugins: ["prettier-plugin-tailwindcss"]
 };
