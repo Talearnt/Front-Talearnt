@@ -1,10 +1,11 @@
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode } from "react";
 
 import { classNames } from "@utils/classNames";
 
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 
 type InputProps = ComponentProps<"input"> & {
+  children: ReactNode;
   error?: {
     errorContent: string;
     hasError: boolean;
@@ -13,7 +14,7 @@ type InputProps = ComponentProps<"input"> & {
 
 function Input({ className, children, error, ...props }: InputProps) {
   return (
-    <div className={"flex flex-col"}>
+    <div className={"relative flex flex-col"}>
       <input
         className={classNames(
           "h-[50px] w-full rounded-lg border bg-talearnt-BG_Background px-[15px] text-[1rem] placeholder:text-talearnt-Text_04 focus:border-talearnt-Primary_01 focus:outline-none disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01",
@@ -23,9 +24,7 @@ function Input({ className, children, error, ...props }: InputProps) {
           className
         )}
         {...props}
-      >
-        {children}
-      </input>
+      />
       {error?.hasError && (
         <div className={"mt-1 flex items-center gap-0.5"}>
           <ErrorIcon />
@@ -34,6 +33,7 @@ function Input({ className, children, error, ...props }: InputProps) {
           </p>
         </div>
       )}
+      {children}
     </div>
   );
 }
