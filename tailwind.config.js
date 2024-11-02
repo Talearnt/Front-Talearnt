@@ -59,6 +59,9 @@ export default {
         "talearnt-Icon_02": "#C1C8CC",
         "talearnt-Icon_03": "#DEE1E3",
         "talearnt-Line_01": "#D0D5D8"
+      },
+      fontFamily: {
+        pretendard: ["Pretendard", "sans-serif"]
       }
     }
   },
