@@ -24,7 +24,7 @@ function SearchIcon({ className, scale = 1, ...props }: CommonIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames("stroke-talearnt-primary", className)}
+      className={classNames("stroke-talearnt-Primary_01", className)}
       {...props}
     >
       <path
