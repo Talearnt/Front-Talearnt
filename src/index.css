@@ -9,3 +9,16 @@
         font-family: 'Pretendard', sans-serif;
     }
 }
+
+.separator {
+    @apply flex basis-full items-center text-talearnt-Text_04 text-sm;
+}
+
+.separator::before {
+    content: "";
+    @apply flex-grow bg-talearnt-Line_01 h-px mr-6;
+}
+.separator::after {
+    content: "";
+    @apply flex-grow bg-talearnt-Line_01 h-px ml-6;
+}
