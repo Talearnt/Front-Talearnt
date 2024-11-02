@@ -3,46 +3,65 @@ export default {
   theme: {
     extend: {
       colors: {
-        "talearnt-primary": "#1B76FF",
         "talearnt-blue": {
-          100: "#E5F0FF",
-          200: "#B2D1FF",
-          300: "#80B2FF",
-          400: "#4D94FF",
-          500: "#1B76FF",
-          600: "#005CE5",
-          700: "#0047B2",
-          800: "#003380",
-          900: "#001F4D"
+          10: "#F0F6FF",
+          20: "#E5F0FF",
+          30: "#B2D1FF",
+          40: "#80B2FF",
+          50: "#4D94FF",
+          60: "#1B76FF",
+          70: "#005CE5",
+          80: "#0047B2",
+          90: "#001F4D",
+          100: "#001F4D"
         },
         "talearnt-red": {
-          100: "#FFF5F5",
-          200: "#FFC2C2",
-          300: "#FF8F8F",
-          400: "#FF5C5C",
-          500: "#FF2727",
-          600: "#F50000",
-          700: "#C20000",
-          800: "#8F0000",
-          900: "#5C0000"
+          10: "#FFF0F0",
+          20: "#FFE5E5",
+          30: "#FFC2C2",
+          40: "#FF8F8F",
+          50: "#FF5C5C",
+          60: "#FF2727",
+          70: "#F50000",
+          80: "#C20000",
+          90: "#8F0000",
+          100: "#5C0000"
         },
         "talearnt-gray": {
-          50: "#F7F7F7",
-          100: "#EDEDED",
-          200: "#E0E0E0",
-          300: "#D4D4D4",
-          400: "#C7C7C7",
-          500: "#ADADAD",
-          600: "#7A7A7A",
-          700: "#616161",
-          800: "#474747",
-          900: "#212121"
+          10: "#F7F8F8",
+          20: "#ECEEEF",
+          30: "#DEE1E3",
+          40: "#D0D5D8",
+          50: "#C1C8CC",
+          60: "#A6B0B5",
+          70: "#98A3A9",
+          80: "#58646A",
+          90: "#414A4E",
+          100: "#1E2224"
         },
-        button: {
-          primary: "#1B76FF",
-          disabled: "#EDEDED",
-          hover: "#4D94FF"
-        }
+        "talearnt-BG_Background": "#FFFFFF",
+        "talearnt-BG_Up_01": "#F7F8F8",
+        "talearnt-BG_Up_02": "#ECEEEF",
+        "talearnt-BG_Up_03": "#DEE1E3",
+        "talearnt-Primary_01": "#1B76FF",
+        "talearnt-PrimaryBG_01": "#E5F0FF",
+        "talearnt-PrimaryBG_02": "#4D94FF",
+        "talearnt-Error_01": "#FF2727",
+        "talearnt-Error_02": "#F50000",
+        "talearnt-Error_03": "#FF5C5C",
+        "talearnt-ErrorBG_01": "#FFF0F0",
+        "talearnt-Text_Strong": "#000000",
+        "talearnt-Text_01 ": "#1E2224",
+        "talearnt-Text_02": "#414A4E",
+        "talearnt-Text_03": "#98A3A9",
+        "talearnt-Text_04": "#A6B0B5",
+        "talearnt-Icon_01": "#414A4E",
+        "talearnt-Icon_02": "#C1C8CC",
+        "talearnt-Icon_03": "#DEE1E3",
+        "talearnt-Line_01": "#D0D5D8"
+      },
+      fontFamily: {
+        pretendard: ["Pretendard", "sans-serif"]
       }
     }
   },

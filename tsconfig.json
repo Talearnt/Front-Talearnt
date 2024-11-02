@@ -27,8 +27,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@common/*": ["src/common/*"],
       "@components/*": ["src/components/*"],
       "@layout/*": ["src/layout/*"],
+      "@pages/*": ["src/pages/*"],
+      "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/declareTypes"], // 추가된 types 폴더 경로
