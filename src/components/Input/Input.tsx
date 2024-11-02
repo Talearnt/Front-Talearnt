@@ -10,11 +10,28 @@ type InputProps = ComponentProps<"input"> & {
     errorContent: string;
     hasError: boolean;
   };
+  label?: string;
+  wrapperClassName?: string;
 };
 
-function Input({ className, children, error, ...props }: InputProps) {
+function Input({
+  className,
+  children,
+  error,
+  id,
+  label,
+  wrapperClassName,
+  ...props
+}: InputProps) {
   return (
-    <div className={"relative flex flex-col"}>
+    <div
+      className={classNames("relative flex w-full flex-col", wrapperClassName)}
+    >
+      {label && (
+        <label className={"mb-2 text-base"} htmlFor={id}>
+          {label}
+        </label>
+      )}
       <input
         className={classNames(
           "h-[50px] w-full rounded-lg border bg-talearnt-BG_Background px-[15px] text-[1rem] placeholder:text-talearnt-Text_04 focus:border-talearnt-Primary_01 focus:outline-none disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01",
@@ -23,6 +40,7 @@ function Input({ className, children, error, ...props }: InputProps) {
             : "border-talearnt-Line_01",
           className
         )}
+        id={id}
         {...props}
       />
       {error?.hasError && (
