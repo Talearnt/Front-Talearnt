@@ -1,14 +1,12 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
-import { classNames } from "@utils/classNames";
-
+import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/Input/Input";
 
 function MainLayout() {
-  const linkStyle =
-    "rounded-lg flex w-[6.875rem] items-center justify-center text-[1.125rem] font-medium";
+  const navigator = useNavigate();
 
   return (
     <div>
@@ -26,24 +24,19 @@ function MainLayout() {
           <SearchIcon className={"absolute right-4 top-2 cursor-pointer"} />
         </Input>
         <div className={"flex h-[40px] gap-[16px]"}>
-          <Link
-            className={classNames(
-              linkStyle,
-              "border border-talearnt-Icon_02 text-talearnt-Text_02"
-            )}
-            to={"sign-in"}
+          <Button
+            buttonStyle={"outlined"}
+            className={"w-[6.875rem]"}
+            onClick={() => navigator("sign-in")}
           >
             로그인
-          </Link>
-          <Link
-            className={classNames(
-              linkStyle,
-              "bg-talearnt-Primary_01 text-talearnt-BG_Background hover:bg-talearnt-PrimaryBG_02"
-            )}
-            to={"sign-up"}
+          </Button>
+          <Button
+            className={"w-[6.875rem]"}
+            onClick={() => navigator("sign-up")}
           >
             회원가입
-          </Link>
+          </Button>
         </div>
       </header>
       <main>
