@@ -3,7 +3,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        "talearnt-primary": "#1B76FF",
         "talearnt-blue": {
           10: "#F0F6FF",
           20: "#E5F0FF",
@@ -39,7 +38,27 @@ export default {
           80: "#58646A",
           90: "#414A4E",
           100: "#1E2224"
-        }
+        },
+        "talearnt-BG_Background": "#FFFFFF",
+        "talearnt-BG_Up_01": "#F7F8F8",
+        "talearnt-BG_Up_02": "#ECEEEF",
+        "talearnt-BG_Up_03": "#DEE1E3",
+        "talearnt-Primary_01": "#1B76FF",
+        "talearnt-PrimaryBG_01": "#E5F0FF",
+        "talearnt-PrimaryBG_02": "#4D94FF",
+        "talearnt-Error_01": "#FF2727",
+        "talearnt-Error_02": "#F50000",
+        "talearnt-Error_03": "#FF5C5C",
+        "talearnt-ErrorBG_01": "#FFF0F0",
+        "talearnt-Text_Strong": "#000000",
+        "talearnt-Text_01 ": "#1E2224",
+        "talearnt-Text_02": "#414A4E",
+        "talearnt-Text_03": "#98A3A9",
+        "talearnt-Text_04": "#A6B0B5",
+        "talearnt-Icon_01": "#414A4E",
+        "talearnt-Icon_02": "#C1C8CC",
+        "talearnt-Icon_03": "#DEE1E3",
+        "talearnt-Line_01": "#D0D5D8"
       }
     }
   },
