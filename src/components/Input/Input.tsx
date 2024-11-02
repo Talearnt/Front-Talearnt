@@ -14,6 +14,25 @@ type InputProps = ComponentProps<"input"> & {
   wrapperClassName?: string;
 };
 
+/**
+ *
+ * Input 컴포넌트
+ * children - Node
+ * error.errorContent - 에러인 경우 보여줄 내용
+ * error.hasError - 에러인지 알려주는 플래그
+ * label - label에 들어갈 내용
+ * wrapperClassName - input을 감싸고 있는 wrapper에 들어갈 className
+ *
+ * @param {string | undefined} className
+ * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null | (undefined & React.ReactElement<any, string | React.JSXElementConstructor<any>>) | (undefined & Iterable<React.ReactNode>) | (undefined & React.ReactPortal)} children
+ * @param {{errorContent: string, hasError: boolean} | undefined} error
+ * @param {string | undefined} id
+ * @param {string | undefined} label
+ * @param {string | undefined} wrapperClassName
+ * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "id" | "label" | "error">} props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Input({
   className,
   children,
