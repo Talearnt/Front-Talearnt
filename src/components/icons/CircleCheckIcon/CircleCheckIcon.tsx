@@ -22,19 +22,12 @@ function CircleCheckIcon({ className, scale = 1, ...props }: CommonIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(className)}
+      className={classNames("stroke-talearnt-Icon_02", className)}
       {...props}
     >
-      <circle
-        cx="12"
-        cy="12"
-        r="11.3"
-        stroke="stroke-talearnt-gray-500"
-        strokeWidth="1.4"
-      />
+      <circle cx="12" cy="12" r="11.3" strokeWidth="1.4" />
       <path
         d="M7 12L10.5 15L16.5 10"
-        stroke="stroke-talearnt-gray-500"
         strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
