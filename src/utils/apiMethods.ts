@@ -2,7 +2,7 @@ import Axios from "axios";
 
 import { checkObjectType } from "./checkObjectType";
 
-const baseURL = "";
+const baseURL = "http://3.35.198.221/";
 const instance = Axios.create({
   baseURL,
   headers: {
