@@ -1,15 +1,17 @@
 import { ComponentProps, ReactNode } from "react";
+import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 import { classNames } from "@utils/classNames";
 
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 
 type InputProps = ComponentProps<"input"> & {
-  children: ReactNode;
+  children?: ReactNode;
   error?: {
     errorContent: string;
     hasError: boolean;
   };
+  formData?: UseFormRegisterReturn;
   label?: string;
   wrapperClassName?: string;
 };
@@ -22,14 +24,16 @@ type InputProps = ComponentProps<"input"> & {
  * error.hasError - 에러인지 알려주는 플래그
  * label - label에 들어갈 내용
  * wrapperClassName - input을 감싸고 있는 wrapper에 들어갈 className
+ * formData - react-hook-form 에서 사용하는 값들
  *
  * @param {string | undefined} className
  * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null | (undefined & React.ReactElement<any, string | React.JSXElementConstructor<any>>) | (undefined & Iterable<React.ReactNode>) | (undefined & React.ReactPortal)} children
  * @param {{errorContent: string, hasError: boolean} | undefined} error
+ * @param {UseFormRegisterReturn<InternalFieldName> | undefined} formData
  * @param {string | undefined} id
  * @param {string | undefined} label
  * @param {string | undefined} wrapperClassName
- * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "id" | "label" | "error">} props
+ * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "formData" | "id" | "label" | "error">} props
  * @returns {JSX.Element}
  * @constructor
  */
@@ -37,6 +41,7 @@ function Input({
   className,
   children,
   error,
+  formData,
   id,
   label,
   wrapperClassName,
@@ -60,6 +65,7 @@ function Input({
           className
         )}
         id={id}
+        {...formData}
         {...props}
       />
       {error?.hasError && (
