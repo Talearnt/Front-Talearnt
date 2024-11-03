@@ -1,8 +1,30 @@
+import { useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string } from "yup";
+
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
 
+import { loginDataType } from "@pages/auth/common/auth.type";
+
+const loginSchema = object({
+  email: string().required("이메일을 입력해 주세요"),
+  password: string().required("비밀번호를 입력해 주세요")
+}).required();
+
 function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<loginDataType>({
+    resolver: yupResolver(loginSchema)
+  });
+
+  const onSubmit = (data: loginDataType) => console.log(data);
+
   return (
     <div
       className={
@@ -10,23 +32,51 @@ function SignIn() {
       }
     >
       <h1 className={"mb-10 text-[1.875rem]"}>로그인</h1>
-      <Input
-        id={"id-input"}
-        label={"아이디"}
-        placeholder={"이메일을 입력해 주세요."}
-        wrapperClassName={"mb-6"}
-      />
-      <Input
-        id={"pw-input"}
-        label={"비밀번호"}
-        placeholder={"비밀번호를 입력해 주세요."}
-        wrapperClassName={"mb-4"}
-      />
-      <CheckBox className={"mb-[26px] mr-auto"}>자동 로그인</CheckBox>
-      <Button className={"mb-10 h-[50px] w-full"}>로그인</Button>
+      <form
+        className={"flex w-full flex-col"}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Input
+          error={
+            errors.email && errors.email.message
+              ? {
+                  errorContent: errors.email.message,
+                  hasError: true
+                }
+              : undefined
+          }
+          formData={{ ...register("email") }}
+          id={"id-input"}
+          label={"아이디"}
+          placeholder={"이메일을 입력해 주세요."}
+          wrapperClassName={"mb-6"}
+        />
+        <Input
+          error={
+            errors.password && errors.password.message
+              ? {
+                  errorContent: errors.password.message,
+                  hasError: true
+                }
+              : undefined
+          }
+          formData={{ ...register("password", { required: true }) }}
+          id={"pw-input"}
+          label={"비밀번호"}
+          placeholder={"비밀번호를 입력해 주세요."}
+          type={"password"}
+          wrapperClassName={"mb-4"}
+        />
+        <CheckBox className={"mb-[26px] mr-auto"}>자동 로그인</CheckBox>
+        <Button className={"mb-10 h-[50px] w-full"} type={"submit"}>
+          로그인
+        </Button>
+      </form>
       <p className={"separator mb-6 w-full"}>간편 로그인</p>
       <Button
-        className={"mb-6 h-[50px] w-full gap-2 bg-[#FAE100] text-[#212121]"}
+        className={
+          "mb-6 h-[50px] w-full gap-2 bg-[#FAE100] text-[#212121] hover:bg-[#FAE100]"
+        }
       >
         <svg
           width="24"
