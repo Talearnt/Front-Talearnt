@@ -29,7 +29,7 @@ type InputProps = ComponentProps<"input"> & {
  * @param {string | undefined} className
  * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null | (undefined & React.ReactElement<any, string | React.JSXElementConstructor<any>>) | (undefined & Iterable<React.ReactNode>) | (undefined & React.ReactPortal)} children
  * @param {{errorContent: string, hasError: boolean} | undefined} error
- * @param {UseFormRegisterReturn<InternalFieldName> | undefined} formData
+ * @param {UseFormRegisterReturn<UseFormRegisterReturn> | undefined} formData
  * @param {string | undefined} id
  * @param {string | undefined} label
  * @param {string | undefined} wrapperClassName
