@@ -126,7 +126,7 @@ export default [
         },
         {
           selector: "typeAlias",
-          format: ["PascalCase"],
+          format: ["camelCase", "PascalCase"],
           suffix: ["Type", "Props"] // 타입 이름 규칙
         }
       ]
