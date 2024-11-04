@@ -34,7 +34,6 @@ type InputProps = ComponentProps<"input"> & {
  * @param {string | undefined} label
  * @param {string | undefined} wrapperClassName
  * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "formData" | "id" | "label" | "error">} props
- * @returns {JSX.Element}
  * @constructor
  */
 function Input({
@@ -68,7 +67,7 @@ function Input({
         {...formData}
         {...props}
       />
-      {error?.hasError && (
+      {error?.hasError && error.errorContent && (
         <div className={"mt-1 flex items-center gap-0.5"}>
           <ErrorIcon />
           <p className={"text-[0.875rem] font-medium text-talearnt-Error_01"}>
