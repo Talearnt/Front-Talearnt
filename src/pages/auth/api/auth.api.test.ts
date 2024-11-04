@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
 
-import { signInApi } from "@pages/auth/SignIn/hook/signIn.api";
+import { postSignIn } from "@pages/auth/api/auth.api";
 
-import { apiErrorType } from "@type/apiMethods.type";
+import { apiErrorType } from "@common/common.type";
 
 test("should allow users to login with valid credentials", async () => {
-  const { status } = await signInApi({
+  const { status } = await postSignIn({
     userId: "test@test.com",
     pw: "test"
   });
@@ -15,7 +15,7 @@ test("should allow users to login with valid credentials", async () => {
 
 test("should not allow users to login with invalid credentials", async () => {
   try {
-    await signInApi({
+    await postSignIn({
       userId: "invalid_user",
       pw: "invalid_password"
     });

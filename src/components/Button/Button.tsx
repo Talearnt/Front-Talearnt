@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-import { CustomVariantProps } from "@type/common.type";
+import { CustomVariantProps } from "@common/common.type";
 
 type ButtonVariantsType = Record<
   "buttonStyle",

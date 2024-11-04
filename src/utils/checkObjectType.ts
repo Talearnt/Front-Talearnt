@@ -3,5 +3,6 @@
  * @param {string | number | object | null} data
  * @returns {boolean}
  */
-export const checkObjectType = (data?: string | number | object | null) =>
-  typeof data === "object" && !Array.isArray(data) && data !== null;
+export const checkObjectType = (
+  data?: string | number | object | null
+): boolean => typeof data === "object" && !Array.isArray(data) && data !== null;

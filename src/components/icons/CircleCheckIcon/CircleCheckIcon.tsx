@@ -1,6 +1,6 @@
 import { classNames } from "@utils/classNames";
 
-import { CommonIconProps } from "@/common/common.type";
+import { CommonIconProps } from "@common/common.type";
 
 /**
  * 동그란 체크 아이콘
@@ -9,7 +9,6 @@ import { CommonIconProps } from "@/common/common.type";
  * @param {string | undefined} className
  * @param {number | undefined} scale
  * @param {Omit<CommonIconProps, "scale" | "className">} props
- * @returns {JSX.Element}
  * @constructor
  */
 function CircleCheckIcon({ className, scale = 1, ...props }: CommonIconProps) {

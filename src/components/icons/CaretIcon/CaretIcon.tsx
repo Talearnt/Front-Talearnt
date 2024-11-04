@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-import { CommonIconProps, CustomVariantProps } from "@/common/common.type";
+import { CommonIconProps, CustomVariantProps } from "@common/common.type";
 
 type CaretIconVariantsType = Record<
   "direction",
@@ -36,7 +36,6 @@ const caretIconVariants = cva<CaretIconVariantsType>("", {
  * @param {"top" | "right" | "bottom" | "left"} direction
  * @param {number | undefined} scale
  * @param {Omit<CaretIconProps, "scale" | "className" | "direction">} props
- * @returns {JSX.Element}
  * @constructor
  */
 function CaretIcon({

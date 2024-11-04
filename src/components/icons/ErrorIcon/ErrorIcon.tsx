@@ -1,6 +1,6 @@
 import { classNames } from "@utils/classNames";
 
-import { CommonIconProps } from "@/common/common.type";
+import { CommonIconProps } from "@common/common.type";
 
 /**
  * 에러 아이콘
@@ -10,7 +10,6 @@ import { CommonIconProps } from "@/common/common.type";
  * @param {string | undefined} className
  * @param {number | undefined} scale
  * @param {Omit<CommonIconProps, "scale" | "className">} props
- * @returns {JSX.Element}
  * @constructor
  */
 

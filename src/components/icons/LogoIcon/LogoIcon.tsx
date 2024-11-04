@@ -7,7 +7,6 @@ import { classNames } from "@utils/classNames";
  *
  * @param {string | undefined} className
  * @param {Omit<React.ComponentProps<"svg">, "className">} props
- * @returns {JSX.Element}
  * @constructor
  */
 function LogoIcon({ className, ...props }: ComponentProps<"svg">) {
