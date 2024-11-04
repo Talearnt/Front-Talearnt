@@ -10,43 +10,71 @@ const instance = Axios.create({
   }
 });
 
+type responseDataType<T> = {
+  data: T;
+  errorCode: string;
+  errorMessage: string;
+  success: boolean;
+};
+
+type customAxiosResponseType<T> = {
+  data: responseDataType<T>;
+  status: number;
+};
+
 export const getAPI = async <T>(
   url: string,
-  data?: Record<string, string | number | Record<string, unknown>>
-): Promise<T> => {
+  queryData?: Record<string, string | number | Record<string, unknown>>
+): Promise<customAxiosResponseType<T>> => {
   let queryParameter = "";
 
-  if (data) {
-    queryParameter = Object.keys(data)
+  if (queryData) {
+    queryParameter = Object.keys(queryData)
       .reduce(
         (acc, cur) =>
           `${acc}${cur}=${
-            checkObjectType(data[cur])
-              ? JSON.stringify(data[cur])
-              : String(data[cur])
+            checkObjectType(queryData[cur])
+              ? JSON.stringify(queryData[cur])
+              : String(queryData[cur])
           }&`,
         "?"
       )
       .slice(0, -1);
   }
+  const { data, status } = await instance.get<responseDataType<T>>(
+    `${url}${queryParameter}`
+  );
 
-  return (await instance.get<T>(`${url}${queryParameter}`)).data;
+  return { data, status };
 };
 
 export const postAPI = async <T>(
   url: string,
-  data?: Record<string, string | number | Record<string, unknown> | unknown[]>
-): Promise<T> => (await instance.post<T>(url, data)).data;
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+): Promise<customAxiosResponseType<T>> => {
+  const { data, status } = await instance.post<responseDataType<T>>(url, body);
+  return { data, status };
+};
 
 export const putAPI = async <T>(
   url: string,
-  data?: Record<string, string | number | Record<string, unknown> | unknown[]>
-): Promise<T> => (await instance.put<T>(url, data)).data;
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+): Promise<customAxiosResponseType<T>> => {
+  const { data, status } = await instance.put<responseDataType<T>>(url, body);
+  return { data, status };
+};
 
 export const patchAPI = async <T>(
   url: string,
-  data?: Record<string, string | number | Record<string, unknown> | unknown[]>
-): Promise<T> => (await instance.patch<T>(url, data)).data;
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+): Promise<customAxiosResponseType<T>> => {
+  const { data, status } = await instance.put<responseDataType<T>>(url, body);
+  return { data, status };
+};
 
-export const deleteAPI = async <T>(url: string): Promise<T> =>
-  (await instance.delete<T>(url)).data;
+export const deleteAPI = async <T>(
+  url: string
+): Promise<customAxiosResponseType<T>> => {
+  const { data, status } = await instance.delete<responseDataType<T>>(url);
+  return { data, status };
+};
