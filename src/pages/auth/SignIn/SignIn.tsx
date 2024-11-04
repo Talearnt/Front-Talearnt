@@ -1,29 +1,45 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
+
+import { postSignIn } from "@pages/auth/SignIn/hook/signIn.api";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
 
-import { loginDataType } from "@pages/auth/common/auth.type";
+import { accountType } from "@pages/auth/common/auth.type";
+import { apiErrorType } from "@type/apiMethods.type";
 
 const loginSchema = object({
-  email: string().required("이메일을 입력해 주세요"),
-  password: string().required("비밀번호를 입력해 주세요")
+  userId: string().required("이메일을 입력해 주세요"),
+  pw: string().required("비밀번호를 입력해 주세요")
 }).required();
 
 function SignIn() {
+  const navigator = useNavigate();
+
   const {
-    register,
+    formState: { errors },
     handleSubmit,
-    formState: { errors }
-  } = useForm<loginDataType>({
+    register,
+    setError
+  } = useForm<accountType>({
     resolver: yupResolver(loginSchema)
   });
 
-  const onSubmit = (data: loginDataType) => console.log(data);
+  const onSubmit = async (data: accountType) => {
+    try {
+      await postSignIn(data);
+      navigator("/");
+    } catch (e) {
+      const { errorMessage } = e as apiErrorType;
+      setError("userId", { message: "" });
+      setError("pw", { message: errorMessage });
+    }
+  };
 
   return (
     <div
@@ -34,18 +50,19 @@ function SignIn() {
       <h1 className={"mb-10 text-[1.875rem]"}>로그인</h1>
       <form
         className={"flex w-full flex-col"}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
       >
         <Input
           error={
-            errors.email && errors.email.message
+            errors.userId
               ? {
-                  errorContent: errors.email.message,
+                  errorContent: errors.userId.message ?? "",
                   hasError: true
                 }
               : undefined
           }
-          formData={{ ...register("email") }}
+          formData={{ ...register("userId") }}
           id={"id-input"}
           label={"아이디"}
           placeholder={"이메일을 입력해 주세요."}
@@ -53,14 +70,14 @@ function SignIn() {
         />
         <Input
           error={
-            errors.password && errors.password.message
+            errors.pw && errors.pw.message
               ? {
-                  errorContent: errors.password.message,
+                  errorContent: errors.pw.message,
                   hasError: true
                 }
               : undefined
           }
-          formData={{ ...register("password", { required: true }) }}
+          formData={{ ...register("pw") }}
           id={"pw-input"}
           label={"비밀번호"}
           placeholder={"비밀번호를 입력해 주세요."}
