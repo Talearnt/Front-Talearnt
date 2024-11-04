@@ -1,6 +1,6 @@
 import { classNames } from "@utils/classNames";
 
-import { CommonIconProps } from "@/common/common.type";
+import { CommonIconProps } from "@common/common.type";
 
 /**
  * 돋보기 아이콘

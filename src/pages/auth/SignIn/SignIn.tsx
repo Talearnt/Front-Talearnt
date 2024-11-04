@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
-import { postSignIn } from "@pages/auth/SignIn/hook/signIn.api";
+import { postSignIn } from "@pages/auth/api/auth.api";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
 
-import { accountType } from "@pages/auth/common/auth.type";
-import { apiErrorType } from "@type/apiMethods.type";
+import { apiErrorType } from "@common/common.type";
+import { accountType } from "@pages/auth/api/auth.type";
 
 const loginSchema = object({
   userId: string().required("이메일을 입력해 주세요"),

@@ -1,13 +1,11 @@
-import Axios, { AxiosError } from "axios";
+import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
-import {
-  customAxiosResponseType,
-  responseDataType
-} from "@type/apiMethods.type";
+import { customAxiosResponseType, responseDataType } from "@common/common.type";
 
 import { checkObjectType } from "./checkObjectType";
 
 const baseURL = "http://3.35.198.221/";
+
 const instance = Axios.create({
   baseURL,
   headers: {
@@ -56,9 +54,14 @@ export const getAPI = async <T>(
 
 export const postAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
-  const { data, status } = await instance.post<responseDataType<T>>(url, body);
+  const { data, status } = await instance.post<responseDataType<T>>(
+    url,
+    body,
+    config
+  );
   return { data, status };
 };
 
