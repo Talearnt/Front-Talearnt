@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 
 import { classNames } from "@utils/classNames";
 
-import { CustomVariantProps } from "@common/common.type";
+import { CustomVariantProps } from "@type/common.type";
 
 type ButtonVariantsType = Record<
   "buttonStyle",
@@ -43,10 +43,9 @@ const buttonVariants = cva<ButtonVariantsType>(
  * @param {"filled" | "outlined" | "outlined-blue"} buttonStyle
  * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null} children
  * @param {Omit<ButtonProps, "className" | "children" | "buttonStyle">} props
- * @returns {JSX.Element}
  * @constructor
  */
-function Button({ className, buttonStyle, children, ...props }: ButtonProps) {
+function Button({ buttonStyle, children, className, ...props }: ButtonProps) {
   return (
     <button
       className={classNames(buttonVariants({ buttonStyle, className }))}
