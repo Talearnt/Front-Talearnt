@@ -1,4 +1,9 @@
-import Axios from "axios";
+import Axios, { AxiosError } from "axios";
+
+import {
+  customAxiosResponseType,
+  responseDataType
+} from "@type/apiMethods.type";
 
 import { checkObjectType } from "./checkObjectType";
 
@@ -10,17 +15,18 @@ const instance = Axios.create({
   }
 });
 
-type responseDataType<T> = {
-  data: T;
-  errorCode: string;
-  errorMessage: string;
-  success: boolean;
-};
+instance.interceptors.response.use(
+  res => res,
+  async (error: AxiosError<responseDataType<unknown>>) => {
+    if (!error.response) {
+      return error;
+    }
 
-type customAxiosResponseType<T> = {
-  data: responseDataType<T>;
-  status: number;
-};
+    const { data, status } = error.response;
+
+    return Promise.reject({ ...data, status });
+  }
+);
 
 export const getAPI = async <T>(
   url: string,
