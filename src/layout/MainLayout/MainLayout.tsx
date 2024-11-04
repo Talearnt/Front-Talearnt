@@ -17,9 +17,8 @@ function MainLayout() {
       >
         <LogoIcon />
         <Input
-          className={
-            "h-10 w-[31.25rem] rounded-full border-talearnt-Primary_01 pr-[55px]"
-          }
+          className={"h-10 rounded-full border-talearnt-Primary_01 pr-[55px]"}
+          wrapperClassName={"w-[31.25rem]"}
         >
           <SearchIcon className={"absolute right-4 top-2 cursor-pointer"} />
         </Input>
