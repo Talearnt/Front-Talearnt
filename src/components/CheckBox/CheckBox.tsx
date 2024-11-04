@@ -1,12 +1,15 @@
 import { ComponentProps } from "react";
+import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 import { classNames } from "@utils/classNames";
 
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 
-type InputProps = ComponentProps<"input">;
+type InputProps = ComponentProps<"input"> & {
+  formData?: UseFormRegisterReturn;
+};
 
-function CheckBox({ className, children, ...props }: InputProps) {
+function CheckBox({ className, children, formData, ...props }: InputProps) {
   return (
     <label
       className={classNames(
@@ -14,7 +17,12 @@ function CheckBox({ className, children, ...props }: InputProps) {
         className
       )}
     >
-      <input className={"peer hidden"} type={"checkbox"} {...props} />
+      <input
+        className={"peer hidden"}
+        type={"checkbox"}
+        {...formData}
+        {...props}
+      />
       <CircleCheckIcon
         className={
           "peer-checked:fill-talearnt-Primary_01 peer-checked:stroke-white"
