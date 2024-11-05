@@ -15,7 +15,7 @@ function MainLayout() {
           "flex h-[88px] items-center justify-between px-20 shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01"
         }
       >
-        <LogoIcon />
+        <LogoIcon className={"cursor-pointer"} onClick={() => navigator("/")} />
         <Input
           className={"h-10 rounded-full border-talearnt-Primary_01 pr-[55px]"}
           wrapperClassName={"w-[31.25rem]"}
