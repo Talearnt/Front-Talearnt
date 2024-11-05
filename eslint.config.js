@@ -124,7 +124,8 @@ export default [
         },
         {
           selector: "parameter",
-          format: ["camelCase"] // 파라미터 이름 규칙
+          format: ["camelCase"], // 파라미터 이름 규칙,
+          leadingUnderscore: "allow"
         },
         {
           selector: "typeAlias",
