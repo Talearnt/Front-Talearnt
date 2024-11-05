@@ -34,7 +34,6 @@
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/declareTypes"], // 추가된 types 폴더 경로
 
     // 다운레벨링 및 기타
     "downlevelIteration": true, // TypeScript에서 최신 기능을 사용할 수 있도록 실행 환경과 호환되지 않는 부분을 다운레벨링
