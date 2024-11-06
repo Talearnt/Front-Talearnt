@@ -23,8 +23,11 @@ jobs:
       - name: Install Bun 📥
         run: |
           curl -fsSL https://bun.sh/install | bash
-          echo "export BUN_INSTALL=\"$HOME/.bun\"" >> $GITHUB_ENV
-          echo "export PATH=\"$BUN_INSTALL/bin:$PATH\"" >> $GITHUB_ENV
+          echo "BUN_INSTALL=$HOME/.bun" >> $GITHUB_ENV
+          echo "PATH=$BUN_INSTALL/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Check Bun version
+        run: bun --version
 
       # 의존성 캐시 설정
       - name: Cache dependencies 🗄️
