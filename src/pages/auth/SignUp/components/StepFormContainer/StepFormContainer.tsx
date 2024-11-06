@@ -9,6 +9,24 @@ import { Stepper } from "@components/Stepper/Stepper";
 import { Agreements } from "@pages/auth/SignUp/components/Agreements/Agreements";
 
 const stepArray = ["약관 동의", "정보 입력", "가입 완료"];
+const stepMessages = [
+  <>
+    Talearnt 서비스 이용을 위한
+    <br />
+    약관에 동의해 주세요
+  </>,
+  <>
+    로그인에 사용할
+    <br />
+    회원정보를 입력해 주세요
+  </>,
+  <>
+    성공적으로 가입되었어요
+    <br />
+    Talearnt에서 만나요!
+  </>
+];
+const buttonLabels = ["시작 하기", "가입 하기", "로그인"];
 
 function StepFormContainer() {
   const navigator = useNavigate();
@@ -31,27 +49,7 @@ function StepFormContainer() {
         stepArray={stepArray}
       />
       <p className={"mb-10 text-center text-3xl font-semibold"}>
-        {step === 1 && (
-          <>
-            Talearnt 서비스 이용을 위한
-            <br />
-            약관에 동의해 주세요
-          </>
-        )}
-        {step === 2 && (
-          <>
-            로그인에 사용할
-            <br />
-            회원정보를 입력해 주세요
-          </>
-        )}
-        {step === 3 && (
-          <>
-            성공적으로 가입되었어요
-            <br />
-            Talearnt에서 만나요!
-          </>
-        )}
+        {stepMessages[step - 1]}
       </p>
       {step === 1 && <Agreements />}
       <div
@@ -69,9 +67,7 @@ function StepFormContainer() {
           disabled={!agreement0 || !agreement1}
           onClick={handleCTAOnClick}
         >
-          {step === 1 && "시작 하기"}
-          {step === 2 && "가입 하기"}
-          {step === 3 && "로그인"}
+          {buttonLabels[step - 1]}
         </Button>
       </div>
     </div>
