@@ -1,24 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { Button } from "@components/Button/Button";
 
-test("renders with children", () => {
-  render(<Button>children</Button>);
-  const initialText = screen.getByRole("button", { name: "children" });
+describe("Button Component", () => {
+  test("renders with children", () => {
+    render(<Button>children</Button>);
+    const initialText = screen.getByRole("button", { name: "children" });
 
-  expect(initialText).toBeInTheDocument();
-});
+    expect(initialText).toBeInTheDocument();
+  });
 
-test("calls onClick handler when button is clicked", async () => {
-  const handleClick = vi.fn();
+  test("calls onClick handler when button is clicked", async () => {
+    const handleClick = vi.fn();
 
-  render(<Button onClick={handleClick}>클릭</Button>);
+    render(<Button onClick={handleClick}>클릭</Button>);
 
-  const button = screen.getByRole("button", { name: "클릭" });
+    const button = screen.getByRole("button", { name: "클릭" });
 
-  await userEvent.click(button);
+    await userEvent.click(button);
 
-  expect(handleClick).toHaveBeenCalled();
+    expect(handleClick).toHaveBeenCalled();
+  });
 });
