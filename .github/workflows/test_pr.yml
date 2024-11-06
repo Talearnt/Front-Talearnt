@@ -30,7 +30,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       # 의존성 캐시 설정
-      - name: Cache dependencies 🏠 - add cache
+      - name: Cache dependencies 🏠
         id: cache
         uses: actions/cache@v4
         with:
