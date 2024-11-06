@@ -11,59 +11,12 @@ permissions:
   checks: write
   pull-requests: write
 
-env:
-  CACHED_DEPENDENCY_PATHS: ${{ github.workspace }}/node_modules
-  CACHED_BUILD_PATHS: ${{ github.workspace }}/.next
-  BUILD_CACHE_KEY: ${{ github.sha }}
-
 jobs:
-  job_install_dependencies:
-    name: Install Dependencies
-    runs-on: ubuntu-latest
-    steps:
-      # workflow가 실행될 때 소스 코드를 가져오는 작업 테스트 푸시
-      - name: Check out current commit (${{ github.sha }})
-        uses: actions/checkout@v4
-
-      # Node 환경 설정 작업
-      - name: Setup Node.js 16 🚀
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-
-      # Bun 설치
-      - name: Install Bun 🚀
-        uses: oven-sh/setup-bun@v2
-
-      # 의존성 캐시 키 생성
-      - name: Compute dependency cache key
-        id: compute_lockfile_hash
-        run: echo "::set-output name=hash::${{ hashFiles('**/bun.lockb') }}"
-
-      # 의존성 캐시 확인
-      - name: Check dependency cache
-        uses: actions/cache@v4
-        id: cache_dependencies
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ steps.compute_lockfile_hash.outputs.hash }}
-
-      # 캐시 없으면 의존성 설치
-      - name: Install dependencies
-        if: steps.cache_dependencies.outputs.cache-hit == ''
-        run: bun install
-
-    # 의존성 캐시 키 return
-    outputs:
-      dependency_cache_key: ${{ steps.compute_lockfile_hash.outputs.hash }}
-
-  job_test:
-    name: Test
-    needs: job_install_dependencies
+  test:
     runs-on: ubuntu-latest
     steps:
       # workflow가 실행될 때 소스 코드를 가져오는 작업
-      - name: Check out current commit (${{ github.sha }})
+      - name: Checkout repository 🖥️
         uses: actions/checkout@v4
 
       # Node 환경 설정 작업
@@ -76,12 +29,20 @@ jobs:
       - name: Install Bun 🚀
         uses: oven-sh/setup-bun@v2
 
-      # job_install_dependencies 에서 return한 캐시 키로 의존성 가져오기
-      - name: Check dependency cache
+      # 의존성 캐시 설정
+      - name: Cache dependencies 🏠
+        id: cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_install_dependencies.outputs.dependency_cache_key }}
+          path: "**/node_modules"
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+
+      # 의존성 설치
+      - name: Install dependencies 🚀
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: bun install
 
       # Test
       - name: Run test 🚓
@@ -94,108 +55,6 @@ jobs:
           check_name: "test result"
           files: "test-results.xml"
 
-    # job_install_dependencies 에서 return한 캐시 키 그대로 return
-    outputs:
-      dependency_cache_key: ${{ needs.job_install_dependencies.outputs.dependency_cache_key }}
-
-  job_build:
-    name: Build
-    needs: job_test
-    runs-on: ubuntu-latest
-    steps:
-      # workflow가 실행될 때 소스 코드를 가져오는 작업
-      - name: Check out current commit (${{ github.sha }})
-        uses: actions/checkout@v4
-
-      # Node 환경 설정 작업
-      - name: Setup Node.js 16 🚀
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-
-      # Bun 설치
-      - name: Install Bun 🚀
-        uses: oven-sh/setup-bun@v2
-
-      # job_test 에서 return한 캐시 키로 의존성 가져오기
-      - name: Check dependency cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ needs.job_test.outputs.dependency_cache_key }}
-
-      # build 캐시 확인
-      - name: Check build cache
-        uses: actions/cache@v4
-        id: cache_built_packages
-        with:
-          path: ${{ env.CACHED_BUILD_PATHS }}
-          key: ${{ env.BUILD_CACHE_KEY }}
-
-      # 캐시 없으면 build
-      - name: Build packages
-        if: steps.cache_built_packages.outputs.cache-hit == ''
+      # Build
+      - name: Run build 🚛
         run: bun run build
-    outputs:
-      dependency_cache_key: ${{ needs.job_install_dependencies.outputs.dependency_cache_key }}
-#  job_size_check:
-#    name: Size Check
-#    needs: job_build
-#    runs-on: ubuntu-latest
-#    steps:
-#      # workflow가 실행될 때 소스 코드를 가져오는 작업
-#      - name: Check out current commit (${{ github.sha }})
-#        uses: actions/checkout@v4
-#
-#      # Node 환경 설정 작업
-#      - name: Setup Node.js 16 🚀
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: "16"
-#
-#      - name: Check dependency cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-#          key: ${{ needs.job_build.outputs.dependency_cache_key }}
-#
-#      - name: Check build cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ${{ env.CACHED_BUILD_PATHS }}
-#          key: ${{ env.BUILD_CACHE_KEY }}
-#    steps:
-#      # workflow가 실행될 때 소스 코드를 가져오는 작업
-#      - name: Checkout repository 🖥️
-#        uses: actions/checkout@v4
-#
-#      # Node 환경 설정 작업
-#      - name: Setup Node.js 16 🚀
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: "16"
-#
-#      # Bun 설치
-#      - name: Install Bun 🚀
-#        uses: oven-sh/setup-bun@v2
-#
-#      # 의존성 캐시 설정
-#      - name: Cache dependencies 🏠
-#        id: cache
-#        uses: actions/cache@v4
-#        with:
-#          path: "**/node_modules"
-#          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-#
-#      # 의존성 설치
-#      - name: Install dependencies 🚀
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        run: bun install
-#
-#      # Test
-#      - name: Run test 🚓
-#        run: bun run vitest
-#
-#      # Build
-#      - name: Run build 🚛
-#        run: bun run build
