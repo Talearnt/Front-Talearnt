@@ -41,7 +41,7 @@ jobs:
 
       # Test
       - name: Run tests ⚙️
-        run: bun test
+        run: bun run vitest
 
       # Build
       - name: Run build ⚙️
