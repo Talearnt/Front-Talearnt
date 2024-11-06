@@ -28,6 +28,7 @@ jobs:
 
       # 의존성 캐시 설정
       - name: Cache dependencies 🗄️
+        id: cache
         uses: actions/cache@v4
         with:
           path: ~/.bun
@@ -37,6 +38,7 @@ jobs:
 
       # 의존성 설치
       - name: Install dependencies 📥
+        if: steps.cache.outputs.cache-hit != "true"
         run: bun install
 
       # Test
