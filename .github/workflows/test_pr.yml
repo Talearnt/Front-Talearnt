@@ -1,0 +1,49 @@
+name: PR Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # workflow가 실행될 때 소스 코드를 가져오는 작업
+      - name: Checkout repository 🖥️
+        uses: actions/checkout@v4
+
+      # Node 환경 설정 작업
+      - name: Setup Node.js 16 📥
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      # Bun 설치
+      - name : Install Bun 📥
+        run : |
+          curl -fsSL https://bun.sh/install | bash
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+
+      # 의존성 캐시 설정
+      - name : Cache dependencies 🗄️
+        uses : actions/cache@v4
+        with :
+          path : |
+            ~/.bun/install/cache/v{bun-version}
+          key : ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys : |
+            ${{ runner.os }}-bun-
+
+      # 의존성 설치
+      - name : Install dependencies 📥
+        run : bun install
+
+      # Test
+      - name : Run tests ⚙️
+        run : bun test
+
+      # Build
+      - name: Run build ⚙️
+        run: bun run build
