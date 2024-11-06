@@ -1,5 +1,8 @@
-/* eslint-disable simple-import-sort/imports */
 import "broadcast-channel";
+
+if (typeof globalThis.BroadcastChannel === "undefined") {
+  globalThis.BroadcastChannel = BroadcastChannel;
+}
 
 import { http, HttpResponse } from "msw";
 import { PathParams } from "msw/src/core/utils/matching/matchRequestUrl";
