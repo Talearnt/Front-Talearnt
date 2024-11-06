@@ -17,32 +17,31 @@ jobs:
       - name: Setup Node.js 16 📥
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: "16"
 
       # Bun 설치
-      - name : Install Bun 📥
-        run : |
+      - name: Install Bun 📥
+        run: |
           curl -fsSL https://bun.sh/install | bash
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
+          echo "export BUN_INSTALL=\"$HOME/.bun\"" >> $GITHUB_ENV
+          echo "export PATH=\"$BUN_INSTALL/bin:$PATH\"" >> $GITHUB_ENV
 
       # 의존성 캐시 설정
-      - name : Cache dependencies 🗄️
-        uses : actions/cache@v4
-        with :
-          path : |
-            ~/.bun/install/cache/v{bun-version}
-          key : ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys : |
+      - name: Cache dependencies 🗄️
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
             ${{ runner.os }}-bun-
 
       # 의존성 설치
-      - name : Install dependencies 📥
-        run : bun install
+      - name: Install dependencies 📥
+        run: bun install
 
       # Test
-      - name : Run tests ⚙️
-        run : bun test
+      - name: Run tests ⚙️
+        run: bun test
 
       # Build
       - name: Run build ⚙️
