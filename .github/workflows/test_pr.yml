@@ -12,7 +12,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  test:
+  job_test:
+    name: Test_and_Build
     runs-on: ubuntu-latest
     steps:
       # workflow가 실행될 때 소스 코드를 가져오는 작업
