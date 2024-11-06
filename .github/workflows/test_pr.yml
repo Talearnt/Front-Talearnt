@@ -45,6 +45,12 @@ jobs:
       - name: Run tests ⚙️
         run: bun run vitest
 
+      # 테스트 결과를 GitHub Actions에 게시
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "./test-results/**/*.xml" # 테스트 결과 파일 경로 (JUnit XML 형식)
+
       # Build
       - name: Run build ⚙️
         run: bun run build
