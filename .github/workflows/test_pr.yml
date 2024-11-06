@@ -38,7 +38,7 @@ jobs:
       # 의존성 캐시 키 생성
       - name: Compute dependency cache key
         id: compute_lockfile_hash
-        run: echo "::set-output name=hash::${{ hashFiles(**/bun.lockb') }}"
+        run: echo "::set-output name=hash::${{ hashFiles('**/bun.lockb') }}"
 
       # 의존성 캐시 확인
       - name: Check dependency cache
