@@ -21,7 +21,7 @@ jobs:
     name: Install Dependencies
     runs-on: ubuntu-latest
     steps:
-      # workflow가 실행될 때 소스 코드를 가져오는 작업
+      # workflow가 실행될 때 소스 코드를 가져오는 작업 테스트 푸시
       - name: Check out current commit (${{ github.sha }})
         uses: actions/checkout@v4
 
