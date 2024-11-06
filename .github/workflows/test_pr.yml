@@ -33,7 +33,7 @@ jobs:
         run: bun --version
 
       # 의존성 캐시 설정
-      - name: Cache dependencies 🏠
+      - name: Cache dependencies 🏠 - test
         id: cache
         uses: actions/cache@v4
         with:
