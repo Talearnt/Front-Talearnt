@@ -38,7 +38,7 @@ jobs:
 
       # 의존성 설치
       - name: Install dependencies 📥
-        if: steps.cache.outputs.cache-hit != "true"
+        if: steps.cache.outputs.cache-hit != 'true'
         run: bun install
 
       # Test
