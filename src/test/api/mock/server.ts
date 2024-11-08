@@ -1,6 +1,6 @@
 /* eslint-disable simple-import-sort/imports */
 import "web-streams-polyfill/polyfill";
-import "test/polyfill";
+import "@/test/polyfill";
 
 import { setupServer } from "msw/node";
 
