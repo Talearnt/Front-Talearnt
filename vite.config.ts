@@ -7,7 +7,7 @@ const vitestConfig: ViteUserConfig = {
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts", "./src/test/polyfill.ts"],
+    setupFiles: ["./src/test/polyfill.ts", "./src/test/setup.ts"],
     reporters: ["junit", "default"],
     outputFile: "test-results.xml"
   }
