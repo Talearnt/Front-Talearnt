@@ -1,6 +1,3 @@
-/* eslint-disable simple-import-sort/imports */
-import "@/test/polyfill";
-
 import { setupServer } from "msw/node";
 
 import { handlers } from "./handler";
