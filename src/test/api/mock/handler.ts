@@ -3,6 +3,8 @@ import { PathParams } from "msw/src/core/utils/matching/matchRequestUrl";
 
 import { accountType } from "@pages/auth/api/auth.type";
 
+import "whatwg-fetch";
+
 export const handlers = [
   http.post<PathParams, accountType>(
     "http://3.35.198.221/v1/api/auth/login",
