@@ -6,7 +6,7 @@ import { Blob, File } from "node:buffer";
 import { fetch, FormData, Headers, Request, Response } from "undici";
 
 Object.defineProperties(globalThis, {
-  fetch: { value: fetch, writable: true },
+  fetch: { value: fetch, configurable: true, writable: true },
   Blob: { value: Blob },
   File: { value: File },
   Headers: { value: Headers },
