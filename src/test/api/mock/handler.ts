@@ -1,6 +1,3 @@
-/* eslint-disable simple-import-sort/imports */
-import { BroadcastChannel } from "broadcast-channel";
-
 import { http, HttpResponse } from "msw";
 import { PathParams } from "msw/src/core/utils/matching/matchRequestUrl";
 
