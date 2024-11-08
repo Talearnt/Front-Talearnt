@@ -1,2 +1,2 @@
-// polyfill.ts
-import "node:stream/web";
+import "broadcastchannel-polyfill/index.js";
+import "web-streams-polyfill/polyfill";
