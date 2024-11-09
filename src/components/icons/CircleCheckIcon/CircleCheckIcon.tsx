@@ -4,16 +4,14 @@ import { CommonIconProps } from "@common/common.type";
 
 /**
  * 동그란 체크 아이콘
- * size 변경은 scale에 배수를 넣어주면 됨
+ * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className
- * @param {number | undefined} scale
+ * @param {number | undefined} size
  * @param {Omit<CommonIconProps, "scale" | "className">} props
  * @constructor
  */
-function CircleCheckIcon({ className, scale = 1, ...props }: CommonIconProps) {
-  const size = scale * 24;
-
+function CircleCheckIcon({ className, size = 24, ...props }: CommonIconProps) {
   return (
     <svg
       width={size}

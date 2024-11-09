@@ -7,7 +7,7 @@ export type CustomVariantProps<
 };
 
 export type CommonIconProps = ComponentProps<"svg"> & {
-  scale?: number;
+  size?: number;
 };
 
 export type responseDataType<T> = {
