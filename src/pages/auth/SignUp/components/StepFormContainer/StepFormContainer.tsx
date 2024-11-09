@@ -7,6 +7,7 @@ import { classNames } from "@utils/classNames";
 import { Button } from "@components/Button/Button";
 import { Stepper } from "@components/Stepper/Stepper";
 import { Agreements } from "@pages/auth/SignUp/components/Agreements/Agreements";
+import { CompleteSignUp } from "@pages/auth/SignUp/components/CompleteSignUp/CompleteSignUp";
 import { SignUpFields } from "@pages/auth/SignUp/components/SignupFields/SignUpFields/SignUpFields";
 
 const stepArray = ["약관 동의", "정보 입력", "가입 완료"];
@@ -38,7 +39,13 @@ function StepFormContainer() {
   const agreement0 = watch("agreement0");
   const agreement1 = watch("agreement1");
 
-  const handleCTAOnClick = () => setStep(prev => prev + 1);
+  const handleCTAOnClick = () => {
+    if (step < 3) {
+      setStep(prev => prev + 1);
+    } else {
+      navigator("/sign-in");
+    }
+  };
 
   return (
     <div
@@ -54,6 +61,7 @@ function StepFormContainer() {
       </p>
       {step === 1 && <Agreements />}
       {step === 2 && <SignUpFields />}
+      {step === 3 && <CompleteSignUp />}
       <div
         className={classNames(
           "mt-[3.5rem] grid grid-rows-[3.125rem] gap-[1.975rem]",
