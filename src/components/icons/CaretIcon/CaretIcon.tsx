@@ -30,22 +30,20 @@ const caretIconVariants = cva<CaretIconVariantsType>("", {
  * 꼬리 없는 화살표 아이콘
  * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
  * direction은 화살표가 가르킬 방향
- * size 변경은 scale에 배수를 넣어주면 됨
+ * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className
  * @param {"top" | "right" | "bottom" | "left"} direction
- * @param {number | undefined} scale
+ * @param {number | undefined} size
  * @param {Omit<CaretIconProps, "scale" | "className" | "direction">} props
  * @constructor
  */
 function CaretIcon({
   className,
   direction,
-  scale = 1,
+  size = 24,
   ...props
 }: CaretIconProps) {
-  const size = scale * 24;
-
   return (
     <svg
       width={size}

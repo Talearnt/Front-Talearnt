@@ -5,18 +5,15 @@ import { CommonIconProps } from "@common/common.type";
 /**
  * 돋보기 아이콘
  * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
- * size 변경은 scale에 배수를 넣어주면 됨
+ * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className
- * @param {number | undefined} scale
+ * @param {number | undefined} size
  * @param {Omit<CommonIconProps, "scale" | "className">} props
- * @returns {JSX.Element}
  * @constructor
  */
 
-function SearchIcon({ className, scale = 1, ...props }: CommonIconProps) {
-  const size = scale * 24;
-
+function SearchIcon({ className, size = 24, ...props }: CommonIconProps) {
   return (
     <svg
       width={size}
