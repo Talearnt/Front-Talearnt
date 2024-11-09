@@ -13,7 +13,7 @@ import { Input } from "@components/Input/Input";
 import { apiErrorType } from "@common/common.type";
 import { accountType } from "@pages/auth/api/auth.type";
 
-const loginSchema = object({
+const signInSchema = object({
   userId: string().required("이메일을 입력해 주세요"),
   pw: string().required("비밀번호를 입력해 주세요")
 }).required();
@@ -27,7 +27,7 @@ function SignIn() {
     register,
     setError
   } = useForm<accountType>({
-    resolver: yupResolver(loginSchema)
+    resolver: yupResolver(signInSchema)
   });
 
   const onSubmit = async (data: accountType) => {

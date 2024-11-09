@@ -18,7 +18,7 @@ function MainLayout() {
         <LogoIcon className={"cursor-pointer"} onClick={() => navigator("/")} />
         <Input
           className={"h-10 rounded-full border-talearnt-Primary_01 pr-[55px]"}
-          wrapperClassName={"w-[31.25rem]"}
+          wrapperClassName={"w-[31.25rem] relative"}
         >
           <SearchIcon className={"absolute right-4 top-2 cursor-pointer"} />
         </Input>
