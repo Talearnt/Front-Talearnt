@@ -8,7 +8,10 @@ function TabSlider({ options }: TabSliderProps) {
   return (
     <div className={"flex"}>
       {options.map((option, index, array) => (
-        <div className={classNames("group flex", index > 0 && "-ml-px")}>
+        <div
+          className={classNames("group flex", index > 0 && "-ml-px")}
+          key={`${option}-${index.toString()}`}
+        >
           <input
             className={"peer hidden"}
             id={`option${index.toString()}`}
