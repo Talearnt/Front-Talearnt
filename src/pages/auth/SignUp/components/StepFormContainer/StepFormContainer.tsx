@@ -48,7 +48,7 @@ function StepFormContainer() {
   };
 
   return (
-    <div className={"flex w-[39.5rem] flex-col"}>
+    <div className={classNames("flex flex-col", "w-[39.5rem]")}>
       <Stepper
         className={"mb-[4.125rem]"}
         currentStep={step}
