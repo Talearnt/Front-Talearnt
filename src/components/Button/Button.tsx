@@ -15,7 +15,11 @@ type ButtonProps = ComponentProps<"button"> &
   CustomVariantProps<ButtonVariantsType>;
 
 const buttonVariants = cva<ButtonVariantsType>(
-  "flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-[1.125rem] font-medium",
+  classNames(
+    "flex items-center justify-center",
+    "rounded-lg px-4 py-2",
+    "h-[50px] text-[1.125rem] font-medium cursor-pointer"
+  ),
   {
     variants: {
       buttonStyle: {
