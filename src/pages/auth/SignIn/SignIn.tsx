@@ -6,6 +6,8 @@ import { object, string } from "yup";
 
 import { postSignIn } from "@pages/auth/api/auth.api";
 
+import { classNames } from "@utils/classNames";
+
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
@@ -42,11 +44,7 @@ function SignIn() {
   };
 
   return (
-    <div
-      className={
-        "mx-auto mb-[7.5rem] mt-[6.5rem] flex w-[26rem] flex-col items-center"
-      }
-    >
+    <div className={classNames("flex flex-col items-center", "w-[416px]")}>
       <h1 className={"mb-10 text-[1.875rem]"}>로그인</h1>
       <form
         className={"flex w-full flex-col"}
@@ -110,7 +108,11 @@ function SignIn() {
         카카오로 로그인
       </Button>
       <div className={"flex w-full gap-4"}>
-        <Button buttonStyle={"outlined"} className={"h-[50px] w-full"}>
+        <Button
+          buttonStyle={"outlined"}
+          className={"h-[50px] w-full"}
+          onClick={() => navigator("/find-account")}
+        >
           아이디/비밀번호 찾기
         </Button>
         <Button buttonStyle={"outlined"} className={"h-[50px] w-full"}>

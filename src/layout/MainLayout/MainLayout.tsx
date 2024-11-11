@@ -1,5 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { classNames } from "@utils/classNames";
+
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
@@ -11,18 +13,25 @@ function MainLayout() {
   return (
     <div>
       <header
-        className={
-          "flex h-[88px] items-center justify-between px-20 shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01"
-        }
+        className={classNames(
+          "flex items-center justify-between",
+          "px-20 shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01",
+          "h-[88px]"
+        )}
       >
         <LogoIcon className={"cursor-pointer"} onClick={() => navigator("/")} />
         <Input
-          className={"h-10 rounded-full border-talearnt-Primary_01 pr-[55px]"}
-          wrapperClassName={"w-[31.25rem] relative"}
+          className={classNames(
+            "rounded-full border-talearnt-Primary_01 pr-[55px]",
+            "h-10"
+          )}
+          wrapperClassName={classNames("relative", "w-[31.25rem]")}
         >
-          <SearchIcon className={"absolute right-4 top-2 cursor-pointer"} />
+          <SearchIcon
+            className={classNames("absolute right-4 top-2", "cursor-pointer")}
+          />
         </Input>
-        <div className={"flex h-[40px] gap-[16px]"}>
+        <div className={classNames("flex gap-[16px]", "h-[40px]")}>
           <Button
             buttonStyle={"outlined"}
             className={"w-[6.875rem]"}
@@ -38,7 +47,9 @@ function MainLayout() {
           </Button>
         </div>
       </header>
-      <main>
+      <main
+        className={classNames("mx-auto mb-[120px] mt-[94px]", "max-w-[848px]")}
+      >
         <Outlet />
       </main>
     </div>
