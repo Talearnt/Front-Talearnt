@@ -8,9 +8,9 @@ function SignUpFields() {
       <Input
         label={"아이디(이메일)"}
         placeholder={"이메일을 입력해 주세요."}
-        wrapperClassName={"flex gap-2 items-end"}
+        wrapperClassName={"flex gap-2"}
       >
-        <TabSlider options={["남자", "여자"]} />
+        <TabSlider className={"ml-2 w-[160px]"} options={["남자", "여자"]} />
       </Input>
       <Input
         label={"비밀번호"}
@@ -23,11 +23,11 @@ function SignUpFields() {
       <Input
         label={"휴대폰 번호"}
         placeholder={"01012345678"}
-        wrapperClassName={"flex gap-2 items-end"}
+        wrapperClassName={"flex gap-2"}
       >
         <Button
           buttonStyle={"outlined"}
-          className={"h-[3.125rem] w-[11.25rem] text-talearnt-Text_04"}
+          className={"ml-2 h-[3.125rem] w-[11.25rem] text-talearnt-Text_04"}
         >
           인증번호 요청
         </Button>
@@ -35,11 +35,11 @@ function SignUpFields() {
       <Input
         label={"인증번호 확인"}
         placeholder={"인증번호 4자리를 입력해 주세요"}
-        wrapperClassName={"flex gap-2 items-end"}
+        wrapperClassName={"flex gap-2"}
       >
         <Button
           buttonStyle={"outlined"}
-          className={"h-[3.125rem] w-[5.9375rem] text-talearnt-Text_04"}
+          className={"ml-2 h-[3.125rem] w-[5.9375rem] text-talearnt-Text_04"}
         >
           확인
         </Button>

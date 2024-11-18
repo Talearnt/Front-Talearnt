@@ -7,14 +7,13 @@ type TabSliderProps = {
 
 function TabSlider({ className, options }: TabSliderProps) {
   return (
-    <div className={"flex"}>
+    <div className={classNames("flex", className)}>
       {options.map((option, index, array) => (
         <div
           className={classNames(
             "group flex",
             "h-[50px] w-full",
-            index > 0 && "-ml-px",
-            className
+            index > 0 && "-ml-px"
           )}
           key={`${option}-${index.toString()}`}
         >
