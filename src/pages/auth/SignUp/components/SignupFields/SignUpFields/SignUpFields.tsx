@@ -2,6 +2,17 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 
+const gender = [
+  {
+    label: "남자",
+    value: "male"
+  },
+  {
+    label: "여자",
+    value: "female"
+  }
+];
+
 function SignUpFields() {
   return (
     <div className={"flex flex-col gap-6"}>
@@ -10,7 +21,12 @@ function SignUpFields() {
         placeholder={"이메일을 입력해 주세요."}
         wrapperClassName={"flex gap-2 items-end"}
       >
-        <TabSlider options={["남자", "여자"]} />
+        <TabSlider
+          currentValue={"male"}
+          //eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClickHandler={() => {}}
+          options={gender}
+        />
       </Input>
       <Input
         label={"비밀번호"}
