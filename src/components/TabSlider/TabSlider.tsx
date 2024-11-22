@@ -2,13 +2,20 @@ import { classNames } from "@utils/classNames";
 
 type TabSliderProps = {
   className?: string;
-  options: string[];
+  currentValue: string;
+  onClickHandler: (value: string) => void;
+  options: { label: string; value: string }[];
 };
 
-function TabSlider({ className, options }: TabSliderProps) {
+function TabSlider({
+  className,
+  currentValue,
+  onClickHandler,
+  options
+}: TabSliderProps) {
   return (
     <div className={"flex"}>
-      {options.map((option, index, array) => (
+      {options.map(({ label, value }, index, array) => (
         <div
           className={classNames(
             "group flex",
@@ -16,12 +23,15 @@ function TabSlider({ className, options }: TabSliderProps) {
             index > 0 && "-ml-px",
             className
           )}
-          key={`${option}-${index.toString()}`}
+          onClick={() => onClickHandler(value)}
+          key={`${value}-${index.toString()}`}
         >
           <input
+            checked={currentValue === value}
             className={"peer hidden"}
             id={`option${index.toString()}`}
             name={"slider"}
+            readOnly
             type={"radio"}
           />
           <label
@@ -35,7 +45,7 @@ function TabSlider({ className, options }: TabSliderProps) {
             )}
             htmlFor={`option${index.toString()}`}
           >
-            {option}
+            {label}
           </label>
         </div>
       ))}
