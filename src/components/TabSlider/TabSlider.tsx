@@ -13,7 +13,8 @@ function TabSlider({ className, options }: TabSliderProps) {
           className={classNames(
             "group flex",
             "h-[50px] w-full",
-            index > 0 && "-ml-px"
+            index > 0 && "-ml-px",
+            className
           )}
           key={`${option}-${index.toString()}`}
         >
