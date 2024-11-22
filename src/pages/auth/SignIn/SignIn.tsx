@@ -111,7 +111,7 @@ function SignIn() {
         <Button
           buttonStyle={"outlined"}
           className={"h-[50px] w-full"}
-          onClick={() => navigator("/find-account")}
+          onClick={() => navigator("/find-account/id")}
         >
           아이디/비밀번호 찾기
         </Button>
