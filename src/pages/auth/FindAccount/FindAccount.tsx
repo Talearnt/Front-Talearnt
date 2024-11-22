@@ -22,7 +22,7 @@ function FindAccount() {
   const pathArray = pathname.split("/");
 
   return (
-    <div className={classNames("flex flex-col gap-14", "w-[39.5rem]")}>
+    <div className={classNames("flex flex-col gap-[56px]", "w-[632px]")}>
       <TabSlider
         className={"text-lg"}
         currentValue={pathArray[pathArray.length - 1]}
