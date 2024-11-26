@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
@@ -31,19 +31,23 @@ function MainLayout() {
             className={classNames("absolute right-4 top-2", "cursor-pointer")}
           />
         </Input>
-        <div className={classNames("flex gap-[16px]", "h-[40px]")}>
+        <div className={classNames("flex items-center gap-[8px]", "h-[40px]")}>
+          <Link
+            className={classNames(
+              "flex items-center justify-center",
+              "h-[40px] w-[94px]",
+              "text-lg font-medium text-talearnt-Text_02"
+            )}
+            to={"sign-up"}
+          >
+            회원가입
+          </Link>
           <Button
             buttonStyle={"outlined"}
-            className={"w-[6.875rem]"}
+            className={classNames("h-[40px] w-[110px]", "text-lg")}
             onClick={() => navigator("sign-in")}
           >
             로그인
-          </Button>
-          <Button
-            className={"w-[6.875rem]"}
-            onClick={() => navigator("sign-up")}
-          >
-            회원가입
           </Button>
         </div>
       </header>
