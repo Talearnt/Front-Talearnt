@@ -11,21 +11,24 @@ function MainLayout() {
   const navigator = useNavigate();
 
   return (
-    <div>
+    <>
       <header
         className={classNames(
-          "flex items-center justify-between",
-          "px-20 shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01",
+          "flex items-center justify-center",
+          "shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01",
           "h-[88px]"
         )}
       >
-        <LogoIcon className={"cursor-pointer"} onClick={() => navigator("/")} />
+        <LogoIcon
+          className={classNames("mr-[40px]", "cursor-pointer")}
+          onClick={() => navigator("/")}
+        />
         <Input
           className={classNames(
             "rounded-full border-talearnt-Primary_01 pr-[55px]",
             "h-10"
           )}
-          wrapperClassName={classNames("relative", "w-[31.25rem]")}
+          wrapperClassName={classNames("relative", "w-[31.25rem] mr-[358px]")}
         >
           <SearchIcon
             className={classNames("absolute right-4 top-2", "cursor-pointer")}
@@ -56,7 +59,7 @@ function MainLayout() {
       >
         <Outlet />
       </main>
-    </div>
+    </>
   );
 }
 
