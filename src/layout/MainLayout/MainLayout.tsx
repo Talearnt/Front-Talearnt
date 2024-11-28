@@ -26,12 +26,15 @@ function MainLayout() {
         <Input
           className={classNames(
             "rounded-full border-talearnt-Primary_01 pr-[55px]",
-            "h-10"
+            "h-[50px]"
           )}
           wrapperClassName={classNames("relative", "w-[31.25rem] mr-[358px]")}
         >
           <SearchIcon
-            className={classNames("absolute right-4 top-2", "cursor-pointer")}
+            className={classNames(
+              "absolute right-4 top-[10px]",
+              "cursor-pointer"
+            )}
           />
         </Input>
         <div className={classNames("flex items-center gap-[8px]", "h-[40px]")}>
