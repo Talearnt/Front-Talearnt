@@ -13,20 +13,31 @@ import { CommonIconProps } from "@common/common.type";
  * @constructor
  */
 
-function SearchIcon({ className, size = 24, ...props }: CommonIconProps) {
+type SearchIconProps = CommonIconProps & {
+  strokeColor?: string;
+};
+
+function SearchIcon({
+  className,
+  strokeColor = "stroke-talearnt-BG_Background",
+  size = 30,
+  ...props
+}: SearchIconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames("stroke-talearnt-Primary_01", className)}
+      className={classNames("fill-talearnt-Primary_01", className)}
       {...props}
     >
+      <rect width="30" height="30" rx="15" />
       <path
-        d="M17.3269 17.44L20.8 20.8M19.68 11.84C19.68 16.1699 16.1699 19.68 11.84 19.68C7.51009 19.68 4 16.1699 4 11.84C4 7.51009 7.51009 4 11.84 4C16.1699 4 19.68 7.51009 19.68 11.84Z"
-        strokeWidth="2"
+        className={strokeColor}
+        d="M19.1057 19.2L22 22M21.0667 14.5333C21.0667 18.1416 18.1416 21.0667 14.5333 21.0667C10.9251 21.0667 8 18.1416 8 14.5333C8 10.9251 10.9251 8 14.5333 8C18.1416 8 21.0667 10.9251 21.0667 14.5333Z"
+        strokeWidth="1.4"
         strokeLinecap="round"
       />
     </svg>
