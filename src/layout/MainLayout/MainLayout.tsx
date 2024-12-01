@@ -28,6 +28,7 @@ function MainLayout() {
             "rounded-full border-talearnt-Primary_01 pr-[55px]",
             "h-[50px]"
           )}
+          placeholder={"관심있는 재능 키워드를 입력해 주세요."}
           wrapperClassName={classNames("relative", "w-[31.25rem] mr-[358px]")}
         >
           <SearchIcon
