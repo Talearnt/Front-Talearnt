@@ -16,7 +16,7 @@ function MainLayout() {
         className={classNames(
           "flex items-center justify-center",
           "shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01",
-          "h-[88px]"
+          "h-[98px]"
         )}
       >
         <LogoIcon
