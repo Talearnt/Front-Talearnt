@@ -28,7 +28,7 @@ function SignIn() {
     handleSubmit,
     register,
     setError
-  } = useForm<accountType>({
+  } = useForm({
     resolver: yupResolver(signInSchema)
   });
 
@@ -48,7 +48,6 @@ function SignIn() {
       <h1 className={"mb-10 text-[1.875rem]"}>로그인</h1>
       <form
         className={"flex w-full flex-col"}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
       >
         <Input
