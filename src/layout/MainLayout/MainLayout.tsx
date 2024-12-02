@@ -45,7 +45,7 @@ function MainLayout() {
               "h-[40px] w-[94px]",
               "text-lg font-medium text-talearnt-Text_02"
             )}
-            to={"sign-up"}
+            to={"sign-up/agreements"}
           >
             회원가입
           </Link>
