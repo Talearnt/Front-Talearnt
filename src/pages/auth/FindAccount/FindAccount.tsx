@@ -30,7 +30,6 @@ function FindAccount() {
         onClickHandler={value => navigator(`/find-account/${value}`)}
         options={options}
       />
-
       <Outlet />
     </div>
   );
