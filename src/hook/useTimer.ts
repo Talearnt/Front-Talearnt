@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useTimer(initialSecond = 180) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -7,16 +7,17 @@ export function useTimer(initialSecond = 180) {
   const [isFinished, setIsFinished] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
-  const stopTimer = () => {
+  const stopTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
 
+    setTime(initialSecond);
     setIsRunning(false);
-  };
+  }, [initialSecond]);
 
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     if (isRunning) return;
 
     setIsFinished(false);
@@ -33,12 +34,7 @@ export function useTimer(initialSecond = 180) {
         }
       });
     }, 1000);
-  };
-
-  const resetTimer = () => {
-    setTime(initialSecond);
-    stopTimer();
-  };
+  }, [isRunning, stopTimer]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -57,8 +53,8 @@ export function useTimer(initialSecond = 180) {
   return {
     time: formatTime(time),
     isFinished,
+    isRunning,
     startTimer,
-    stopTimer,
-    resetTimer
+    stopTimer
   };
 }
