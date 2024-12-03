@@ -11,7 +11,7 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 
 type VerificationCodeProps = {
-  confirmCodeHandler: (verificationCode: string) => void;
+  confirmCodeHandler: (verificationCode: string) => Promise<void>;
   sendCodeHandler: (phone: string) => Promise<void>;
 };
 
@@ -38,9 +38,10 @@ function VerificationCode({
     resolver: yupResolver(verificationCodeSchema)
   });
 
-  const { isFinished, isRunning, time, startTimer } = useTimer();
+  const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
   const hasPhoneNumber = !!phone && phone.length === 11;
@@ -49,8 +50,10 @@ function VerificationCode({
 
   useEffect(() => {
     if (!isFinished) {
+      // 타이머 재시작하면 에러 제거
       clearErrors("verificationCode");
     } else {
+      // 타이머 초과된 경우 에러 표시
       setError("verificationCode", {
         message:
           "인증번호 입력 시간이 초과되었습니다. 인증번호를 재요청해 주세요"
@@ -58,8 +61,39 @@ function VerificationCode({
     }
   }, [clearErrors, isFinished, setError]);
 
+  useEffect(() => {
+    // 초기값에는 return
+    if (verificationAttempts === 0) {
+      return;
+    }
+
+    // 10번이상 시도하면 모달
+    if (verificationAttempts >= 10) {
+      console.log("모달 띄우기");
+      return;
+    }
+
+    // 5회 연속 실패한 경우
+    if (verificationAttempts % 5 === 0) {
+      stopTimer();
+      setError("verificationCode", {
+        message: "5회 연속 인증에  실패하였습니다. 인증번호를 재요청해 주세요."
+      });
+      return;
+    }
+
+    // 실패한 횟수 보여주기
+    if (verificationAttempts > 0) {
+      setError("verificationCode", {
+        message: `인증번호가 일치하지 않습니다(${(verificationAttempts % 5).toString()}/5)`
+      });
+      return;
+    }
+  }, [setError, stopTimer, verificationAttempts]);
+
   return (
     <div className={classNames("flex flex-col gap-6")}>
+      {/*휴대폰 본인인증 input*/}
       <Input
         disabled={isRunning}
         error={
@@ -75,6 +109,7 @@ function VerificationCode({
         maxLength={11}
         placeholder={"01012345678"}
       >
+        {/*인증번호 요청 button */}
         <Button
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[160px] shrink-0"}
@@ -92,6 +127,8 @@ function VerificationCode({
           인증번호 {isCodeSent ? "재요청" : "요청"}
         </Button>
       </Input>
+
+      {/*인증번호 확인 input*/}
       <Input
         disabled={!isCodeSent}
         error={
@@ -107,6 +144,7 @@ function VerificationCode({
         maxLength={4}
         placeholder={"인증번호 4자리를 입력해 주세요"}
       >
+        {/*인증번호 전송 후 3분 타이머*/}
         {isRunning && (
           <p
             className={classNames(
@@ -117,17 +155,20 @@ function VerificationCode({
             {time}
           </p>
         )}
+        {/*인증번호 확인 button*/}
         <Button
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[95px] shrink-0"}
           disabled={
             !isCodeSent || !hasVerificationCode || !!errors.verificationCode
           }
-          onClick={() => {
+          onClick={async () => {
             if (!verificationCode) {
               return;
             }
-            confirmCodeHandler(verificationCode);
+
+            await confirmCodeHandler(verificationCode);
+            setVerificationAttempts(prev => prev + 1);
           }}
         >
           확인
