@@ -9,6 +9,7 @@ import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
+import { Spinner } from "@components/Spinner/Spinner";
 
 type VerificationCodeProps = {
   confirmCodeHandler: ({
@@ -49,6 +50,7 @@ function VerificationCode({
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
@@ -124,13 +126,23 @@ function VerificationCode({
               return;
             }
 
-            await sendCodeHandler(phone);
-            clearErrors("verificationCode");
-            startTimer();
-            setIsCodeSent(true);
+            try {
+              setIsLoading(true);
+              await sendCodeHandler(phone);
+              clearErrors("verificationCode");
+              startTimer();
+              setIsCodeSent(true);
+              setIsLoading(false);
+            } catch {
+              setIsLoading(false);
+            }
           }}
         >
-          인증번호 {isCodeSent ? "재요청" : "요청"}
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            `인증번호 ${isCodeSent || verificationAttempts > 0 ? "재요청" : "요청"}`
+          )}
         </Button>
       </Input>
 
