@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useTimer } from "@/hook/useTimer";
@@ -21,6 +21,7 @@ type VerificationCodeProps = {
     verificationCode: string;
   }) => Promise<string | true>;
   sendCodeHandler: (phone: string) => Promise<void>;
+  verifiedState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 
 const verificationCodeSchema = object({
@@ -33,7 +34,8 @@ const verificationCodeSchema = object({
 
 function VerificationCode({
   confirmCodeHandler,
-  sendCodeHandler
+  sendCodeHandler,
+  verifiedState
 }: VerificationCodeProps) {
   const {
     clearErrors,
@@ -51,7 +53,7 @@ function VerificationCode({
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isCodeVerified, setIsCodeVerified] = verifiedState;
   const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
@@ -94,7 +96,7 @@ function VerificationCode({
 
     if (data === true) {
       // 인증번호 확인 완료
-      setIsSuccess(true);
+      setIsCodeVerified(true);
       return;
     }
 
@@ -154,7 +156,7 @@ function VerificationCode({
     <div className={classNames("flex flex-col gap-6")}>
       {/*휴대폰 본인인증 input*/}
       <Input
-        disabled={isRunning || isSuccess}
+        disabled={isRunning || isCodeVerified}
         error={errors.phone?.message}
         formData={{ ...register("phone") }}
         label={"휴대폰 본인인증"}
@@ -165,7 +167,9 @@ function VerificationCode({
         <Button
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[160px] shrink-0"}
-          disabled={!hasPhoneNumber || !!errors.phone || isRunning || isSuccess}
+          disabled={
+            !hasPhoneNumber || !!errors.phone || isRunning || isCodeVerified
+          }
           onClick={handleSendCode}
         >
           {isLoading ? (
@@ -178,8 +182,8 @@ function VerificationCode({
 
       {/*인증번호 확인 input*/}
       <Input
-        complete={isSuccess ? "인증이 완료되었습니다" : undefined}
-        disabled={!isRunning || isSuccess}
+        complete={isCodeVerified ? "인증이 완료되었습니다" : undefined}
+        disabled={!isRunning || isCodeVerified}
         error={errors.verificationCode?.message}
         formData={{ ...register("verificationCode") }}
         label={"인증번호 확인"}
@@ -205,7 +209,7 @@ function VerificationCode({
             !isRunning ||
             !hasVerificationCode ||
             !!errors.verificationCode ||
-            isSuccess
+            isCodeVerified
           }
           onClick={handleVerifyCode}
         >
