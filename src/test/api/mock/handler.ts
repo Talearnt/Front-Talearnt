@@ -35,5 +35,18 @@ export const handlers = [
         { status: 404 }
       );
     }
-  )
+  ),
+  http.get<PathParams>("http://3.35.198.221/v1/auth/user/nickname", () => {
+    const randomNickName = "user" + Math.floor(Math.random() * 1000).toString();
+
+    return HttpResponse.json(
+      {
+        data: randomNickName,
+        success: true,
+        errorCode: null,
+        errorMessage: null
+      },
+      { status: 200 }
+    );
+  })
 ];

@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { postSignIn } from "@pages/auth/api/auth.api";
+import { getRandomNickName, postSignIn } from "@pages/auth/api/auth.api";
 
 import { apiErrorType } from "@common/common.type";
 
@@ -23,5 +23,18 @@ test("should not allow users to login with invalid credentials", async () => {
     const { status } = e as apiErrorType;
 
     expect(status).toBe(404);
+  }
+});
+
+test("should return a string for data when status is 200", async () => {
+  const {
+    data: { data },
+    status
+  } = await getRandomNickName();
+
+  if (status === 200) {
+    expect(typeof data).toBe("string");
+  } else {
+    expect(data).toBeUndefined();
   }
 });
