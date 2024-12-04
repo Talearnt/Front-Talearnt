@@ -1,4 +1,4 @@
-import { postAPI } from "@utils/apiMethods";
+import { getAPI, postAPI } from "@utils/apiMethods";
 
 import { customAxiosResponseType } from "@common/common.type";
 import {
@@ -21,3 +21,6 @@ export const postSendVerificationCode = async (data: verificationBodyType) =>
 export const postConfirmVerificationCode = async (
   data: submitVerificationBodyType
 ) => await postAPI("/v1/auth/sms/validation", data);
+
+export const getRandomNickName = async () =>
+  await getAPI<string>("/v1/auth/users/nickname");
