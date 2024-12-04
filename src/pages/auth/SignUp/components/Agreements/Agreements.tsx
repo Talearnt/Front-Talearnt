@@ -93,7 +93,7 @@ function Agreements() {
       </div>
       <Button
         disabled={!agreement1 || !agreement2}
-        onClick={() => navigator("/sign-up/user-info")}
+        onClick={() => navigator("/sign-up/info-fields")}
       >
         시작하기
       </Button>
