@@ -4,5 +4,6 @@
  * @returns {boolean}
  */
 export const checkObjectType = (
-  data?: string | number | object | null
-): boolean => typeof data === "object" && !Array.isArray(data) && data !== null;
+  data?: unknown
+): data is Record<string, unknown> =>
+  typeof data === "object" && !Array.isArray(data) && data !== null;
