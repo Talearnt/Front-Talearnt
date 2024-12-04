@@ -16,7 +16,7 @@ function SignUp() {
     switch (currentPage) {
       case "complete":
         return 3;
-      case "user-info":
+      case "info-fields":
         return 2;
       case "agreement":
       default:
