@@ -11,7 +11,13 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 
 type VerificationCodeProps = {
-  confirmCodeHandler: (verificationCode: string) => Promise<void>;
+  confirmCodeHandler: ({
+    phone,
+    verificationCode
+  }: {
+    phone: string;
+    verificationCode: string;
+  }) => Promise<string | true>;
   sendCodeHandler: (phone: string) => Promise<void>;
 };
 
@@ -32,6 +38,8 @@ function VerificationCode({
     formState: { errors },
     register,
     setError,
+    setFocus,
+    setValue,
     watch
   } = useForm({
     mode: "onChange",
@@ -58,6 +66,7 @@ function VerificationCode({
         message:
           "인증번호 입력 시간이 초과되었습니다. 인증번호를 재요청해 주세요"
       });
+      setIsCodeSent(false);
     }
   }, [clearErrors, isFinished, setError]);
 
@@ -67,29 +76,25 @@ function VerificationCode({
       return;
     }
 
-    // 10번이상 시도하면 모달
-    if (verificationAttempts >= 10) {
-      console.log("모달 띄우기");
-      return;
-    }
-
-    // 5회 연속 실패한 경우
     if (verificationAttempts % 5 === 0) {
+      // 5회 연속 실패한 경우
       stopTimer();
       setError("verificationCode", {
         message: "5회 연속 인증에  실패하였습니다. 인증번호를 재요청해 주세요."
       });
+      setValue("verificationCode", "");
+      setIsCodeSent(false);
       return;
     }
 
-    // 실패한 횟수 보여주기
     if (verificationAttempts > 0) {
+      // 실패한 횟수 보여주기
       setError("verificationCode", {
         message: `인증번호가 일치하지 않습니다(${(verificationAttempts % 5).toString()}/5)`
       });
       return;
     }
-  }, [setError, stopTimer, verificationAttempts]);
+  }, [setError, setValue, stopTimer, verificationAttempts]);
 
   return (
     <div className={classNames("flex flex-col gap-6")}>
@@ -120,6 +125,7 @@ function VerificationCode({
             }
 
             await sendCodeHandler(phone);
+            clearErrors("verificationCode");
             startTimer();
             setIsCodeSent(true);
           }}
@@ -163,12 +169,28 @@ function VerificationCode({
             !isCodeSent || !hasVerificationCode || !!errors.verificationCode
           }
           onClick={async () => {
-            if (!verificationCode) {
+            if (!verificationCode || !phone) {
               return;
             }
 
-            await confirmCodeHandler(verificationCode);
-            setVerificationAttempts(prev => prev + 1);
+            const data = await confirmCodeHandler({ phone, verificationCode });
+
+            if (data === true) {
+              // 인증번호 확인 완료
+              return;
+            }
+
+            setFocus("verificationCode");
+
+            if (data === "400-AUTH-05") {
+              // 인증번호가 틀린 경우
+              setVerificationAttempts(prev => prev + 1);
+            } else {
+              // 그 외 다양한 경우
+              setError("verificationCode", {
+                message: data
+              });
+            }
           }}
         >
           확인
