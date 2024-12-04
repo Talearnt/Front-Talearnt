@@ -62,6 +62,7 @@ function VerificationCode({
     !!verificationCode && verificationCode.length === 4;
 
   const handleSendCode = async () => {
+    // TODO 1분이내 5회 요청시 10분간 정지
     if (!phone) {
       return;
     }
