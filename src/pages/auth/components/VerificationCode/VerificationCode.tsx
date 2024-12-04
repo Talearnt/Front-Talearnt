@@ -59,6 +59,59 @@ function VerificationCode({
   const hasVerificationCode =
     !!verificationCode && verificationCode.length === 4;
 
+  const handleSendCode = async () => {
+    if (!phone) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      clearErrors("phone");
+      clearErrors("verificationCode");
+      await sendCodeHandler(phone);
+      startTimer();
+    } catch (e) {
+      if (checkObjectType(e) && "errorMessage" in e) {
+        setError("phone", {
+          message: e.errorMessage as string
+        });
+        return;
+      }
+      setError("phone", {
+        message: "예기치 못한 오류가 발생했습니다."
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode || !phone) {
+      return;
+    }
+
+    const data = await confirmCodeHandler({ phone, verificationCode });
+
+    if (data === true) {
+      // 인증번호 확인 완료
+      setIsSuccess(true);
+      return;
+    }
+
+    setFocus("verificationCode");
+
+    if (data === "400-AUTH-05") {
+      // 인증번호가 틀린 경우
+      setVerificationAttempts(prev => prev + 1);
+      return;
+    }
+
+    // 그 외 다양한 경우
+    setError("verificationCode", {
+      message: data
+    });
+  };
+
   useEffect(() => {
     if (!isFinished) {
       // 타이머 재시작하면 에러 제거
@@ -113,31 +166,7 @@ function VerificationCode({
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[160px] shrink-0"}
           disabled={!hasPhoneNumber || !!errors.phone || isRunning || isSuccess}
-          onClick={async () => {
-            if (!phone) {
-              return;
-            }
-
-            try {
-              setIsLoading(true);
-              clearErrors("phone");
-              clearErrors("verificationCode");
-              await sendCodeHandler(phone);
-              startTimer();
-              setIsLoading(false);
-            } catch (e) {
-              setIsLoading(false);
-              if (checkObjectType(e) && "errorMessage" in e) {
-                setError("phone", {
-                  message: e.errorMessage as string
-                });
-                return;
-              }
-              setError("phone", {
-                message: "예기치 못한 오류가 발생했습니다."
-              });
-            }
-          }}
+          onClick={handleSendCode}
         >
           {isLoading ? (
             <Spinner />
@@ -178,31 +207,7 @@ function VerificationCode({
             !!errors.verificationCode ||
             isSuccess
           }
-          onClick={async () => {
-            if (!verificationCode || !phone) {
-              return;
-            }
-
-            const data = await confirmCodeHandler({ phone, verificationCode });
-
-            if (data === true) {
-              // 인증번호 확인 완료
-              setIsSuccess(true);
-              return;
-            }
-
-            setFocus("verificationCode");
-
-            if (data === "400-AUTH-05") {
-              // 인증번호가 틀린 경우
-              setVerificationAttempts(prev => prev + 1);
-            } else {
-              // 그 외 다양한 경우
-              setError("verificationCode", {
-                message: data
-              });
-            }
-          }}
+          onClick={handleVerifyCode}
         >
           확인
         </Button>
