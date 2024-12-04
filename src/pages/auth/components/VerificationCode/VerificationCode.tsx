@@ -5,6 +5,7 @@ import { useTimer } from "@/hook/useTimer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
+import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
@@ -49,8 +50,8 @@ function VerificationCode({
 
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
-  const [isCodeSent, setIsCodeSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
@@ -68,7 +69,6 @@ function VerificationCode({
         message:
           "인증번호 입력 시간이 초과되었습니다. 인증번호를 재요청해 주세요"
       });
-      setIsCodeSent(false);
     }
   }, [clearErrors, isFinished, setError]);
 
@@ -85,7 +85,6 @@ function VerificationCode({
         message: "5회 연속 인증에  실패하였습니다. 인증번호를 재요청해 주세요."
       });
       setValue("verificationCode", "");
-      setIsCodeSent(false);
       return;
     }
 
@@ -102,15 +101,8 @@ function VerificationCode({
     <div className={classNames("flex flex-col gap-6")}>
       {/*휴대폰 본인인증 input*/}
       <Input
-        disabled={isRunning}
-        error={
-          errors.phone && errors.phone.message
-            ? {
-                errorContent: errors.phone.message,
-                hasError: true
-              }
-            : undefined
-        }
+        disabled={isRunning || isSuccess}
+        error={errors.phone?.message}
         formData={{ ...register("phone") }}
         label={"휴대폰 본인인증"}
         maxLength={11}
@@ -120,7 +112,7 @@ function VerificationCode({
         <Button
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[160px] shrink-0"}
-          disabled={!hasPhoneNumber || !!errors.phone || isRunning}
+          disabled={!hasPhoneNumber || !!errors.phone || isRunning || isSuccess}
           onClick={async () => {
             if (!phone) {
               return;
@@ -128,35 +120,38 @@ function VerificationCode({
 
             try {
               setIsLoading(true);
-              await sendCodeHandler(phone);
+              clearErrors("phone");
               clearErrors("verificationCode");
+              await sendCodeHandler(phone);
               startTimer();
-              setIsCodeSent(true);
               setIsLoading(false);
-            } catch {
+            } catch (e) {
               setIsLoading(false);
+              if (checkObjectType(e) && "errorMessage" in e) {
+                setError("phone", {
+                  message: e.errorMessage as string
+                });
+                return;
+              }
+              setError("phone", {
+                message: "예기치 못한 오류가 발생했습니다."
+              });
             }
           }}
         >
           {isLoading ? (
             <Spinner />
           ) : (
-            `인증번호 ${isCodeSent || verificationAttempts > 0 ? "재요청" : "요청"}`
+            `인증번호 ${isRunning || verificationAttempts > 0 ? "재요청" : "요청"}`
           )}
         </Button>
       </Input>
 
       {/*인증번호 확인 input*/}
       <Input
-        disabled={!isCodeSent}
-        error={
-          errors.verificationCode && errors.verificationCode.message
-            ? {
-                errorContent: errors.verificationCode.message,
-                hasError: true
-              }
-            : undefined
-        }
+        complete={isSuccess ? "인증이 완료되었습니다" : undefined}
+        disabled={!isRunning || isSuccess}
+        error={errors.verificationCode?.message}
         formData={{ ...register("verificationCode") }}
         label={"인증번호 확인"}
         maxLength={4}
@@ -178,7 +173,10 @@ function VerificationCode({
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[95px] shrink-0"}
           disabled={
-            !isCodeSent || !hasVerificationCode || !!errors.verificationCode
+            !isRunning ||
+            !hasVerificationCode ||
+            !!errors.verificationCode ||
+            isSuccess
           }
           onClick={async () => {
             if (!verificationCode || !phone) {
@@ -189,6 +187,7 @@ function VerificationCode({
 
             if (data === true) {
               // 인증번호 확인 완료
+              setIsSuccess(true);
               return;
             }
 
