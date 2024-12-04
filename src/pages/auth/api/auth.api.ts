@@ -18,6 +18,6 @@ export const postToGetRefreshToken = async () =>
 export const postSendVerificationCode = async (data: verificationBodyType) =>
   await postAPI("/v1/auth/sms/verification-codes", data);
 
-export const postSubmitVerificationCode = async (
+export const postConfirmVerificationCode = async (
   data: submitVerificationBodyType
 ) => await postAPI("/v1/auth/sms/validation", data);

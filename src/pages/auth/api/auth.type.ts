@@ -4,7 +4,8 @@ export type accountType = {
 };
 
 export type verificationBodyType = {
-  type?: "회원가입" | "아이디찾기";
+  name?: string;
+  type: "signUp" | "findId";
   phone: string;
 };
 
