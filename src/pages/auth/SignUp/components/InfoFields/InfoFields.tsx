@@ -1,18 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string } from "yup";
 
 import {
+  getRandomNickName,
   postConfirmVerificationCode,
   postSendVerificationCode
 } from "@pages/auth/api/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
+import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
-const gender = [
+const genderOptions = [
   {
     label: "남자",
     value: "male"
@@ -23,9 +29,45 @@ const gender = [
   }
 ];
 
+const infoFieldsSchema = object({
+  nickName: string().required("닉네임을 입력해 주세요"),
+  name: string().required("이름을 입력해 주세요"),
+  gender: string().required(),
+  userId: string().required("이메일을 입력해 주세요"),
+  pw: string().required("비밀번호를 입력해 주세요"),
+  checkPw: string().required("비밀번호를 입력해 주세요")
+}).required();
+
 function InfoFields() {
+  const { register, setValue, watch } = useForm({
+    defaultValues: { gender: "male" },
+    resolver: yupResolver(infoFieldsSchema)
+  });
+
   const [canProceed, setCanProceed] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+
+  const [nickName, name, gender, userId, pw, checkPw] = watch([
+    "nickName",
+    "name",
+    "gender",
+    "userId",
+    "pw",
+    "checkPw"
+  ]);
+  const doneButtonDisable =
+    !nickName || !name || !userId || !pw || !checkPw || pw !== checkPw;
+
+  useEffect(() => {
+    // nickName 인풋에 random nickname 적용
+    getRandomNickName()
+      .then(({ data: { data } }) => {
+        setValue("nickName", data);
+      })
+      .catch(() => {
+        setValue("nickName", "");
+      });
+  }, [setValue]);
 
   return (
     <>
@@ -33,51 +75,48 @@ function InfoFields() {
         {canProceed ? (
           <>
             <Input
-              label={"아이디(이메일)"}
-              placeholder={"이메일을 입력해 주세요."}
-              wrapperClassName={"flex gap-2 items-end"}
+              formData={{ ...register("nickName") }}
+              label={"닉네임"}
+              placeholder={"닉네임을 입력해 주세요"}
+            />
+            <Input
+              formData={{ ...register("name") }}
+              label={"이름"}
+              placeholder={"이름을 입력해 주세요."}
             >
               <TabSlider
-                currentValue={"male"}
-                //eslint-disable-next-line @typescript-eslint/no-empty-function
-                onClickHandler={() => {}}
-                options={gender}
+                className={classNames("ml-2", "w-[160px]")}
+                currentValue={gender}
+                onChangeHandler={value => setValue("gender", value)}
+                options={genderOptions}
               />
             </Input>
             <Input
+              formData={{ ...register("userId") }}
+              label={"아이디(이메일)"}
+              placeholder={"이메일을 입력해 주세요"}
+            />
+            <Input
+              formData={{ ...register("pw") }}
               label={"비밀번호"}
               placeholder={
                 "영문, 숫자, 특수문자의 조합 8자리 이상 입력해 주세요"
               }
+              type={"password"}
             />
             <Input
+              formData={{ ...register("checkPw") }}
               label={"비밀번호 확인"}
               placeholder={"비밀번호를 한 번 더 입력해 주세요"}
+              type={"password"}
             />
-            <Input
-              label={"휴대폰 번호"}
-              placeholder={"01012345678"}
-              wrapperClassName={"flex gap-2 items-end"}
+            <Button
+              className={"mt-[32px]"}
+              disabled={doneButtonDisable}
+              onClick={() => console.log("가입")}
             >
-              <Button
-                buttonStyle={"outlined"}
-                className={"h-[3.125rem] w-[11.25rem] text-talearnt-Text_04"}
-              >
-                인증번호 요청
-              </Button>
-            </Input>
-            <Input
-              label={"인증번호 확인"}
-              placeholder={"인증번호 4자리를 입력해 주세요"}
-              wrapperClassName={"flex gap-2 items-end"}
-            >
-              <Button
-                buttonStyle={"outlined"}
-                className={"h-[3.125rem] w-[5.9375rem] text-talearnt-Text_04"}
-              >
-                확인
-              </Button>
-            </Input>
+              가입하기
+            </Button>
           </>
         ) : (
           <>
