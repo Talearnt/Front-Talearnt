@@ -3,27 +3,25 @@ import { classNames } from "@utils/classNames";
 type TabSliderProps = {
   className?: string;
   currentValue: string;
-  onClickHandler: (value: string) => void;
+  onChangeHandler: (value: string) => void;
   options: { label: string; value: string }[];
 };
 
 function TabSlider({
   className,
   currentValue,
-  onClickHandler,
+  onChangeHandler,
   options
 }: TabSliderProps) {
   return (
-    <div className={"flex"}>
+    <div className={classNames("flex", className)}>
       {options.map(({ label, value }, index, array) => (
         <div
           className={classNames(
             "group flex",
             "h-[50px] w-full",
-            index > 0 && "-ml-px",
-            className
+            index > 0 && "-ml-px"
           )}
-          onClick={() => onClickHandler(value)}
           key={`${value}-${index.toString()}`}
         >
           <input
@@ -31,7 +29,7 @@ function TabSlider({
             className={"peer hidden"}
             id={`option${index.toString()}`}
             name={"slider"}
-            readOnly
+            onChange={() => onChangeHandler(value)}
             type={"radio"}
           />
           <label
