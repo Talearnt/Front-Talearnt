@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode } from "react";
+import { ComponentProps, ReactNode, useEffect, useRef } from "react";
 import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 import { classNames } from "@utils/classNames";
@@ -11,6 +11,7 @@ type InputProps = ComponentProps<"input"> & {
   complete?: string;
   error?: string;
   formData?: UseFormRegisterReturn;
+  insideNode?: ReactNode;
   label?: string;
   wrapperClassName?: string;
 };
@@ -30,6 +31,7 @@ type InputProps = ComponentProps<"input"> & {
  * @param {string | undefined} error
  * @param {UseFormRegisterReturn<UseFormRegisterReturn> | undefined} formData
  * @param {string | undefined} id
+ * @param {string | undefined} insideNode
  * @param {string | undefined} label
  * @param {string | undefined} wrapperClassName
  * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "formData" | "id" | "label" | "error">} props
@@ -42,12 +44,32 @@ function Input({
   error,
   formData,
   id,
+  insideNode,
   label,
   wrapperClassName,
   ...props
 }: InputProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const insideNodeRef = useRef<HTMLDivElement>(null);
+
   const hasComplete = complete !== undefined;
   const hasError = error !== undefined;
+
+  const combinedRef = (node: HTMLInputElement | null) => {
+    inputRef.current = node;
+    if (formData?.ref) {
+      formData.ref(node);
+    }
+  };
+
+  useEffect(() => {
+    if (insideNodeRef.current && inputRef.current) {
+      const insideNodeWidth = insideNodeRef.current.offsetWidth;
+
+      inputRef.current.style.paddingRight = `${(insideNodeWidth + 8).toString()}px`;
+    }
+  }, [insideNode]);
+
   return (
     <div className={classNames("flex flex-col", "w-full", wrapperClassName)}>
       {label && (
@@ -58,8 +80,8 @@ function Input({
       <div className={classNames("relative flex")}>
         <input
           className={classNames(
-            "rounded-lg border bg-talearnt-BG_Background px-[15px] text-[1rem]",
-            "h-[50px] w-full",
+            "rounded-lg border bg-talearnt-BG_Background",
+            "h-[50px] w-full pl-[15px] text-base",
             "placeholder:text-talearnt-Text_04",
             "focus:border-talearnt-Primary_01 focus:outline-none",
             "disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04",
@@ -71,7 +93,16 @@ function Input({
           id={id}
           {...formData}
           {...props}
+          ref={combinedRef}
         />
+        {insideNode && (
+          <div
+            className={"absolute right-2 top-1/2 -translate-y-1/2"}
+            ref={insideNodeRef}
+          >
+            {insideNode}
+          </div>
+        )}
         {children}
       </div>
       {(hasComplete || hasError) && (
