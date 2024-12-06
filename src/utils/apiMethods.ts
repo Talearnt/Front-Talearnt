@@ -28,21 +28,28 @@ instance.interceptors.response.use(
 
 export const getAPI = async <T>(
   url: string,
-  queryData?: Record<string, string | number | Record<string, unknown>>
+  queryData?: Record<
+    string,
+    string | number | Record<string, unknown> | undefined
+  >
 ): Promise<customAxiosResponseType<T>> => {
   let queryParameter = "";
 
   if (queryData) {
     queryParameter = Object.keys(queryData)
-      .reduce(
-        (acc, cur) =>
-          `${acc}${cur}=${
-            checkObjectType(queryData[cur])
-              ? JSON.stringify(queryData[cur])
-              : String(queryData[cur])
-          }&`,
-        "?"
-      )
+      .reduce((acc, cur) => {
+        const value = queryData[cur];
+
+        if (value === undefined) {
+          return acc;
+        }
+
+        return `${acc}${cur}=${
+          checkObjectType(queryData[cur])
+            ? JSON.stringify(queryData[cur])
+            : String(queryData[cur])
+        }&`;
+      }, "?")
       .slice(0, -1);
   }
   const { data, status } = await instance.get<responseDataType<T>>(
