@@ -29,6 +29,7 @@
       "@/*": ["src/*"],
       "@common/*": ["src/common/*"],
       "@components/*": ["src/components/*"],
+      "@hook/*": ["src/hook/*"],
       "@layout/*": ["src/layout/*"],
       "@pages/*": ["src/pages/*"],
       "@routes/*": ["src/routes/*"],
