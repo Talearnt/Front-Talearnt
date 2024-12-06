@@ -22,5 +22,5 @@ export const postConfirmVerificationCode = async (
   data: submitVerificationBodyType
 ) => await postAPI("/v1/auth/sms/validation", data);
 
-export const getRandomNickName = async () =>
-  await getAPI<string>("/v1/auth/users/nickname");
+export const getNickNameWithCheck = async (nickName?: string) =>
+  await getAPI<string>("/v1/auth/users/nickname", { nickName });
