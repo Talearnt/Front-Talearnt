@@ -60,7 +60,7 @@ export default [
             ["^@utils/.*|^.*/(util|.*.util)$"],
 
             // 5. custom hook
-            ["^.*/(hook|.*.hook)$"],
+            ["^@hook/.*|^.*/(hook|.*.hook)$"],
 
             // 6. 페이지
             ["^.*/(?!.*.css$)[A-Z].*$"],
