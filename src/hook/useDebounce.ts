@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const useDebounce = (value: unknown, delay = 300) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+const useDebounce = <T = string>(value: T, delay = 300) => {
+  const [debouncedValue, setDebouncedValue] = useState<T | undefined>(value);
 
   useEffect(() => {
     // 타이머가 시작됩니다.
@@ -13,6 +13,7 @@ const useDebounce = (value: unknown, delay = 300) => {
     // 이전 타이머를 정리하고 새로운 타이머를 설정합니다.
     return () => {
       clearTimeout(handler);
+      setDebouncedValue(undefined);
     };
   }, [value, delay]); // value나 delay가 변경될 때마다 실행됩니다.
 
