@@ -15,6 +15,7 @@ import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
+import { LabelText } from "@components/LabelText/LabelText";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
@@ -52,6 +53,7 @@ function InfoFields() {
     formState: { errors },
     register,
     setValue,
+    trigger,
     watch
   } = useForm({
     defaultValues: { gender: "male" },
@@ -84,6 +86,14 @@ function InfoFields() {
         setValue("nickName", "");
       });
   }, [setValue]);
+
+  useEffect(() => {
+    if (!pw) {
+      return;
+    }
+
+    void trigger("checkPw");
+  }, [pw, trigger]);
 
   return (
     <>
@@ -126,6 +136,11 @@ function InfoFields() {
             <Input
               error={errors.checkPw?.message}
               formData={{ ...register("checkPw") }}
+              insideNode={
+                checkPw && !errors.checkPw ? (
+                  <LabelText>확인</LabelText>
+                ) : undefined
+              }
               label={"비밀번호 확인"}
               placeholder={"비밀번호를 한 번 더 입력해 주세요"}
               type={"password"}
