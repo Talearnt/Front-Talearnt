@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { object, ref as yupRef, string } from "yup";
 
 import {
+  getCheckNickName,
   getNickNameWithCheck,
   postConfirmVerificationCode,
   postSendVerificationCode
@@ -13,9 +14,12 @@ import {
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
+import useDebounce from "@hook/useDebounce";
+
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { LabelText } from "@components/LabelText/LabelText";
+import { Spinner } from "@components/Spinner/Spinner";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
@@ -64,6 +68,9 @@ function InfoFields() {
 
   const [canProceed, setCanProceed] = useState(true);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [isUserIdDuplicate, setIsUserIdDuplicate] = useState<
+    boolean | "loading"
+  >();
 
   const [nickName, name, gender, userId, pw, checkPw] = watch([
     "nickName",
@@ -73,6 +80,7 @@ function InfoFields() {
     "pw",
     "checkPw"
   ]);
+  const debounceUserId = useDebounce(userId);
   const doneButtonDisable =
     !nickName || !name || !userId || !pw || !checkPw || pw !== checkPw;
 
@@ -80,7 +88,7 @@ function InfoFields() {
     // nickName 인풋에 random nickname 적용
     getNickNameWithCheck()
       .then(({ data: { data } }) => {
-        setValue("nickName", data);
+        setValue("nickName", data as string);
       })
       .catch(() => {
         setValue("nickName", "");
@@ -94,6 +102,28 @@ function InfoFields() {
 
     void trigger("checkPw");
   }, [pw, trigger]);
+
+  useEffect(() => {
+    const checkEmailValidity = async () => {
+      if (!debounceUserId || errors.userId) {
+        setIsUserIdDuplicate(undefined);
+        return;
+      }
+
+      setIsUserIdDuplicate("loading");
+
+      try {
+        const {
+          data: { data }
+        } = await getCheckNickName(debounceUserId);
+        setIsUserIdDuplicate(data);
+      } catch {
+        setIsUserIdDuplicate(undefined);
+      }
+    };
+
+    void checkEmailValidity();
+  }, [debounceUserId, errors.userId]);
 
   return (
     <>
@@ -121,6 +151,13 @@ function InfoFields() {
             <Input
               error={errors.userId?.message}
               formData={{ ...register("userId") }}
+              insideNode={
+                isUserIdDuplicate === "loading" ? (
+                  <Spinner />
+                ) : isUserIdDuplicate === false ? (
+                  <LabelText>확인완료</LabelText>
+                ) : undefined
+              }
               label={"아이디(이메일)"}
               placeholder={"이메일을 입력해 주세요"}
             />
