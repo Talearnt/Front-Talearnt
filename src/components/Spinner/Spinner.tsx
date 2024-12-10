@@ -5,32 +5,36 @@ import { CommonIconProps } from "@common/common.type";
 function Spinner({ className, size = 25, ...props }: CommonIconProps) {
   return (
     <svg
-      className={classNames("animate-spin", className)}
+      className={classNames("animate-spinner-spin", className)}
       width={size}
       height={size}
-      viewBox="0 0 25 25"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path
-        d="M24.8984 12.8981C24.8984 19.5254 19.5259 24.8978 12.8984 24.8978C6.27102 24.8978 0.898438 19.5254 0.898438 12.8981C0.898438 6.27088 6.27102 0.898438 12.8984 0.898438C19.5259 0.898438 24.8984 6.27088 24.8984 12.8981ZM4.48676 12.8981C4.48676 17.5437 8.25279 21.3096 12.8984 21.3096C17.5441 21.3096 21.3101 17.5437 21.3101 12.8981C21.3101 8.25261 17.5441 4.48666 12.8984 4.48666C8.25279 4.48666 4.48676 8.25261 4.48676 12.8981Z"
-        fill="url(#paint0_angular_2313_43727)"
-      />
-      <ellipse cx="13.0188" cy="23.0968" rx="1.8" ry="1.79995" fill="#1B76FF" />
+      <g clipPath="url(#clip0_2964_49837)">
+        <path
+          d="M22.5 12C23.3284 12 24.0098 11.3251 23.9075 10.503C23.1707 4.58207 18.1205 0 12 0C5.37258 0 0 5.37258 0 12C0 18.1205 4.58207 23.1707 10.503 23.9075C11.3251 24.0098 12 23.3284 12 22.5C12 21.6716 11.3234 21.0131 10.5063 20.8766C6.24662 20.1651 3 16.4617 3 12C3 7.02944 7.02944 3 12 3C16.4617 3 20.1651 6.24662 20.8766 10.5063C21.0131 11.3234 21.6716 12 22.5 12Z"
+          fill="url(#paint0_linear_2964_49837)"
+        />
+      </g>
       <defs>
-        <radialGradient
-          id="paint0_angular_2313_43727"
-          cx="0"
-          cy="0"
-          r="1"
+        <linearGradient
+          id="paint0_linear_2964_49837"
+          x1="29"
+          y1="1"
+          x2="5.5"
+          y2="24"
           gradientUnits="userSpaceOnUse"
-          gradientTransform="translate(12.8984 12.8981) rotate(90) scale(11.9997 12)"
         >
-          <stop stopColor="#1B76FF" />
-          <stop offset="0.175675" stopColor="#4C94FF" />
-          <stop offset="1" stopColor="#E5F0FF" stopOpacity="0.5" />
-        </radialGradient>
+          <stop offset="0.0977082" stopColor="white" stopOpacity="0.1" />
+          <stop offset="0.727498" stopColor="#4C94FF" />
+          <stop offset="1" stopColor="#1B76FF" />
+        </linearGradient>
+        <clipPath id="clip0_2964_49837">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
       </defs>
     </svg>
   );
