@@ -1,53 +1,22 @@
-import { ChangeEvent } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
+import useAgreementStore from "@pages/auth/api/auth.store";
+
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
-
-type agreementsDataType = {
-  required: boolean;
-  title: string;
-}[];
-
-const agreementsData: agreementsDataType = [
-  {
-    required: true,
-    title: "이용약관 동의"
-  },
-  {
-    required: true,
-    title: "개인정보 수집"
-  },
-  {
-    required: false,
-    title: "마케팅 목적의 개인정보 수집 및 이용 동의"
-  },
-  {
-    required: false,
-    title: "광고성 정보 수신 동의"
-  }
-];
 
 function Agreements() {
   const navigator = useNavigate();
 
-  const { register, setValue, watch } = useForm();
-
-  const [agreement1, agreement2] = watch(["agreement1", "agreement2"]);
-
-  const handleAllCheckboxChange = ({
-    target
-  }: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = target.checked;
-
-    setValue("all", isChecked);
-    agreementsData.forEach((_, index) =>
-      setValue(`agreement${(index + 1).toString()}`, isChecked)
-    );
-  };
+  const {
+    agreements,
+    isAllAgreementsAgreed,
+    isRequiredAgreementsAgreed,
+    setAgreement,
+    setAllAgreement
+  } = useAgreementStore();
 
   return (
     <>
@@ -62,22 +31,23 @@ function Agreements() {
             "border-b border-b-talearnt-Line_01",
             "h-[71px]"
           )}
-          formData={{ ...register("all") }}
-          onChange={handleAllCheckboxChange}
+          checked={isAllAgreementsAgreed()}
+          onChange={({ target }) => setAllAgreement(target.checked)}
         >
           <p className={"w-full text-lg font-semibold"}>
             전체 동의하기 (선택 정보를 포함합니다.)
           </p>
         </CheckBox>
-        {agreementsData.map(({ required, title }, index) => (
+        {agreements.map(({ agreeCodeId, agree, required, title }) => (
           <CheckBox
             className={classNames(
               "gap-4",
               "border-b border-b-talearnt-Line_01",
               "h-[71px]"
             )}
-            formData={{ ...register(`agreement${(index + 1).toString()}`) }}
-            key={`agreement${(index + 1).toString()}`}
+            checked={agree}
+            onChange={({ target }) => setAgreement(agreeCodeId, target.checked)}
+            key={agreeCodeId}
           >
             <p className={"w-full text-base font-semibold"}>
               {required ? (
@@ -92,7 +62,7 @@ function Agreements() {
         ))}
       </div>
       <Button
-        disabled={!agreement1 || !agreement2}
+        disabled={!isRequiredAgreementsAgreed()}
         onClick={() => navigator("/sign-up/info-fields")}
       >
         시작하기

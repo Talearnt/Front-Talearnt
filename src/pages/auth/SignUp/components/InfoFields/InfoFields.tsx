@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, ref as yupRef, string } from "yup";
@@ -16,6 +17,8 @@ import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
+
+import useAgreementStore from "@pages/auth/api/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
@@ -55,6 +58,7 @@ const infoFieldsSchema = object({
 
 function InfoFields() {
   const nickNameRef = useRef<string>("");
+  const navigator = useNavigate();
 
   const {
     formState: { errors },
@@ -68,6 +72,7 @@ function InfoFields() {
     mode: "onChange",
     resolver: yupResolver(infoFieldsSchema)
   });
+  const { agreements } = useAgreementStore();
 
   const [canProceed, setCanProceed] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
@@ -90,6 +95,13 @@ function InfoFields() {
   const debounceUserId = useDebounce(userId);
   const doneButtonDisable =
     !nickName || !name || !userId || !pw || !checkPw || pw !== checkPw;
+
+  useEffect(() => {
+    // 필수 약관 동의되어있지 않으면 약관 페이지로 이동 - URL 복붙 방지
+    if (agreements.some(({ agree, required }) => !agree && required)) {
+      navigator("/sign-up/agreements");
+    }
+  }, [agreements, navigator]);
 
   useEffect(() => {
     // nickName 인풋에 random nickname 적용
