@@ -3,6 +3,13 @@ export type accountType = {
   pw: string;
 };
 
+export type agreementType = {
+  agreeCodeId: number;
+  agree: boolean;
+  required: boolean;
+  title: string;
+};
+
 export type verificationBodyType = {
   name?: string;
   type: "signUp" | "findId";
@@ -11,4 +18,12 @@ export type verificationBodyType = {
 
 export type submitVerificationBodyType = verificationBodyType & {
   code: string;
+};
+
+export type signUpBodyType = accountType & {
+  name: string;
+  nickname: string;
+  gender: string;
+  phone: string;
+  agreeReqDTOS: Pick<agreementType, "agreeCodeId" | "agree">[];
 };

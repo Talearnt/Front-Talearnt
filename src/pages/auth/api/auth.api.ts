@@ -3,6 +3,7 @@ import { getAPI, postAPI } from "@utils/apiMethods";
 import { customAxiosResponseType } from "@common/common.type";
 import {
   accountType,
+  signUpBodyType,
   submitVerificationBodyType,
   verificationBodyType
 } from "@pages/auth/api/auth.type";
@@ -37,3 +38,7 @@ export const getCheckNickName = async (nickname: string) =>
 // 아이디 중복 확인
 export const getCheckUserId = async (userId: string) =>
   await getAPI<boolean>("/v1/auth/users/id", { userId });
+
+// 회원가입
+export const postSignUp = async (body: signUpBodyType) =>
+  await postAPI("/v1/auth/join", body);
