@@ -5,8 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { object, ref as yupRef, string } from "yup";
 
 import {
-  getCheckNickName,
-  getNickNameWithCheck,
+  getCheckUserId,
+  getRandomNickName,
   postConfirmVerificationCode,
   postSendVerificationCode
 } from "@pages/auth/api/auth.api";
@@ -86,13 +86,9 @@ function InfoFields() {
 
   useEffect(() => {
     // nickName 인풋에 random nickname 적용
-    getNickNameWithCheck()
-      .then(({ data: { data } }) => {
-        setValue("nickName", data as string);
-      })
-      .catch(() => {
-        setValue("nickName", "");
-      });
+    getRandomNickName()
+      .then(({ data: { data } }) => setValue("nickName", data))
+      .catch(() => setValue("nickName", ""));
   }, [setValue]);
 
   useEffect(() => {
@@ -115,7 +111,7 @@ function InfoFields() {
       try {
         const {
           data: { data }
-        } = await getCheckNickName(debounceUserId);
+        } = await getCheckUserId(debounceUserId);
         setIsUserIdDuplicate(data);
       } catch {
         setIsUserIdDuplicate(undefined);
