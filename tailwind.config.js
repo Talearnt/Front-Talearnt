@@ -62,6 +62,15 @@ export default {
       },
       fontFamily: {
         pretendard: ["Pretendard", "sans-serif"]
+      },
+      animation: {
+        "spinner-spin": "spinner-spin 1s linear infinite"
+      },
+      keyframes: {
+        "spinner-spin": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(-360deg)" }
+        }
       }
     }
   },
