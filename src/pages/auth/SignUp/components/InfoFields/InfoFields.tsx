@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, ref as yupRef, string } from "yup";
 
 import {
+  getCheckNickName,
   getCheckUserId,
   getRandomNickName,
   postConfirmVerificationCode,
@@ -53,6 +54,8 @@ const infoFieldsSchema = object({
 }).required();
 
 function InfoFields() {
+  const nickNameRef = useRef<string>("");
+
   const {
     formState: { errors },
     register,
@@ -66,8 +69,11 @@ function InfoFields() {
     resolver: yupResolver(infoFieldsSchema)
   });
 
-  const [canProceed, setCanProceed] = useState(true);
+  const [canProceed, setCanProceed] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [isNickNameDuplicate, setIsNickNameDuplicate] = useState<
+    boolean | "loading"
+  >();
   const [isUserIdDuplicate, setIsUserIdDuplicate] = useState<
     boolean | "loading"
   >();
@@ -80,6 +86,7 @@ function InfoFields() {
     "pw",
     "checkPw"
   ]);
+  const debounceNickName = useDebounce(nickName);
   const debounceUserId = useDebounce(userId);
   const doneButtonDisable =
     !nickName || !name || !userId || !pw || !checkPw || pw !== checkPw;
@@ -87,7 +94,10 @@ function InfoFields() {
   useEffect(() => {
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
-      .then(({ data: { data } }) => setValue("nickName", data))
+      .then(({ data: { data } }) => {
+        setValue("nickName", data);
+        nickNameRef.current = data;
+      })
       .catch(() => setValue("nickName", ""));
   }, [setValue]);
 
@@ -98,6 +108,32 @@ function InfoFields() {
 
     void trigger("checkPw");
   }, [pw, trigger]);
+
+  useEffect(() => {
+    const checkEmailValidity = async () => {
+      if (
+        debounceNickName === nickNameRef.current ||
+        !debounceNickName ||
+        errors.nickName
+      ) {
+        setIsNickNameDuplicate(undefined);
+        return;
+      }
+
+      setIsNickNameDuplicate("loading");
+
+      try {
+        const {
+          data: { data }
+        } = await getCheckNickName(debounceNickName);
+        setIsNickNameDuplicate(data);
+      } catch {
+        setIsNickNameDuplicate(undefined);
+      }
+    };
+
+    void checkEmailValidity();
+  }, [debounceNickName, errors.nickName]);
 
   useEffect(() => {
     const checkEmailValidity = async () => {
@@ -128,6 +164,13 @@ function InfoFields() {
           <>
             <Input
               formData={{ ...register("nickName") }}
+              insideNode={
+                isNickNameDuplicate === "loading" ? (
+                  <Spinner />
+                ) : isNickNameDuplicate === false ? (
+                  <LabelText>사용가능</LabelText>
+                ) : undefined
+              }
               label={"닉네임"}
               placeholder={"닉네임을 입력해 주세요"}
             />

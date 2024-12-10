@@ -81,7 +81,7 @@ function Input({
         <input
           className={classNames(
             "rounded-lg border bg-talearnt-BG_Background",
-            "h-[50px] w-full pl-[15px] text-base",
+            "h-[50px] w-full px-[15px] text-base",
             "placeholder:text-talearnt-Text_04",
             "focus:border-talearnt-Primary_01 focus:outline-none",
             "disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04",
