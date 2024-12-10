@@ -1,11 +1,6 @@
 import { create } from "zustand/react";
 
-type agreementType = {
-  agreeCodeId: number;
-  agree: boolean;
-  required: boolean;
-  title: string;
-};
+import { agreementType } from "@pages/auth/api/auth.type";
 
 type agreementStoreType = {
   agreements: agreementType[];
@@ -45,18 +40,19 @@ const useAgreementStore = create<agreementStoreType>((set, get) => ({
   isAllAgreementsAgreed: () => {
     const { agreements } = get();
 
-    return agreements.every(item => item.agree);
+    return agreements.every(({ agree }) => agree);
   },
   isRequiredAgreementsAgreed: () => {
     const { agreements } = get();
 
-    return agreements.every(item => !item.required || item.agree);
+    return agreements.every(({ agree, required }) => !required || agree);
   },
   setAgreement: (agreeCodeId, agree) =>
     set(state => {
       const updatedAgreements = state.agreements.map(item =>
         item.agreeCodeId === agreeCodeId ? { ...item, agree } : item
       );
+
       return { agreements: updatedAgreements };
     }),
   setAllAgreement: agree =>
