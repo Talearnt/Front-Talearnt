@@ -1,27 +1,81 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
-import { postSendVerificationCode } from "@pages/auth/api/auth.api";
+import {
+  postConfirmVerificationCode,
+  postSendVerificationCode
+} from "@pages/auth/api/auth.api";
 
+import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
+import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
+
+import { verificationStateType } from "@pages/auth/api/auth.type";
 
 const findIdSchema = object({
-  name: string(),
-  phone: string()
+  name: string().matches(
+    /^$|^[가-힣]{2,5}$/,
+    "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
+  )
 }).required();
 
 function FindId() {
-  const { register, watch } = useForm({
+  const {
+    formState: { errors },
+    register,
+    watch
+  } = useForm({
+    mode: "onChange",
     resolver: yupResolver(findIdSchema)
   });
 
-  const [name, phone] = watch(["name", "phone"]);
-  const hasRequiredData = !!name && !!phone && phone.length === 11;
+  const [verification, setVerification] = useState<verificationStateType>({
+    isCodeVerified: false
+  });
+
+  const [name] = watch(["name"]);
+
+  const handleConfirmCode = async ({
+    phone,
+    verificationCode
+  }: {
+    phone: string;
+    verificationCode: string;
+  }) => {
+    try {
+      const { data } = await postConfirmVerificationCode({
+        type: "findId",
+        phone,
+        code: verificationCode
+      });
+
+      console.log(data);
+
+      return true;
+    } catch (e) {
+      if (checkObjectType(e) && "errorCode" in e) {
+        return e.errorCode === "400-AUTH-05"
+          ? "400-AUTH-05"
+          : (e.errorMessage as string);
+      }
+
+      return "예기치 못한 오류가 발생했습니다.";
+    }
+  };
+
+  const handleSendCode = async (phone: string) => {
+    if (!name) {
+      return;
+    }
+
+    await postSendVerificationCode({ name, phone, type: "findId" });
+  };
 
   return (
     <>
@@ -32,40 +86,19 @@ function FindId() {
       </p>
       <div className={classNames("flex flex-col gap-6")}>
         <Input
+          error={errors.name?.message}
           formData={{ ...register("name") }}
           label={"이름"}
           placeholder={"이름을 입력해 주세요"}
         />
-        <Input
-          formData={{ ...register("phone") }}
-          label={"휴대폰 본인인증"}
-          placeholder={"01012345678"}
-        >
-          <Button
-            buttonStyle={"outlined-blue"}
-            className={"ml-2 w-[160px] shrink-0"}
-            disabled={!hasRequiredData}
-            onClick={async () => {
-              if (!phone) {
-                return;
-              }
-
-              await postSendVerificationCode({ type: "findId", phone });
-            }}
-          >
-            인증번호 요청
-          </Button>
-        </Input>
-        <Input
-          label={"인증번호 확인"}
-          placeholder={"인증번호 4자리를 입력해 주세요"}
-        >
-          <Button buttonStyle={"outlined"} className={"ml-2 w-[95px] shrink-0"}>
-            확인
-          </Button>
-        </Input>
+        <VerificationCode
+          confirmCodeHandler={handleConfirmCode}
+          isSendButtonDisabled={!!errors.name}
+          sendCodeHandler={handleSendCode}
+          verificationState={[verification, setVerification]}
+        />
       </div>
-      <Button>아이디 찾기</Button>
+      <Button disabled={!verification.isCodeVerified}>아이디 찾기</Button>
     </>
   );
 }
