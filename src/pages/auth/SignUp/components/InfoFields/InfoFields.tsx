@@ -10,7 +10,8 @@ import {
   getCheckUserId,
   getRandomNickName,
   postConfirmVerificationCode,
-  postSendVerificationCode
+  postSendVerificationCode,
+  postSignUp
 } from "@pages/auth/api/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
@@ -27,6 +28,8 @@ import { Spinner } from "@components/Spinner/Spinner";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
+import { verificationStateType } from "@pages/auth/api/auth.type";
+
 const genderOptions = [
   {
     label: "남자",
@@ -39,20 +42,26 @@ const genderOptions = [
 ];
 
 const infoFieldsSchema = object({
-  nickName: string().required("닉네임을 입력해 주세요"),
-  name: string().matches(
-    /^$|^[가-힣]{2,5}$/,
-    "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
-  ),
-  gender: string(),
-  userId: string().matches(
-    /^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/,
-    "올바른 이메일 형식으로 입력해 주세요"
-  ),
-  pw: string().matches(
-    /^$|^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?~-]).{8,}$/,
-    "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
-  ),
+  nickname: string().required("닉네임을 입력해 주세요"),
+  name: string()
+    .required("이름을 입력해 주세요")
+    .matches(
+      /^$|^[가-힣]{2,5}$/,
+      "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
+    ),
+  gender: string().required(),
+  userId: string()
+    .required("아이디를 입력해 주세요")
+    .matches(
+      /^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/,
+      "올바른 이메일 형식으로 입력해 주세요"
+    ),
+  pw: string()
+    .required("비밀번호를 입력해 주세요")
+    .matches(
+      /^$|^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?~-]).{8,}$/,
+      "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
+    ),
   checkPw: string().oneOf([yupRef("pw"), ""], "비밀번호가 일치하지 않습니다.")
 }).required();
 
@@ -68,14 +77,15 @@ function InfoFields() {
     watch
   } = useForm({
     defaultValues: { gender: "male" },
-    // TODO debounce 걸 수 있나 확인
     mode: "onChange",
     resolver: yupResolver(infoFieldsSchema)
   });
   const { agreements } = useAgreementStore();
 
   const [canProceed, setCanProceed] = useState(false);
-  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [verification, setVerification] = useState<verificationStateType>({
+    isCodeVerified: false
+  });
   const [isNickNameDuplicate, setIsNickNameDuplicate] = useState<
     boolean | "loading"
   >();
@@ -83,18 +93,51 @@ function InfoFields() {
     boolean | "loading"
   >();
 
-  const [nickName, name, gender, userId, pw, checkPw] = watch([
-    "nickName",
+  const [nickname, name, gender, userId, pw, checkPw] = watch([
+    "nickname",
     "name",
     "gender",
     "userId",
     "pw",
     "checkPw"
   ]);
-  const debounceNickName = useDebounce(nickName);
+  const debounceNickName = useDebounce(nickname);
   const debounceUserId = useDebounce(userId);
   const doneButtonDisable =
-    !nickName || !name || !userId || !pw || !checkPw || pw !== checkPw;
+    !nickname ||
+    !name ||
+    !userId ||
+    !pw ||
+    !checkPw ||
+    pw !== checkPw ||
+    isNickNameDuplicate === "loading" ||
+    isUserIdDuplicate === "loading";
+
+  const handleSignUp = async () => {
+    if (!verification.phone) {
+      return;
+    }
+
+    try {
+      await postSignUp({
+        userId,
+        pw,
+        name,
+        nickname,
+        gender,
+        phone: verification.phone,
+        agreeReqDTOS: agreements.map(({ agreeCodeId, agree }) => ({
+          agreeCodeId,
+          agree
+        }))
+      });
+
+      navigator("/sign-up/complete");
+    } catch (e) {
+      // TODO 토스트 alert 적용
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     // 필수 약관 동의되어있지 않으면 약관 페이지로 이동 - URL 복붙 방지
@@ -107,26 +150,18 @@ function InfoFields() {
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
       .then(({ data: { data } }) => {
-        setValue("nickName", data);
+        setValue("nickname", data);
         nickNameRef.current = data;
       })
-      .catch(() => setValue("nickName", ""));
+      .catch(() => setValue("nickname", ""));
   }, [setValue]);
-
-  useEffect(() => {
-    if (!pw) {
-      return;
-    }
-
-    void trigger("checkPw");
-  }, [pw, trigger]);
 
   useEffect(() => {
     const checkEmailValidity = async () => {
       if (
         debounceNickName === nickNameRef.current ||
         !debounceNickName ||
-        errors.nickName
+        errors.nickname
       ) {
         setIsNickNameDuplicate(undefined);
         return;
@@ -145,7 +180,7 @@ function InfoFields() {
     };
 
     void checkEmailValidity();
-  }, [debounceNickName, errors.nickName]);
+  }, [debounceNickName, errors.nickname]);
 
   useEffect(() => {
     const checkEmailValidity = async () => {
@@ -171,11 +206,26 @@ function InfoFields() {
 
   return (
     <>
+      <h1 className={classNames("text-center text-3xl font-semibold")}>
+        {canProceed ? (
+          <>
+            마지막으로 로그인에 사용할
+            <br />
+            회원정보를 입력해 주세요.
+          </>
+        ) : (
+          <>
+            휴대폰 본인인증을
+            <br />
+            진행해 주세요.
+          </>
+        )}
+      </h1>
       <div className={"flex flex-col gap-6"}>
         {canProceed ? (
           <>
             <Input
-              formData={{ ...register("nickName") }}
+              formData={{ ...register("nickname") }}
               insideNode={
                 isNickNameDuplicate === "loading" ? (
                   <Spinner />
@@ -194,7 +244,7 @@ function InfoFields() {
             >
               <TabSlider
                 className={classNames("ml-2", "w-[160px]")}
-                currentValue={gender as string}
+                currentValue={gender}
                 onChangeHandler={value => setValue("gender", value)}
                 options={genderOptions}
               />
@@ -214,7 +264,11 @@ function InfoFields() {
             />
             <Input
               error={errors.pw?.message}
-              formData={{ ...register("pw") }}
+              formData={{
+                ...register("pw", {
+                  onChange: () => trigger("checkPw")
+                })
+              }}
               label={"비밀번호"}
               placeholder={
                 "영문, 숫자, 특수문자의 조합 8자리 이상 입력해 주세요"
@@ -236,7 +290,7 @@ function InfoFields() {
             <Button
               className={"mt-[32px]"}
               disabled={doneButtonDisable}
-              onClick={() => console.log("가입")}
+              onClick={handleSignUp}
             >
               가입하기
             </Button>
@@ -264,11 +318,11 @@ function InfoFields() {
               sendCodeHandler={async phone => {
                 await postSendVerificationCode({ phone, type: "signUp" });
               }}
-              verifiedState={[isCodeVerified, setIsCodeVerified]}
+              verificationState={[verification, setVerification]}
             />
             <Button
               className={"mt-[32px]"}
-              disabled={!isCodeVerified}
+              disabled={!verification.isCodeVerified}
               onClick={() => setCanProceed(true)}
             >
               다음
