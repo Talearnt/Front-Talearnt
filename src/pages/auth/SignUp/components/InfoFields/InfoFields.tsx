@@ -33,11 +33,11 @@ import { verificationStateType } from "@pages/auth/api/auth.type";
 const genderOptions = [
   {
     label: "남자",
-    value: "male"
+    value: "남자"
   },
   {
     label: "여자",
-    value: "female"
+    value: "여자"
   }
 ];
 
@@ -76,7 +76,7 @@ function InfoFields() {
     trigger,
     watch
   } = useForm({
-    defaultValues: { gender: "male" },
+    defaultValues: { gender: "남자" },
     mode: "onChange",
     resolver: yupResolver(infoFieldsSchema)
   });
