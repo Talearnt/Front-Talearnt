@@ -5,6 +5,7 @@ import {
   accountType,
   signUpBodyType,
   submitVerificationBodyType,
+  submitVerificationResponseType,
   verificationBodyType
 } from "@pages/auth/api/auth.type";
 
@@ -25,7 +26,11 @@ export const postSendVerificationCode = async (data: verificationBodyType) =>
 // 인증번호 검증
 export const postConfirmVerificationCode = async (
   data: submitVerificationBodyType
-) => await postAPI("/v1/auth/sms/validation", data);
+) =>
+  await postAPI<submitVerificationResponseType>(
+    "/v1/auth/sms/validation",
+    data
+  );
 
 // 랜덤 닉네임 생성
 export const getRandomNickName = async () =>
