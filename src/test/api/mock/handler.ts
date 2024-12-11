@@ -36,17 +36,21 @@ export const handlers = [
       );
     }
   ),
-  http.get<PathParams>("http://3.35.198.221/v1/auth/users/nickname", () => {
-    const randomNickName = "user" + Math.floor(Math.random() * 1000).toString();
+  http.get<PathParams>(
+    "http://3.35.198.221/v1/auth/users/nickname/random",
+    () => {
+      const randomNickName =
+        "user" + Math.floor(Math.random() * 1000).toString();
 
-    return HttpResponse.json(
-      {
-        data: randomNickName,
-        success: true,
-        errorCode: null,
-        errorMessage: null
-      },
-      { status: 200 }
-    );
-  })
+      return HttpResponse.json(
+        {
+          data: randomNickName,
+          success: true,
+          errorCode: null,
+          errorMessage: null
+        },
+        { status: 200 }
+      );
+    }
+  )
 ];
