@@ -22,6 +22,7 @@ type VerificationCodeProps = {
     phone: string;
     verificationCode: string;
   }) => Promise<string | true>;
+  isSendButtonDisabled?: boolean;
   sendCodeHandler: (phone: string) => Promise<void>;
   verificationState: [
     verificationStateType,
@@ -39,6 +40,7 @@ const verificationCodeSchema = object({
 
 function VerificationCode({
   confirmCodeHandler,
+  isSendButtonDisabled,
   sendCodeHandler,
   verificationState
 }: VerificationCodeProps) {
@@ -174,7 +176,11 @@ function VerificationCode({
           buttonStyle={"outlined-blue"}
           className={"ml-2 w-[160px] shrink-0"}
           disabled={
-            !hasPhoneNumber || !!errors.phone || isRunning || isCodeVerified
+            !hasPhoneNumber ||
+            !!errors.phone ||
+            isRunning ||
+            isCodeVerified ||
+            isSendButtonDisabled
           }
           onClick={handleSendCode}
         >
