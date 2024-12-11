@@ -16,6 +16,11 @@ export type verificationBodyType = {
   phone: string;
 };
 
+export type verificationStateType = {
+  isCodeVerified: boolean;
+  phone?: string;
+};
+
 export type submitVerificationBodyType = verificationBodyType & {
   code: string;
 };

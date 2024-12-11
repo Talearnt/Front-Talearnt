@@ -12,6 +12,8 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
+import { verificationStateType } from "@pages/auth/api/auth.type";
+
 type VerificationCodeProps = {
   confirmCodeHandler: ({
     phone,
@@ -21,7 +23,10 @@ type VerificationCodeProps = {
     verificationCode: string;
   }) => Promise<string | true>;
   sendCodeHandler: (phone: string) => Promise<void>;
-  verifiedState: [boolean, Dispatch<SetStateAction<boolean>>];
+  verificationState: [
+    verificationStateType,
+    Dispatch<SetStateAction<verificationStateType>>
+  ];
 };
 
 const verificationCodeSchema = object({
@@ -35,7 +40,7 @@ const verificationCodeSchema = object({
 function VerificationCode({
   confirmCodeHandler,
   sendCodeHandler,
-  verifiedState
+  verificationState
 }: VerificationCodeProps) {
   const {
     clearErrors,
@@ -52,8 +57,8 @@ function VerificationCode({
 
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
+  const [{ isCodeVerified }, setVerification] = verificationState;
   const [isLoading, setIsLoading] = useState(false);
-  const [isCodeVerified, setIsCodeVerified] = verifiedState;
   const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
@@ -97,7 +102,7 @@ function VerificationCode({
 
     if (data === true) {
       // 인증번호 확인 완료
-      setIsCodeVerified(true);
+      setVerification({ isCodeVerified: true, phone });
       return;
     }
 
