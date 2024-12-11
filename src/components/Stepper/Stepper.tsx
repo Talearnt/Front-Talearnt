@@ -10,7 +10,7 @@ type StepperProps = {
 
 function Stepper({ className, currentStep, stepArray }: StepperProps) {
   return (
-    <div className={classNames("flex items-center", className)}>
+    <div className={classNames("flex items-center", "pb-[26px]", className)}>
       {stepArray.map((step, index) => (
         <Fragment key={`${step}-${index.toString()}`}>
           <div className={"relative"}>
