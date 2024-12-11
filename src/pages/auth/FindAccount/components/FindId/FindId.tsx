@@ -50,7 +50,7 @@ function FindId() {
                 return;
               }
 
-              await postSendVerificationCode({ type: "아이디찾기", phone });
+              await postSendVerificationCode({ type: "findId", phone });
             }}
           >
             인증번호 요청

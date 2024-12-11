@@ -51,14 +51,7 @@ function SignIn() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Input
-          error={
-            errors.userId
-              ? {
-                  errorContent: errors.userId.message ?? "",
-                  hasError: true
-                }
-              : undefined
-          }
+          error={errors.userId?.message}
           formData={{ ...register("userId") }}
           id={"id-input"}
           label={"아이디"}
@@ -66,14 +59,7 @@ function SignIn() {
           wrapperClassName={"mb-6"}
         />
         <Input
-          error={
-            errors.pw && errors.pw.message
-              ? {
-                  errorContent: errors.pw.message,
-                  hasError: true
-                }
-              : undefined
-          }
+          error={errors.pw?.message}
           formData={{ ...register("pw") }}
           id={"pw-input"}
           label={"비밀번호"}

@@ -27,7 +27,7 @@ function FindAccount() {
       <TabSlider
         className={"text-lg"}
         currentValue={currentPage}
-        onClickHandler={value => navigator(`/find-account/${value}`)}
+        onChangeHandler={value => navigator(`/find-account/${value}`)}
         options={options}
       />
       <Outlet />
