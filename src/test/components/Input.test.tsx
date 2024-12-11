@@ -17,9 +17,7 @@ describe("Input Component", () => {
   });
 
   test("renders error message when error prop is provided", () => {
-    render(
-      <Input error={{ errorContent: "Error occurred", hasError: true }} />
-    );
+    render(<Input error={"Error occurred"} />);
     expect(screen.getByText("Error occurred")).toBeInTheDocument();
   });
 
