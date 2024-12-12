@@ -60,7 +60,9 @@ function VerificationCode({
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
 
   const [{ isCodeVerified }, setVerification] = verificationState;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<
+    undefined | "phone" | "verificationCode"
+  >();
   const [verificationAttempts, setVerificationAttempts] = useState(0);
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
@@ -75,7 +77,7 @@ function VerificationCode({
     }
 
     try {
-      setIsLoading(true);
+      setIsLoading("phone");
       clearErrors("phone");
       clearErrors("verificationCode");
       await sendCodeHandler(phone);
@@ -91,7 +93,7 @@ function VerificationCode({
         message: "예기치 못한 오류가 발생했습니다."
       });
     } finally {
-      setIsLoading(false);
+      setIsLoading(undefined);
     }
   };
 
@@ -100,11 +102,13 @@ function VerificationCode({
       return;
     }
 
+    setIsLoading("verificationCode");
     const data = await confirmCodeHandler({ phone, verificationCode });
 
     if (data === true) {
       // 인증번호 확인 완료
       setVerification({ isCodeVerified: true, phone });
+      setIsLoading(undefined);
       return;
     }
 
@@ -113,6 +117,7 @@ function VerificationCode({
     if (data === "400-AUTH-05") {
       // 인증번호가 틀린 경우
       setVerificationAttempts(prev => prev + 1);
+      setIsLoading(undefined);
       return;
     }
 
@@ -120,6 +125,7 @@ function VerificationCode({
     setError("verificationCode", {
       message: data
     });
+    setIsLoading(undefined);
   };
 
   useEffect(() => {
@@ -184,7 +190,7 @@ function VerificationCode({
           }
           onClick={handleSendCode}
         >
-          {isLoading ? (
+          {isLoading === "phone" ? (
             <Spinner />
           ) : (
             `인증번호 ${isRunning || verificationAttempts > 0 ? "재요청" : "요청"}`
@@ -225,7 +231,7 @@ function VerificationCode({
           }
           onClick={handleVerifyCode}
         >
-          확인
+          {isLoading === "verificationCode" ? <Spinner /> : "확인"}
         </Button>
       </Input>
     </div>
