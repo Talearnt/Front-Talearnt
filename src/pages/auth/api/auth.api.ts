@@ -3,9 +3,9 @@ import { getAPI, postAPI } from "@utils/apiMethods";
 import { customAxiosResponseType } from "@common/common.type";
 import {
   accountType,
+  findIdResponseType,
   signUpBodyType,
   submitVerificationBodyType,
-  submitVerificationResponseType,
   verificationBodyType
 } from "@pages/auth/api/auth.type";
 
@@ -26,11 +26,7 @@ export const postSendVerificationCode = async (data: verificationBodyType) =>
 // 인증번호 검증
 export const postConfirmVerificationCode = async (
   data: submitVerificationBodyType
-) =>
-  await postAPI<submitVerificationResponseType>(
-    "/v1/auth/sms/validation",
-    data
-  );
+) => await postAPI<true | findIdResponseType>("/v1/auth/sms/validation", data);
 
 // 랜덤 닉네임 생성
 export const getRandomNickName = async () =>

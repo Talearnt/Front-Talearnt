@@ -25,12 +25,10 @@ export type submitVerificationBodyType = verificationBodyType & {
   code: string;
 };
 
-export type submitVerificationResponseType =
-  | true
-  | {
-      userId: string;
-      createdAt: string;
-    };
+export type findIdResponseType = {
+  userId: string;
+  createdAt: string;
+};
 
 export type signUpBodyType = accountType & {
   name: string;
