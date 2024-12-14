@@ -56,7 +56,7 @@ export const getAPI = async <T>(
     `${url}${queryParameter}`
   );
 
-  return { data, status };
+  return { ...data, status };
 };
 
 export const postAPI = async <T>(
@@ -69,7 +69,7 @@ export const postAPI = async <T>(
     body,
     config
   );
-  return { data, status };
+  return { ...data, status };
 };
 
 export const putAPI = async <T>(
@@ -77,7 +77,8 @@ export const putAPI = async <T>(
   body?: Record<string, string | number | Record<string, unknown> | unknown[]>
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.put<responseDataType<T>>(url, body);
-  return { data, status };
+
+  return { ...data, status };
 };
 
 export const patchAPI = async <T>(
@@ -85,12 +86,14 @@ export const patchAPI = async <T>(
   body?: Record<string, string | number | Record<string, unknown> | unknown[]>
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.put<responseDataType<T>>(url, body);
-  return { data, status };
+
+  return { ...data, status };
 };
 
 export const deleteAPI = async <T>(
   url: string
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.delete<responseDataType<T>>(url);
-  return { data, status };
+
+  return { ...data, status };
 };

@@ -149,7 +149,7 @@ function InfoFields() {
   useEffect(() => {
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
-      .then(({ data: { data } }) => {
+      .then(({ data }) => {
         setValue("nickname", data);
         nickNameRef.current = data;
       })
@@ -170,9 +170,7 @@ function InfoFields() {
       setIsNickNameDuplicate("loading");
 
       try {
-        const {
-          data: { data }
-        } = await getCheckNickName(debounceNickName);
+        const { data } = await getCheckNickName(debounceNickName);
         setIsNickNameDuplicate(data);
       } catch {
         setIsNickNameDuplicate(undefined);
@@ -192,9 +190,7 @@ function InfoFields() {
       setIsUserIdDuplicate("loading");
 
       try {
-        const {
-          data: { data }
-        } = await getCheckUserId(debounceUserId);
+        const { data } = await getCheckUserId(debounceUserId);
         setIsUserIdDuplicate(data);
       } catch {
         setIsUserIdDuplicate(undefined);

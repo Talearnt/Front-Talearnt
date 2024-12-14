@@ -17,8 +17,7 @@ export type responseDataType<T> = {
   success: boolean;
 };
 
-export type customAxiosResponseType<T> = {
-  data: responseDataType<T>;
+export type customAxiosResponseType<T> = responseDataType<T> & {
   status: number;
 };
 
