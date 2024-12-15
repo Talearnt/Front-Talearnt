@@ -27,10 +27,7 @@ test("should not allow users to login with invalid credentials", async () => {
 });
 
 test("should return a string for data when status is 200", async () => {
-  const {
-    data: { data },
-    status
-  } = await getRandomNickName();
+  const { data, status } = await getRandomNickName();
 
   if (status === 200) {
     expect(typeof data).toBe("string");
