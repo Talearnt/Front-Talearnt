@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
-import useAgreementStore from "@pages/auth/api/auth.store";
+import { useAgreementStore } from "@pages/auth/api/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";

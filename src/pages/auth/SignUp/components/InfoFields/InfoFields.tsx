@@ -19,7 +19,7 @@ import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
 
-import useAgreementStore from "@pages/auth/api/auth.store";
+import { useAgreementStore } from "@pages/auth/api/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
