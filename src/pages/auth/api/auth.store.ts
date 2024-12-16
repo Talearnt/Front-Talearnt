@@ -10,7 +10,7 @@ type agreementStoreType = {
   setAllAgreement: (agree: boolean) => void;
 };
 
-const useAgreementStore = create<agreementStoreType>((set, get) => ({
+export const useAgreementStore = create<agreementStoreType>((set, get) => ({
   agreements: [
     {
       agreeCodeId: 1,
@@ -65,5 +65,3 @@ const useAgreementStore = create<agreementStoreType>((set, get) => ({
       return { agreements: updatedAgreements };
     })
 }));
-
-export default useAgreementStore;
