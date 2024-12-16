@@ -6,13 +6,13 @@ import { object, string } from "yup";
 
 import { postSignIn } from "@pages/auth/api/auth.api";
 
+import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
 
-import { apiErrorType } from "@common/common.type";
 import { accountType } from "@pages/auth/api/auth.type";
 
 const signInSchema = object({
@@ -27,32 +27,46 @@ function SignIn() {
     formState: { errors },
     handleSubmit,
     register,
-    setError
+    setError,
+    trigger,
+    watch
   } = useForm({
     resolver: yupResolver(signInSchema)
   });
 
-  const onSubmit = async (data: accountType) => {
+  const [userId, pw] = watch(["userId", "pw"]);
+
+  const handleSignIn = async (data: accountType) => {
     try {
       await postSignIn(data);
       navigator("/");
     } catch (e) {
-      const { errorMessage } = e as apiErrorType;
-      setError("userId", { message: "" });
-      setError("pw", { message: errorMessage });
+      if (checkObjectType(e) && "errorMessage" in e) {
+        setError("userId", { message: "" });
+        setError("pw", { message: e.errorMessage as string });
+        return;
+      }
+
+      setError("pw", {
+        message: "예기치 못한 오류가 발생했습니다."
+      });
     }
   };
 
   return (
     <div className={classNames("flex flex-col items-center", "w-[416px]")}>
-      <h1 className={"mb-10 text-[1.875rem]"}>로그인</h1>
+      <h1 className={classNames("mb-[56px]", "text-[1.875rem]")}>로그인</h1>
       <form
         className={"flex w-full flex-col"}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleSignIn)}
       >
         <Input
           error={errors.userId?.message}
-          formData={{ ...register("userId") }}
+          formData={{
+            ...register("userId", {
+              onChange: () => !!pw && trigger("pw")
+            })
+          }}
           id={"id-input"}
           label={"아이디"}
           placeholder={"이메일을 입력해 주세요."}
@@ -60,19 +74,24 @@ function SignIn() {
         />
         <Input
           error={errors.pw?.message}
-          formData={{ ...register("pw") }}
+          formData={{
+            ...register("pw", {
+              onChange: () => !!userId && trigger("userId")
+            })
+          }}
           id={"pw-input"}
           label={"비밀번호"}
           placeholder={"비밀번호를 입력해 주세요."}
           type={"password"}
           wrapperClassName={"mb-4"}
         />
-        <CheckBox className={"mb-[26px] mr-auto"}>자동 로그인</CheckBox>
+        {/*TODO 자동 로그인 적용*/}
+        <CheckBox className={"mb-6 mr-auto"}>자동 로그인</CheckBox>
         <Button className={"mb-10 h-[50px] w-full"} type={"submit"}>
           로그인
         </Button>
       </form>
-      <p className={"separator mb-6 w-full"}>간편 로그인</p>
+      <p className={"separator mb-6 w-full font-medium"}>간편 로그인</p>
       <Button
         className={
           "mb-6 h-[50px] w-full gap-2 bg-[#FAE100] text-[#212121] hover:bg-[#FAE100]"
@@ -100,7 +119,11 @@ function SignIn() {
         >
           아이디/비밀번호 찾기
         </Button>
-        <Button buttonStyle={"outlined"} className={"h-[50px] w-full"}>
+        <Button
+          buttonStyle={"outlined"}
+          className={"h-[50px] w-full"}
+          onClick={() => navigator("/sign-up/agreements")}
+        >
           회원가입
         </Button>
       </div>
