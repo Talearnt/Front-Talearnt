@@ -3,14 +3,18 @@ import { getAPI, postAPI, putAPI } from "@utils/apiMethods";
 import {
   accountType,
   findIdResponseType,
+  kakaoAuthResponseType,
   signUpBodyType,
-  submitVerificationBodyType,
   verificationBodyType
 } from "@pages/auth/api/auth.type";
 
 // 로그인
 export const postSignIn = async (account: accountType) =>
   await postAPI<{ accessToken: string }>("/v1/auth/login", account);
+
+// 카카오 로그인/회원가입
+export const getKakaoAccessToken = async (code: string) =>
+  await getAPI<kakaoAuthResponseType>("/v1/auth/login/kakao", { code });
 
 // refresh 토큰
 export const postToGetRefreshToken = async () =>
@@ -22,7 +26,9 @@ export const postSendVerificationCode = async (data: verificationBodyType) =>
 
 // 인증번호 검증
 export const postConfirmVerificationCode = async (
-  data: submitVerificationBodyType
+  data: verificationBodyType & {
+    code: string;
+  }
 ) => await postAPI<true | findIdResponseType>("/v1/auth/sms/validation", data);
 
 // 랜덤 닉네임 생성
