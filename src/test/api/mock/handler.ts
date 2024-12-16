@@ -5,7 +5,7 @@ import { accountType } from "@pages/auth/api/auth.type";
 
 export const handlers = [
   http.post<PathParams, accountType>(
-    "http://3.35.198.221/v1/api/auth/login",
+    "http://3.35.198.221/v1/auth/login",
     async ({ request }) => {
       const { userId, pw } = await request.json();
 
