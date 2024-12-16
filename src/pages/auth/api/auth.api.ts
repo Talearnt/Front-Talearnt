@@ -13,7 +13,7 @@ import {
 export const postSignIn = async (
   account: accountType
 ): Promise<customAxiosResponseType<{ accessToken: string }>> =>
-  await postAPI("/v1/api/auth/login", account);
+  await postAPI("/v1/auth/login", account);
 
 // refresh 토큰
 export const postToGetRefreshToken = async () =>

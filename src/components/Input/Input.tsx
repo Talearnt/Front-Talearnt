@@ -53,7 +53,7 @@ function Input({
   const insideNodeRef = useRef<HTMLDivElement>(null);
 
   const hasComplete = complete !== undefined;
-  const hasError = error !== undefined;
+  const hasError = !!error;
 
   const combinedRef = (node: HTMLInputElement | null) => {
     inputRef.current = node;
@@ -85,7 +85,7 @@ function Input({
             "placeholder:text-talearnt-Text_04",
             "focus:border-talearnt-Primary_01 focus:outline-none",
             "disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04",
-            hasError
+            error !== undefined
               ? "border-talearnt-Error_02 focus:border-talearnt-Error_02"
               : "border-talearnt-Line_01",
             className
