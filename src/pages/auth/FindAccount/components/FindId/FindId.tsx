@@ -19,6 +19,8 @@ import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIc
 import { Input } from "@components/Input/Input";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
+import { nameRegex } from "@pages/auth/common/authRegex.constants";
+
 import {
   findIdResponseType,
   verificationStateType
@@ -26,7 +28,7 @@ import {
 
 const findIdSchema = object({
   name: string().matches(
-    /^$|^[가-힣]{2,5}$/,
+    nameRegex,
     "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
   )
 }).required();
@@ -53,6 +55,7 @@ function FindId() {
   });
 
   const [name] = watch(["name"]);
+  const buttonDisable = !name || !!errors.name;
 
   const handleConfirmCode = async ({
     phone,
@@ -83,7 +86,7 @@ function FindId() {
   };
 
   const handleSendCode = async (phone: string) => {
-    if (!name) {
+    if (!buttonDisable) {
       return;
     }
 
@@ -183,7 +186,7 @@ function FindId() {
             />
             <VerificationCode
               confirmCodeHandler={handleConfirmCode}
-              isSendButtonDisabled={!!errors.name || !name}
+              isSendButtonDisabled={buttonDisable}
               sendCodeHandler={handleSendCode}
               verificationState={[verification, setVerification]}
             />
