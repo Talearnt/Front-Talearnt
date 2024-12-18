@@ -30,6 +30,7 @@ import { VerificationCode } from "@pages/auth/components/VerificationCode/Verifi
 
 import {
   nameRegex,
+  nicknameRegex,
   pwRegex,
   userIdRegex
 } from "@pages/auth/common/authRegex.constants";
@@ -48,7 +49,7 @@ const genderOptions = [
 ];
 
 const infoFieldsSchema = object({
-  nickname: string(),
+  nickname: string().matches(nicknameRegex, "match"),
   name: string().matches(
     nameRegex,
     "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
@@ -69,6 +70,7 @@ function InfoFields() {
   const {
     formState: { errors },
     register,
+    setError,
     setValue,
     trigger,
     watch
@@ -107,8 +109,8 @@ function InfoFields() {
     !pw ||
     !checkedPw ||
     pw !== checkedPw ||
-    isNickNameDuplicate === "loading" ||
-    isUserIdDuplicate === "loading" ||
+    isNickNameDuplicate !== false ||
+    isUserIdDuplicate !== false ||
     Object.keys(errors).length > 0;
 
   const handleSignUp = async () => {
@@ -151,12 +153,17 @@ function InfoFields() {
   }, [setValue]);
 
   useEffect(() => {
+    if (errors.nickname) {
+      return;
+    }
+
     const checkEmailValidity = async () => {
       if (
-        debounceNickName === nickNameRef.current ||
-        !debounceNickName ||
-        errors.nickname
+        nickname === nickNameRef.current ||
+        nickname !== debounceNickName ||
+        !debounceNickName
       ) {
+        // 랜덤 생성된 닉네임과 동일하거나, 닉네임이 없거나, 디바운스중 일경우
         setIsNickNameDuplicate(undefined);
         return;
       }
@@ -164,19 +171,29 @@ function InfoFields() {
       setIsNickNameDuplicate("loading");
 
       try {
+        // TODO tanstack-query 적용해서 캐싱
         const { data } = await getCheckNickName(debounceNickName);
         setIsNickNameDuplicate(data as boolean);
+
+        if (data) {
+          setError("nickname", { message: "이미 등록된 닉네임입니다" });
+        }
       } catch {
         setIsNickNameDuplicate(undefined);
       }
     };
 
     void checkEmailValidity();
-  }, [debounceNickName, errors.nickname]);
+  }, [debounceNickName, errors.nickname, nickname, setError]);
 
   useEffect(() => {
+    if (errors.userId) {
+      return;
+    }
+
     const checkEmailValidity = async () => {
-      if (!debounceUserId || errors.userId) {
+      if (userId !== debounceUserId || !debounceUserId) {
+        // 디바운스 중이거나, 아이디가 없는 경우
         setIsUserIdDuplicate(undefined);
         return;
       }
@@ -184,15 +201,20 @@ function InfoFields() {
       setIsUserIdDuplicate("loading");
 
       try {
+        // TODO tanstack-query 적용해서 캐싱
         const { data } = await getCheckUserId(debounceUserId);
         setIsUserIdDuplicate(data as boolean);
+
+        if (data) {
+          setError("userId", { message: "이미 등록된 아이디입니다" });
+        }
       } catch {
         setIsUserIdDuplicate(undefined);
       }
     };
 
     void checkEmailValidity();
-  }, [debounceUserId, errors.userId]);
+  }, [debounceUserId, errors.userId, setError, userId]);
 
   return (
     <>
@@ -214,18 +236,51 @@ function InfoFields() {
       <div className={"flex flex-col gap-6"}>
         {canProceed ? (
           <>
-            <Input
-              formData={{ ...register("nickname") }}
-              insideNode={
-                isNickNameDuplicate === "loading" ? (
-                  <Spinner />
-                ) : isNickNameDuplicate === false ? (
-                  <LabelText>사용가능</LabelText>
-                ) : undefined
-              }
-              label={"닉네임"}
-              placeholder={"닉네임을 입력해 주세요"}
-            />
+            <div className={"flex flex-col"}>
+              <Input
+                error={
+                  errors.nickname?.message === "match"
+                    ? ""
+                    : errors.nickname?.message
+                }
+                formData={{ ...register("nickname") }}
+                insideNode={
+                  isNickNameDuplicate ===
+                  undefined ? undefined : isNickNameDuplicate === "loading" ? (
+                    <Spinner />
+                  ) : isNickNameDuplicate ? (
+                    <LabelText type={"error"}>사용불가</LabelText>
+                  ) : (
+                    <LabelText>사용가능</LabelText>
+                  )
+                }
+                label={"닉네임"}
+                placeholder={"닉네임을 입력해 주세요"}
+              />
+              {isNickNameDuplicate !== true && (
+                <>
+                  <span
+                    className={classNames(
+                      "mt-1",
+                      "text-sm font-medium text-talearnt-Text_03"
+                    )}
+                  >
+                    *&nbsp;
+                    {nickname === nickNameRef.current
+                      ? "랜덤으로 지정된 닉네임입니다. 자유롭게 수정 가능해요"
+                      : "2~12자 이내로 입력해 주세요"}
+                  </span>
+                  {nickname !== nickNameRef.current && (
+                    <span
+                      className={"text-sm font-medium text-talearnt-Primary_01"}
+                    >
+                      * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는
+                      #만 입력 가능해요
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
             <Input
               error={errors.name?.message}
               formData={{ ...register("name") }}
@@ -233,7 +288,7 @@ function InfoFields() {
               placeholder={"이름을 입력해 주세요."}
             >
               <TabSlider
-                className={classNames("ml-2", "w-[160px]")}
+                className={classNames("ml-2 flex-shrink-0", "w-[160px]")}
                 currentValue={gender}
                 onChangeHandler={value => setValue("gender", value)}
                 options={genderOptions}
@@ -243,11 +298,14 @@ function InfoFields() {
               error={errors.userId?.message}
               formData={{ ...register("userId") }}
               insideNode={
-                isUserIdDuplicate === "loading" ? (
+                isUserIdDuplicate ===
+                undefined ? undefined : isUserIdDuplicate === "loading" ? (
                   <Spinner />
-                ) : isUserIdDuplicate === false ? (
-                  <LabelText>확인완료</LabelText>
-                ) : undefined
+                ) : isUserIdDuplicate ? (
+                  <LabelText type={"error"}>사용불가</LabelText>
+                ) : (
+                  <LabelText>사용가능</LabelText>
+                )
               }
               label={"아이디(이메일)"}
               placeholder={"이메일을 입력해 주세요"}
