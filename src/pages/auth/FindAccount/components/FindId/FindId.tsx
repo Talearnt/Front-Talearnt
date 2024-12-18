@@ -33,7 +33,7 @@ const findIdSchema = object({
 
 function FindId() {
   const navigator = useNavigate();
-  const idData = useRef<{ userId: string; createdAt: string }>({
+  const idData = useRef<findIdResponseType>({
     userId: "",
     createdAt: ""
   });
