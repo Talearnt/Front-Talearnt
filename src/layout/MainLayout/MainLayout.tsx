@@ -59,7 +59,7 @@ function MainLayout() {
         </div>
       </header>
       <main
-        className={classNames("mx-auto mb-[120px] mt-[94px]", "max-w-[848px]")}
+        className={classNames("mx-auto mb-[120px] mt-[96px]", "max-w-[848px]")}
       >
         <Outlet />
       </main>
