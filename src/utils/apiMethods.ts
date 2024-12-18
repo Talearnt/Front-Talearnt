@@ -4,7 +4,7 @@ import { customAxiosResponseType, responseDataType } from "@common/common.type";
 
 import { checkObjectType } from "./checkObjectType";
 
-const baseURL = "http://3.35.198.221/";
+const baseURL = "https://api.talearnt.net/";
 
 const instance = Axios.create({
   baseURL,
