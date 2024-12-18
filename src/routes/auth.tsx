@@ -8,8 +8,9 @@ import FindId from "@pages/auth/FindAccount/components/FindId/FindId";
 import FindPassword from "@pages/auth/FindAccount/components/FindPassword/FindPassword";
 import FindAccount from "@pages/auth/FindAccount/FindAccount";
 // 카카오
-import KaKaoExtraInfo from "@pages/auth/KaKao/KaKaoExtraInfo/KaKaoExtraInfo";
-import KaKaoOauth from "@pages/auth/KaKao/KaKaoOauth/KaKaoOauth";
+import Kakao from "@pages/auth/Kakao/Kakao";
+import KaKaoExtraInfo from "@pages/auth/Kakao/KaKaoExtraInfo/KaKaoExtraInfo";
+import KaKaoOauth from "@pages/auth/Kakao/KaKaoOauth/KaKaoOauth";
 // 로그인
 import SignIn from "@pages/auth/SignIn/SignIn";
 // 회원가입
@@ -23,6 +24,7 @@ const authRouter: RouteObject[] = [
     path: "sign-in"
   },
   {
+    element: <Kakao />,
     path: "kakao",
     children: [
       {
