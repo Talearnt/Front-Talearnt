@@ -15,17 +15,14 @@ import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIc
 import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
+import { userIdRegex } from "@pages/auth/common/authRegex.constants";
+
 const findIdSchema = object({
   phone: string().matches(
     /^[0-9]*$/,
     "올바른 전화번호 형식이 아닙니다. 숫자만 입력해 주세요."
   ),
-  userId: string()
-    .required("이메일을 입력해 주세요")
-    .matches(
-      /^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/,
-      "올바른 이메일 형식으로 입력해 주세요"
-    )
+  userId: string().matches(userIdRegex, "올바른 이메일 형식으로 입력해 주세요")
 }).required();
 
 function FindPassword() {
@@ -45,9 +42,11 @@ function FindPassword() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [phone, userId] = watch(["phone", "userId"]);
+  const buttonDisable =
+    !userId || phone?.length !== 11 || Object.keys(errors).length > 0;
 
   const handleFindPassword = async () => {
-    if (!phone || !userId) {
+    if (buttonDisable) {
       return;
     }
 
@@ -89,8 +88,8 @@ function FindPassword() {
           >
             <span className={"text-center text-base font-medium"}>
               <b className={"font-semibold"}>
-                {userId.split("@")[0].slice(0, -3)}***@
-                {userId.split("@")[1]}
+                {userId?.split("@")[0].slice(0, -3)}***@
+                {userId?.split("@")[1]}
               </b>
               으로 <br />
               비밀번호 재설정을 위한 인증 메일을 발송하였습니다.
