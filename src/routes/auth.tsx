@@ -1,6 +1,7 @@
 import { RouteObject } from "react-router-dom";
 
 // 계정 찾기
+import ChangePassword from "@pages/auth/FindAccount/components/ChangePassword/ChangePassword";
 import FindId from "@pages/auth/FindAccount/components/FindId/FindId";
 import FindPassword from "@pages/auth/FindAccount/components/FindPassword/FindPassword";
 import FindAccount from "@pages/auth/FindAccount/FindAccount";
@@ -46,6 +47,10 @@ const authRouter: RouteObject[] = [
       {
         element: <FindPassword />,
         path: "pw"
+      },
+      {
+        element: <ChangePassword />,
+        path: "change"
       }
     ]
   }
