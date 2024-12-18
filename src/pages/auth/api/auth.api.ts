@@ -1,6 +1,5 @@
 import { getAPI, postAPI } from "@utils/apiMethods";
 
-import { customAxiosResponseType } from "@common/common.type";
 import {
   accountType,
   findIdResponseType,
@@ -10,10 +9,8 @@ import {
 } from "@pages/auth/api/auth.type";
 
 // 로그인
-export const postSignIn = async (
-  account: accountType
-): Promise<customAxiosResponseType<{ accessToken: string }>> =>
-  await postAPI("/v1/auth/login", account);
+export const postSignIn = async (account: accountType) =>
+  await postAPI<{ accessToken: string }>("/v1/auth/login", account);
 
 // refresh 토큰
 export const postToGetRefreshToken = async () =>
@@ -43,3 +40,9 @@ export const getCheckUserId = async (userId: string) =>
 // 회원가입
 export const postSignUp = async (body: signUpBodyType) =>
   await postAPI("/v1/auth/join", body);
+
+// 비밀번호 찾기
+export const postFindPwEmail = async (body: {
+  phone: string;
+  userId: string;
+}) => await postAPI<{ sentDate: string }>("/v1/auth/password/email", body);
