@@ -29,24 +29,14 @@ import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
 import {
+  genderOptions,
   nameRegex,
   nicknameRegex,
   pwRegex,
   userIdRegex
-} from "@pages/auth/common/authRegex.constants";
+} from "@pages/auth/common/common.constants";
 
 import { verificationStateType } from "@pages/auth/api/auth.type";
-
-const genderOptions = [
-  {
-    label: "남자",
-    value: "남자"
-  },
-  {
-    label: "여자",
-    value: "여자"
-  }
-];
 
 const infoFieldsSchema = object({
   nickname: string().matches(nicknameRegex, "match"),

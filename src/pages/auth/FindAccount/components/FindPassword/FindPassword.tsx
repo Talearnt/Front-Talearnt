@@ -15,7 +15,7 @@ import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIc
 import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { userIdRegex } from "@pages/auth/common/authRegex.constants";
+import { userIdRegex } from "@pages/auth/common/common.constants";
 
 const findIdSchema = object({
   phone: string().matches(

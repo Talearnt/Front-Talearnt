@@ -16,7 +16,7 @@ import { Input } from "@components/Input/Input";
 import { LabelText } from "@components/LabelText/LabelText";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { pwRegex } from "@pages/auth/common/authRegex.constants";
+import { pwRegex } from "@pages/auth/common/common.constants";
 
 const changePasswordSchema = object({
   pw: string().matches(
