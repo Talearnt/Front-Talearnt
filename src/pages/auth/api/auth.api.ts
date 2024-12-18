@@ -1,4 +1,4 @@
-import { getAPI, postAPI } from "@utils/apiMethods";
+import { getAPI, postAPI, putAPI } from "@utils/apiMethods";
 
 import {
   accountType,
@@ -46,3 +46,13 @@ export const postFindPwEmail = async (body: {
   phone: string;
   userId: string;
 }) => await postAPI<{ sentDate: string }>("/v1/auth/password/email", body);
+
+// 비밀번호 수정
+export const putChangePw = async ({
+  no,
+  uuid,
+  ...body
+}: Pick<signUpBodyType, "checkedPw" | "pw"> & {
+  no: string;
+  uuid: string;
+}) => await putAPI(`/v1/auth/${no}/password/${uuid}`, body);
