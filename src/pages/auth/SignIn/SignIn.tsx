@@ -13,11 +13,9 @@ import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
 
-import { accountType } from "@pages/auth/api/auth.type";
-
 const signInSchema = object({
-  userId: string().required("이메일을 입력해 주세요"),
-  pw: string().required("비밀번호를 입력해 주세요")
+  userId: string(),
+  pw: string()
 }).required();
 
 function SignIn() {
@@ -36,9 +34,26 @@ function SignIn() {
 
   const [userId, pw] = watch(["userId", "pw"]);
 
-  const handleSignIn = async (data: accountType) => {
+  const handleSignIn = async ({
+    userId,
+    pw
+  }: {
+    userId?: string;
+    pw?: string;
+  }) => {
+    if (!userId || !pw) {
+      if (!userId) {
+        setError("userId", { message: "이메일을 입력해 주세요" });
+      }
+
+      if (!pw) {
+        setError("pw", { message: "비밀번호를 입력해 주세요" });
+      }
+      return;
+    }
+
     try {
-      await postSignIn(data);
+      await postSignIn({ userId, pw });
       navigator("/");
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
