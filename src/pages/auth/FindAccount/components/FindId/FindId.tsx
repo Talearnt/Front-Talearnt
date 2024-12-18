@@ -86,7 +86,7 @@ function FindId() {
   };
 
   const handleSendCode = async (phone: string) => {
-    if (!buttonDisable) {
+    if (buttonDisable) {
       return;
     }
 
