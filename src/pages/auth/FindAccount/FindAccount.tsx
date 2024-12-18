@@ -6,11 +6,11 @@ import { TabSlider } from "@components/TabSlider/TabSlider";
 
 const options = [
   {
-    label: "아이디",
+    label: "아이디 찾기",
     value: "id"
   },
   {
-    label: "패스워드",
+    label: "비밀번호 찾기",
     value: "pw"
   }
 ];
