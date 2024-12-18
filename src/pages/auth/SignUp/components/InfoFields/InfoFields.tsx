@@ -51,7 +51,7 @@ const infoFieldsSchema = object({
     ),
   gender: string().required(),
   userId: string()
-    .required("아이디를 입력해 주세요")
+    .required("이메일을 입력해 주세요")
     .matches(
       /^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/,
       "올바른 이메일 형식으로 입력해 주세요"
@@ -111,7 +111,8 @@ function InfoFields() {
     !checkPw ||
     pw !== checkPw ||
     isNickNameDuplicate === "loading" ||
-    isUserIdDuplicate === "loading";
+    isUserIdDuplicate === "loading" ||
+    Object.keys(errors).length > 0;
 
   const handleSignUp = async () => {
     if (!verification.phone) {
@@ -140,18 +141,13 @@ function InfoFields() {
   };
 
   useEffect(() => {
-    // 필수 약관 동의되어있지 않으면 약관 페이지로 이동 - URL 복붙 방지
-    if (agreements.some(({ agree, required }) => !agree && required)) {
-      navigator("/sign-up/agreements");
-    }
-  }, [agreements, navigator]);
-
-  useEffect(() => {
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
       .then(({ data }) => {
-        setValue("nickname", data);
-        nickNameRef.current = data;
+        const nickname = data as string;
+
+        setValue("nickname", nickname);
+        nickNameRef.current = nickname;
       })
       .catch(() => setValue("nickname", ""));
   }, [setValue]);
@@ -171,7 +167,7 @@ function InfoFields() {
 
       try {
         const { data } = await getCheckNickName(debounceNickName);
-        setIsNickNameDuplicate(data);
+        setIsNickNameDuplicate(data as boolean);
       } catch {
         setIsNickNameDuplicate(undefined);
       }
@@ -191,7 +187,7 @@ function InfoFields() {
 
       try {
         const { data } = await getCheckUserId(debounceUserId);
-        setIsUserIdDuplicate(data);
+        setIsUserIdDuplicate(data as boolean);
       } catch {
         setIsUserIdDuplicate(undefined);
       }
