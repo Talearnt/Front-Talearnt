@@ -19,7 +19,7 @@ import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIc
 import { Input } from "@components/Input/Input";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
-import { nameRegex } from "@pages/auth/common/authRegex.constants";
+import { nameRegex } from "@pages/auth/common/common.constants";
 
 import {
   findIdResponseType,
