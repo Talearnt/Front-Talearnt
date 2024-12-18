@@ -12,7 +12,7 @@ import {
 export const postSignIn = async (account: accountType) =>
   await postAPI<{ accessToken: string }>("/v1/auth/login", account);
 
-// 카카오 로그인/회원가입
+// 카카오 로그인
 export const getKakaoAccessToken = async (code: string) =>
   await getAPI<kakaoAuthResponseType>("/v1/auth/login/kakao", { code });
 
