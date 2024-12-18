@@ -18,6 +18,10 @@ const signInSchema = object({
   pw: string()
 }).required();
 
+const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+const REDIRECT_URI = "http://localhost:5173/kakao/oauth";
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
 function SignIn() {
   const navigator = useNavigate();
 
@@ -111,6 +115,7 @@ function SignIn() {
         className={
           "mb-6 h-[50px] w-full gap-2 bg-[#FAE100] text-[#212121] hover:bg-[#FAE100]"
         }
+        onClick={() => (window.location.href = KAKAO_AUTH_URL)}
       >
         <svg
           width="24"
