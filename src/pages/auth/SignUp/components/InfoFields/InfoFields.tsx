@@ -71,7 +71,7 @@ function InfoFields() {
   });
   const { agreements } = useAgreementStore();
 
-  const [canProceed, setCanProceed] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false
   });
@@ -99,7 +99,8 @@ function InfoFields() {
     !pw ||
     !checkedPw ||
     pw !== checkedPw ||
-    isNickNameDuplicate !== false ||
+    (isNickNameDuplicate !== false && isNickNameDuplicate !== undefined) ||
+    (isNickNameDuplicate === undefined && nickname !== nickNameRef.current) ||
     isUserIdDuplicate !== false ||
     Object.keys(errors).length > 0;
 

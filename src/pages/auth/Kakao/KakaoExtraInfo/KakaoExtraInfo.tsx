@@ -32,11 +32,11 @@ import {
   nicknameRegex
 } from "@pages/auth/common/common.constants";
 
-const kaKaoExtraInfoSchema = object({
+const kakaoExtraInfoSchema = object({
   nickname: string().matches(nicknameRegex, "match")
 }).required();
 
-function KaKaoExtraInfo() {
+function KakaoExtraInfo() {
   const navigator = useNavigate();
   const nickNameRef = useRef<string>("");
 
@@ -48,7 +48,7 @@ function KaKaoExtraInfo() {
     watch
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(kaKaoExtraInfoSchema)
+    resolver: yupResolver(kakaoExtraInfoSchema)
   });
   const agreementsForm = useForm();
 
@@ -67,7 +67,8 @@ function KaKaoExtraInfo() {
     agreements[0] === false ||
     agreements[1] === false ||
     !nickname ||
-    isNickNameDuplicate !== false;
+    (isNickNameDuplicate !== false && isNickNameDuplicate !== undefined) ||
+    (isNickNameDuplicate === undefined && nickname !== nickNameRef.current);
   const debounceNickName = useDebounce(nickname);
 
   const handleAllCheckboxChange = ({
@@ -90,9 +91,9 @@ function KaKaoExtraInfo() {
       await postKakaoSignUp({
         ...kakaoAuthResponse,
         nickname,
-        agreeReqDTOS: agreements.map(({ agreeCodeId, agree }) => ({
+        agreeReqDTOS: agreements.map(({ agreeCodeId }, index) => ({
           agreeCodeId,
-          agree
+          agree: agreements[index]
         }))
       });
 
@@ -266,4 +267,4 @@ function KaKaoExtraInfo() {
   );
 }
 
-export default KaKaoExtraInfo;
+export default KakaoExtraInfo;
