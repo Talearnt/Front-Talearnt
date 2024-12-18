@@ -31,10 +31,13 @@ type VerificationCodeProps = {
 };
 
 const verificationCodeSchema = object({
-  phone: string().matches(/^[0-9]*$/, "올바른 전화번호 형식이 아닙니다."),
+  phone: string().matches(
+    /^[0-9]*$/,
+    "올바른 전화번호 형식이 아닙니다. 숫자만 입력해 주세요."
+  ),
   verificationCode: string().matches(
     /^[0-9]*$/,
-    "올바른 인증번호 형식이 아닙니다."
+    "올바른 인증번호 형식이 아닙니다. 숫자만 입력해 주세요."
   )
 }).required();
 
