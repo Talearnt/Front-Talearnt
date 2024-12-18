@@ -28,6 +28,12 @@ import { Spinner } from "@components/Spinner/Spinner";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
+import {
+  nameRegex,
+  pwRegex,
+  userIdRegex
+} from "@pages/auth/common/authRegex.constants";
+
 import { verificationStateType } from "@pages/auth/api/auth.type";
 
 const genderOptions = [
@@ -42,27 +48,18 @@ const genderOptions = [
 ];
 
 const infoFieldsSchema = object({
-  nickname: string().required("닉네임을 입력해 주세요"),
-  name: string()
-    .required("이름을 입력해 주세요")
-    .matches(
-      /^$|^[가-힣]{2,5}$/,
-      "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
-    ),
+  nickname: string(),
+  name: string().matches(
+    nameRegex,
+    "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
+  ),
   gender: string().required(),
-  userId: string()
-    .required("이메일을 입력해 주세요")
-    .matches(
-      /^$|^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/,
-      "올바른 이메일 형식으로 입력해 주세요"
-    ),
-  pw: string()
-    .required("비밀번호를 입력해 주세요")
-    .matches(
-      /^$|^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?~-]).{8,}$/,
-      "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
-    ),
-  checkPw: string().oneOf([yupRef("pw"), ""], "비밀번호가 일치하지 않습니다.")
+  userId: string().matches(userIdRegex, "올바른 이메일 형식으로 입력해 주세요"),
+  pw: string().matches(
+    pwRegex,
+    "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
+  ),
+  checkedPw: string().oneOf([yupRef("pw"), ""], "비밀번호가 일치하지 않습니다.")
 }).required();
 
 function InfoFields() {
@@ -82,7 +79,7 @@ function InfoFields() {
   });
   const { agreements } = useAgreementStore();
 
-  const [canProceed, setCanProceed] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false
   });
@@ -93,13 +90,13 @@ function InfoFields() {
     boolean | "loading"
   >();
 
-  const [nickname, name, gender, userId, pw, checkPw] = watch([
+  const [nickname, name, gender, userId, pw, checkedPw] = watch([
     "nickname",
     "name",
     "gender",
     "userId",
     "pw",
-    "checkPw"
+    "checkedPw"
   ]);
   const debounceNickName = useDebounce(nickname);
   const debounceUserId = useDebounce(userId);
@@ -108,14 +105,14 @@ function InfoFields() {
     !name ||
     !userId ||
     !pw ||
-    !checkPw ||
-    pw !== checkPw ||
+    !checkedPw ||
+    pw !== checkedPw ||
     isNickNameDuplicate === "loading" ||
     isUserIdDuplicate === "loading" ||
     Object.keys(errors).length > 0;
 
   const handleSignUp = async () => {
-    if (!verification.phone) {
+    if (!verification.phone || doneButtonDisable) {
       return;
     }
 
@@ -123,6 +120,7 @@ function InfoFields() {
       await postSignUp({
         userId,
         pw,
+        checkedPw,
         name,
         nickname,
         gender,
@@ -258,7 +256,7 @@ function InfoFields() {
               error={errors.pw?.message}
               formData={{
                 ...register("pw", {
-                  onChange: () => trigger("checkPw")
+                  onChange: () => trigger("checkedPw")
                 })
               }}
               label={"비밀번호"}
@@ -268,10 +266,10 @@ function InfoFields() {
               type={"password"}
             />
             <Input
-              error={errors.checkPw?.message}
-              formData={{ ...register("checkPw") }}
+              error={errors.checkedPw?.message}
+              formData={{ ...register("checkedPw") }}
               insideNode={
-                checkPw && !errors.checkPw ? (
+                checkedPw && !errors.checkedPw ? (
                   <LabelText>확인</LabelText>
                 ) : undefined
               }
