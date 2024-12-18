@@ -7,7 +7,7 @@ import { useKakaoAuthResponseStore } from "@pages/auth/api/auth.store";
 
 import { kakaoAuthResponseType } from "@pages/auth/api/auth.type";
 
-function KaKaoOauth() {
+function KakaoOauth() {
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -35,4 +35,4 @@ function KaKaoOauth() {
   return null;
 }
 
-export default KaKaoOauth;
+export default KakaoOauth;

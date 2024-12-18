@@ -9,8 +9,8 @@ import FindPassword from "@pages/auth/FindAccount/components/FindPassword/FindPa
 import FindAccount from "@pages/auth/FindAccount/FindAccount";
 // 카카오
 import Kakao from "@pages/auth/Kakao/Kakao";
-import KaKaoExtraInfo from "@pages/auth/Kakao/KaKaoExtraInfo/KaKaoExtraInfo";
-import KaKaoOauth from "@pages/auth/Kakao/KaKaoOauth/KaKaoOauth";
+import KakaoExtraInfo from "@pages/auth/Kakao/KakaoExtraInfo/KakaoExtraInfo";
+import KakaoOauth from "@pages/auth/Kakao/KakaoOauth/KakaoOauth";
 // 로그인
 import SignIn from "@pages/auth/SignIn/SignIn";
 // 회원가입
@@ -28,11 +28,11 @@ const authRouter: RouteObject[] = [
     path: "kakao",
     children: [
       {
-        element: <KaKaoOauth />,
+        element: <KakaoOauth />,
         path: "oauth"
       },
       {
-        element: <KaKaoExtraInfo />,
+        element: <KakaoExtraInfo />,
         path: "info-fields"
       },
       {
