@@ -1,24 +1,12 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
-
-import useAgreementStore from "@pages/auth/api/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 
 function CompleteSignUp() {
   const navigator = useNavigate();
-
-  const { agreements } = useAgreementStore();
-
-  useEffect(() => {
-    // 필수 약관 동의되어있지 않으면 약관 페이지로 이동 - URL 복붙 방지
-    if (agreements.some(({ agree, required }) => !agree && required)) {
-      navigator("/sign-up/agreements");
-    }
-  }, [agreements, navigator]);
 
   return (
     <>
