@@ -4,6 +4,7 @@ type TabSliderProps = {
   className?: string;
   currentValue: string;
   onChangeHandler: (value: string) => void;
+  onClickHandler?: (value: string) => void;
   options: { label: string; value: string }[];
 };
 
@@ -11,6 +12,7 @@ function TabSlider({
   className,
   currentValue,
   onChangeHandler,
+  onClickHandler,
   options
 }: TabSliderProps) {
   return (
@@ -30,6 +32,7 @@ function TabSlider({
             id={`option${index.toString()}`}
             name={"slider"}
             onChange={() => onChangeHandler(value)}
+            onClick={() => onClickHandler && onClickHandler(value)}
             type={"radio"}
           />
           <label
