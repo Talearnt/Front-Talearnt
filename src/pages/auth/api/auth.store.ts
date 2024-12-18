@@ -1,6 +1,9 @@
 import { create } from "zustand/react";
 
-import { agreementType } from "@pages/auth/api/auth.type";
+import {
+  agreementType,
+  kakaoAuthResponseType
+} from "@pages/auth/api/auth.type";
 
 type agreementStoreType = {
   agreements: agreementType[];
@@ -65,3 +68,15 @@ export const useAgreementStore = create<agreementStoreType>((set, get) => ({
       return { agreements: updatedAgreements };
     })
 }));
+
+type kakaoAuthResponseStoreType = {
+  kakaoAuthResponse: kakaoAuthResponseType | null;
+  setResponse: (response: kakaoAuthResponseType) => void;
+};
+
+export const useKakaoAuthResponseStore = create<kakaoAuthResponseStoreType>(
+  set => ({
+    kakaoAuthResponse: null,
+    setResponse: response => set(() => ({ kakaoAuthResponse: response }))
+  })
+);
