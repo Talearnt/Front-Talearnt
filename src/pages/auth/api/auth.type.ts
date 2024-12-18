@@ -31,6 +31,7 @@ export type findIdResponseType = {
 };
 
 export type signUpBodyType = accountType & {
+  checkedPw: string;
   name: string;
   nickname: string;
   gender: string;
