@@ -1,19 +1,16 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
-import {
-  getCheckNickName,
-  getRandomNickName,
-  postKakaoSignUp
-} from "@pages/auth/api/auth.api";
+import { getRandomNickName, postKakaoSignUp } from "@pages/auth/api/auth.api";
 
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
+import { useCheckNickname } from "@pages/auth/api/auth.hook";
 
 import {
   useAgreementStore,
@@ -54,22 +51,23 @@ function KakaoExtraInfo() {
 
   const { agreements: agreementsList } = useAgreementStore();
   const { kakaoAuthResponse } = useKakaoAuthResponseStore();
-
-  const [isNickNameDuplicate, setIsNickNameDuplicate] = useState<
-    boolean | "loading"
-  >();
+  const debounceNickname = useDebounce(watch("nickname"));
+  const { data, isLoading } = useCheckNickname(
+    debounceNickname,
+    !!debounceNickname &&
+      debounceNickname !== nickNameRef.current &&
+      !errors.nickname
+  );
 
   const agreements = agreementsForm.watch(
     agreementsList.map(({ agreeCodeId }) => agreeCodeId.toString())
   );
   const [nickname] = watch(["nickname"]);
   const buttonIsDisabled =
-    agreements[0] === false ||
-    agreements[1] === false ||
-    !nickname ||
-    (isNickNameDuplicate !== false && isNickNameDuplicate !== undefined) ||
-    (isNickNameDuplicate === undefined && nickname !== nickNameRef.current);
-  const debounceNickName = useDebounce(nickname);
+    agreements[0] === false || // 필수 이용약관 동의 안 한 경우
+    agreements[1] === false || // 필수 이용약관 동의 안 한 경우
+    !nickname || // 닉네임 없는 경우
+    data?.data !== false; // 닉네임 중복인 경우
 
   const handleAllCheckboxChange = ({
     target
@@ -117,38 +115,11 @@ function KakaoExtraInfo() {
   }, [setValue]);
 
   useEffect(() => {
-    if (errors.nickname) {
-      return;
+    if (data?.data === true) {
+      // 닉네임 중복인 경우
+      setError("nickname", { message: "이미 등록된 닉네임입니다" });
     }
-
-    const checkEmailValidity = async () => {
-      if (
-        nickname === nickNameRef.current ||
-        nickname !== debounceNickName ||
-        !debounceNickName
-      ) {
-        // 랜덤 생성된 닉네임과 동일하거나, 닉네임이 없거나, 디바운스중 일경우
-        setIsNickNameDuplicate(undefined);
-        return;
-      }
-
-      setIsNickNameDuplicate("loading");
-
-      try {
-        // TODO tanstack-query 적용해서 캐싱
-        const { data } = await getCheckNickName(debounceNickName);
-        setIsNickNameDuplicate(data);
-
-        if (data) {
-          setError("nickname", { message: "이미 등록된 닉네임입니다" });
-        }
-      } catch {
-        setIsNickNameDuplicate(undefined);
-      }
-    };
-
-    void checkEmailValidity();
-  }, [debounceNickName, errors.nickname, nickname, setError]);
+  }, [data, setError]);
 
   if (kakaoAuthResponse === null) {
     return;
@@ -185,19 +156,18 @@ function KakaoExtraInfo() {
             }
             formData={{ ...register("nickname") }}
             insideNode={
-              isNickNameDuplicate ===
-              undefined ? undefined : isNickNameDuplicate === "loading" ? (
+              isLoading ? (
                 <Spinner />
-              ) : isNickNameDuplicate ? (
+              ) : data?.data ? (
                 <LabelText type={"error"}>사용불가</LabelText>
-              ) : (
+              ) : data?.data === false ? (
                 <LabelText>사용가능</LabelText>
-              )
+              ) : undefined
             }
             label={"닉네임"}
             placeholder={"닉네임을 입력해 주세요"}
           />
-          {isNickNameDuplicate !== true && (
+          {data?.data !== true && (
             <>
               <span
                 className={classNames(
