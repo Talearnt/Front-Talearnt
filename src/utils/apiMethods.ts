@@ -1,5 +1,7 @@
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
+import { useAuthStore } from "@pages/auth/api/auth.store";
+
 import { customAxiosResponseType, responseDataType } from "@common/common.type";
 
 import { checkObjectType } from "./checkObjectType";
@@ -12,6 +14,22 @@ const instance = Axios.create({
     Accept: "application/json"
   }
 });
+
+instance.interceptors.request.use(
+  config => {
+    if (config.withCredentials) {
+      const { accessToken } = useAuthStore.getState();
+
+      if (accessToken === null) {
+        return config;
+      }
+
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
 
 instance.interceptors.response.use(
   res => res,
@@ -31,7 +49,8 @@ export const getAPI = async <T>(
   queryData?: Record<
     string,
     string | number | Record<string, unknown> | undefined
-  >
+  >,
+  config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   let queryParameter = "";
 
@@ -52,8 +71,10 @@ export const getAPI = async <T>(
       }, "?")
       .slice(0, -1);
   }
+
   const { data, status } = await instance.get<responseDataType<T>>(
-    `${url}${queryParameter}`
+    `${url}${queryParameter}`,
+    config
   );
 
   return { ...data, status };
@@ -74,26 +95,40 @@ export const postAPI = async <T>(
 
 export const putAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
-  const { data, status } = await instance.put<responseDataType<T>>(url, body);
+  const { data, status } = await instance.put<responseDataType<T>>(
+    url,
+    body,
+    config
+  );
 
   return { ...data, status };
 };
 
 export const patchAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>
+  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
-  const { data, status } = await instance.put<responseDataType<T>>(url, body);
+  const { data, status } = await instance.patch<responseDataType<T>>(
+    url,
+    body,
+    config
+  );
 
   return { ...data, status };
 };
 
 export const deleteAPI = async <T>(
-  url: string
+  url: string,
+  config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
-  const { data, status } = await instance.delete<responseDataType<T>>(url);
+  const { data, status } = await instance.delete<responseDataType<T>>(
+    url,
+    config
+  );
 
   return { ...data, status };
 };

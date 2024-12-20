@@ -9,6 +9,8 @@ import { postSignIn } from "@pages/auth/api/auth.api";
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
+import { useAuthStore } from "@pages/auth/api/auth.store";
+
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { Input } from "@components/Input/Input";
@@ -36,6 +38,8 @@ function SignIn() {
     resolver: yupResolver(signInSchema)
   });
 
+  const { setAccessToken } = useAuthStore();
+
   const [userId, pw] = watch(["userId", "pw"]);
 
   const handleSignIn = async ({
@@ -57,7 +61,9 @@ function SignIn() {
     }
 
     try {
-      await postSignIn({ userId, pw });
+      const { data } = await postSignIn({ userId, pw });
+
+      setAccessToken((data as { accessToken: string }).accessToken);
       navigator("/");
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
