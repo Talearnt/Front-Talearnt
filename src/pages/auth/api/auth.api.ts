@@ -32,7 +32,10 @@ export const getKakaoAccessToken = async (code: string) =>
 // 카카오 회원가입
 export const postKakaoSignUp = async (
   body: Omit<signUpBodyType, "pw" | "checkedPw">
-) => await postAPI("/v1/auth/join/kakao", body);
+) =>
+  await postAPI("/v1/auth/join/kakao", body, {
+    withCredentials: true
+  });
 
 // refresh 토큰
 export const postToGetRefreshToken = async () =>
