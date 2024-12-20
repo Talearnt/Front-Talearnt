@@ -63,7 +63,7 @@ function SignIn() {
     try {
       const { data } = await postSignIn({ userId, pw });
 
-      setAccessToken((data as { accessToken: string }).accessToken);
+      setAccessToken(data.accessToken);
       navigator("/");
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {

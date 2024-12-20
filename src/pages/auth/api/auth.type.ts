@@ -46,10 +46,4 @@ export type findIdResponseType = {
 };
 
 // 카카오 로그인 response
-export type kakaoAuthResponseType = Pick<
-  signUpBodyType,
-  "gender" | "name" | "phone" | "userId"
-> & {
-  accessToken: string;
-  isRegistered: boolean;
-};
+export type kakaoSignUpBodyType = Omit<signUpBodyType, "checkedPw" | "pw">;

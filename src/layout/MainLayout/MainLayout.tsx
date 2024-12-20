@@ -12,8 +12,6 @@ import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/Input/Input";
 
-import { accessTokenType } from "@pages/auth/api/auth.type";
-
 function MainLayout() {
   const navigator = useNavigate();
 
@@ -23,7 +21,7 @@ function MainLayout() {
     if (accessToken === null) {
       getAccessTokenUseRefreshToken()
         .then(({ data }) => {
-          setAccessToken((data as accessTokenType).accessToken);
+          setAccessToken(data.accessToken);
         })
         .catch((error: unknown) =>
           console.error("Token refresh failed", error)

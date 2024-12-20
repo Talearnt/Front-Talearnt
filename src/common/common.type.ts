@@ -11,7 +11,7 @@ export type CommonIconProps = ComponentProps<"svg"> & {
 };
 
 export type responseDataType<T> = {
-  data: T | null;
+  data: T;
   errorCode: string;
   errorMessage: string;
   success: boolean;
