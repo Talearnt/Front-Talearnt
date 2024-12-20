@@ -71,7 +71,7 @@ function InfoFields() {
   });
   const { agreements } = useAgreementStore();
 
-  const [canProceed, setCanProceed] = useState(true);
+  const [canProceed, setCanProceed] = useState(false);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false
   });
