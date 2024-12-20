@@ -1,6 +1,7 @@
 import { getAPI, postAPI, putAPI } from "@utils/apiMethods";
 
 import {
+  accessTokenType,
   accountType,
   findIdResponseType,
   kakaoAuthResponseType,
@@ -10,7 +11,15 @@ import {
 
 // 로그인
 export const postSignIn = async (account: accountType) =>
-  await postAPI<{ accessToken: string }>("/v1/auth/login", account);
+  await postAPI<accessTokenType>("/v1/auth/login", account, {
+    withCredentials: true
+  });
+
+// 리프레시 토큰
+export const getAccessTokenUseRefreshToken = async () =>
+  await getAPI<accessTokenType>("v1/auth/login/refresh", undefined, {
+    withCredentials: true
+  });
 
 // 카카오 로그인
 export const getKakaoAccessToken = async (code: string) =>
@@ -67,3 +76,9 @@ export const putChangePw = async ({
   no: string;
   uuid: string;
 }) => await putAPI(`/v1/auth/${no}/password/${uuid}`, body);
+
+// 랜덤 닉네임 생성
+export const getTest = async () =>
+  await getAPI("/v1/posts/exchange/talents/offered", undefined, {
+    withCredentials: true
+  });

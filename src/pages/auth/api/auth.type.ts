@@ -12,6 +12,10 @@ export type agreementType = {
   title: string;
 };
 
+export type accessTokenType = {
+  accessToken: string;
+};
+
 // 회원가입 body
 export type signUpBodyType = accountType & {
   checkedPw: string;
