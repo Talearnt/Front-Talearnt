@@ -6,8 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { object, ref as yupRef, string } from "yup";
 
 import {
-  getCheckNickName,
-  getCheckUserId,
   getRandomNickName,
   postConfirmVerificationCode,
   postSendVerificationCode,
@@ -18,6 +16,7 @@ import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
+import { useCheckNickname, useCheckUserId } from "@pages/auth/api/auth.hook";
 
 import { useAgreementStore } from "@pages/auth/api/auth.store";
 
@@ -69,18 +68,25 @@ function InfoFields() {
     mode: "onChange",
     resolver: yupResolver(infoFieldsSchema)
   });
-  const { agreements } = useAgreementStore();
 
-  const [canProceed, setCanProceed] = useState(false);
+  const { agreements } = useAgreementStore();
+  const debounceNickname = useDebounce(watch("nickname"));
+  const debounceUserId = useDebounce(watch("userId"));
+  const { data, isLoading } = useCheckNickname(
+    debounceNickname,
+    !!debounceNickname &&
+      debounceNickname !== nickNameRef.current &&
+      !errors.nickname
+  );
+  const { data: userIdData, isLoading: userIdIsLoading } = useCheckUserId(
+    debounceUserId,
+    !!debounceUserId && !errors.userId
+  );
+
+  const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false
   });
-  const [isNickNameDuplicate, setIsNickNameDuplicate] = useState<
-    boolean | "loading"
-  >();
-  const [isUserIdDuplicate, setIsUserIdDuplicate] = useState<
-    boolean | "loading"
-  >();
 
   const [nickname, name, gender, userId, pw, checkedPw] = watch([
     "nickname",
@@ -90,19 +96,16 @@ function InfoFields() {
     "pw",
     "checkedPw"
   ]);
-  const debounceNickName = useDebounce(nickname);
-  const debounceUserId = useDebounce(userId);
   const doneButtonDisable =
-    !nickname ||
-    !name ||
-    !userId ||
-    !pw ||
-    !checkedPw ||
-    pw !== checkedPw ||
-    (isNickNameDuplicate !== false && isNickNameDuplicate !== undefined) ||
-    (isNickNameDuplicate === undefined && nickname !== nickNameRef.current) ||
-    isUserIdDuplicate !== false ||
-    Object.keys(errors).length > 0;
+    !nickname || // 닉네임 없는 경우
+    !name || // 이름 없는 경우
+    !userId || // 아이디 없는 경우
+    !pw || // 비밀번호 없는 경우
+    !checkedPw || // 확인 비밀번호 없는 경우
+    pw !== checkedPw || // 비밀번호와 확인 비밀번호가 다른 경우
+    data?.data !== false || // 닉네임 중복인 경우
+    userIdData?.data !== false || // 아이디 중복인 경우
+    Object.keys(errors).length > 0; // 그 외 에러가 있는 경우(matches 등)
 
   const handleSignUp = async () => {
     if (!verification.phone || doneButtonDisable) {
@@ -132,6 +135,10 @@ function InfoFields() {
   };
 
   useEffect(() => {
+    if (!canProceed) {
+      return;
+    }
+
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
       .then(({ data }) => {
@@ -141,71 +148,21 @@ function InfoFields() {
         nickNameRef.current = nickname;
       })
       .catch(() => setValue("nickname", ""));
-  }, [setValue]);
+  }, [canProceed, setValue]);
 
   useEffect(() => {
-    if (errors.nickname) {
-      return;
+    if (data?.data === true) {
+      // 닉네임 중복인 경우
+      setError("nickname", { message: "이미 등록된 닉네임입니다" });
     }
-
-    const checkEmailValidity = async () => {
-      if (
-        nickname === nickNameRef.current ||
-        nickname !== debounceNickName ||
-        !debounceNickName
-      ) {
-        // 랜덤 생성된 닉네임과 동일하거나, 닉네임이 없거나, 디바운스중 일경우
-        setIsNickNameDuplicate(undefined);
-        return;
-      }
-
-      setIsNickNameDuplicate("loading");
-
-      try {
-        // TODO tanstack-query 적용해서 캐싱
-        const { data } = await getCheckNickName(debounceNickName);
-        setIsNickNameDuplicate(data);
-
-        if (data) {
-          setError("nickname", { message: "이미 등록된 닉네임입니다" });
-        }
-      } catch {
-        setIsNickNameDuplicate(undefined);
-      }
-    };
-
-    void checkEmailValidity();
-  }, [debounceNickName, errors.nickname, nickname, setError]);
+  }, [data, setError]);
 
   useEffect(() => {
-    if (errors.userId) {
-      return;
+    if (userIdData?.data === true) {
+      // 아이디 중복인 경우
+      setError("userId", { message: "이미 등록된 아이디입니다" });
     }
-
-    const checkEmailValidity = async () => {
-      if (userId !== debounceUserId || !debounceUserId) {
-        // 디바운스 중이거나, 아이디가 없는 경우
-        setIsUserIdDuplicate(undefined);
-        return;
-      }
-
-      setIsUserIdDuplicate("loading");
-
-      try {
-        // TODO tanstack-query 적용해서 캐싱
-        const { data } = await getCheckUserId(debounceUserId);
-        setIsUserIdDuplicate(data);
-
-        if (data) {
-          setError("userId", { message: "이미 등록된 아이디입니다" });
-        }
-      } catch {
-        setIsUserIdDuplicate(undefined);
-      }
-    };
-
-    void checkEmailValidity();
-  }, [debounceUserId, errors.userId, setError, userId]);
+  }, [setError, userIdData]);
 
   return (
     <>
@@ -236,19 +193,18 @@ function InfoFields() {
                 }
                 formData={{ ...register("nickname") }}
                 insideNode={
-                  isNickNameDuplicate ===
-                  undefined ? undefined : isNickNameDuplicate === "loading" ? (
+                  isLoading ? (
                     <Spinner />
-                  ) : isNickNameDuplicate ? (
+                  ) : data?.data ? (
                     <LabelText type={"error"}>사용불가</LabelText>
-                  ) : (
+                  ) : data?.data === false ? (
                     <LabelText>사용가능</LabelText>
-                  )
+                  ) : undefined
                 }
                 label={"닉네임"}
                 placeholder={"닉네임을 입력해 주세요"}
               />
-              {isNickNameDuplicate !== true && (
+              {data?.data !== true && (
                 <>
                   <span
                     className={classNames(
@@ -289,14 +245,13 @@ function InfoFields() {
               error={errors.userId?.message}
               formData={{ ...register("userId") }}
               insideNode={
-                isUserIdDuplicate ===
-                undefined ? undefined : isUserIdDuplicate === "loading" ? (
+                userIdIsLoading ? (
                   <Spinner />
-                ) : isUserIdDuplicate ? (
+                ) : userIdData?.data ? (
                   <LabelText type={"error"}>사용불가</LabelText>
-                ) : (
+                ) : userIdData?.data === false ? (
                   <LabelText>사용가능</LabelText>
-                )
+                ) : undefined
               }
               label={"아이디(이메일)"}
               placeholder={"이메일을 입력해 주세요"}
