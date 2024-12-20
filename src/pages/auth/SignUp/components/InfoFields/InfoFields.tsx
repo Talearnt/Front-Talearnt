@@ -135,7 +135,7 @@ function InfoFields() {
     // nickName 인풋에 random nickname 적용
     getRandomNickName()
       .then(({ data }) => {
-        const nickname = data as string;
+        const nickname = data;
 
         setValue("nickname", nickname);
         nickNameRef.current = nickname;
@@ -164,7 +164,7 @@ function InfoFields() {
       try {
         // TODO tanstack-query 적용해서 캐싱
         const { data } = await getCheckNickName(debounceNickName);
-        setIsNickNameDuplicate(data as boolean);
+        setIsNickNameDuplicate(data);
 
         if (data) {
           setError("nickname", { message: "이미 등록된 닉네임입니다" });
@@ -194,7 +194,7 @@ function InfoFields() {
       try {
         // TODO tanstack-query 적용해서 캐싱
         const { data } = await getCheckUserId(debounceUserId);
-        setIsUserIdDuplicate(data as boolean);
+        setIsUserIdDuplicate(data);
 
         if (data) {
           setError("userId", { message: "이미 등록된 아이디입니다" });

@@ -4,7 +4,6 @@ import {
   accessTokenType,
   accountType,
   findIdResponseType,
-  kakaoAuthResponseType,
   signUpBodyType,
   verificationBodyType
 } from "@pages/auth/api/auth.type";
@@ -23,7 +22,12 @@ export const getAccessTokenUseRefreshToken = async () =>
 
 // 카카오 로그인
 export const getKakaoAccessToken = async (code: string) =>
-  await getAPI<kakaoAuthResponseType>("/v1/auth/login/kakao", { code });
+  await getAPI<
+    Pick<signUpBodyType, "gender" | "name" | "phone" | "userId"> & {
+      accessToken: string;
+      isRegistered: boolean;
+    }
+  >("/v1/auth/login/kakao", { code });
 
 // 카카오 회원가입
 export const postKakaoSignUp = async (

@@ -57,7 +57,7 @@ function FindPassword() {
         userId
       });
 
-      sentDateRef.current = data?.sentDate as string;
+      sentDateRef.current = data.sentDate;
 
       setCanProceed(true);
     } catch (e) {
