@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { getRandomNickName, postSignIn } from "@pages/auth/api/auth.api";
+import { getRandomNickName, postSignIn } from "@pages/auth/auth.api";
 
 import { apiErrorType } from "@common/common.type";
 

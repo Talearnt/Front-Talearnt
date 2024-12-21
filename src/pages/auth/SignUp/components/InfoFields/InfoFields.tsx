@@ -10,15 +10,15 @@ import {
   postConfirmVerificationCode,
   postSendVerificationCode,
   postSignUp
-} from "@pages/auth/api/auth.api";
+} from "@pages/auth/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
-import { useCheckNickname, useCheckUserId } from "@pages/auth/api/auth.hook";
+import { useCheckNickname, useCheckUserId } from "@pages/auth/auth.hook";
 
-import { useAgreementStore } from "@pages/auth/api/auth.store";
+import { useAgreementStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
@@ -35,7 +35,7 @@ import {
   userIdRegex
 } from "@pages/auth/common/common.constants";
 
-import { verificationStateType } from "@pages/auth/api/auth.type";
+import { verificationStateType } from "@pages/auth/auth.type";
 
 const infoFieldsSchema = object({
   nickname: string().matches(nicknameRegex, "match"),

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getCheckNickName, getCheckUserId } from "@pages/auth/api/auth.api";
+import { getCheckNickName, getCheckUserId } from "@pages/auth/auth.api";
 
 export const useCheckNickname = (
   debounceNickname: string | undefined,

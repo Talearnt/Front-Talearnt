@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 
-import { getAccessTokenUseRefreshToken } from "@pages/auth/api/auth.api";
+import { getAccessTokenUseRefreshToken } from "@pages/auth/auth.api";
 
 import { classNames } from "@utils/classNames";
 
-import { useAuthStore } from "@pages/auth/api/auth.store";
+import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
