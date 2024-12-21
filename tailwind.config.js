@@ -40,6 +40,8 @@ export default {
           100: "#1E2224"
         },
         "talearnt-BG_Background": "#FFFFFF",
+        "talearnt-BG_Black_01": "rgba(0, 0, 0, 0.7)",
+        "talearnt-BG_Black_02": "rgba(0, 0, 0, 0.8)",
         "talearnt-BG_Up_01": "#F7F8F8",
         "talearnt-BG_Up_02": "#ECEEEF",
         "talearnt-BG_Up_03": "#DEE1E3",
@@ -64,12 +66,22 @@ export default {
         pretendard: ["Pretendard", "sans-serif"]
       },
       animation: {
-        "spinner-spin": "spinner-spin 1s linear infinite"
+        "spinner-spin": "spinner-spin 1s linear infinite",
+        "fade-in": "fade-in 0.5s ease-in-out",
+        "fade-out": "fade-out 0.5s ease-in-out"
       },
       keyframes: {
         "spinner-spin": {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(-360deg)" }
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" }
+        },
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" }
         }
       }
     }
