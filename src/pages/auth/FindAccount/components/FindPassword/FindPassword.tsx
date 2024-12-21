@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
 import { object, string } from "yup";
 
-import { postFindPwEmail } from "@pages/auth/api/auth.api";
+import { postFindPwEmail } from "@pages/auth/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";

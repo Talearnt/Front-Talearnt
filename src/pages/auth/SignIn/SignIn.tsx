@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
-import { postSignIn } from "@pages/auth/api/auth.api";
+import { postSignIn } from "@pages/auth/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
-import { useAuthStore } from "@pages/auth/api/auth.store";
+import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";

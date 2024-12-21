@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { getKakaoAccessToken } from "@pages/auth/api/auth.api";
+import { getKakaoAccessToken } from "@pages/auth/auth.api";
 
 import {
   useAuthStore,
   useKakaoAuthResponseStore
-} from "@pages/auth/api/auth.store";
+} from "@pages/auth/auth.store";
 
 function KakaoOauth() {
   const navigator = useNavigate();

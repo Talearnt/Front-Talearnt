@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
-import { useAuthStore } from "@pages/auth/api/auth.store";
+import { useAuthStore } from "@pages/auth/auth.store";
 
 import { customAxiosResponseType, responseDataType } from "@common/common.type";
 

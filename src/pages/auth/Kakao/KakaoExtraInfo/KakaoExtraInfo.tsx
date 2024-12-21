@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 
-import { getRandomNickName, postKakaoSignUp } from "@pages/auth/api/auth.api";
+import { getRandomNickName, postKakaoSignUp } from "@pages/auth/auth.api";
 
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
-import { useCheckNickname } from "@pages/auth/api/auth.hook";
+import { useCheckNickname } from "@pages/auth/auth.hook";
 
 import {
   useAgreementStore,
   useKakaoAuthResponseStore
-} from "@pages/auth/api/auth.store";
+} from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";

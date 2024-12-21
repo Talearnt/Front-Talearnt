@@ -9,7 +9,7 @@ import { object, string } from "yup";
 import {
   postConfirmVerificationCode,
   postSendVerificationCode
-} from "@pages/auth/api/auth.api";
+} from "@pages/auth/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
@@ -24,7 +24,7 @@ import { nameRegex } from "@pages/auth/common/common.constants";
 import {
   findIdResponseType,
   verificationStateType
-} from "@pages/auth/api/auth.type";
+} from "@pages/auth/auth.type";
 
 const findIdSchema = object({
   name: string().matches(

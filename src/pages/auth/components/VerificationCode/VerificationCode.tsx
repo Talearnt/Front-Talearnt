@@ -12,7 +12,7 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { verificationStateType } from "@pages/auth/api/auth.type";
+import { verificationStateType } from "@pages/auth/auth.type";
 
 type VerificationCodeProps = {
   confirmCodeHandler: ({
