@@ -5,7 +5,7 @@ import { accountType } from "@pages/auth/api/auth.type";
 
 export const handlers = [
   http.post<PathParams, accountType>(
-    "http://3.35.198.221/v1/auth/login",
+    "https://api.talearnt.net/v1/auth/login",
     async ({ request }) => {
       const { userId, pw } = await request.json();
 
@@ -37,7 +37,7 @@ export const handlers = [
     }
   ),
   http.get<PathParams>(
-    "http://3.35.198.221/v1/auth/users/nickname/random",
+    "https://api.talearnt.net/v1/auth/users/nickname/random",
     () => {
       const randomNickName =
         "user" + Math.floor(Math.random() * 1000).toString();
