@@ -11,6 +11,7 @@ import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/Input/Input";
+import { Toast } from "@components/Toast/Toast";
 
 function MainLayout() {
   const navigator = useNavigate();
@@ -81,6 +82,7 @@ function MainLayout() {
         className={classNames("mx-auto mb-[120px] mt-[96px]", "max-w-[848px]")}
       >
         <Outlet />
+        <Toast />
       </main>
     </>
   );
