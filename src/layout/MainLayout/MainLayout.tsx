@@ -5,18 +5,21 @@ import { getAccessTokenUseRefreshToken } from "@pages/auth/auth.api";
 
 import { classNames } from "@utils/classNames";
 
+import { usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/Input/Input";
+import { Prompt } from "@components/Prompt/Prompt";
 import { Toast } from "@components/Toast/Toast";
 
 function MainLayout() {
   const navigator = useNavigate();
 
   const { accessToken, setAccessToken } = useAuthStore();
+  const { promptData } = usePromptStore();
 
   useEffect(() => {
     if (accessToken === null) {
@@ -83,6 +86,7 @@ function MainLayout() {
       >
         <Outlet />
         <Toast />
+        {promptData && <Prompt />}
       </main>
     </>
   );
