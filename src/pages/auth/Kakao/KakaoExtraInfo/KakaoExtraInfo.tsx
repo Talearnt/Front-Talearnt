@@ -7,11 +7,13 @@ import { object, string } from "yup";
 
 import { getRandomNickName, postKakaoSignUp } from "@pages/auth/auth.api";
 
+import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
 import { useCheckNickname } from "@pages/auth/auth.hook";
 
+import { usePromptStore, useToastStore } from "@common/common.store";
 import {
   useAgreementStore,
   useKakaoAuthResponseStore
@@ -49,8 +51,6 @@ function KakaoExtraInfo() {
   });
   const agreementsForm = useForm();
 
-  const { agreements: agreementsList } = useAgreementStore();
-  const { kakaoAuthResponse } = useKakaoAuthResponseStore();
   const debounceNickname = useDebounce(watch("nickname"));
   const { data, isLoading } = useCheckNickname(
     debounceNickname,
@@ -58,6 +58,11 @@ function KakaoExtraInfo() {
       debounceNickname !== nickNameRef.current &&
       !errors.nickname
   );
+
+  const { agreements: agreementsList } = useAgreementStore();
+  const { kakaoAuthResponse } = useKakaoAuthResponseStore();
+  const { setToast } = useToastStore();
+  const { setPrompt } = usePromptStore();
 
   const agreements = agreementsForm.watch(
     agreementsList.map(({ agreeCodeId }) => agreeCodeId.toString())
@@ -97,8 +102,18 @@ function KakaoExtraInfo() {
 
       navigator("/kakao/complete");
     } catch (e) {
-      // TODO 토스트 alert 적용
-      console.log(e);
+      if (checkObjectType(e) && "errorMessage" in e) {
+        setToast({
+          message: e.errorMessage as string
+        });
+        return;
+      }
+
+      setPrompt({
+        title: "서버 오류",
+        content:
+          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요."
+      });
     }
   };
 

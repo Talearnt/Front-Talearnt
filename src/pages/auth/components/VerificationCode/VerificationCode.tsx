@@ -8,6 +8,8 @@ import { object, string } from "yup";
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
+import { usePromptStore } from "@common/common.store";
+
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
@@ -61,6 +63,7 @@ function VerificationCode({
   });
 
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
+  const { setPrompt } = usePromptStore();
 
   const [{ isCodeVerified }, setVerification] = verificationState;
   const [isLoading, setIsLoading] = useState<
@@ -92,8 +95,11 @@ function VerificationCode({
         });
         return;
       }
-      setError("phone", {
-        message: "예기치 못한 오류가 발생했습니다."
+
+      setPrompt({
+        title: "서버 오류",
+        content:
+          "알 수 없는 이유로 인증번호 요청에 실패하였습니다.\n다시 시도해 주세요."
       });
     } finally {
       setIsLoading(undefined);

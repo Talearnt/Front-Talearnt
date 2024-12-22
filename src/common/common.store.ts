@@ -47,7 +47,7 @@ export const useToastStore = create<toastStoreType>(set => ({
 type promptType = {
   title: ReactNode;
   content: ReactNode;
-  confirmOnClickHandler: () => void;
+  confirmOnClickHandler?: () => void;
   cancelOnClickHandler?: () => void;
 };
 
