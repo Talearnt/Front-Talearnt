@@ -27,7 +27,13 @@ export const getKakaoAccessToken = async (code: string) =>
       accessToken: string;
       isRegistered: boolean;
     }
-  >("/v1/auth/login/kakao", { code });
+  >(
+    "/v1/auth/login/kakao",
+    { code },
+    {
+      withCredentials: true
+    }
+  );
 
 // 카카오 회원가입
 export const postKakaoSignUp = async (
