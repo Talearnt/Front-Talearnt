@@ -7,7 +7,7 @@ import { usePromptStore } from "@common/common.store";
 import { Button } from "@components/Button/Button";
 
 function Prompt() {
-  const { promptData } = usePromptStore();
+  const { promptData, setPrompt } = usePromptStore();
 
   useLockBodyScroll();
 
@@ -31,7 +31,12 @@ function Prompt() {
         <h1 className={classNames("text-base font-semibold")}>
           {promptData.title}
         </h1>
-        <p className={classNames("mt-2", "text-lg font-medium")}>
+        <p
+          className={classNames(
+            "mt-2",
+            "whitespace-pre-line text-sm font-medium"
+          )}
+        >
           {promptData.content}
         </p>
         <div className={classNames("flex justify-end gap-4", "mt-4")}>
@@ -39,14 +44,17 @@ function Prompt() {
             <Button
               buttonStyle={"outlined-blue"}
               className={"h-[40px] w-[95px]"}
-              onClick={promptData.cancelOnClickHandler}
+              onClick={() => {
+                promptData.cancelOnClickHandler?.();
+                setPrompt();
+              }}
             >
               취소
             </Button>
           )}
           <Button
             className={"h-[40px] w-[95px]"}
-            onClick={promptData.confirmOnClickHandler}
+            onClick={promptData.confirmOnClickHandler ?? (() => setPrompt())}
           >
             확인
           </Button>
