@@ -37,8 +37,7 @@ function KakaoOauth() {
       .catch(() => {
         setPrompt({
           title: "카카오 연동 실패",
-          content: "카카오로부터 연동이 실패하였습니다.",
-          confirmOnClickHandler: () => setPrompt()
+          content: "카카오로부터 연동이 실패하였습니다."
         });
         navigator("/sign-in");
       });

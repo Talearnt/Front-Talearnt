@@ -18,6 +18,7 @@ import { classNames } from "@utils/classNames";
 import useDebounce from "@hook/useDebounce";
 import { useCheckNickname, useCheckUserId } from "@pages/auth/auth.hook";
 
+import { usePromptStore, useToastStore } from "@common/common.store";
 import { useAgreementStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
@@ -69,7 +70,6 @@ function InfoFields() {
     resolver: yupResolver(infoFieldsSchema)
   });
 
-  const { agreements } = useAgreementStore();
   const debounceNickname = useDebounce(watch("nickname"));
   const debounceUserId = useDebounce(watch("userId"));
   const { data, isLoading } = useCheckNickname(
@@ -82,6 +82,10 @@ function InfoFields() {
     debounceUserId,
     !!debounceUserId && !errors.userId
   );
+
+  const { agreements } = useAgreementStore();
+  const { setToast } = useToastStore();
+  const { setPrompt } = usePromptStore();
 
   const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
@@ -103,7 +107,7 @@ function InfoFields() {
     !pw || // 비밀번호 없는 경우
     !checkedPw || // 확인 비밀번호 없는 경우
     pw !== checkedPw || // 비밀번호와 확인 비밀번호가 다른 경우
-    data?.data !== false || // 닉네임 중복인 경우
+    (data?.data !== undefined && data.data) || // 닉네임 중복인 경우
     userIdData?.data !== false || // 아이디 중복인 경우
     Object.keys(errors).length > 0; // 그 외 에러가 있는 경우(matches 등)
 
@@ -129,8 +133,18 @@ function InfoFields() {
 
       navigator("/sign-up/complete");
     } catch (e) {
-      // TODO 토스트 alert 적용
-      console.log(e);
+      if (checkObjectType(e) && "errorMessage" in e) {
+        setToast({
+          message: e.errorMessage as string
+        });
+        return;
+      }
+
+      setPrompt({
+        title: "서버 오류",
+        content:
+          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요."
+      });
     }
   };
 
