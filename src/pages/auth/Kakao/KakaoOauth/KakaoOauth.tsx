@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { getKakaoAccessToken } from "@pages/auth/auth.api";
 
+import { usePromptStore } from "@common/common.store";
 import {
   useAuthStore,
   useKakaoAuthResponseStore
@@ -13,6 +14,7 @@ function KakaoOauth() {
   const [searchParams] = useSearchParams();
 
   const { setAccessToken } = useAuthStore();
+  const { setPrompt } = usePromptStore();
   const { setResponse } = useKakaoAuthResponseStore();
 
   const code = searchParams.get("code");
@@ -33,9 +35,14 @@ function KakaoOauth() {
         }
       })
       .catch(() => {
-        // TODO 에러 핸들링
+        setPrompt({
+          title: "카카오 연동 실패",
+          content: "카카오로부터 연동이 실패하였습니다.",
+          confirmOnClickHandler: () => setPrompt()
+        });
+        navigator("/sign-in");
       });
-  }, [code, navigator, setAccessToken, setResponse]);
+  }, [code, navigator, setAccessToken, setPrompt, setResponse]);
 
   return (
     <div className={"flex flex-col items-center gap-10"}>
