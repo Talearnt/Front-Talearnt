@@ -4,7 +4,7 @@ import { useToastStore } from "@common/common.store";
 
 function Toast() {
   const { toastList } = useToastStore();
-  console.log(toastList);
+
   return (
     <div
       className={classNames(
