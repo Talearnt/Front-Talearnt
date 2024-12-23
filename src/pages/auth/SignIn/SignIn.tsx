@@ -21,7 +21,7 @@ const signInSchema = object({
 }).required();
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-const REDIRECT_URI = "http://localhost:5173/kakao/oauth";
+const REDIRECT_URI = `${import.meta.env.VITE_BASE_URL}kakao/oauth`;
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 function SignIn() {
