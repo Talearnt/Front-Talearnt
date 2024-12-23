@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useTimer } from "@/hook/useTimer";
 import { yupResolver } from "@hookform/resolvers/yup";
+import dayjs from "dayjs";
 import { object, string } from "yup";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
+
+import { useTimer } from "@hook/useTimer";
 
 import { usePromptStore } from "@common/common.store";
 
@@ -15,6 +17,11 @@ import { Input } from "@components/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
 import { verificationStateType } from "@pages/auth/auth.type";
+
+type sendCodeDataType = {
+  sendTime: Date | undefined;
+  sendCount: number;
+};
 
 type VerificationCodeProps = {
   confirmCodeHandler: ({
@@ -43,6 +50,9 @@ const verificationCodeSchema = object({
   )
 }).required();
 
+const isDateOver10MinutesOld = (date?: Date) =>
+  dayjs().diff(dayjs(date), "minute") >= 10;
+
 function VerificationCode({
   confirmCodeHandler,
   isSendButtonDisabled,
@@ -70,23 +80,76 @@ function VerificationCode({
     undefined | "phone" | "verificationCode"
   >();
   const [verificationAttempts, setVerificationAttempts] = useState(0);
+  const [{ sendCount, sendTime }, setSendCodeData] = useState<sendCodeDataType>(
+    () => {
+      const data = localStorage.getItem("verification-data");
+
+      if (data === null) {
+        return {
+          sendCount: 0,
+          sendTime: undefined
+        };
+      }
+
+      const { sendCount, sendTime } = JSON.parse(data) as sendCodeDataType;
+
+      if (isDateOver10MinutesOld(sendTime)) {
+        return {
+          sendCount: 0,
+          sendTime: undefined
+        };
+      }
+
+      return {
+        sendCount,
+        sendTime
+      };
+    }
+  );
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
   const hasPhoneNumber = !!phone && phone.length === 11;
   const hasVerificationCode =
     !!verificationCode && verificationCode.length === 4;
 
+  const saveSendCodeData = (data: sendCodeDataType) => {
+    localStorage.setItem("verification-data", JSON.stringify(data));
+
+    setSendCodeData(data);
+  };
+
   const handleSendCode = async () => {
-    // TODO 1분이내 5회 요청시 10분간 정지
     if (!phone) {
+      return;
+    }
+
+    if (sendCount === 5 && !isDateOver10MinutesOld(sendTime)) {
+      setPrompt({
+        title: "1분 내에  인증번호 5회 초과",
+        content:
+          "1분 내에 5회 연속 인증에 실패하였습니다. 10분 후 다시 시도해 주세요."
+      });
+
+      saveSendCodeData({
+        sendCount: sendCount + 1,
+        sendTime: new Date()
+      });
       return;
     }
 
     try {
       setIsLoading("phone");
+      if (sendTime === undefined || isDateOver10MinutesOld(sendTime)) {
+        saveSendCodeData({
+          sendCount: 1,
+          sendTime: new Date()
+        });
+      } else {
+        saveSendCodeData({ sendCount: sendCount + 1, sendTime });
+      }
+      await sendCodeHandler(phone);
       clearErrors("phone");
       clearErrors("verificationCode");
-      await sendCodeHandler(phone);
       startTimer();
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
@@ -175,11 +238,27 @@ function VerificationCode({
     }
   }, [setError, setValue, stopTimer, verificationAttempts]);
 
+  useEffect(() => {
+    if (sendTime === undefined || sendCount <= 5) {
+      return;
+    }
+
+    const ping = setInterval(() => {
+      if (isDateOver10MinutesOld(sendTime)) {
+        saveSendCodeData({ sendCount: 0, sendTime: undefined });
+
+        clearInterval(ping);
+      }
+    }, 1000);
+
+    return () => clearInterval(ping);
+  }, [sendCount, sendTime]);
+
   return (
     <div className={classNames("flex flex-col gap-6")}>
       {/*휴대폰 본인인증 input*/}
       <Input
-        disabled={isRunning || isCodeVerified}
+        disabled={isRunning || isCodeVerified || sendCount > 5}
         error={errors.phone?.message}
         formData={{ ...register("phone") }}
         label={"휴대폰 본인인증"}
@@ -195,7 +274,8 @@ function VerificationCode({
             !!errors.phone ||
             isRunning ||
             isCodeVerified ||
-            isSendButtonDisabled
+            isSendButtonDisabled ||
+            sendCount > 5
           }
           onClick={handleSendCode}
         >
@@ -211,7 +291,11 @@ function VerificationCode({
       <Input
         complete={isCodeVerified ? "인증이 완료되었습니다" : undefined}
         disabled={!isRunning || isCodeVerified}
-        error={errors.verificationCode?.message}
+        error={
+          sendCount > 5
+            ? "10분 후 다시 시도해 주세요."
+            : errors.verificationCode?.message
+        }
         formData={{ ...register("verificationCode") }}
         label={"인증번호 확인"}
         maxLength={4}
