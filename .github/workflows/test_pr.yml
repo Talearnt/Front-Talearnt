@@ -58,4 +58,4 @@ jobs:
 
       # Build
       - name: Run build 🚛
-        run: bun run build
+        run: bun run build:dev

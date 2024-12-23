@@ -3,7 +3,7 @@
 ### 이슈 티켓 / Related Issues
 
 ### 변경 사항 / Changes Made
-- [ ] 
+- 
 
 ### 체크리스트 / Checklist
 - [ ] 모든 테스트가 통과합니까? / Does it pass all tests?
