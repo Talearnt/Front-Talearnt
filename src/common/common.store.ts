@@ -11,12 +11,14 @@ type toastType = {
 
 type toastStoreType = {
   toastList: toastType[];
-  setToast: (toast: Omit<toastType, "id" | "isRemoving">) => void;
+  setToast: (
+    toast: Pick<toastType, "message"> & { type?: "success" | "error" }
+  ) => void;
 };
 
 export const useToastStore = create<toastStoreType>(set => ({
   toastList: [],
-  setToast: toast =>
+  setToast: ({ message, type }) =>
     set(({ toastList }) => {
       // 생성된 시점
       const id = Date.now();
@@ -39,7 +41,10 @@ export const useToastStore = create<toastStoreType>(set => ({
 
       // 토스트 생성
       return {
-        toastList: [{ ...toast, id, isRemoving: false }, ...toastList]
+        toastList: [
+          { id, isRemoving: false, message, type: type ?? "success" },
+          ...toastList
+        ]
       };
     })
 }));
