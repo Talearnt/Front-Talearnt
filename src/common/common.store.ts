@@ -5,7 +5,7 @@ import { create } from "zustand/react";
 type toastType = {
   id: number;
   message: string;
-  type?: "success" | "error";
+  type: "success" | "error";
   isRemoving: boolean;
 };
 

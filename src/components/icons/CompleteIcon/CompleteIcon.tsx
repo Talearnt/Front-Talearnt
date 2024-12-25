@@ -3,7 +3,7 @@ import { classNames } from "@utils/classNames";
 import { CommonIconProps } from "@common/common.type";
 
 /**
- * 에러 아이콘
+ * 체크 아이콘
  * 색 변경은 className에 "fill-talearnt-Primary_01" 와 같이 넣어주면 됨
  * size 변경은 원하는 size를 넣어주면 됨
  *
