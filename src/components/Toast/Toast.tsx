@@ -16,11 +16,11 @@ function Toast() {
         <div
           className={classNames(
             "flex gap-2",
-            "w-fit rounded-full border px-10 py-4",
+            "w-fit rounded-full px-10 py-4 shadow-[inset_0_0_0_1px]",
             type === "success" &&
-              "bg-talearnt-SuccessBG_01 border-talearnt-Success_01",
+              "bg-talearnt-SuccessBG_01 shadow-talearnt-Success_01",
             type === "error" &&
-              "bg-talearnt-ErrorBG_02 border-talearnt-Error_03",
+              "bg-talearnt-ErrorBG_02 shadow-talearnt-Error_03]",
             isRemoving ? "animate-fade-out" : "animate-fade-in"
           )}
           key={id.toString()}
