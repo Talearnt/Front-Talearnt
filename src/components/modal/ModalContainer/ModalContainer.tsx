@@ -15,7 +15,7 @@ function ModalContainer({ children, className }: ModalContainerProps) {
   return (
     <div
       className={classNames(
-        "fixed left-0 top-0 flex justify-center",
+        "fixed left-0 top-0 flex items-center justify-center",
         "h-full w-full bg-black/30",
         className
       )}
