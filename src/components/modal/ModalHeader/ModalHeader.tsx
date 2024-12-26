@@ -5,16 +5,22 @@ import { classNames } from "@utils/classNames";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
 
 type ModalHeaderProps = {
+  className?: string;
   children: ReactNode;
   onCloseHandler?: () => void;
 };
 
-function ModalHeader({ children, onCloseHandler }: ModalHeaderProps) {
+function ModalHeader({
+  className,
+  children,
+  onCloseHandler
+}: ModalHeaderProps) {
   return (
     <div
       className={classNames(
         "relative flex flex-col items-center justify-center",
-        "h-[150px]"
+        "h-[150px]",
+        className
       )}
     >
       {onCloseHandler && (

@@ -3,12 +3,13 @@ import { ReactNode } from "react";
 import { classNames } from "@utils/classNames";
 
 type ModalBottomProps = {
+  className?: string;
   children: ReactNode;
 };
 
-function ModalBottom({ children }: ModalBottomProps) {
+function ModalBottom({ className, children }: ModalBottomProps) {
   return (
-    <div className={classNames("flex items-center", "h-[120px]")}>
+    <div className={classNames("flex items-center", "h-[120px]", className)}>
       {children}
     </div>
   );
