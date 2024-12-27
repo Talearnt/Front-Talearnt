@@ -23,7 +23,7 @@ export default {
         "talearnt-SuccessBG_01": "rgba(240, 255, 248, 0.8)",
         "talearnt-On_Success": "#FFFFFF",
         "talearnt-Text_Strong": "#000000",
-        "talearnt-Text_01 ": "#1E2224",
+        "talearnt-Text_01": "#1E2224",
         "talearnt-Text_02": "#414A4E",
         "talearnt-Text_03": "#98A3A9",
         "talearnt-Text_04": "#A6B0B5",
