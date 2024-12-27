@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ChangeEvent, ComponentProps } from "react";
 import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 import { classNames } from "@utils/classNames";
@@ -9,7 +9,23 @@ type InputProps = ComponentProps<"input"> & {
   formData?: UseFormRegisterReturn;
 };
 
-function CheckBox({ className, children, formData, ...props }: InputProps) {
+function CheckBox({
+  className,
+  children,
+  formData,
+  onChange,
+  ...props
+}: InputProps) {
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (formData?.onChange) {
+      await formData.onChange(e); // react-hook-form의 onChange 호출
+    }
+
+    if (onChange) {
+      onChange(e); // 외부에서 전달된 onChange 호출
+    }
+  };
+
   return (
     <label
       className={classNames(
@@ -22,6 +38,7 @@ function CheckBox({ className, children, formData, ...props }: InputProps) {
         type={"checkbox"}
         {...formData}
         {...props}
+        onChange={handleChange}
       />
       <CircleCheckIcon
         className={
