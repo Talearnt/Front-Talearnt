@@ -4,7 +4,7 @@ import { CommonIconProps } from "@common/common.type";
 
 /**
  * 돋보기 아이콘
- * 색 변경은 className에 "stroke-talearnt-gray-500" 와 같이 넣어주면 됨
+ * 색 변경은 className에 "stroke-talearnt-Icon_01" 와 같이 넣어주면 됨
  * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className

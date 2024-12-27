@@ -9,6 +9,7 @@ import { usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
+import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
@@ -85,6 +86,7 @@ function MainLayout() {
           </Input>
         </div>
         <div className={"flex items-center gap-6"}>
+          <CaretIcon />
           <div className={classNames("flex items-center gap-2", "h-[40px]")}>
             {linkArray.map(({ path, content }) => {
               if (content === "회원가입" && accessToken) {
