@@ -31,6 +31,7 @@
       "@components/*": ["src/components/*"],
       "@hook/*": ["src/hook/*"],
       "@layout/*": ["src/layout/*"],
+      "@modal/*": ["src/modal/*"],
       "@pages/*": ["src/pages/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"]
