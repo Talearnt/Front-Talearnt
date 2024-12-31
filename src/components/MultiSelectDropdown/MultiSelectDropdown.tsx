@@ -34,12 +34,18 @@ function MultiSelectDropdown<T = string>({
           className={classNames(
             "text-lg text-talearnt-Text_04",
             "group-hover/label:font-medium group-hover/label:text-talearnt-Text_02",
-            "peer-checked/checkbox:text-talearnt-Text_01 peer-checked/checkbox:font-semibold"
+            "peer-checked/checkbox:font-semibold peer-checked/checkbox:text-talearnt-Text_01"
           )}
         >
           {title}
         </span>
-        <CaretIcon className={"peer-checked/checkbox:rotate-180"} />
+        <CaretIcon
+          className={classNames(
+            "stroke-talearnt-Icon_03",
+            "group-hover/label:stroke-talearnt-Icon_01",
+            "peer-checked/checkbox:rotate-180 peer-checked/checkbox:stroke-talearnt-Icon_01"
+          )}
+        />
       </label>
       <div
         className={classNames(
@@ -72,7 +78,7 @@ function MultiSelectDropdown<T = string>({
                 className={classNames(
                   "text-lg text-talearnt-Text_04",
                   "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
-                  checked && "!text-talearnt-Text_01 !font-semibold"
+                  checked && "!font-semibold !text-talearnt-Text_01"
                 )}
               >
                 {label}
