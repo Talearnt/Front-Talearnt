@@ -27,11 +27,7 @@ function CloseIcon({ className, size = 24, ...props }: CommonIconProps) {
       )}
       {...props}
     >
-      <path
-        d="M22 2L12 12M12 12L2 22M12 12L22 22M12 12L2 2"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      <path d="M19 5L5 19M19 19L5 5" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
