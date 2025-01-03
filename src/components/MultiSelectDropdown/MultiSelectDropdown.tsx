@@ -1,25 +1,31 @@
-import { Dispatch, SetStateAction } from "react";
-
 import { classNames } from "@utils/classNames";
 
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 
+type MultiSelectDropdownOptionType<T> = { label: string; value: T };
+
 type MultiSelectDropdownProps<T> = {
+  className?: string;
   title: string;
-  options: { label: string; value: T }[];
-  onSelectHandler: Dispatch<SetStateAction<T[]>>;
+  options: MultiSelectDropdownOptionType<T>[];
+  onSelectHandler: ({
+    checked,
+    label,
+    value
+  }: { checked: boolean } & MultiSelectDropdownOptionType<T>) => void;
   selectedValueArray: T[];
 };
 
 function MultiSelectDropdown<T = string>({
+  className,
   title,
   options,
   onSelectHandler,
   selectedValueArray
 }: MultiSelectDropdownProps<T>) {
   return (
-    <div className={classNames("flex flex-col")}>
+    <div className={classNames("flex flex-col", className)}>
       <label
         className={classNames(
           "peer/label group/label",
@@ -66,11 +72,7 @@ function MultiSelectDropdown<T = string>({
               )}
               checked={checked}
               onChange={({ target }) => {
-                if (target.checked) {
-                  onSelectHandler(prev => [...prev, value]);
-                } else {
-                  onSelectHandler(prev => prev.filter(item => item !== value));
-                }
+                onSelectHandler({ checked: target.checked, label, value });
               }}
               key={`${label}-${String(value)}`}
             >
