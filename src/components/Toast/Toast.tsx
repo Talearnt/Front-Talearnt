@@ -20,7 +20,7 @@ function Toast() {
             type === "success" &&
               "bg-talearnt-SuccessBG_01 shadow-talearnt-Success_01",
             type === "error" &&
-              "bg-talearnt-ErrorBG_02 shadow-talearnt-Error_03]",
+              "bg-talearnt-ErrorBG_02 shadow-talearnt-Error_03",
             isRemoving ? "animate-fade-out" : "animate-fade-in"
           )}
           key={id.toString()}
@@ -57,7 +57,7 @@ function Toast() {
               />
             </svg>
           )}
-          <span className={"text-talearnt-Text_01 text-base font-semibold"}>
+          <span className={"text-base font-semibold text-talearnt-Text_01"}>
             {message}
           </span>
         </div>
