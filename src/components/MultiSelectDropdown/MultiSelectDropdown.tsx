@@ -71,9 +71,9 @@ function MultiSelectDropdown<T = string>({
                 checked && "bg-talearnt-BG_Up_01"
               )}
               checked={checked}
-              onChange={({ target }) => {
-                onSelectHandler({ checked: target.checked, label, value });
-              }}
+              onChange={({ target }) =>
+                onSelectHandler({ checked: target.checked, label, value })
+              }
               key={`${label}-${String(value)}`}
             >
               <span
