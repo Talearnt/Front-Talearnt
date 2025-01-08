@@ -51,6 +51,13 @@ function TalentsSettingModal() {
     [currentTalentsType, talentsData]
   );
 
+  const isScrollable = () => {
+    if (!scrollRef.current) {
+      return false;
+    }
+
+    return scrollRef.current.scrollHeight > scrollRef.current.clientHeight;
+  };
   const handleTypeChange = (type: talentsType) => {
     if (!scrollRef.current) {
       return;
@@ -159,7 +166,7 @@ function TalentsSettingModal() {
               <div
                 className={classNames(
                   "flex flex-col",
-                  "mr-[10px] h-[344px] overflow-y-scroll pl-[32px] pr-2",
+                  "mr-[10px] h-[344px] overflow-y-scroll pl-[32px] pr-[10px]",
                   styles.scrollbar
                 )}
                 ref={scrollRef}
@@ -167,7 +174,11 @@ function TalentsSettingModal() {
                 {CATEGORIZED_TALENTS_LIST.map(
                   ({ categoryCode, categoryName, talents }) => (
                     <MultiSelectDropdown<number>
-                      className={"border-r border-talearnt-Line_01"}
+                      className={
+                        isScrollable()
+                          ? "border-r border-talearnt-Line_01"
+                          : undefined
+                      }
                       title={categoryName}
                       options={talents.map(({ talentCode, talentName }) => ({
                         label: talentName,
