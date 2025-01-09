@@ -1,9 +1,15 @@
 import { useMemo, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string } from "yup";
 
 import { postTalents } from "@modal/TalentsSettingModal/talentsSettingModal.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
+
+import useDebounce from "@hook/useDebounce";
 
 import { useToastStore } from "@common/common.store";
 
@@ -29,9 +35,17 @@ const talentsName: Record<talentsType, string> = {
   giveTalents: "나의 재능",
   receiveTalents: "관심있는 재능"
 };
+const talentsSearchSchema = object({
+  search: string()
+}).required();
 
 function TalentsSettingModal() {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { setValue, register, watch } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(talentsSearchSchema)
+  });
 
   const { setToast } = useToastStore();
 
@@ -45,12 +59,34 @@ function TalentsSettingModal() {
   });
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // 검색한 값
+  const search = useDebounce(watch("search"));
+  // 검색한 재능 키워드 목록
+  const searchedTalentsList = useMemo(() => {
+    if (!search) {
+      return [];
+    }
+
+    // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
+    const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
+
+    return CATEGORIZED_TALENTS_LIST.flatMap(({ talents }) =>
+      talents.filter(
+        ({ talentCode, talentName }) =>
+          searchRegex.test(talentName.replace(/\s+/g, "")) &&
+          !talentsData[currentTalentsType].some(
+            ({ value }) => value === talentCode
+          )
+      )
+    );
+  }, [currentTalentsType, search, talentsData]);
   // 선택된 값 배열
   const selectedValueArray = useMemo(
     () => talentsData[currentTalentsType].map(({ value }) => value),
     [currentTalentsType, talentsData]
   );
 
+  // body가 scroll가능한지
   const isScrollable = () => {
     if (!scrollRef.current) {
       return false;
@@ -58,6 +94,7 @@ function TalentsSettingModal() {
 
     return scrollRef.current.scrollHeight > scrollRef.current.clientHeight;
   };
+  // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동
   const handleTypeChange = (type: talentsType) => {
     if (!scrollRef.current) {
       return;
@@ -74,6 +111,26 @@ function TalentsSettingModal() {
     scrollRef.current.scrollTo({ top: 0 });
     setCurrentTalentsType(type);
   };
+  // 재능 추가, 제거
+  const handleTalentChange = (
+    checked: boolean,
+    talent: { label: string; value: number }
+  ) => {
+    if (checked) {
+      setTalentsData(prev => ({
+        ...prev,
+        [currentTalentsType]: [...prev[currentTalentsType], talent]
+      }));
+    } else {
+      setTalentsData(prev => ({
+        ...prev,
+        [currentTalentsType]: prev[currentTalentsType].filter(
+          ({ value: talentCode }) => talentCode !== talent.value
+        )
+      }));
+    }
+  };
+  // 재능 설정
   const handleConfirm = async () => {
     try {
       await postTalents({
@@ -153,6 +210,7 @@ function TalentsSettingModal() {
                 className={classNames(
                   "rounded-full border-talearnt-Line_01 text-sm font-medium"
                 )}
+                formData={{ ...register("search") }}
                 placeholder={"원하는 키워드를 검색해 보세요."}
                 wrapperClassName={classNames("relative px-[30px]")}
               >
@@ -171,51 +229,58 @@ function TalentsSettingModal() {
                 )}
                 ref={scrollRef}
               >
-                {CATEGORIZED_TALENTS_LIST.map(
-                  ({ categoryCode, categoryName, talents }) => (
-                    <MultiSelectDropdown<number>
-                      className={
-                        isScrollable()
-                          ? "border-r border-talearnt-Line_01"
-                          : undefined
-                      }
-                      title={categoryName}
-                      options={talents.map(({ talentCode, talentName }) => ({
-                        label: talentName,
-                        value: talentCode
-                      }))}
-                      onSelectHandler={({ checked, label, value }) => {
-                        if (
-                          talentsData[currentTalentsType].length > 4 &&
-                          checked
-                        ) {
-                          return;
+                {/*검색 한 결과가 있는 경우*/}
+                {searchedTalentsList.length > 0
+                  ? searchedTalentsList.map(({ talentCode, talentName }) => (
+                      <button
+                        className={classNames(
+                          "flex-shrink-0",
+                          "m-2 h-[70px] rounded-lg px-4",
+                          "text-left text-lg text-talearnt-Text_04",
+                          "hover:bg-talearnt-BG_Up_01 hover:font-medium hover:text-talearnt-Text_02"
+                        )}
+                        onClick={() => {
+                          handleTalentChange(true, {
+                            label: talentName,
+                            value: talentCode
+                          });
+                          setValue("search", "");
+                        }}
+                      >
+                        {talentName}
+                      </button>
+                    ))
+                  : search && <></>}
+                {/*검색 한 값이 없는 경우*/}
+                {!search &&
+                  CATEGORIZED_TALENTS_LIST.map(
+                    ({ categoryCode, categoryName, talents }) => (
+                      <MultiSelectDropdown<number>
+                        className={
+                          isScrollable()
+                            ? "border-r border-talearnt-Line_01"
+                            : undefined
                         }
+                        title={categoryName}
+                        options={talents.map(({ talentCode, talentName }) => ({
+                          label: talentName,
+                          value: talentCode
+                        }))}
+                        onSelectHandler={({ checked, label, value }) => {
+                          if (
+                            talentsData[currentTalentsType].length > 4 &&
+                            checked
+                          ) {
+                            return;
+                          }
 
-                        if (checked) {
-                          setTalentsData(prev => ({
-                            ...prev,
-                            [currentTalentsType]: [
-                              ...prev[currentTalentsType],
-                              { label, value }
-                            ]
-                          }));
-                        } else {
-                          setTalentsData(prev => ({
-                            ...prev,
-                            [currentTalentsType]: prev[
-                              currentTalentsType
-                            ].filter(
-                              ({ value: talentCode }) => talentCode !== value
-                            )
-                          }));
-                        }
-                      }}
-                      selectedValueArray={selectedValueArray}
-                      key={categoryCode}
-                    />
-                  )
-                )}
+                          handleTalentChange(checked, { label, value });
+                        }}
+                        selectedValueArray={selectedValueArray}
+                        key={categoryCode}
+                      />
+                    )
+                  )}
               </div>
               {talentsData[currentTalentsType].length > 0 && (
                 <div
@@ -232,14 +297,7 @@ function TalentsSettingModal() {
                       <span className={"text-base font-medium"}>{label}</span>
                       <CloseIcon
                         onClick={() =>
-                          setTalentsData(prev => ({
-                            ...prev,
-                            [currentTalentsType]: prev[
-                              currentTalentsType
-                            ].filter(
-                              ({ value: talentCode }) => talentCode !== value
-                            )
-                          }))
+                          handleTalentChange(false, { label, value })
                         }
                         size={16}
                       />
