@@ -24,6 +24,7 @@ import { ModalBox } from "@components/modal/ModalBox/ModalBox";
 import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer";
 import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 import { MultiSelectDropdown } from "@components/MultiSelectDropdown/MultiSelectDropdown";
+import { Spinner } from "@components/Spinner/Spinner";
 
 import { CATEGORIZED_TALENTS_LIST } from "@modal/TalentsSettingModal/talentsList.constants";
 
@@ -57,8 +58,12 @@ function TalentsSettingModal() {
     giveTalents: [],
     receiveTalents: []
   });
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [status, setStatus] = useState<"default" | "loading" | "success">(
+    "default"
+  );
 
+  const isLoading = status === "loading";
+  const isSuccess = status === "success";
   // 검색한 값
   const search = useDebounce(watch("search"));
   // 검색한 재능 키워드 목록
@@ -132,13 +137,20 @@ function TalentsSettingModal() {
   };
   // 재능 설정
   const handleConfirm = async () => {
+    if (isLoading) {
+      return;
+    }
+
+    setStatus("loading");
+
     try {
       await postTalents({
         giveTalents: talentsData.giveTalents.map(({ value }) => value),
         receiveTalents: talentsData.receiveTalents.map(({ value }) => value)
       });
-      setIsSuccess(true);
+      setStatus("success");
     } catch (e) {
+      setStatus("default");
       if (checkObjectType(e) && "errorCode" in e) {
         setToast({
           message: e.errorMessage as string,
@@ -339,7 +351,7 @@ function TalentsSettingModal() {
                       disabled={talentsData.receiveTalents.length === 0}
                       onClick={handleConfirm}
                     >
-                      완료
+                      {isLoading ? <Spinner /> : "완료"}
                     </Button>
                   </>
                 )}
