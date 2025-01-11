@@ -40,7 +40,7 @@ export default {
         pretendard: ["Pretendard", "sans-serif"]
       },
       animation: {
-        "spinner-spin": "spinner-spin 1s linear infinite",
+        "spinner-spin": "spinner-spin 0.8s linear infinite",
         "fade-in": "fade-in 0.5s ease-in-out",
         "fade-out": "fade-out 0.5s ease-in-out"
       },
