@@ -11,3 +11,7 @@
 .scrollbar::-webkit-scrollbar-track {
     background-color: transparent;
 }
+
+.divider {
+    border-right: 1px solid #D0D5D8;
+}

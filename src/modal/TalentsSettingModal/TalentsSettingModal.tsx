@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -91,14 +91,6 @@ function TalentsSettingModal() {
     [currentTalentsType, talentsData]
   );
 
-  // body가 scroll가능한지
-  const isScrollable = () => {
-    if (!scrollRef.current) {
-      return false;
-    }
-
-    return scrollRef.current.scrollHeight > scrollRef.current.clientHeight;
-  };
   // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동
   const handleTypeChange = (type: talentsType) => {
     if (!scrollRef.current) {
@@ -165,6 +157,23 @@ function TalentsSettingModal() {
       });
     }
   };
+
+  useEffect(() => {
+    if (!scrollRef.current || !scrollRef.current.parentElement) {
+      return;
+    }
+
+    // 스크롤 가능 여부
+    const isScrollable =
+      scrollRef.current.scrollHeight >
+      scrollRef.current.parentElement.clientHeight;
+
+    if (isScrollable) {
+      scrollRef.current.classList.add(styles.divider);
+    } else {
+      scrollRef.current.classList.remove(styles.divider);
+    }
+  }, [search]);
 
   return (
     <ModalContainer>
@@ -235,15 +244,42 @@ function TalentsSettingModal() {
               </Input>
               <div
                 className={classNames(
-                  "flex flex-col",
-                  "mr-[10px] h-[344px] overflow-y-scroll pl-[32px] pr-[10px]",
+                  "mr-[10px] h-[344px] pl-[32px] pr-[10px]",
+                  "overflow-y-scroll",
                   styles.scrollbar
                 )}
-                ref={scrollRef}
               >
-                {/*검색 한 결과가 있는 경우*/}
-                {searchedTalentsList.length > 0
-                  ? searchedTalentsList.map(({ talentCode, talentName }) => (
+                <div className={"flex flex-col"} ref={scrollRef}>
+                  {!search ? (
+                    // 검색을 하지 않은 경우
+                    CATEGORIZED_TALENTS_LIST.map(
+                      ({ categoryCode, categoryName, talents }) => (
+                        <MultiSelectDropdown<number>
+                          title={categoryName}
+                          options={talents.map(
+                            ({ talentCode, talentName }) => ({
+                              label: talentName,
+                              value: talentCode
+                            })
+                          )}
+                          onSelectHandler={({ checked, label, value }) => {
+                            if (
+                              talentsData[currentTalentsType].length > 4 &&
+                              checked
+                            ) {
+                              return;
+                            }
+
+                            handleTalentChange(checked, { label, value });
+                          }}
+                          selectedValueArray={selectedValueArray}
+                          key={categoryCode}
+                        />
+                      )
+                    )
+                  ) : searchedTalentsList.length > 0 ? (
+                    // 검색한 결과가 있는 경우
+                    searchedTalentsList.map(({ talentCode, talentName }) => (
                       <button
                         className={classNames(
                           "flex-shrink-0",
@@ -258,41 +294,16 @@ function TalentsSettingModal() {
                           });
                           setValue("search", "");
                         }}
+                        key={talentCode}
                       >
                         {talentName}
                       </button>
                     ))
-                  : search && <></>}
-                {/*검색 한 값이 없는 경우*/}
-                {!search &&
-                  CATEGORIZED_TALENTS_LIST.map(
-                    ({ categoryCode, categoryName, talents }) => (
-                      <MultiSelectDropdown<number>
-                        className={
-                          isScrollable()
-                            ? "border-r border-talearnt-Line_01"
-                            : undefined
-                        }
-                        title={categoryName}
-                        options={talents.map(({ talentCode, talentName }) => ({
-                          label: talentName,
-                          value: talentCode
-                        }))}
-                        onSelectHandler={({ checked, label, value }) => {
-                          if (
-                            talentsData[currentTalentsType].length > 4 &&
-                            checked
-                          ) {
-                            return;
-                          }
-
-                          handleTalentChange(checked, { label, value });
-                        }}
-                        selectedValueArray={selectedValueArray}
-                        key={categoryCode}
-                      />
-                    )
+                  ) : (
+                    // 검색한 결과가 없는 경우
+                    <></>
                   )}
+                </div>
               </div>
               {talentsData[currentTalentsType].length > 0 && (
                 <div
