@@ -6,7 +6,6 @@ import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 type MultiSelectDropdownOptionType<T> = { label: string; value: T };
 
 type MultiSelectDropdownProps<T> = {
-  className?: string;
   title: string;
   options: MultiSelectDropdownOptionType<T>[];
   onSelectHandler: ({
@@ -18,14 +17,13 @@ type MultiSelectDropdownProps<T> = {
 };
 
 function MultiSelectDropdown<T = string>({
-  className,
   title,
   options,
   onSelectHandler,
   selectedValueArray
 }: MultiSelectDropdownProps<T>) {
   return (
-    <div className={classNames("flex flex-col", className)}>
+    <div className={classNames("flex flex-col")}>
       <label
         className={classNames(
           "peer/label group/label",
