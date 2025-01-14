@@ -22,10 +22,8 @@ function TalentsSettingModalBottom() {
     state => state.setCurrentTalentsType
   );
   const setStatus = useTalentsSettingModalStore(state => state.setStatus);
-  const [isLoading, isSuccess] = useTalentsSettingModalStore(state => [
-    state.isLoading,
-    state.isSuccess
-  ]);
+  const isLoading = useTalentsSettingModalStore(state => state.isLoading);
+  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
   const setToast = useToastStore(state => state.setToast);
 
   // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동
