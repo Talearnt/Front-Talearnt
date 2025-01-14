@@ -16,6 +16,7 @@ import { useToastStore } from "@common/common.store";
 import { Button } from "@components/Button/Button";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
+import { MakoExpressionSad } from "@components/icons/Mako/MakoExpressionSad";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/Input/Input";
 import { ModalBody } from "@components/modal/ModalBody/ModalBody";
@@ -250,7 +251,15 @@ function TalentsSettingModal() {
                   styles.scrollbar
                 )}
               >
-                <div className={"flex flex-col"} ref={scrollRef}>
+                <div
+                  className={classNames(
+                    "flex flex-col",
+                    search &&
+                      searchedTalentsList.length === 0 &&
+                      "h-full items-center justify-center gap-4"
+                  )}
+                  ref={scrollRef}
+                >
                   {!search ? (
                     // 검색을 하지 않은 경우
                     CATEGORIZED_TALENTS_LIST.map(
@@ -302,7 +311,16 @@ function TalentsSettingModal() {
                     ))
                   ) : (
                     // 검색한 결과가 없는 경우
-                    <></>
+                    <>
+                      <span
+                        className={
+                          "text-xl font-semibold text-talearnt-Text_03"
+                        }
+                      >
+                        이 키워드는 없어요...
+                      </span>
+                      <MakoExpressionSad />
+                    </>
                   )}
                 </div>
               </div>
