@@ -77,19 +77,19 @@ function TalentsSettingModalBody() {
   );
 
   useEffect(() => {
-    if (!scrollRef.current || !scrollRef.current.parentElement) {
+    if (!scrollRef.current || !scrollRef.current.firstElementChild) {
       return;
     }
 
     // 스크롤 가능 여부
     const isScrollable =
-      scrollRef.current.scrollHeight >
-      scrollRef.current.parentElement.clientHeight;
+      scrollRef.current.firstElementChild.clientHeight >
+      scrollRef.current.clientHeight;
 
     if (isScrollable) {
-      scrollRef.current.classList.add(styles.divider);
+      scrollRef.current.firstElementChild.classList.add(styles.divider);
     } else {
-      scrollRef.current.classList.remove(styles.divider);
+      scrollRef.current.firstElementChild.classList.remove(styles.divider);
     }
   }, [scrollRef, search]);
 
@@ -149,6 +149,7 @@ function TalentsSettingModalBody() {
               "overflow-y-scroll",
               styles.scrollbar
             )}
+            ref={scrollRef}
           >
             <div
               className={classNames(
@@ -157,7 +158,6 @@ function TalentsSettingModalBody() {
                   searchedTalentsList.length === 0 &&
                   "h-full items-center justify-center gap-4"
               )}
-              ref={scrollRef}
             >
               {!search ? (
                 // 검색을 하지 않은 경우
