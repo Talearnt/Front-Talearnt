@@ -8,6 +8,7 @@ import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
 
+import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
@@ -46,6 +47,7 @@ function TalentsSettingModalBody() {
   const setTalentsData = useTalentsSettingModalStore(
     state => state.setTalentsData
   );
+  const setToast = useToastStore(state => state.setToast);
 
   // 검색한 값
   const search = useDebounce(watch("search"));
@@ -172,6 +174,11 @@ function TalentsSettingModalBody() {
                           talentsData[currentTalentsType].length > 4 &&
                           checked
                         ) {
+                          setToast({
+                            message: "재능 키워드는 5개까지만 선택 가능해요",
+                            type: "error"
+                          });
+
                           return;
                         }
 
@@ -196,6 +203,15 @@ function TalentsSettingModalBody() {
                       "hover:bg-talearnt-BG_Up_01 hover:font-medium hover:text-talearnt-Text_02"
                     )}
                     onClick={() => {
+                      if (talentsData[currentTalentsType].length > 4) {
+                        setToast({
+                          message: "재능 키워드는 5개까지만 선택 가능해요",
+                          type: "error"
+                        });
+
+                        return;
+                      }
+
                       setTalentsData({
                         type: "add",
                         talent: {
