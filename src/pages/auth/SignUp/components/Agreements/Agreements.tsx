@@ -10,13 +10,15 @@ import { CheckBox } from "@components/CheckBox/CheckBox";
 function Agreements() {
   const navigator = useNavigate();
 
-  const {
-    agreements,
-    isAllAgreementsAgreed,
-    isRequiredAgreementsAgreed,
-    setAgreement,
-    setAllAgreement
-  } = useAgreementStore();
+  const agreements = useAgreementStore(state => state.agreements);
+  const isAllAgreementsAgreed = useAgreementStore(
+    state => state.isAllAgreementsAgreed
+  );
+  const isRequiredAgreementsAgreed = useAgreementStore(
+    state => state.isRequiredAgreementsAgreed
+  );
+  const setAgreement = useAgreementStore(state => state.setAgreement);
+  const setAllAgreement = useAgreementStore(state => state.setAllAgreement);
 
   return (
     <>

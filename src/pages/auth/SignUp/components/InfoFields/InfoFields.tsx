@@ -21,12 +21,13 @@ import { useCheckNickname, useCheckUserId } from "@pages/auth/auth.hook";
 import { usePromptStore, useToastStore } from "@common/common.store";
 import { useAgreementStore } from "@pages/auth/auth.store";
 
+import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
+
 import { Button } from "@components/Button/Button";
 import { Input } from "@components/Input/Input";
 import { LabelText } from "@components/LabelText/LabelText";
 import { Spinner } from "@components/Spinner/Spinner";
 import { TabSlider } from "@components/TabSlider/TabSlider";
-import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
 import {
   genderOptions,
@@ -83,9 +84,9 @@ function InfoFields() {
     !!debounceUserId && !errors.userId
   );
 
-  const { agreements } = useAgreementStore();
-  const { setToast } = useToastStore();
-  const { setPrompt } = usePromptStore();
+  const agreements = useAgreementStore(state => state.agreements);
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const [canProceed, setCanProceed] = useState(false);
   const [verification, setVerification] = useState<verificationStateType>({

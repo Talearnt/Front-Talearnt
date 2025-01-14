@@ -8,6 +8,8 @@ import { classNames } from "@utils/classNames";
 import { usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/auth.store";
 
+import { TalentsSettingModal } from "@modal/TalentsSettingModal/TalentsSettingModal";
+
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
@@ -32,8 +34,9 @@ const linkArray = [
 function MainLayout() {
   const navigator = useNavigate();
 
-  const { accessToken, setAccessToken } = useAuthStore();
-  const { promptData } = usePromptStore();
+  const accessToken = useAuthStore(state => state.accessToken);
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
+  const promptData = usePromptStore(state => state.promptData);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -128,6 +131,7 @@ function MainLayout() {
       </header>
       <main className={classNames("mx-auto mb-[120px] mt-[96px]")}>
         <Outlet />
+        <TalentsSettingModal />
       </main>
       <Toast />
       {promptData && <Prompt />}

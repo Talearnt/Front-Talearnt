@@ -3,7 +3,7 @@ import { classNames } from "@utils/classNames";
 import { useToastStore } from "@common/common.store";
 
 function Toast() {
-  const { toastList } = useToastStore();
+  const toastList = useToastStore(state => state.toastList);
 
   return (
     <div

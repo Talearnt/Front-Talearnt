@@ -6,7 +6,8 @@ import { Button } from "@components/Button/Button";
 import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer";
 
 function Prompt() {
-  const { promptData, setPrompt } = usePromptStore();
+  const promptData = usePromptStore(state => state.promptData);
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   if (promptData === undefined) {
     return null;

@@ -5,7 +5,10 @@ import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 import { CURRENT_TALENTS_TYPE_NAME } from "@modal/TalentsSettingModal/core/talentsList.constants";
 
 function TalentsSettingModalHeader() {
-  const { currentTalentsType, isSuccess } = useTalentsSettingModalStore();
+  const currentTalentsType = useTalentsSettingModalStore(
+    state => state.currentTalentsType
+  );
+  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
 
   return (
     <ModalHeader>

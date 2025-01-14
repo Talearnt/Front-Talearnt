@@ -13,7 +13,8 @@ function SignUp() {
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
-  const { agreements, setAllAgreement } = useAgreementStore();
+  const agreements = useAgreementStore(state => state.agreements);
+  const setAllAgreement = useAgreementStore(state => state.setAllAgreement);
 
   const pathArray = pathname.split("/");
   const currentPage = pathArray[pathArray.length - 1];

@@ -15,9 +15,9 @@ function KakaoOauth() {
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const { setAccessToken } = useAuthStore();
-  const { setPrompt } = usePromptStore();
-  const { setResponse } = useKakaoAuthResponseStore();
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+  const setResponse = useKakaoAuthResponseStore(state => state.setResponse);
 
   const code = searchParams.get("code");
 
