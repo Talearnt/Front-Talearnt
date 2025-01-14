@@ -42,7 +42,8 @@ export default {
       animation: {
         "spinner-spin": "spinner-spin 0.8s linear infinite",
         "fade-in": "fade-in 0.5s ease-in-out",
-        "fade-out": "fade-out 0.5s ease-in-out"
+        "fade-out": "fade-out 0.5s ease-in-out",
+        "mako-sad": "mako-sad 0.6s linear infinite"
       },
       keyframes: {
         "spinner-spin": {
@@ -56,6 +57,11 @@ export default {
         "fade-out": {
           "0%": { opacity: "1" },
           "100%": { opacity: "0" }
+        },
+        "mako-sad": {
+          "0%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(15px)" },
+          "100%": { transform: "translateY(30px)" }
         }
       }
     }
