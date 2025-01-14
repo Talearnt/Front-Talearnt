@@ -13,16 +13,20 @@ import { Spinner } from "@components/Spinner/Spinner";
 import { talentsType } from "@modal/TalentsSettingModal/core/talentsSettingModal.type";
 
 function TalentsSettingModalBottom() {
-  const {
-    scrollRef,
-    currentTalentsType,
-    talentsData,
-    setCurrentTalentsType,
-    setStatus,
-    isLoading,
-    isSuccess
-  } = useTalentsSettingModalStore();
-  const { setToast } = useToastStore();
+  const scrollRef = useTalentsSettingModalStore(state => state.scrollRef);
+  const currentTalentsType = useTalentsSettingModalStore(
+    state => state.currentTalentsType
+  );
+  const talentsData = useTalentsSettingModalStore(state => state.talentsData);
+  const setCurrentTalentsType = useTalentsSettingModalStore(
+    state => state.setCurrentTalentsType
+  );
+  const setStatus = useTalentsSettingModalStore(state => state.setStatus);
+  const [isLoading, isSuccess] = useTalentsSettingModalStore(state => [
+    state.isLoading,
+    state.isSuccess
+  ]);
+  const setToast = useToastStore(state => state.setToast);
 
   // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동
   const handleTypeChange = (type: talentsType) => {

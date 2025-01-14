@@ -37,13 +37,15 @@ function TalentsSettingModalBody() {
     resolver: yupResolver(talentsSearchSchema)
   });
 
-  const {
-    scrollRef,
-    currentTalentsType,
-    talentsData,
-    isSuccess,
-    setTalentsData
-  } = useTalentsSettingModalStore();
+  const scrollRef = useTalentsSettingModalStore(state => state.scrollRef);
+  const currentTalentsType = useTalentsSettingModalStore(
+    state => state.currentTalentsType
+  );
+  const talentsData = useTalentsSettingModalStore(state => state.talentsData);
+  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
+  const setTalentsData = useTalentsSettingModalStore(
+    state => state.setTalentsData
+  );
 
   // 검색한 값
   const search = useDebounce(watch("search"));

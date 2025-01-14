@@ -38,7 +38,7 @@ function SignIn() {
     resolver: yupResolver(signInSchema)
   });
 
-  const { setAccessToken } = useAuthStore();
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
 
   const [userId, pw] = watch(["userId", "pw"]);
 

@@ -9,7 +9,9 @@ function Kakao() {
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
-  const { kakaoAuthResponse } = useKakaoAuthResponseStore();
+  const kakaoAuthResponse = useKakaoAuthResponseStore(
+    state => state.kakaoAuthResponse
+  );
 
   const pathArray = pathname.split("/");
   const currentPage = pathArray[pathArray.length - 1];

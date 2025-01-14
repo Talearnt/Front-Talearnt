@@ -59,10 +59,12 @@ function KakaoExtraInfo() {
       !errors.nickname
   );
 
-  const { agreements: agreementsList } = useAgreementStore();
-  const { kakaoAuthResponse } = useKakaoAuthResponseStore();
-  const { setToast } = useToastStore();
-  const { setPrompt } = usePromptStore();
+  const agreementsList = useAgreementStore(state => state.agreements);
+  const kakaoAuthResponse = useKakaoAuthResponseStore(
+    state => state.kakaoAuthResponse
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const agreements = agreementsForm.watch(
     agreementsList.map(({ agreeCodeId }) => agreeCodeId.toString())
