@@ -80,6 +80,7 @@ function Input({
       <div className={classNames("relative flex")}>
         <input
           className={classNames(
+            "peer/input",
             "rounded-lg border bg-talearnt-BG_Background",
             "h-[50px] w-full px-[15px] text-base",
             "placeholder:text-talearnt-Text_04",
@@ -95,6 +96,7 @@ function Input({
           {...props}
           ref={combinedRef}
         />
+        {children}
         {insideNode && (
           <div
             className={"absolute right-2 top-1/2 -translate-y-1/2"}
@@ -103,7 +105,6 @@ function Input({
             {insideNode}
           </div>
         )}
-        {children}
       </div>
       {(hasComplete || hasError) && (
         <div className={"mt-1 flex items-center gap-0.5"}>

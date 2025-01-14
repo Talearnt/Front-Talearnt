@@ -238,7 +238,8 @@ function TalentsSettingModal() {
                 <SearchIcon
                   className={classNames(
                     "absolute right-4 top-[13px]",
-                    "cursor-pointer fill-transparent"
+                    "cursor-pointer fill-transparent",
+                    "peer-focus/input:stroke-talearnt-Primary_01"
                   )}
                 />
               </Input>
