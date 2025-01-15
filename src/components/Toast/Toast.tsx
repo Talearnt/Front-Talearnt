@@ -15,12 +15,8 @@ function Toast() {
       {toastList.map(({ id, isRemoving, message, type }) => (
         <div
           className={classNames(
-            "flex gap-2",
-            "w-fit rounded-full px-10 py-4 shadow-[inset_0_0_0_1px]",
-            type === "success" &&
-              "bg-talearnt-SuccessBG_01 shadow-talearnt-Success_01",
-            type === "error" &&
-              "bg-talearnt-ErrorBG_02 shadow-talearnt-Error_03",
+            "flex items-center gap-2",
+            "h-[50px] w-fit rounded-full bg-talearnt-BG_Toast_02 px-8",
             isRemoving ? "animate-fade-out" : "animate-fade-in"
           )}
           key={id.toString()}
@@ -57,7 +53,7 @@ function Toast() {
               />
             </svg>
           )}
-          <span className={"text-base font-semibold text-talearnt-Text_01"}>
+          <span className={"text-base font-semibold text-talearnt-On_Primary"}>
             {message}
           </span>
         </div>
