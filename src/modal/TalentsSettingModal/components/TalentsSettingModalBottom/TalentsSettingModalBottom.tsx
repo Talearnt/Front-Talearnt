@@ -39,16 +39,8 @@ function TalentsSettingModalBottom() {
     inputs.forEach(input => {
       (input as HTMLInputElement).checked = false;
     });
-    setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = 0;
-      }
-    }, 0);
-    setInterval(
-      () => console.log(scrollRef.current, scrollRef.current?.scrollTop),
-      1000
-    );
     // 스크롤 최상단으로 이동
+    scrollRef.current.scrollTo({ top: 0 });
     setCurrentTalentsType(type);
   };
 
