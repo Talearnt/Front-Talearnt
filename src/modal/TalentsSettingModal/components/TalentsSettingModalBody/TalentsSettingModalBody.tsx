@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,7 +33,15 @@ const talentsSearchSchema = object({
 }).required();
 
 function TalentsSettingModalBody() {
-  const { setValue, register, watch } = useForm({
+  // 현재 눌린 키보드의 방향
+  const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
+  // 키보드, 마우스 어떤 source 선택하는지 저장
+  const inputSourceRef = useRef<"keyboard" | "mouse">("keyboard");
+  // 현재 선택된 재능
+  const selectedTalentRef = useRef<HTMLButtonElement>(null);
+
+  const { register, reset, watch } = useForm({
+    defaultValues: { search: "" },
     mode: "onChange",
     resolver: yupResolver(talentsSearchSchema)
   });
@@ -48,6 +56,9 @@ function TalentsSettingModalBody() {
     state => state.setTalentsData
   );
   const setToast = useToastStore(state => state.setToast);
+
+  // 현재 선택된 재능의 index
+  const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
 
   // 검색한 값
   const search = useDebounce(watch("search"));
@@ -76,12 +87,70 @@ function TalentsSettingModalBody() {
     [currentTalentsType, talentsData]
   );
 
+  // 키워드가 최대 개수라면 토스트 노출
+  const isTalentsExceedingLimit = () => {
+    if (talentsData[currentTalentsType].length < 5) {
+      return false;
+    }
+
+    setToast({
+      message: "재능 키워드는 5개까지만 선택 가능해요",
+      type: "error"
+    });
+
+    return true;
+  };
+  // 키보드로 재능을 선택
+  const handleKeyDown = ({
+    key,
+    nativeEvent
+  }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (nativeEvent.isComposing) {
+      // 아직 글자가 조합중인 상태라면 return (한글 이슈)
+      return;
+    }
+
+    if (key === "Enter") {
+      if (isTalentsExceedingLimit()) {
+        return;
+      }
+
+      const { talentCode, talentName } =
+        searchedTalentsList[selectedTalentIndex];
+
+      setTalentsData({
+        type: "add",
+        talent: { label: talentName, value: talentCode }
+      });
+      reset();
+
+      return;
+    }
+
+    if (key !== "ArrowUp" && key !== "ArrowDown") {
+      return;
+    }
+    inputSourceRef.current = "keyboard";
+    arrowDirectionRef.current = key;
+
+    if (key === "ArrowUp") {
+      setSelectedTalentIndex(prev =>
+        prev === 0 ? searchedTalentsList.length - 1 : prev - 1
+      );
+      return;
+    }
+
+    setSelectedTalentIndex(prev =>
+      prev === searchedTalentsList.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // 스크롤 바 디바이더 style 탈부착
   useEffect(() => {
     if (!scrollRef.current || !scrollRef.current.firstElementChild) {
       return;
     }
 
-    // 스크롤 가능 여부
     const isScrollable =
       scrollRef.current.firstElementChild.clientHeight >
       scrollRef.current.clientHeight;
@@ -91,6 +160,47 @@ function TalentsSettingModalBody() {
     } else {
       scrollRef.current.firstElementChild.classList.remove(styles.divider);
     }
+  }, [scrollRef, search]);
+  // 키보드로 재능 선택할 때 스크롤 이동
+  useEffect(() => {
+    if (inputSourceRef.current === "mouse" || !selectedTalentRef.current) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!selectedTalentRef.current) {
+            return;
+          }
+
+          if (!entry.isIntersecting) {
+            selectedTalentRef.current.scrollIntoView({
+              block:
+                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined
+            });
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1
+      }
+    );
+
+    observer.observe(selectedTalentRef.current);
+
+    return () => observer.disconnect();
+  }, [selectedTalentIndex]);
+  // 검색어 변하면 index, 스크롤 초기화
+  useEffect(() => {
+    if (!scrollRef.current) {
+      return;
+    }
+
+    setSelectedTalentIndex(0);
+    scrollRef.current.scrollTo({ top: 0 });
   }, [scrollRef, search]);
 
   return (
@@ -103,7 +213,7 @@ function TalentsSettingModalBody() {
           />
           <div className={"flex flex-col gap-6 px-[30px]"}>
             {Object.keys(talentsData).map(key => (
-              <div className={"flex flex-col gap-2"}>
+              <div className={"flex flex-col gap-2"} key={key}>
                 <h3 className={"text-sm font-medium text-talearnt-Text_03"}>
                   {CURRENT_TALENTS_TYPE_NAME[key as talentsType]} 키워드
                 </h3>
@@ -131,6 +241,7 @@ function TalentsSettingModalBody() {
             className={classNames(
               "rounded-full border-talearnt-Line_01 text-sm font-medium"
             )}
+            onKeyDown={handleKeyDown}
             formData={{ ...register("search") }}
             placeholder={"원하는 키워드를 검색해 보세요."}
             wrapperClassName={classNames("relative px-[30px]")}
@@ -139,7 +250,7 @@ function TalentsSettingModalBody() {
               className={classNames(
                 "absolute right-4 top-[13px]",
                 "cursor-pointer fill-transparent",
-                "peer-focus/input:stroke-talearnt-Primary_01"
+                "peer-hover/input:stroke-talearnt-Primary_01 peer-focus/input:stroke-talearnt-Primary_01"
               )}
             />
           </Input>
@@ -170,16 +281,10 @@ function TalentsSettingModalBody() {
                         value: talentCode
                       }))}
                       onSelectHandler={({ checked, label, value }) => {
-                        if (
-                          talentsData[currentTalentsType].length > 4 &&
-                          checked
-                        ) {
-                          setToast({
-                            message: "재능 키워드는 5개까지만 선택 가능해요",
-                            type: "error"
-                          });
-
-                          return;
+                        if (checked) {
+                          if (isTalentsExceedingLimit()) {
+                            return;
+                          }
                         }
 
                         setTalentsData({
@@ -194,21 +299,24 @@ function TalentsSettingModalBody() {
                 )
               ) : searchedTalentsList.length > 0 ? (
                 // 검색한 결과가 있는 경우
-                searchedTalentsList.map(({ talentCode, talentName }) => (
+                searchedTalentsList.map(({ talentCode, talentName }, index) => (
                   <button
+                    ref={
+                      selectedTalentIndex === index
+                        ? selectedTalentRef
+                        : undefined
+                    }
                     className={classNames(
                       "flex-shrink-0",
                       "m-2 h-[70px] rounded-lg px-4",
                       "text-left text-lg text-talearnt-Text_04",
-                      "hover:bg-talearnt-BG_Up_01 hover:font-medium hover:text-talearnt-Text_02"
+                      inputSourceRef.current === "mouse" &&
+                        "hover:bg-talearnt-BG_Up_01 hover:font-medium hover:text-talearnt-Text_02",
+                      index === selectedTalentIndex &&
+                        "bg-talearnt-BG_Up_01 font-medium text-talearnt-Text_02"
                     )}
                     onClick={() => {
-                      if (talentsData[currentTalentsType].length > 4) {
-                        setToast({
-                          message: "재능 키워드는 5개까지만 선택 가능해요",
-                          type: "error"
-                        });
-
+                      if (isTalentsExceedingLimit()) {
                         return;
                       }
 
@@ -219,7 +327,13 @@ function TalentsSettingModalBody() {
                           value: talentCode
                         }
                       });
-                      setValue("search", "");
+                      reset();
+                    }}
+                    onMouseMove={() => {
+                      if (selectedTalentIndex !== index) {
+                        inputSourceRef.current = "mouse";
+                        setSelectedTalentIndex(index);
+                      }
                     }}
                     key={talentCode}
                   >
