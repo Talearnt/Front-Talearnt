@@ -53,7 +53,11 @@ function Toast() {
               />
             </svg>
           )}
-          <span className={"text-base font-semibold text-talearnt-On_Primary"}>
+          <span
+            className={
+              "whitespace-nowrap text-base font-semibold text-talearnt-On_Primary"
+            }
+          >
             {message}
           </span>
         </div>
