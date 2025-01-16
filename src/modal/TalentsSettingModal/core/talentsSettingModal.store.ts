@@ -8,10 +8,10 @@ import {
 } from "@modal/TalentsSettingModal/core/talentsSettingModal.type";
 
 type talentsSettingModalStoreType = {
-  scrollRef: RefObject<HTMLDivElement>;
-  currentTalentsType: talentsType;
+  scrollRef: RefObject<HTMLDivElement>; // 스크롤이 발생하는 div에 걸어주는 ref
+  currentTalentsType: talentsType; // 현재 어떤 재능을 선택하고있는지
   setCurrentTalentsType: (type: talentsType) => void;
-  talentsData: talentsDataType;
+  talentsData: talentsDataType; // 주고싶은, 받고싶은 재능을 저장
   setTalentsData: (data: {
     type: "add" | "remove";
     talent: { label: string; value: number };
