@@ -8,8 +8,6 @@ import { classNames } from "@utils/classNames";
 import { usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/auth.store";
 
-import { TalentsSettingModal } from "@modal/TalentsSettingModal/TalentsSettingModal";
-
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
@@ -131,7 +129,6 @@ function MainLayout() {
       </header>
       <main className={classNames("mx-auto mb-[120px] mt-[96px]")}>
         <Outlet />
-        <TalentsSettingModal />
       </main>
       <Toast />
       {promptData && <Prompt />}
