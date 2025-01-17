@@ -3,16 +3,10 @@ import { classNames } from "@utils/classNames";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 
-type MultiSelectDropdownOptionType<T> = { label: string; value: T };
+import { commonDropdownProps } from "@components/dropdowns/dropdown.type";
 
-type MultiSelectDropdownProps<T> = {
+type MultiSelectDropdownProps<T> = commonDropdownProps<T> & {
   title: string;
-  options: MultiSelectDropdownOptionType<T>[];
-  onSelectHandler: ({
-    checked,
-    label,
-    value
-  }: { checked: boolean } & MultiSelectDropdownOptionType<T>) => void;
   selectedValueArray: T[];
 };
 
@@ -72,7 +66,7 @@ function MultiSelectDropdown<T = string>({
               onChange={({ target }) =>
                 onSelectHandler({ checked: target.checked, label, value })
               }
-              key={`${label}-${String(value)}`}
+              key={String(value)}
             >
               <span
                 className={classNames(

@@ -11,13 +11,13 @@ import useDebounce from "@hook/useDebounce";
 import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
+import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
 import { MakoExpressionSad } from "@components/icons/Mako/MakoExpressionSad";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
-import { Input } from "@components/Input/Input";
+import { Input } from "@components/inputs/Input/Input";
 import { ModalBody } from "@components/modal/ModalBody/ModalBody";
-import { MultiSelectDropdown } from "@components/MultiSelectDropdown/MultiSelectDropdown";
 
 import {
   CATEGORIZED_TALENTS_LIST,
