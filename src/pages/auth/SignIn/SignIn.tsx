@@ -13,7 +13,7 @@ import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { CheckBox } from "@components/CheckBox/CheckBox";
-import { Input } from "@components/Input/Input";
+import { Input } from "@components/inputs/Input/Input";
 
 const signInSchema = object({
   userId: string(),

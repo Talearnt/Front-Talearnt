@@ -12,7 +12,7 @@ import { classNames } from "@utils/classNames";
 
 import { Button } from "@components/Button/Button";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
-import { Input } from "@components/Input/Input";
+import { Input } from "@components/inputs/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
 import { userIdRegex } from "@pages/auth/common/common.constants";

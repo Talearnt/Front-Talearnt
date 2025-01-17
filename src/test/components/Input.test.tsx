@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test } from "vitest";
 
-import { Input } from "@components/Input/Input";
+import { Input } from "@components/inputs/Input/Input";
 
 describe("Input Component", () => {
   test("renders without crashing", () => {

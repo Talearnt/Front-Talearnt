@@ -14,10 +14,11 @@ import {
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
+import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
+
 import { Button } from "@components/Button/Button";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
-import { Input } from "@components/Input/Input";
-import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
+import { Input } from "@components/inputs/Input/Input";
 
 import { nameRegex } from "@pages/auth/common/common.constants";
 
