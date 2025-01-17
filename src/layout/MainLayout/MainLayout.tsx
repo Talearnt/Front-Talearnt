@@ -55,11 +55,7 @@ function MainLayout() {
 
   return (
     <>
-      <header
-        className={classNames(
-          "shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01"
-        )}
-      >
+      <header className={"shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01"}>
         <div
           className={classNames(
             "flex items-center justify-between",
@@ -67,7 +63,7 @@ function MainLayout() {
           )}
         >
           <LogoIcon
-            className={classNames("cursor-pointer")}
+            className={"cursor-pointer"}
             onClick={() => navigator("/")}
           />
           <div className={"flex items-center gap-6"}>
@@ -127,7 +123,7 @@ function MainLayout() {
           </div>
         </div>
       </header>
-      <main className={classNames("mx-auto mb-[120px] mt-[96px]")}>
+      <main className={"mx-auto mb-[120px] mt-[96px]"}>
         <Outlet />
       </main>
       <Toast />
