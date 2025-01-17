@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 
 import { getRandomNickName, postSignIn } from "@pages/auth/auth.api";
 
-import { apiErrorType } from "@common/common.type";
+import { customAxiosResponseType } from "@common/common.type";
 
 test("should allow users to login with valid credentials", async () => {
   const { status } = await postSignIn({
@@ -20,7 +20,7 @@ test("should not allow users to login with invalid credentials", async () => {
       pw: "invalid_password"
     });
   } catch (e) {
-    const { status } = e as apiErrorType;
+    const { status } = e as customAxiosResponseType<null>;
 
     expect(status).toBe(404);
   }
