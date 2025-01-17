@@ -13,7 +13,7 @@ import { useTimer } from "@hook/useTimer";
 import { usePromptStore } from "@common/common.store";
 
 import { Button } from "@components/Button/Button";
-import { Input } from "@components/Input/Input";
+import { Input } from "@components/inputs/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
 import { verificationStateType } from "@pages/auth/auth.type";
