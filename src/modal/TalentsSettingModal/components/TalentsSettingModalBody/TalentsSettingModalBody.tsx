@@ -151,15 +151,11 @@ function TalentsSettingModalBody() {
       return;
     }
 
+    const { firstElementChild } = scrollRef.current;
     const isScrollable =
-      scrollRef.current.firstElementChild.clientHeight >
-      scrollRef.current.clientHeight;
+      firstElementChild.clientHeight > scrollRef.current.clientHeight;
 
-    if (isScrollable) {
-      scrollRef.current.firstElementChild.classList.add(styles.divider);
-    } else {
-      scrollRef.current.firstElementChild.classList.remove(styles.divider);
-    }
+    firstElementChild.classList.toggle(styles.divider, isScrollable);
   }, [scrollRef, search]);
   // 키보드로 재능 선택할 때 스크롤 이동
   useEffect(() => {
