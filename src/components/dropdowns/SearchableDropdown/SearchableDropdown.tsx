@@ -15,10 +15,19 @@ import {
 
 import styles from "./SearchableDropdown.module.css";
 
-type SearchableDropdownProps<T> = commonDropdownProps<T> & {
+type SearchableDropdownProps<T> = commonDropdownProps<
+  T | dropdownOptionType<T>[]
+> & {
   placeholder?: string;
   selectedOptionsArray: dropdownOptionType<T>[];
 };
+
+const optionsStyle = classNames(
+  "flex flex-col gap-2",
+  "m-[7px] mr-[7px] w-full pr-4",
+  "overflow-y-auto",
+  styles.scrollbar
+);
 
 function SearchableDropdown<T = string>({
   options,
@@ -31,28 +40,48 @@ function SearchableDropdown<T = string>({
   const { register, setValue, watch } = useForm<{
     checkbox: boolean;
     search: string;
+    selectedCategoryIndex?: number;
   }>();
 
-  const isOpen = watch("checkbox");
-  const search = watch("search");
+  const [isOpen, search, selectedCategoryIndex] = watch([
+    "checkbox",
+    "search",
+    "selectedCategoryIndex"
+  ]);
+  const hasSubOption = Array.isArray(options[0].value);
 
   useEffect(() => {
-    scrollRefArray.current.forEach(scrollRef => {
-      if (!scrollRef || !scrollRef.parentElement) {
-        return;
-      }
+    // 기본 or 1차 옵션 스크롤 바 스타일, 스크롤 위치 변경
+    if (
+      !scrollRefArray.current[0] ||
+      !scrollRefArray.current[0].parentElement
+    ) {
+      return;
+    }
 
-      const isScrollable =
-        scrollRef.scrollHeight > scrollRef.parentElement.offsetHeight;
-      console.log(isScrollable);
+    const { parentElement, scrollHeight } = scrollRefArray.current[0];
+    const isScrollable = scrollHeight > parentElement.offsetHeight;
+    const dividerStyle = hasSubOption ? styles.divider2 : styles.divider1;
 
-      if (isScrollable) {
-        scrollRef.parentElement.classList.add(styles.divider);
-      } else {
-        scrollRef.parentElement.classList.remove(styles.divider);
-      }
-    });
+    parentElement.classList.toggle(dividerStyle, isScrollable);
+    scrollRefArray.current[0].scrollTo({ top: 0 });
   }, [isOpen]);
+
+  useEffect(() => {
+    // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
+    if (
+      !scrollRefArray.current[1] ||
+      !scrollRefArray.current[1].parentElement
+    ) {
+      return;
+    }
+
+    const { parentElement, scrollHeight } = scrollRefArray.current[1];
+    const isScrollable = scrollHeight > parentElement.offsetHeight;
+
+    parentElement.classList.toggle(styles.divider1, isScrollable);
+    scrollRefArray.current[1].scrollTo({ top: 0 });
+  }, [selectedCategoryIndex]);
 
   return (
     <div className={"relative w-[388px]"}>
@@ -122,18 +151,15 @@ function SearchableDropdown<T = string>({
         )}
       >
         <div
-          className={classNames(
-            "flex flex-col gap-2",
-            "m-[7px] mr-[7px] w-full pr-4",
-            "overflow-y-auto",
-            styles.scrollbar
-          )}
+          className={optionsStyle}
           ref={element => (scrollRefArray.current = [element])}
         >
-          {options.map(({ label, value }) => {
-            const checked = selectedOptionsArray.some(
-              ({ value: selectedValue }) => selectedValue === value
-            );
+          {options.map(({ label, value }, index) => {
+            const checked = hasSubOption
+              ? selectedCategoryIndex === index
+              : selectedOptionsArray.some(
+                  ({ value: selectedValue }) => selectedValue === value
+                );
 
             return (
               <CheckBox
@@ -145,7 +171,12 @@ function SearchableDropdown<T = string>({
                 )}
                 checked={checked}
                 onChange={({ target }) =>
-                  onSelectHandler({ checked: target.checked, label, value })
+                  hasSubOption
+                    ? setValue(
+                        "selectedCategoryIndex",
+                        index === selectedCategoryIndex ? undefined : index
+                      )
+                    : onSelectHandler({ checked: target.checked, label, value })
                 }
                 key={String(value)}
               >
@@ -162,6 +193,52 @@ function SearchableDropdown<T = string>({
             );
           })}
         </div>
+        {/*서브 옵션*/}
+        {hasSubOption && (
+          <div
+            className={optionsStyle}
+            ref={element => (scrollRefArray.current[1] = element)}
+          >
+            {selectedCategoryIndex !== undefined &&
+              (
+                options[selectedCategoryIndex].value as dropdownOptionType<T>[]
+              ).map(({ label, value }) => {
+                const checked = selectedOptionsArray.some(
+                  ({ value: selectedValue }) => selectedValue === value
+                );
+
+                return (
+                  <CheckBox
+                    className={classNames(
+                      "group/checkbox",
+                      "rounded-[10px] px-4 py-[13px]",
+                      "hover:bg-talearnt-BG_Up_01",
+                      checked && "bg-talearnt-BG_Up_01"
+                    )}
+                    checked={checked}
+                    onChange={({ target }) =>
+                      onSelectHandler({
+                        checked: target.checked,
+                        label,
+                        value
+                      })
+                    }
+                    key={String(value)}
+                  >
+                    <span
+                      className={classNames(
+                        "text-base font-medium text-talearnt-Text_04",
+                        "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
+                        checked && "!font-semibold !text-talearnt-Text_01"
+                      )}
+                    >
+                      {label}
+                    </span>
+                  </CheckBox>
+                );
+              })}
+          </div>
+        )}
       </div>
     </div>
   );
