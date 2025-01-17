@@ -20,7 +20,3 @@ export type responseDataType<T> = {
 export type customAxiosResponseType<T> = responseDataType<T> & {
   status: number;
 };
-
-export type apiErrorType<T = null> = responseDataType<T> & {
-  status: number;
-};
