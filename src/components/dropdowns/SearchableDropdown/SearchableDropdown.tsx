@@ -65,7 +65,7 @@ function SearchableDropdown<T = string>({
 
     parentElement.classList.toggle(dividerStyle, isScrollable);
     scrollRefArray.current[0].scrollTo({ top: 0 });
-  }, [isOpen]);
+  }, [hasSubOption, isOpen]);
 
   useEffect(() => {
     // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
@@ -178,7 +178,9 @@ function SearchableDropdown<T = string>({
                       )
                     : onSelectHandler({ checked: target.checked, label, value })
                 }
-                key={String(value)}
+                key={
+                  Array.isArray(value) ? `main-option-${label}` : String(value)
+                }
               >
                 <span
                   className={classNames(
@@ -223,7 +225,7 @@ function SearchableDropdown<T = string>({
                         value
                       })
                     }
-                    key={String(value)}
+                    key={`sub-option-${label}`}
                   >
                     <span
                       className={classNames(
