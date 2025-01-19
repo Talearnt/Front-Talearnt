@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import { classNames } from "@utils/classNames";
+
+import useDebounce from "@hook/useDebounce";
 
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
@@ -24,7 +26,7 @@ type SearchableDropdownProps<T> = commonDropdownProps<
 
 const optionsStyle = classNames(
   "flex flex-col gap-2",
-  "m-[7px] mr-[7px] w-full pr-4",
+  "m-[7px] w-full pr-4",
   "overflow-y-auto",
   styles.scrollbar
 );
@@ -43,15 +45,41 @@ function SearchableDropdown<T = string>({
     selectedCategoryIndex?: number;
   }>();
 
-  const [isOpen, search, selectedCategoryIndex] = watch([
+  const [isOpen, selectedCategoryIndex] = watch([
     "checkbox",
-    "search",
     "selectedCategoryIndex"
   ]);
   const hasSubOption = Array.isArray(options[0].value);
+  const search = useDebounce(watch("search"));
+  // 옵션이 선택되었는지 확인
+  const isOptionSelected = useCallback(
+    (value: T) =>
+      selectedOptionsArray.some(
+        ({ value: selectedValue }) => selectedValue === value
+      ),
+    [selectedOptionsArray]
+  );
+  // 검색한 재능 키워드 목록
+  const searchedOptionsList = useMemo(() => {
+    if (!search) {
+      return [];
+    }
+
+    // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
+    const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
+    const searchOption = hasSubOption
+      ? options.flatMap(({ value }) => value as dropdownOptionType<T>[])
+      : options;
+
+    return searchOption.filter(
+      ({ label, value }) =>
+        searchRegex.test(label.replace(/\s+/g, "")) &&
+        !isOptionSelected(value as T)
+    ) as dropdownOptionType<T>[];
+  }, [hasSubOption, isOptionSelected, options, search]);
 
   useEffect(() => {
-    // 기본 or 1차 옵션 스크롤 바 스타일, 스크롤 위치 변경
+    // 기본 or 메인 옵션 스크롤 바 스타일 적용
     if (
       !scrollRefArray.current[0] ||
       !scrollRefArray.current[0].parentElement
@@ -61,11 +89,10 @@ function SearchableDropdown<T = string>({
 
     const { parentElement, scrollHeight } = scrollRefArray.current[0];
     const isScrollable = scrollHeight > parentElement.offsetHeight;
-    const dividerStyle = hasSubOption ? styles.divider2 : styles.divider1;
+    const dividerStyle = hasSubOption ? styles.middleDivider : styles.divider;
 
     parentElement.classList.toggle(dividerStyle, isScrollable);
-    scrollRefArray.current[0].scrollTo({ top: 0 });
-  }, [hasSubOption, isOpen]);
+  }, [hasSubOption, isOpen, search]);
 
   useEffect(() => {
     // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
@@ -79,9 +106,27 @@ function SearchableDropdown<T = string>({
     const { parentElement, scrollHeight } = scrollRefArray.current[1];
     const isScrollable = scrollHeight > parentElement.offsetHeight;
 
-    parentElement.classList.toggle(styles.divider1, isScrollable);
+    parentElement.classList.toggle(styles.divider, isScrollable);
     scrollRefArray.current[1].scrollTo({ top: 0 });
-  }, [selectedCategoryIndex]);
+  }, [selectedCategoryIndex, isOpen]);
+
+  useEffect(() => {
+    // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
+    if (
+      !scrollRefArray.current[2] ||
+      !scrollRefArray.current[2].parentElement ||
+      !search
+    ) {
+      return;
+    }
+
+    const { parentElement, scrollHeight } = scrollRefArray.current[2];
+    const isScrollable = scrollHeight > parentElement.offsetHeight;
+
+    parentElement.classList.toggle(styles.divider, isScrollable);
+    parentElement.classList.remove(styles.middleDivider);
+    scrollRefArray.current[2].scrollTo({ top: 0 });
+  }, [isOpen, search]);
 
   return (
     <div className={"relative w-[388px]"}>
@@ -150,64 +195,16 @@ function SearchableDropdown<T = string>({
           "peer-has-[:checked]/label:flex"
         )}
       >
-        <div
-          className={optionsStyle}
-          ref={element => (scrollRefArray.current = [element])}
-        >
-          {options.map(({ label, value }, index) => {
-            const checked = hasSubOption
-              ? selectedCategoryIndex === index
-              : selectedOptionsArray.some(
-                  ({ value: selectedValue }) => selectedValue === value
-                );
-
-            return (
-              <CheckBox
-                className={classNames(
-                  "group/checkbox",
-                  "rounded-[10px] px-4 py-[13px]",
-                  "hover:bg-talearnt-BG_Up_01",
-                  checked && "bg-talearnt-BG_Up_01"
-                )}
-                checked={checked}
-                onChange={({ target }) =>
-                  hasSubOption
-                    ? setValue(
-                        "selectedCategoryIndex",
-                        index === selectedCategoryIndex ? undefined : index
-                      )
-                    : onSelectHandler({ checked: target.checked, label, value })
-                }
-                key={
-                  Array.isArray(value) ? `main-option-${label}` : String(value)
-                }
-              >
-                <span
-                  className={classNames(
-                    "text-base font-medium text-talearnt-Text_04",
-                    "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
-                    checked && "!font-semibold !text-talearnt-Text_01"
-                  )}
-                >
-                  {label}
-                </span>
-              </CheckBox>
-            );
-          })}
-        </div>
-        {/*서브 옵션*/}
-        {hasSubOption && (
-          <div
-            className={optionsStyle}
-            ref={element => (scrollRefArray.current[1] = element)}
-          >
-            {selectedCategoryIndex !== undefined &&
-              (
-                options[selectedCategoryIndex].value as dropdownOptionType<T>[]
-              ).map(({ label, value }) => {
-                const checked = selectedOptionsArray.some(
-                  ({ value: selectedValue }) => selectedValue === value
-                );
+        {!search ? (
+          <>
+            <div
+              className={optionsStyle}
+              ref={element => (scrollRefArray.current = [element])}
+            >
+              {options.map(({ label, value }, index) => {
+                const checked = hasSubOption
+                  ? selectedCategoryIndex === index
+                  : isOptionSelected(value as T);
 
                 return (
                   <CheckBox
@@ -219,13 +216,22 @@ function SearchableDropdown<T = string>({
                     )}
                     checked={checked}
                     onChange={({ target }) =>
-                      onSelectHandler({
-                        checked: target.checked,
-                        label,
-                        value
-                      })
+                      hasSubOption
+                        ? setValue(
+                            "selectedCategoryIndex",
+                            index === selectedCategoryIndex ? undefined : index
+                          )
+                        : onSelectHandler({
+                            checked: target.checked,
+                            label,
+                            value
+                          })
                     }
-                    key={`sub-option-${label}`}
+                    key={
+                      Array.isArray(value)
+                        ? `main-option-${label}`
+                        : String(value)
+                    }
                   >
                     <span
                       className={classNames(
@@ -239,6 +245,92 @@ function SearchableDropdown<T = string>({
                   </CheckBox>
                 );
               })}
+            </div>
+            {/*서브 옵션*/}
+            {hasSubOption && (
+              <div
+                className={optionsStyle}
+                ref={element => (scrollRefArray.current[1] = element)}
+              >
+                {selectedCategoryIndex !== undefined &&
+                  (
+                    options[selectedCategoryIndex]
+                      .value as dropdownOptionType<T>[]
+                  ).map(({ label, value }) => {
+                    console.log(label);
+                    const checked = isOptionSelected(value);
+
+                    return (
+                      <CheckBox
+                        className={classNames(
+                          "group/checkbox",
+                          "rounded-[10px] px-4 py-[13px]",
+                          "hover:bg-talearnt-BG_Up_01",
+                          checked && "bg-talearnt-BG_Up_01"
+                        )}
+                        checked={checked}
+                        onChange={({ target }) =>
+                          onSelectHandler({
+                            checked: target.checked,
+                            label,
+                            value
+                          })
+                        }
+                        key={`sub-option-${label}`}
+                      >
+                        <span
+                          className={classNames(
+                            "text-base font-medium text-talearnt-Text_04",
+                            "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
+                            checked && "!font-semibold !text-talearnt-Text_01"
+                          )}
+                        >
+                          {label}
+                        </span>
+                      </CheckBox>
+                    );
+                  })}
+              </div>
+            )}
+          </>
+        ) : (
+          <div
+            className={optionsStyle}
+            ref={element => (scrollRefArray.current[2] = element)}
+          >
+            {searchedOptionsList.map(({ label, value }) => {
+              const checked = isOptionSelected(value);
+
+              return (
+                <CheckBox
+                  className={classNames(
+                    "group/checkbox",
+                    "rounded-[10px] px-4 py-[13px]",
+                    "hover:bg-talearnt-BG_Up_01",
+                    checked && "bg-talearnt-BG_Up_01"
+                  )}
+                  checked={checked}
+                  onChange={({ target }) =>
+                    onSelectHandler({
+                      checked: target.checked,
+                      label,
+                      value
+                    })
+                  }
+                  key={`search-option-${label}`}
+                >
+                  <span
+                    className={classNames(
+                      "text-base font-medium text-talearnt-Text_04",
+                      "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
+                      checked && "!font-semibold !text-talearnt-Text_01"
+                    )}
+                  >
+                    {label}
+                  </span>
+                </CheckBox>
+              );
+            })}
           </div>
         )}
       </div>
