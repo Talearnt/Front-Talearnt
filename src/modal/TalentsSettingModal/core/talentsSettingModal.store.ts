@@ -21,7 +21,7 @@ type talentsSettingModalStoreType = {
   isLoading: boolean;
   isSuccess: boolean;
 };
-
+// TODO 불필요한 store 사용을 막기 위해 props로 변경
 export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
   set => ({
     scrollRef: createRef<HTMLDivElement>(),
