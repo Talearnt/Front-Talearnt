@@ -8,6 +8,7 @@ import useDebounce from "@hook/useDebounce";
 import { CheckBox } from "@components/CheckBox/CheckBox";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
+import { MakoExpressionSad } from "@components/icons/Mako/MakoExpressionSad";
 import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeInput";
 
 import {
@@ -108,10 +109,10 @@ function SearchableDropdown<T = string>({
 
     parentElement.classList.toggle(styles.divider, isScrollable);
     scrollRefArray.current[1].scrollTo({ top: 0 });
-  }, [selectedCategoryIndex, isOpen]);
+  }, [selectedCategoryIndex, isOpen, search]);
 
   useEffect(() => {
-    // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
+    // 검색한 옵션 스크롤 바 스타일, 스크롤 위치 변경
     if (
       !scrollRefArray.current[2] ||
       !scrollRefArray.current[2].parentElement ||
@@ -295,42 +296,55 @@ function SearchableDropdown<T = string>({
           </>
         ) : (
           <div
-            className={optionsStyle}
+            className={classNames(
+              optionsStyle,
+              searchedOptionsList.length === 0 &&
+                "h-[298px] items-center justify-center gap-4"
+            )}
             ref={element => (scrollRefArray.current[2] = element)}
           >
-            {searchedOptionsList.map(({ label, value }) => {
-              const checked = isOptionSelected(value);
+            {searchedOptionsList.length > 0 ? (
+              searchedOptionsList.map(({ label, value }) => {
+                const checked = isOptionSelected(value);
 
-              return (
-                <CheckBox
-                  className={classNames(
-                    "group/checkbox",
-                    "rounded-[10px] px-4 py-[13px]",
-                    "hover:bg-talearnt-BG_Up_01",
-                    checked && "bg-talearnt-BG_Up_01"
-                  )}
-                  checked={checked}
-                  onChange={({ target }) =>
-                    onSelectHandler({
-                      checked: target.checked,
-                      label,
-                      value
-                    })
-                  }
-                  key={`search-option-${label}`}
-                >
-                  <span
+                return (
+                  <CheckBox
                     className={classNames(
-                      "text-base font-medium text-talearnt-Text_04",
-                      "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
-                      checked && "!font-semibold !text-talearnt-Text_01"
+                      "group/checkbox",
+                      "rounded-[10px] px-4 py-[13px]",
+                      "hover:bg-talearnt-BG_Up_01",
+                      checked && "bg-talearnt-BG_Up_01"
                     )}
+                    checked={checked}
+                    onChange={({ target }) =>
+                      onSelectHandler({
+                        checked: target.checked,
+                        label,
+                        value
+                      })
+                    }
+                    key={`search-option-${label}`}
                   >
-                    {label}
-                  </span>
-                </CheckBox>
-              );
-            })}
+                    <span
+                      className={classNames(
+                        "text-base font-medium text-talearnt-Text_04",
+                        "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
+                        checked && "!font-semibold !text-talearnt-Text_01"
+                      )}
+                    >
+                      {label}
+                    </span>
+                  </CheckBox>
+                );
+              })
+            ) : (
+              <>
+                <span className={"text-xl font-semibold text-talearnt-Text_03"}>
+                  이 키워드는 없어요...
+                </span>
+                <MakoExpressionSad />
+              </>
+            )}
           </div>
         )}
       </div>
