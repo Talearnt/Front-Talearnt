@@ -59,7 +59,7 @@ function SearchableDropdown<T = string>({
       ),
     [selectedOptionsArray]
   );
-  // 검색한 재능 키워드 목록
+  // 검색한 재능 키워드 목록 TODO 재능 설정 모달에 있는 기능과 합쳐 공통 hook으로 분리
   const searchedOptionsList = useMemo(() => {
     if (!search) {
       return [];
@@ -205,7 +205,7 @@ function SearchableDropdown<T = string>({
                 const checked = hasSubOption
                   ? selectedCategoryIndex === index
                   : isOptionSelected(value as T);
-
+                // TODO 컴포넌트 분리
                 return (
                   <CheckBox
                     className={classNames(
