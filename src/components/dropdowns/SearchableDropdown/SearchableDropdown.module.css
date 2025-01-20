@@ -12,7 +12,7 @@
     background-color: transparent;
 }
 
-.divider1::before {
+.divider::before {
     position: absolute;
     content:"";
     width: 1px;
@@ -21,7 +21,7 @@
     background-color: #D0D5D8;
 }
 
-.divider2::after {
+.middleDivider::after {
     content:"";
     position: absolute;
     right: calc(50% - 14px);
