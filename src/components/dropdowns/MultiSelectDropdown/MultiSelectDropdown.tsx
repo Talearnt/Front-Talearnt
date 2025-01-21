@@ -1,6 +1,6 @@
 import { classNames } from "@utils/classNames";
 
-import { CheckBox } from "@components/CheckBox/CheckBox";
+import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 
 import { commonDropdownProps } from "@components/dropdowns/dropdown.type";
@@ -51,35 +51,15 @@ function MultiSelectDropdown<T = string>({
           "px-2 py-1"
         )}
       >
-        {options.map(({ label, value }) => {
-          const checked = selectedValueArray.includes(value);
-
-          return (
-            <CheckBox
-              className={classNames(
-                "group/checkbox",
-                "rounded-lg px-4 py-[13px]",
-                "hover:bg-talearnt-BG_Up_01",
-                checked && "bg-talearnt-BG_Up_01"
-              )}
-              checked={checked}
-              onChange={({ target }) =>
-                onSelectHandler({ checked: target.checked, label, value })
-              }
-              key={String(value)}
-            >
-              <span
-                className={classNames(
-                  "text-lg text-talearnt-Text_04",
-                  "group-hover/checkbox:font-medium group-hover/checkbox:text-talearnt-Text_02",
-                  checked && "!font-semibold !text-talearnt-Text_01"
-                )}
-              >
-                {label}
-              </span>
-            </CheckBox>
-          );
-        })}
+        {options.map(({ label, value }) => (
+          <DropdownOptionItem
+            checked={selectedValueArray.includes(value)}
+            onChangeHandler={({ target }) =>
+              onSelectHandler({ checked: target.checked, label, value })
+            }
+            label={label}
+          />
+        ))}
       </div>
     </div>
   );
