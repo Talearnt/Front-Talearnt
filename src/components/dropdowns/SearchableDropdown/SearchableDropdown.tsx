@@ -1,4 +1,11 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import { useForm } from "react-hook-form";
 
 import { classNames } from "@utils/classNames";
@@ -38,6 +45,12 @@ function SearchableDropdown<T = string>({
   placeholder,
   selectedOptionsArray
 }: SearchableDropdownProps<T>) {
+  // 현재 눌린 키보드의 방향
+  const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
+  // 키보드, 마우스 어떤 source 선택하는지 저장
+  const inputSourceRef = useRef<"keyboard" | "mouse">("keyboard");
+  // 현재 선택된 재능
+  const selectedTalentRef = useRef<HTMLButtonElement>(null);
   const scrollRefArray = useRef<(HTMLDivElement | null)[]>([]);
 
   const { register, setValue, watch } = useForm<{
@@ -45,6 +58,9 @@ function SearchableDropdown<T = string>({
     search: string;
     selectedCategoryIndex?: number;
   }>();
+
+  // 현재 선택된 재능의 index
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 
   const [isOpen, selectedCategoryIndex] = watch([
     "checkbox",
@@ -60,7 +76,7 @@ function SearchableDropdown<T = string>({
       ),
     [selectedOptionsArray]
   );
-  // 검색한 재능 키워드 목록 TODO 재능 설정 모달에 있는 기능과 합쳐 공통 hook으로 분리
+  // 검색한 재능 키워드 목록
   const searchedOptionsList = useMemo(() => {
     if (!search) {
       return [];
@@ -91,6 +107,74 @@ function SearchableDropdown<T = string>({
             }),
     [onSelectHandler, setValue]
   );
+
+  // 키보드로 재능을 선택
+  const handleKeyDown = ({
+    key,
+    nativeEvent
+  }: React.KeyboardEvent<HTMLInputElement>) => {
+    if (nativeEvent.isComposing || !search) {
+      // 아직 글자가 조합중인 상태라면 return (한글 이슈)
+      return;
+    }
+
+    if (key === "Enter") {
+      handleOnChange(searchedOptionsList[selectedOptionIndex]);
+      setValue("search", "");
+
+      return;
+    }
+
+    if (key !== "ArrowUp" && key !== "ArrowDown") {
+      return;
+    }
+    inputSourceRef.current = "keyboard";
+    arrowDirectionRef.current = key;
+
+    if (key === "ArrowUp") {
+      setSelectedOptionIndex(prev =>
+        prev === 0 ? searchedOptionsList.length - 1 : prev - 1
+      );
+      return;
+    }
+
+    setSelectedOptionIndex(prev =>
+      prev === searchedOptionsList.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  // 키보드로 재능 선택할 때 스크롤 이동
+  useEffect(() => {
+    if (inputSourceRef.current === "mouse" || !selectedTalentRef.current) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!selectedTalentRef.current) {
+            return;
+          }
+
+          if (!entry.isIntersecting) {
+            selectedTalentRef.current.scrollIntoView({
+              block:
+                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined
+            });
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1
+      }
+    );
+
+    observer.observe(selectedTalentRef.current);
+
+    return () => observer.disconnect();
+  }, [selectedOptionIndex]);
 
   useEffect(() => {
     // 기본 or 메인 옵션 스크롤 바 스타일 적용
@@ -140,6 +224,7 @@ function SearchableDropdown<T = string>({
     parentElement.classList.toggle(styles.divider, isScrollable);
     parentElement.classList.remove(styles.middleDivider);
     scrollRefArray.current[2].scrollTo({ top: 0 });
+    setSelectedOptionIndex(0);
   }, [isOpen, search]);
 
   return (
@@ -185,6 +270,7 @@ function SearchableDropdown<T = string>({
               }
             }}
             onChange={({ target }) => setValue("search", target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={
               selectedOptionsArray.length === 0 ? placeholder : undefined
             }
@@ -265,14 +351,32 @@ function SearchableDropdown<T = string>({
             ref={element => (scrollRefArray.current[2] = element)}
           >
             {searchedOptionsList.length > 0 ? (
-              searchedOptionsList.map(({ label, value }) => (
-                <DropdownOptionItem
-                  className={"text-base"}
-                  checked={isOptionSelected(value)}
-                  onChangeHandler={handleOnChange({ label, value })}
-                  label={label}
+              searchedOptionsList.map(({ label, value }, index) => (
+                <button
+                  ref={
+                    selectedOptionIndex === index
+                      ? selectedTalentRef
+                      : undefined
+                  }
+                  className={classNames(
+                    "flex-shrink-0",
+                    "h-[50px] rounded-lg px-4",
+                    "text-left text-base font-medium text-talearnt-Text_04",
+                    index === selectedOptionIndex &&
+                      "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
+                  )}
+                  onClick={() => {
+                    handleOnChange({ label, value });
+                    setValue("search", "");
+                  }}
+                  onMouseEnter={() => {
+                    inputSourceRef.current = "mouse";
+                    setSelectedOptionIndex(index);
+                  }}
                   key={`search-option-${label}`}
-                />
+                >
+                  {label}
+                </button>
               ))
             ) : (
               <>
