@@ -105,7 +105,7 @@ function TalentsSettingModalBody() {
     key,
     nativeEvent
   }: React.KeyboardEvent<HTMLInputElement>) => {
-    if (nativeEvent.isComposing) {
+    if (nativeEvent.isComposing || !search) {
       // 아직 글자가 조합중인 상태라면 return (한글 이슈)
       return;
     }
@@ -241,6 +241,7 @@ function TalentsSettingModalBody() {
             formData={{ ...register("search") }}
             placeholder={"원하는 키워드를 검색해 보세요."}
             wrapperClassName={classNames("relative px-[30px]")}
+            autoComplete={"off"}
           >
             <SearchIcon
               className={classNames(
@@ -306,10 +307,8 @@ function TalentsSettingModalBody() {
                       "flex-shrink-0",
                       "m-2 h-[70px] rounded-lg px-4",
                       "text-left text-lg text-talearnt-Text_04",
-                      inputSourceRef.current === "mouse" &&
-                        "hover:bg-talearnt-BG_Up_01 hover:font-medium hover:text-talearnt-Text_02",
                       index === selectedTalentIndex &&
-                        "bg-talearnt-BG_Up_01 font-medium text-talearnt-Text_02"
+                        "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
                     )}
                     onClick={() => {
                       if (isTalentsExceedingLimit()) {
@@ -325,11 +324,9 @@ function TalentsSettingModalBody() {
                       });
                       reset();
                     }}
-                    onMouseMove={() => {
-                      if (selectedTalentIndex !== index) {
-                        inputSourceRef.current = "mouse";
-                        setSelectedTalentIndex(index);
-                      }
+                    onMouseEnter={() => {
+                      inputSourceRef.current = "mouse";
+                      setSelectedTalentIndex(index);
                     }}
                     key={talentCode}
                   >
