@@ -38,6 +38,11 @@ const optionsStyle = classNames(
   "overflow-y-auto",
   styles.scrollbar
 );
+const optionItemStyle = classNames(
+  "flex-shrink-0",
+  "h-[50px] rounded-lg px-4",
+  "text-left text-base font-medium text-talearnt-Text_04"
+);
 
 function SearchableDropdown<T = string>({
   options,
@@ -96,16 +101,14 @@ function SearchableDropdown<T = string>({
   }, [hasSubOption, isOptionSelected, options, search]);
 
   const handleOnChange = useCallback(
-    ({ index, label, value }: { index?: number; label: string; value: T }) =>
+    ({ label, value }: { label: string; value: T }) =>
       ({ target }: ChangeEvent<HTMLInputElement>) =>
-        index !== undefined
-          ? setValue("selectedCategoryIndex", index)
-          : onSelectHandler({
-              checked: target.checked,
-              label,
-              value
-            }),
-    [onSelectHandler, setValue]
+        onSelectHandler({
+          checked: target.checked,
+          label,
+          value
+        }),
+    [onSelectHandler]
   );
 
   // 키보드로 재능을 선택
@@ -301,23 +304,45 @@ function SearchableDropdown<T = string>({
               className={optionsStyle}
               ref={element => (scrollRefArray.current = [element])}
             >
-              {options.map(({ label, value }, index) => (
-                <DropdownOptionItem
-                  className={"text-base"}
-                  checked={
-                    hasSubOption
-                      ? selectedCategoryIndex === index
-                      : isOptionSelected(value as T)
-                  }
-                  onChangeHandler={handleOnChange({
-                    index: hasSubOption ? index : undefined,
-                    label,
-                    value: value as T
-                  })}
-                  label={label}
-                  key={hasSubOption ? `main-option-${label}` : String(value)}
-                />
-              ))}
+              {options.map(({ label, value }, index) =>
+                hasSubOption ? (
+                  <button
+                    className={classNames(
+                      optionItemStyle,
+                      "group/item",
+                      "hover:bg-talearnt-BG_Up_01 hover:text-talearnt-Text_02",
+                      index === selectedCategoryIndex &&
+                        "bg-talearnt-BG_Up_01 font-semibold text-talearnt-Text_01"
+                    )}
+                    onClick={() => setValue("selectedCategoryIndex", index)}
+                    key={`main-option-${label}`}
+                  >
+                    <div className={"flex items-center justify-between"}>
+                      {label}
+                      <CaretIcon
+                        className={classNames(
+                          "stroke-talearnt-Icon_03",
+                          "group-hover/item:stroke-talearnt-Icon_01",
+                          index === selectedCategoryIndex &&
+                            "stroke-talearnt-Icon_01"
+                        )}
+                        direction={"right"}
+                      />
+                    </div>
+                  </button>
+                ) : (
+                  <DropdownOptionItem
+                    className={"text-base"}
+                    checked={isOptionSelected(value as T)}
+                    onChangeHandler={handleOnChange({
+                      label,
+                      value: value as T
+                    })}
+                    label={label}
+                    key={String(value)}
+                  />
+                )
+              )}
             </div>
             {/*서브 옵션*/}
             {hasSubOption && (
@@ -359,9 +384,7 @@ function SearchableDropdown<T = string>({
                       : undefined
                   }
                   className={classNames(
-                    "flex-shrink-0",
-                    "h-[50px] rounded-lg px-4",
-                    "text-left text-base font-medium text-talearnt-Text_04",
+                    optionItemStyle,
                     index === selectedOptionIndex &&
                       "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
                   )}
