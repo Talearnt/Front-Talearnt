@@ -252,7 +252,7 @@ function InfoFields() {
               <TabSlider
                 className={classNames("ml-2 flex-shrink-0", "w-[160px]")}
                 currentValue={gender}
-                onChangeHandler={value => setValue("gender", value)}
+                onClickHandler={value => setValue("gender", value)}
                 options={genderOptions}
               />
             </Input>
