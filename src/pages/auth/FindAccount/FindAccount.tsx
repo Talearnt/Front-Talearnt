@@ -25,14 +25,9 @@ function FindAccount() {
   return (
     <div className={classNames("flex flex-col gap-[56px]", "w-[632px]")}>
       <TabSlider
-        className={"text-lg"}
+        className={"h-[50px] text-lg"}
         currentValue={currentPage === "change" ? "pw" : currentPage}
-        onChangeHandler={value => navigator(`/find-account/${value}`)}
-        onClickHandler={
-          currentPage === "change"
-            ? value => navigator(`/find-account/${value}`)
-            : undefined
-        }
+        onClickHandler={value => navigator(`/find-account/${value}`)}
         options={options}
       />
       <Outlet />

@@ -13,7 +13,7 @@ type TabSliderProps = CustomVariantProps<TabSliderVariantsType> & {
   className?: string;
   currentValue: string;
   disabled?: boolean;
-  onChangeHandler?: (value: string) => void;
+  onClickHandler?: (value: string) => void;
   options: { label: string; value: string }[];
 };
 
@@ -66,7 +66,7 @@ function TabSlider({
   className,
   currentValue,
   disabled,
-  onChangeHandler,
+  onClickHandler,
   options,
   type
 }: TabSliderProps) {
@@ -86,12 +86,13 @@ function TabSlider({
             type !== "shadow" &&
               defaultStyle({ disabled, index, maxLength: array.length - 1 })
           )}
+          key={`${value}-${index.toString()}`}
         >
           <input
             checked={currentValue === value}
             className={"hidden"}
             disabled={disabled}
-            onChange={() => onChangeHandler?.(value)}
+            onClick={() => onClickHandler?.(value)}
             type={"radio"}
           />
           {label}
