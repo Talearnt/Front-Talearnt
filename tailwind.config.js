@@ -32,6 +32,7 @@ export default {
         "talearnt-Icon_03": "#DEE1E3",
         "talearnt-On_Icon": "#FFFFFF",
         "talearnt-Line_01": "#D0D5D8",
+        "talearnt-Line_02": "#ECEEEF",
         "talearnt-BG_Up_01": "#F7F8F8",
         "talearnt-BG_Up_02": "#ECEEEF",
         "talearnt-BG_Up_03": "#DEE1E3"
