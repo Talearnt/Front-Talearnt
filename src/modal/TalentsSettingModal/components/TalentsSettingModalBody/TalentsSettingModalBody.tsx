@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string } from "yup";
-
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
@@ -28,10 +25,6 @@ import { talentsType } from "@modal/TalentsSettingModal/core/talentsSettingModal
 
 import styles from "./TalentsSettingModalBody.module.css";
 
-const talentsSearchSchema = object({
-  search: string()
-}).required();
-
 function TalentsSettingModalBody() {
   // 현재 눌린 키보드의 방향
   const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
@@ -40,11 +33,7 @@ function TalentsSettingModalBody() {
   // 현재 선택된 재능
   const selectedTalentRef = useRef<HTMLButtonElement>(null);
 
-  const { register, reset, watch } = useForm({
-    defaultValues: { search: "" },
-    mode: "onChange",
-    resolver: yupResolver(talentsSearchSchema)
-  });
+  const { register, reset, watch } = useForm<{ search: string }>();
 
   const scrollRef = useTalentsSettingModalStore(state => state.scrollRef);
   const currentTalentsType = useTalentsSettingModalStore(
