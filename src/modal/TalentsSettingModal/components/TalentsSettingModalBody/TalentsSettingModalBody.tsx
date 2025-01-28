@@ -11,7 +11,7 @@ import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/tal
 import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
-import { MakoExpressionSad } from "@components/icons/Mako/MakoExpressionSad";
+import { MakoExpressionSad } from "@components/icons/mako/MakoExpressionSad";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/inputs/Input/Input";
 import { ModalBody } from "@components/modal/ModalBody/ModalBody";
