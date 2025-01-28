@@ -15,7 +15,7 @@ import useDebounce from "@hook/useDebounce";
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
-import { MakoExpressionSad } from "@components/icons/Mako/MakoExpressionSad";
+import { MakoExpressionSad } from "@components/icons/mako/MakoExpressionSad";
 import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeInput";
 
 import {
