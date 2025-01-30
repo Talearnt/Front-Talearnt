@@ -1,12 +1,13 @@
-import { useState } from "react";
-import ReactQuill from "react-quill-new";
+import { classNames } from "@utils/classNames";
 
-import "react-quill-new/dist/quill.snow.css";
+import { TextEditor } from "@components/TextEditor/TextEditor";
 
 function WriteArticle() {
-  const [value, setValue] = useState("");
-
-  return <ReactQuill theme="snow" value={value} onChange={setValue} />;
+  return (
+    <div className={classNames("w-[848px]")}>
+      <TextEditor />
+    </div>
+  );
 }
 
 export { WriteArticle };
