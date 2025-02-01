@@ -22,7 +22,7 @@ const backgroundColorOptions = [
   "#E7C2FF",
   "#DEE1E3",
   "#FFFFFF"
-] as const;
+];
 const colorOptions = [
   "#FF2727",
   "#FF9A27",
@@ -31,7 +31,7 @@ const colorOptions = [
   "#1B76FF",
   "#A927FF",
   "#1E2224"
-] as const;
+];
 const DEFAULT_VALUE = {
   size: "16px" as (typeof sizeOptions)[number],
   color: "#1E2224" as (typeof colorOptions)[number],
@@ -52,7 +52,7 @@ const sizeOptions = [
   "22px",
   "24px",
   "30px"
-] as const;
+];
 
 const updatePickerItemColors = (selector: string) => {
   document.querySelectorAll(`${selector} .ql-picker-item`).forEach(item => {
