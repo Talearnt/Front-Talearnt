@@ -3,63 +3,94 @@ export default {
   theme: {
     extend: {
       colors: {
-        "talearnt-BG_Background": "#FFFFFF",
-        "talearnt-BG_Background_01": "rgba(255, 255, 255, 0.2)",
-        "talearnt-BG_Toast_01": "rgba(0, 0, 0, 0.7)",
-        "talearnt-BG_Toast_02": "rgba(0, 0, 0, 0.8)",
-        "talearnt-On_Toast": "#FFFFFF",
-        "talearnt-Primary_01": "#1B76FF",
-        "talearnt-PrimaryBG_01": "#E5F0FF",
-        "talearnt-PrimaryBG_02": "#4D94FF",
-        "talearnt-PrimaryBG_03": "#80B2FF",
-        "talearnt-On_Primary": "#FFFFFF",
-        "talearnt-Error_01": "#FF2727",
-        "talearnt-Error_02": "#F50000",
-        "talearnt-Error_03": "#FF5C5C",
-        "talearnt-ErrorBG_01": "#FFF0F0",
-        "talearnt-ErrorBG_02": "rgba(255, 240, 240, 0.8)",
-        "talearnt-On_Error": "#FFFFFF",
-        "talearnt-Success_01": "#00CC70",
-        "talearnt-SuccessBG_01": "rgba(240, 255, 248, 0.8)",
-        "talearnt-On_Success": "#FFFFFF",
-        "talearnt-Text_Strong": "#000000",
-        "talearnt-Text_01": "#1E2224",
-        "talearnt-Text_02": "#414A4E",
-        "talearnt-Text_03": "#98A3A9",
-        "talearnt-Text_04": "#A6B0B5",
-        "talearnt-Icon_01": "#414A4E",
-        "talearnt-Icon_02": "#C1C8CC",
-        "talearnt-Icon_03": "#DEE1E3",
-        "talearnt-On_Icon": "#FFFFFF",
-        "talearnt-Line_01": "#D0D5D8",
-        "talearnt-Line_02": "#ECEEEF",
-        "talearnt-BG_Up_01": "#F7F8F8",
-        "talearnt-BG_Up_02": "#ECEEEF",
-        "talearnt-BG_Up_03": "#DEE1E3"
+        talearnt_BG_Background: "#FFFFFF",
+        talearnt_BG_Background_01: "rgba(255, 255, 255, 0.2)",
+        talearnt_BG_Toast_01: "rgba(0, 0, 0, 0.7)",
+        talearnt_BG_Toast_02: "rgba(0, 0, 0, 0.8)",
+        talearnt_On_Toast: "#FFFFFF",
+        talearnt_Primary_01: "#1B76FF",
+        talearnt_PrimaryBG_01: "#E5F0FF",
+        talearnt_PrimaryBG_02: "#4D94FF",
+        talearnt_PrimaryBG_03: "#80B2FF",
+        talearnt_On_Primary: "#FFFFFF",
+        talearnt_Error_0: "#FF2727",
+        talearnt_Error_02: "#F50000",
+        talearnt_Error_03: "#FF5C5C",
+        talearnt_ErrorBG_01: "#FFF0F0",
+        talearnt_ErrorBG_02: "rgba(255, 240, 240, 0.8)",
+        talearnt_On_Error: "#FFFFFF",
+        talearnt_Success_01: "#00CC70",
+        talearnt_SuccessBG_01: "rgba(240, 255, 248, 0.8)",
+        talearnt_On_Success: "#FFFFFF",
+        talearnt_Text_Strong: "#000000",
+        talearnt_Text_01: "#1E2224",
+        talearnt_Text_02: "#414A4E",
+        talearnt_Text_03: "#98A3A9",
+        talearnt_Text_04: "#A6B0B5",
+        talearnt_Icon_01: "#414A4E",
+        talearnt_Icon_02: "#C1C8CC",
+        talearnt_Icon_03: "#DEE1E3",
+        talearnt_On_Icon: "#FFFFFF",
+        talearnt_Line_01: "#D0D5D8",
+        talearnt_Line_02: "#ECEEEF",
+        talearnt_BG_Up_01: "#F7F8F8",
+        talearnt_BG_Up_02: "#ECEEEF",
+        talearnt_BG_Up_03: "#DEE1E3"
       },
-      fontFamily: {
-        pretendard: ["Pretendard", "sans-serif"]
+      fontSize: {
+        heading1_30_semibold: [
+          "30px",
+          { lineHeight: "1.3", fontWeight: "600" }
+        ],
+        heading2_24_semibold: [
+          "24px",
+          { lineHeight: "1.3", fontWeight: "600" }
+        ],
+        heading3_22_semibold: [
+          "22px",
+          { lineHeight: "1.3", fontWeight: "600" }
+        ],
+        heading4_20_semibold: [
+          "20px",
+          { lineHeight: "1.3", fontWeight: "600" }
+        ],
+        body1_18_semibold: ["18px", { lineHeight: "1.3", fontWeight: "600" }],
+        body1_18_medium: ["18px", { lineHeight: "1.3", fontWeight: "500" }],
+        body2_16_semibold: ["16px", { lineHeight: "1.3", fontWeight: "600" }],
+        body2_16_medium: ["16px", { lineHeight: "1.5", fontWeight: "500" }],
+        body3_14_medium: ["14px", { lineHeight: "1.3", fontWeight: "500" }],
+        caption1_14_medium: ["14px", { lineHeight: "1.3", fontWeight: "500" }],
+        caption2_12_semibold: [
+          "12px",
+          { lineHeight: "1.3", fontWeight: "600" }
+        ],
+        caption2_12_medium: ["12px", { lineHeight: "1.3", fontWeight: "500" }],
+        label1_10_semibold: ["10px", { lineHeight: "1.3", fontWeight: "600" }]
+      },
+      boxShadow: {
+        shadow_02: "0 0 20px 0 rgba(0, 0, 0, 0.08)",
+        shadow_03: "0 0 24px 0 rgba(0, 0, 0, 0.12)"
       },
       animation: {
-        "spinner-spin": "spinner-spin 0.8s linear infinite",
-        "fade-in": "fade-in 0.5s ease-in-out",
-        "fade-out": "fade-out 0.5s ease-in-out",
-        "mako-sad": "mako-sad 0.6s linear infinite"
+        spinner_spin: "spinner_spin 0.8s linear infinite",
+        fade_in: "fade_in 0.5s ease-in-out",
+        fade_out: "fade_out 0.5s ease-in-out",
+        mako_sad: "mako_sad 0.6s linear infinite"
       },
       keyframes: {
-        "spinner-spin": {
+        spinner_spin: {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(-360deg)" }
         },
-        "fade-in": {
+        fade_in: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" }
         },
-        "fade-out": {
+        fade_out: {
           "0%": { opacity: "1" },
           "100%": { opacity: "0" }
         },
-        "mako-sad": {
+        mako_sad: {
           "0%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(15px)" },
           "100%": { transform: "translateY(30px)" }
