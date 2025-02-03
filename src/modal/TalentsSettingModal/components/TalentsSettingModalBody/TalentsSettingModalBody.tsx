@@ -193,13 +193,13 @@ function TalentsSettingModalBody() {
       {isSuccess ? (
         <>
           <CircleCheckIcon
-            className={"mx-auto mb-2 stroke-talearnt-Primary_01"}
+            className={classNames("mx-auto mb-2", "stroke-talearnt-Primary_01")}
             size={70}
           />
-          <div className={"flex flex-col gap-6 px-[30px]"}>
+          <div className={classNames("flex flex-col gap-6", "px-[30px]")}>
             {Object.keys(talentsData).map(key => (
               <div className={"flex flex-col gap-2"} key={key}>
-                <h3 className={"text-sm font-medium text-talearnt-Text_03"}>
+                <h3 className={"text-talearnt-Text_03 text-caption1_14_medium"}>
                   {CURRENT_TALENTS_TYPE_NAME[key as talentsType]} 키워드
                 </h3>
                 <div className={"flex flex-wrap gap-2"}>
@@ -207,8 +207,8 @@ function TalentsSettingModalBody() {
                     <span
                       className={classNames(
                         "flex items-center",
-                        "h-[40px] rounded-[6px] bg-talearnt-BG_Up_02 px-4",
-                        "whitespace-nowrap text-base font-medium text-talearnt-Text_02"
+                        "bg-talearnt-BG_Up_02 h-[40px] rounded-[6px] px-4",
+                        "text-talearnt-Text_02 whitespace-nowrap text-body2_16_medium"
                       )}
                       key={value}
                     >
@@ -224,7 +224,8 @@ function TalentsSettingModalBody() {
         <>
           <Input
             className={classNames(
-              "rounded-full border-talearnt-Line_01 text-sm font-medium"
+              "border-talearnt-Line_01 rounded-full",
+              "text-caption1_14_medium"
             )}
             onKeyDown={handleKeyDown}
             formData={{ ...register("search") }}
@@ -295,7 +296,7 @@ function TalentsSettingModalBody() {
                     className={classNames(
                       "flex-shrink-0",
                       "m-2 h-[70px] rounded-lg px-4",
-                      "text-left text-lg text-talearnt-Text_04",
+                      "text-talearnt-Text_04 text-left text-body1_18_medium",
                       index === selectedTalentIndex &&
                         "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
                     )}
@@ -326,7 +327,9 @@ function TalentsSettingModalBody() {
                 // 검색한 결과가 없는 경우
                 <>
                   <span
-                    className={"text-xl font-semibold text-talearnt-Text_03"}
+                    className={
+                      "text-talearnt-Text_03 text-heading4_20_semibold"
+                    }
                   >
                     이 키워드는 없어요...
                   </span>
@@ -341,11 +344,11 @@ function TalentsSettingModalBody() {
                 <div
                   className={classNames(
                     "flex items-center gap-1",
-                    "h-[30px] rounded-[6px] bg-talearnt-BG_Up_02 px-2"
+                    "bg-talearnt-BG_Up_02 h-[30px] rounded-[6px] px-2"
                   )}
                   key={value}
                 >
-                  <span className={"text-base font-medium"}>{label}</span>
+                  <span className={"text-body3_14_medium"}>{label}</span>
                   <CloseIcon
                     onClick={() =>
                       setTalentsData({

@@ -41,7 +41,7 @@ const optionsStyle = classNames(
 const optionItemStyle = classNames(
   "flex-shrink-0",
   "h-[50px] rounded-lg px-4",
-  "text-left text-base font-medium text-talearnt-Text_04"
+  "text-left text-body2_16_medium text-talearnt-Text_04"
 );
 
 function SearchableDropdown<T = string>({
@@ -236,7 +236,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "peer/label group/label",
           "flex items-center",
-          "rounded-lg border border-talearnt-Line_01 px-[15px] py-[10px]",
+          "border-talearnt-Line_01 rounded-lg border px-[15px] py-[10px]",
           "cursor-pointer"
         )}
       >
@@ -251,18 +251,18 @@ function SearchableDropdown<T = string>({
             <div
               className={classNames(
                 "flex items-center gap-1",
-                "rounded-[6px] bg-talearnt-BG_Up_02 px-2 py-[5px]"
+                "bg-talearnt-BG_Up_02 rounded-[6px] px-2 py-[5px]"
               )}
               key={String(value)}
             >
-              <span className={"text-sm font-semibold"}>{label}</span>
+              <span className={"text-body3_14_medium"}>{label}</span>
               <CloseIcon size={16} />
             </div>
           ))}
           <AutoResizeInput
             className={classNames(
               "flex-1",
-              "font-medium",
+              "text-body2_16_medium",
               "focus:outline-none"
             )}
             onClick={({ target }) => {
@@ -285,7 +285,7 @@ function SearchableDropdown<T = string>({
             "shrink-0",
             "stroke-talearnt-Icon_03",
             "group-hover/label:stroke-talearnt-Icon_01",
-            isOpen && "rotate-180 stroke-talearnt-Icon_01"
+            isOpen && "stroke-talearnt-Icon_01 rotate-180"
           )}
         />
       </label>
@@ -294,7 +294,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "absolute hidden",
           "mt-2 max-h-[298px] w-full rounded-lg",
-          "border border-talearnt-Line_01 bg-talearnt-BG_Background shadow-[0_0_20px_0_rgba(0,0,0,0.08)]",
+          "border-talearnt-Line_01 bg-talearnt-BG_Background border shadow-[0_0_20px_0_rgba(0,0,0,0.08)]",
           "peer-has-[:checked]/label:flex"
         )}
       >
@@ -312,7 +312,7 @@ function SearchableDropdown<T = string>({
                       "group/item",
                       "hover:bg-talearnt-BG_Up_01 hover:text-talearnt-Text_02",
                       index === selectedCategoryIndex &&
-                        "bg-talearnt-BG_Up_01 font-semibold text-talearnt-Text_01"
+                        "bg-talearnt-BG_Up_01 text-talearnt-Text_01 text-body2_16_semibold"
                     )}
                     onClick={() => setValue("selectedCategoryIndex", index)}
                     key={`main-option-${label}`}
@@ -332,7 +332,10 @@ function SearchableDropdown<T = string>({
                   </button>
                 ) : (
                   <DropdownOptionItem
-                    className={"text-base"}
+                    className={classNames(
+                      "text-body2_16_medium",
+                      isOptionSelected(value as T) && "text-body2_16_semibold"
+                    )}
                     checked={isOptionSelected(value as T)}
                     onChangeHandler={handleOnChange({
                       label,
@@ -356,7 +359,10 @@ function SearchableDropdown<T = string>({
                       .value as dropdownOptionType<T>[]
                   ).map(({ label, value }) => (
                     <DropdownOptionItem
-                      className={"text-base"}
+                      className={classNames(
+                        "text-body2_16_medium",
+                        isOptionSelected(value) && "text-body2_16_semibold"
+                      )}
                       checked={isOptionSelected(value)}
                       onChangeHandler={handleOnChange({ label, value })}
                       label={label}
@@ -403,7 +409,9 @@ function SearchableDropdown<T = string>({
               ))
             ) : (
               <>
-                <span className={"text-xl font-semibold text-talearnt-Text_03"}>
+                <span
+                  className={"text-talearnt-Text_03 text-heading4_20_semibold"}
+                >
                   이 키워드는 없어요...
                 </span>
                 <MakoExpressionSad />

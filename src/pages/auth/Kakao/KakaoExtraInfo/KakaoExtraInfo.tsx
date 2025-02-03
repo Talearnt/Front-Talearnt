@@ -144,7 +144,7 @@ function KakaoExtraInfo() {
 
   return (
     <>
-      <h1 className={"text-center text-3xl font-semibold"}>
+      <h1 className={"text-center text-heading1_30_semibold"}>
         로그인에 사용할
         <br />
         회원정보와 약관에 동의해 주세요.
@@ -152,7 +152,7 @@ function KakaoExtraInfo() {
       <div className={"flex flex-col gap-6"}>
         <Input disabled label={"이름"} value={kakaoAuthResponse.name}>
           <TabSlider
-            className={classNames("ml-2 flex-shrink-0", "w-[160px]")}
+            className={"ml-2 w-[160px] flex-shrink-0"}
             currentValue={kakaoAuthResponse.gender}
             disabled
             options={genderOptions}
@@ -189,7 +189,7 @@ function KakaoExtraInfo() {
               <span
                 className={classNames(
                   "mt-1",
-                  "text-sm font-medium text-talearnt-Text_03"
+                  "text-talearnt-Text_03 text-caption1_14_medium"
                 )}
               >
                 *&nbsp;
@@ -199,7 +199,7 @@ function KakaoExtraInfo() {
               </span>
               {nickname !== nickNameRef.current && (
                 <span
-                  className={"text-sm font-medium text-talearnt-Primary_01"}
+                  className={"text-talearnt-Primary_01 text-caption1_14_medium"}
                 >
                   * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는 #만
                   입력 가능해요
@@ -213,29 +213,27 @@ function KakaoExtraInfo() {
         <CheckBox
           className={classNames(
             "gap-4",
-            "border-b border-b-talearnt-Line_01",
-            "h-[71px]"
+            "border-b-talearnt-Line_01 h-[72px] border-b"
           )}
           formData={{ ...agreementsForm.register("all") }}
           onChange={handleAllCheckboxChange}
         >
-          <p className={"w-full text-lg font-semibold"}>
+          <span className={"w-full text-body1_18_semibold"}>
             전체 동의하기 (선택 정보를 포함합니다.)
-          </p>
+          </span>
         </CheckBox>
         {agreementsList.map(({ agreeCodeId, required, title }) => (
           <CheckBox
             className={classNames(
               "gap-4",
-              "border-b border-b-talearnt-Line_01",
-              "h-[71px]"
+              "border-b-talearnt-Line_01 h-[72px] border-b"
             )}
             formData={{
               ...agreementsForm.register(agreeCodeId.toString())
             }}
             key={agreeCodeId}
           >
-            <p className={"w-full text-base font-semibold"}>
+            <span className={classNames("w-full", "text-body2_16_semibold")}>
               {required ? (
                 <span className={"text-talearnt-Error_01"}>(필수)</span>
               ) : (
@@ -243,7 +241,7 @@ function KakaoExtraInfo() {
               )}
               &nbsp;
               {title}
-            </p>
+            </span>
           </CheckBox>
         ))}
       </div>

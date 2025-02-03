@@ -99,7 +99,7 @@ function FindId() {
       {canProceed ? (
         <>
           <div className={"flex flex-col items-center gap-8"}>
-            <h1 className={classNames("text-center text-3xl font-semibold")}>
+            <h1 className={"text-center text-heading1_30_semibold"}>
               아이디 찾기 완료
             </h1>
             <CircleCheckIcon
@@ -112,16 +112,16 @@ function FindId() {
                 "w-full"
               )}
             >
-              <span className={"text-base font-medium"}>
+              <span className={"text-body2_16_medium"}>
                 아이디 찾기 결과 고객님의 아이디 정보는 아래와 같아요
               </span>
               <div
                 className={classNames(
                   "flex flex-col items-center justify-center gap-2",
-                  "w-full rounded-xl border border-talearnt-Line_01 bg-talearnt-BG_Up_01 py-[31px]"
+                  "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
                 )}
               >
-                <span className={"text-base font-medium"}>
+                <span className={"text-body2_16_medium"}>
                   고객님 아이디는
                   <b className={"font-semibold"}>
                     {idData.current.userId.split("@")[0].slice(0, -3)}***@
@@ -129,7 +129,9 @@ function FindId() {
                   </b>
                   입니다.
                 </span>
-                <span className={"text-sm font-medium text-talearnt-Error_01"}>
+                <span
+                  className={"text-talearnt-Error_01 text-caption1_14_medium"}
+                >
                   {dayjs(idData.current.createdAt).format("YYYY-MM-DD HH:mm")}에
                   가입함
                 </span>
@@ -140,14 +142,14 @@ function FindId() {
                   "w-full"
                 )}
               >
-                <span className={classNames("ml-4", "text-lg font-medium")}>
+                <span className={classNames("ml-4", "text-body1_18_medium")}>
                   010-****-{verification.phone?.slice(-4)}
                 </span>
                 <span
                   className={classNames(
                     "flex items-center justify-center",
-                    "h-[50px] w-[160px] rounded-lg border border-talearnt-Icon_02",
-                    "text-lg font-medium text-talearnt-Text_04"
+                    "border-talearnt-Icon_02 h-[50px] w-[160px] rounded-lg border",
+                    "text-talearnt-Text_04 text-body1_18_medium"
                   )}
                 >
                   아이디 발송됨
@@ -158,27 +160,24 @@ function FindId() {
           <div className={"flex gap-[30px]"}>
             <Button
               buttonStyle={"outlined"}
-              className={"h-[50px] w-full"}
+              className={"w-full"}
               onClick={() => navigator("/find-account/pw")}
             >
               비밀번호 찾기
             </Button>
-            <Button
-              className={"h-[50px] w-full"}
-              onClick={() => navigator("/sign-in")}
-            >
+            <Button className={"w-full"} onClick={() => navigator("/sign-in")}>
               로그인
             </Button>
           </div>
         </>
       ) : (
         <>
-          <h1 className={classNames("text-center text-3xl font-semibold")}>
+          <h1 className={"text-center text-heading1_30_semibold"}>
             가입 시 등록한 휴대폰 정보로
             <br />
             아이디를 찾을 수 있어요
           </h1>
-          <div className={classNames("flex flex-col gap-6")}>
+          <div className={"flex flex-col gap-6"}>
             <Input
               error={errors.name?.message}
               formData={{ ...register("name") }}

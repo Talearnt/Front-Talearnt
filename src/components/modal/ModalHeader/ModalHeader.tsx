@@ -18,14 +18,15 @@ function ModalHeader({
   return (
     <div
       className={classNames(
-        "relative flex flex-col items-center justify-center",
+        "relative",
+        "flex flex-col items-center justify-center",
         "h-[150px]",
         className
       )}
     >
       {onCloseHandler && (
         <CloseIcon
-          className={classNames("absolute right-[32px] top-[32px]")}
+          className={"absolute right-[32px] top-[32px]"}
           onClick={onCloseHandler}
         />
       )}

@@ -76,17 +76,17 @@ function FindPassword() {
     <>
       {canProceed ? (
         <div className={"flex flex-col items-center gap-8"}>
-          <h1 className={classNames("text-center text-3xl font-semibold")}>
+          <h1 className={"text-center text-heading1_30_semibold"}>
             비밀번호 재설정 링크 발송 완료
           </h1>
           <CircleCheckIcon className={"stroke-talearnt-Primary_01"} size={70} />
           <div
             className={classNames(
               "flex flex-col items-center justify-center gap-2",
-              "w-full rounded-xl border border-talearnt-Line_01 bg-talearnt-BG_Up_01 py-[31px]"
+              "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
             )}
           >
-            <span className={"text-center text-base font-medium"}>
+            <span className={"text-center text-body2_16_medium"}>
               <b className={"font-semibold"}>
                 {userId?.split("@")[0].slice(0, -3)}***@
                 {userId?.split("@")[1]}
@@ -94,7 +94,7 @@ function FindPassword() {
               으로 <br />
               비밀번호 재설정을 위한 인증 메일을 발송하였습니다.
             </span>
-            <span className={"text-sm font-medium text-talearnt-Error_01"}>
+            <span className={"text-talearnt-Error_01 text-caption1_14_medium"}>
               {dayjs(sentDateRef.current).format("YYYY-MM-DD HH:mm")}에 메일
               발송함
             </span>
@@ -102,12 +102,12 @@ function FindPassword() {
         </div>
       ) : (
         <>
-          <h1 className={classNames("text-center text-3xl font-semibold")}>
+          <h1 className={"text-center text-heading1_30_semibold"}>
             본인 확인을 통해
             <br />
             비밀번호를 재설정할 수 있어요
           </h1>
-          <div className={classNames("flex flex-col gap-6")}>
+          <div className={"flex flex-col gap-6"}>
             <Input
               error={errors.userId?.message}
               formData={{ ...register("userId") }}

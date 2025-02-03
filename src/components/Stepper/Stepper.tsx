@@ -28,7 +28,10 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
             >
               <circle cx="25" cy="25" r="25" />
               <text
-                className={"fill-talearnt-BG_Background text-lg"}
+                className={classNames(
+                  "fill-talearnt-BG_Background",
+                  "text-body1_18_semibold"
+                )}
                 x="25"
                 y="25"
                 textAnchor="middle"
@@ -38,7 +41,11 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
               </text>
             </svg>
             <span
-              className={"absolute mt-2 whitespace-nowrap text-sm font-medium"}
+              className={classNames(
+                "absolute",
+                "mt-2",
+                "whitespace-nowrap text-caption1_14_medium"
+              )}
             >
               {step}
             </span>

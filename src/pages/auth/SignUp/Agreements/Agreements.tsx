@@ -22,7 +22,7 @@ function Agreements() {
 
   return (
     <>
-      <h1 className={classNames("text-center text-3xl font-semibold")}>
+      <h1 className={"text-center text-heading1_30_semibold"}>
         Talearnt 서비스 이용을 위한
         <br /> 약관에 동의해 주세요
       </h1>
@@ -30,28 +30,26 @@ function Agreements() {
         <CheckBox
           className={classNames(
             "gap-4",
-            "border-b border-b-talearnt-Line_01",
-            "h-[71px]"
+            "border-b-talearnt-Line_01 h-[72px] border-b"
           )}
           checked={isAllAgreementsAgreed()}
           onChange={({ target }) => setAllAgreement(target.checked)}
         >
-          <p className={"w-full text-lg font-semibold"}>
+          <span className={"text-body1_18_semibold1 w-full"}>
             전체 동의하기 (선택 정보를 포함합니다.)
-          </p>
+          </span>
         </CheckBox>
         {agreements.map(({ agreeCodeId, agree, required, title }) => (
           <CheckBox
             className={classNames(
               "gap-4",
-              "border-b border-b-talearnt-Line_01",
-              "h-[71px]"
+              "border-b-talearnt-Line_01 h-[72px] border-b"
             )}
             checked={agree}
             onChange={({ target }) => setAgreement(agreeCodeId, target.checked)}
             key={agreeCodeId}
           >
-            <p className={"w-full text-base font-semibold"}>
+            <p className={"w-full text-body2_16_semibold"}>
               {required ? (
                 <span className={"text-talearnt-Error_01"}>(필수)</span>
               ) : (

@@ -17,7 +17,7 @@ type LabelTextProps = CustomVariantProps<LabelTextVariantsType> & {
 };
 
 const labelTextVariants = cva<LabelTextVariantsType>(
-  classNames("py-1 px-[8.5px] rounded-lg", "text-base font-medium"),
+  classNames("py-1 px-[8.5px] rounded-lg", "text-body2_16_medium"),
   {
     variants: {
       type: {
