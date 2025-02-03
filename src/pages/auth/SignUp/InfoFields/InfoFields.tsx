@@ -181,7 +181,7 @@ function InfoFields() {
 
   return (
     <>
-      <h1 className={classNames("text-center text-3xl font-semibold")}>
+      <h1 className={"text-center text-heading1_30_semibold"}>
         {canProceed ? (
           <>
             마지막으로 로그인에 사용할
@@ -224,7 +224,7 @@ function InfoFields() {
                   <span
                     className={classNames(
                       "mt-1",
-                      "text-sm font-medium text-talearnt-Text_03"
+                      "text-talearnt-Text_03 text-caption1_14_medium"
                     )}
                   >
                     *&nbsp;
@@ -234,7 +234,9 @@ function InfoFields() {
                   </span>
                   {nickname !== nickNameRef.current && (
                     <span
-                      className={"text-sm font-medium text-talearnt-Primary_01"}
+                      className={
+                        "text-talearnt-Primary_01 text-caption1_14_medium"
+                      }
                     >
                       * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는
                       #만 입력 가능해요
@@ -250,7 +252,7 @@ function InfoFields() {
               placeholder={"이름을 입력해 주세요."}
             >
               <TabSlider
-                className={classNames("ml-2 flex-shrink-0", "w-[160px]")}
+                className={"ml-2 w-[160px] flex-shrink-0"}
                 currentValue={gender}
                 onClickHandler={value => setValue("gender", value)}
                 options={genderOptions}

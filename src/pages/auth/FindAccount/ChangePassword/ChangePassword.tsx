@@ -87,7 +87,7 @@ function ChangePassword() {
       {canProceed ? (
         <>
           <div className={"flex flex-col items-center gap-8"}>
-            <h1 className={classNames("text-center text-3xl font-semibold")}>
+            <h1 className={"text-center text-heading1_30_semibold"}>
               비밀번호 변경 완료
             </h1>
             <CircleCheckIcon
@@ -97,10 +97,10 @@ function ChangePassword() {
             <div
               className={classNames(
                 "flex items-center justify-center",
-                "w-full rounded-xl border border-talearnt-Line_01 bg-talearnt-BG_Up_01 py-[31px]"
+                "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
               )}
             >
-              <span className={"text-base font-medium"}>
+              <span className={"text-body2_16_medium"}>
                 비밀번호가 성공적으로 변경되었습니다.
               </span>
             </div>
@@ -108,22 +108,19 @@ function ChangePassword() {
           <div className={"flex gap-[30px]"}>
             <Button
               buttonStyle={"outlined"}
-              className={"h-[50px] w-full"}
+              className={"w-full"}
               onClick={() => navigator("/")}
             >
               홈으로
             </Button>
-            <Button
-              className={"h-[50px] w-full"}
-              onClick={() => navigator("/sign-in")}
-            >
+            <Button className={"w-full"} onClick={() => navigator("/sign-in")}>
               로그인
             </Button>
           </div>
         </>
       ) : (
         <>
-          <h1 className={classNames("text-center text-3xl font-semibold")}>
+          <h1 className={"text-center text-heading1_30_semibold"}>
             새 비밀번호를 입력해 주세요
           </h1>
           <div className={"flex flex-col gap-6"}>

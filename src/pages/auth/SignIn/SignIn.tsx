@@ -80,7 +80,9 @@ function SignIn() {
 
   return (
     <div className={classNames("flex flex-col items-center", "w-[416px]")}>
-      <h1 className={classNames("mb-[56px]", "text-[1.875rem]")}>로그인</h1>
+      <h1 className={classNames("mb-[56px]", "text-heading1_30_semibold")}>
+        로그인
+      </h1>
       <form
         className={"flex w-full flex-col"}
         onSubmit={handleSubmit(handleSignIn)}
@@ -110,17 +112,27 @@ function SignIn() {
           type={"password"}
           wrapperClassName={"mb-4"}
         />
-        {/*TODO 자동 로그인 적용*/}
         <CheckBox className={"mb-6 mr-auto"}>자동 로그인</CheckBox>
         <Button className={"mb-10 h-[50px] w-full"} type={"submit"}>
           로그인
         </Button>
       </form>
-      <p className={"separator mb-6 w-full font-medium"}>간편 로그인</p>
+      <p
+        className={classNames(
+          "separator",
+          "mb-6 w-full",
+          "text-caption1_14_medium"
+        )}
+      >
+        간편 로그인
+      </p>
       <Button
-        className={
-          "mb-6 h-[50px] w-full gap-2 bg-[#FAE100] text-[#212121] hover:bg-[#FAE100]"
-        }
+        className={classNames(
+          "mb-6 h-[50px] w-full gap-2",
+          "bg-[#FAE100]",
+          "text-[#212121]",
+          "hover:bg-[#FAE100]"
+        )}
         onClick={() => (window.location.href = KAKAO_AUTH_URL)}
       >
         <svg
@@ -140,14 +152,14 @@ function SignIn() {
       <div className={"flex w-full gap-4"}>
         <Button
           buttonStyle={"outlined"}
-          className={"h-[50px] w-full"}
+          className={"w-full"}
           onClick={() => navigator("/find-account/id")}
         >
           아이디/비밀번호 찾기
         </Button>
         <Button
           buttonStyle={"outlined"}
-          className={"h-[50px] w-full"}
+          className={"w-full"}
           onClick={() => navigator("/sign-up/agreements")}
         >
           회원가입

@@ -73,19 +73,18 @@ function Input({
   return (
     <div className={classNames("flex flex-col", "w-full", wrapperClassName)}>
       {label && (
-        <label className={"mb-2 text-base"} htmlFor={id}>
+        <label className={"mb-2 text-body2_16_medium"} htmlFor={id}>
           {label}
         </label>
       )}
-      <div className={classNames("relative flex")}>
+      <div className={"relative flex"}>
         <input
           className={classNames(
             "peer/input",
-            "rounded-lg border bg-talearnt-BG_Background",
-            "h-[50px] w-full px-[15px] text-base",
-            "placeholder:text-talearnt-Text_04",
+            "bg-talearnt-BG_Background h-[50px] w-full rounded-lg border px-[15px]",
+            "placeholder:text-talearnt-Text_04 text-body2_16_medium",
             "focus:border-talearnt-Primary_01 focus:outline-none",
-            "disabled:cursor-not-allowed disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04",
+            "disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04 disabled:cursor-not-allowed",
             "hover:border-talearnt-PrimaryBG_03",
             error !== undefined
               ? "border-talearnt-Error_02 focus:border-talearnt-Error_02"
@@ -113,9 +112,9 @@ function Input({
           {hasError && <ErrorIcon />}
           <p
             className={classNames(
-              "text-[0.875rem] font-medium",
-              hasError ? "text-talearnt-Error_01" : "",
-              hasComplete ? "text-talearnt-Primary_01" : ""
+              "text-caption1_14_medium",
+              hasError && "text-talearnt-Error_01",
+              hasComplete && "text-talearnt-Primary_01"
             )}
           >
             {hasComplete && complete}

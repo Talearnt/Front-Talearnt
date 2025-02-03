@@ -55,7 +55,7 @@ function MainLayout() {
 
   return (
     <>
-      <header className={"shadow-[inset_0_-1px_0_0] shadow-talearnt-Line_01"}>
+      <header className={"shadow-talearnt-Line_01 shadow-[inset_0_-1px_0_0]"}>
         <div
           className={classNames(
             "flex items-center justify-between",
@@ -78,7 +78,7 @@ function MainLayout() {
                     className={classNames(
                       "flex items-center justify-center",
                       "h-[40px] w-[94px]",
-                      "text-lg font-medium text-talearnt-Text_02"
+                      "text-talearnt-Text_02 text-body2_16_semibold"
                     )}
                     to={path}
                     key={path}
@@ -89,7 +89,10 @@ function MainLayout() {
               })}
               <Button
                 buttonStyle={"outlined"}
-                className={classNames("h-[40px] w-[110px]", "text-lg")}
+                className={classNames(
+                  "h-[40px] w-[110px]",
+                  "text-body2_16_semibold"
+                )}
                 onClick={() => navigator(accessToken ? "" : "sign-in")}
               >
                 {accessToken ? "글쓰기" : "로그인"}
@@ -100,10 +103,9 @@ function MainLayout() {
                 <NotificationIcon />
                 <div className={"flex items-center"}>
                   <div
-                    className={classNames(
-                      "rounded-full border border-talearnt-Icon_02 bg-talearnt-BG_Up_02",
-                      "h-8 w-8"
-                    )}
+                    className={
+                      "border-talearnt-Icon_02 bg-talearnt-BG_Up_02 h-8 w-8 rounded-full border"
+                    }
                   />
                   <svg
                     width="16"

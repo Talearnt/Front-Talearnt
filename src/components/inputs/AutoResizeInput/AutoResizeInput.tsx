@@ -20,7 +20,7 @@ function AutoResizeInput({ onChange, ...props }: ComponentProps<"input">) {
     }
 
     const mirrorWidth = measureWidthRef.current.offsetWidth;
-    inputRef.current.style.width = `${mirrorWidth}px`;
+    inputRef.current.style.width = `${mirrorWidth.toString()}px`;
   }, [value]);
 
   return (

@@ -11,7 +11,7 @@ function CompleteSignUp() {
   return (
     <>
       <div className={"flex flex-col items-center gap-8"}>
-        <h1 className={classNames("text-center text-3xl font-semibold")}>
+        <h1 className={"text-center text-heading1_30_semibold"}>
           성공적으로 가입되었어요
           <br />
           talearnt에서 만나요!
@@ -20,15 +20,14 @@ function CompleteSignUp() {
         <p
           className={classNames(
             "flex items-center justify-center",
-            "rounded-xl border border-talearnt-Line_01",
-            "h-[5.25rem] w-full bg-talearnt-BG_Up_01",
-            "font-medium"
+            "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border px-[31px]",
+            "text-body2_16_medium"
           )}
         >
           로그인하시면 더욱 다양한 서비스를 제공 받으실 수 있습니다.
         </p>
       </div>
-      <div className={classNames("flex gap-[30px]")}>
+      <div className={"flex gap-[30px]"}>
         <Button
           buttonStyle={"outlined"}
           className={"w-full"}

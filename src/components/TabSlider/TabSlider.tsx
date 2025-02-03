@@ -21,7 +21,7 @@ const tabSliderVariants = cva<TabSliderVariantsType>(
   classNames(
     "flex items-center justify-center",
     "w-full",
-    "cursor-pointer text-base font-medium",
+    "cursor-pointer text-body2_16_medium",
     "has-[:checked]:text-talearnt-Primary_01",
     "has-[:disabled]:cursor-not-allowed"
   ),
@@ -33,9 +33,8 @@ const tabSliderVariants = cva<TabSliderVariantsType>(
           "has-[:checked]:z-10 has-[:checked]:shadow-talearnt-Primary_01"
         ),
         shadow: classNames(
-          "px-[15px] py-[7px] rounded-full",
-          "border border-transparent",
-          "text-lg text-talearnt-Text_04",
+          "px-[15px] py-[7px] rounded-full border border-transparent",
+          "text-body1_18_medium text-talearnt-Text_04",
           "has-[:checked]:text-talearnt-Primary_01 has-[:checked]:bg-talearnt-BG_Background has-[:checked]:border-talearnt-Line_02 has-[:checked]:shadow-[0_0_20px_0_rgba(0,0,0,0.08)]"
         )
       }
@@ -75,7 +74,7 @@ function TabSlider({
       className={classNames(
         "flex",
         type === "shadow" &&
-          "border-talearnt-Line_02 gap-4 rounded-full border bg-talearnt-BG_Up_01 p-[7px]",
+          "border-talearnt-Line_02 bg-talearnt-BG_Up_01 gap-4 rounded-full border p-[7px]",
         className
       )}
     >

@@ -30,9 +30,9 @@ function MultiSelectDropdown<T = string>({
         <input className={"peer/checkbox hidden"} type={"checkbox"} />
         <span
           className={classNames(
-            "text-lg text-talearnt-Text_04",
-            "group-hover/label:font-medium group-hover/label:text-talearnt-Text_02",
-            "peer-checked/checkbox:font-semibold peer-checked/checkbox:text-talearnt-Text_01"
+            "text-talearnt-Text_04 text-body1_18_medium",
+            "group-hover/label:text-talearnt-Text_02",
+            "peer-checked/checkbox:text-talearnt-Text_01 peer-checked/checkbox:text-body1_18_semibold"
           )}
         >
           {title}
@@ -41,14 +41,15 @@ function MultiSelectDropdown<T = string>({
           className={classNames(
             "stroke-talearnt-Icon_03",
             "group-hover/label:stroke-talearnt-Icon_01",
-            "peer-checked/checkbox:rotate-180 peer-checked/checkbox:stroke-talearnt-Icon_01"
+            "peer-checked/checkbox:stroke-talearnt-Icon_01 peer-checked/checkbox:rotate-180"
           )}
         />
       </label>
       <div
         className={classNames(
-          "hidden flex-col gap-2 peer-has-[:checked]/label:flex",
-          "px-2 py-1"
+          "hidden flex-col gap-2",
+          "px-2 py-1",
+          "peer-has-[:checked]/label:flex"
         )}
       >
         {options.map(({ label, value }) => (

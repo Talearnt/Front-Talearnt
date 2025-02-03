@@ -6,10 +6,10 @@ import { classNames } from "@utils/classNames";
 
 import { CustomVariantProps } from "@common/common.type";
 
-type ButtonVariantsType = Record<
-  "buttonStyle",
-  Record<"filled" | "outlined" | "outlined-blue", string>
->;
+type ButtonVariantsType = {
+  buttonStyle: Record<"filled" | "outlined" | "outlined-blue", string>;
+  size: Record<"small" | "large", string>;
+};
 
 type ButtonProps = ComponentProps<"button"> &
   CustomVariantProps<ButtonVariantsType>;
@@ -18,7 +18,7 @@ const buttonVariants = cva<ButtonVariantsType>(
   classNames(
     "flex items-center justify-center",
     "rounded-lg px-4 py-2",
-    "h-[50px] text-[1.125rem] font-medium cursor-pointer",
+    "cursor-pointer",
     "disabled:text-talearnt-Text_04 disabled:cursor-not-allowed"
   ),
   {
@@ -30,10 +30,15 @@ const buttonVariants = cva<ButtonVariantsType>(
           "bg-talearnt-BG_Background text-talearnt-Text_02 border border-talearnt-Icon_02",
         "outlined-blue":
           "bg-talearnt-BG_Background text-talearnt-Primary_01 border border-talearnt-Primary_01 disabled:border-talearnt-Icon_02 "
+      },
+      size: {
+        small: "h-[40px] text-body2_16_medium",
+        large: "h-[50px] text-body1_18_medium"
       }
     },
     defaultVariants: {
-      buttonStyle: "filled"
+      buttonStyle: "filled",
+      size: "large"
     }
   }
 );

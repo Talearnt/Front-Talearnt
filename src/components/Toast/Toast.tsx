@@ -16,7 +16,7 @@ function Toast() {
         <div
           className={classNames(
             "flex items-center gap-2",
-            "h-[50px] w-fit rounded-full bg-talearnt-BG_Toast_02 px-8",
+            "bg-talearnt-BG_Toast_02 h-[50px] w-fit rounded-full px-8",
             isRemoving ? "animate-fade-out" : "animate-fade-in"
           )}
           key={id.toString()}
@@ -55,7 +55,7 @@ function Toast() {
           )}
           <span
             className={
-              "whitespace-nowrap text-base font-semibold text-talearnt-On_Primary"
+              "text-talearnt-On_Primary whitespace-nowrap text-body2_16_semibold"
             }
           >
             {message}

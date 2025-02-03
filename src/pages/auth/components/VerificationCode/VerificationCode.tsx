@@ -255,7 +255,7 @@ function VerificationCode({
   }, [sendCount, sendTime]);
 
   return (
-    <div className={classNames("flex flex-col gap-6")}>
+    <div className={"flex flex-col gap-6"}>
       {/*휴대폰 본인인증 input*/}
       <Input
         disabled={isRunning || isCodeVerified || sendCount > 5}
@@ -306,7 +306,7 @@ function VerificationCode({
           <p
             className={classNames(
               "absolute right-[119px] top-1/2 -translate-y-1/2",
-              "text-base font-medium text-talearnt-Primary_01"
+              "text-talearnt-Primary_01 text-body2_16_medium"
             )}
           >
             {time}

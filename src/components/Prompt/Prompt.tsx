@@ -18,16 +18,14 @@ function Prompt() {
       <div
         className={classNames(
           "flex flex-col",
-          "mt-[120px] h-fit w-[440px] rounded-xl bg-talearnt-BG_Background p-6"
+          "bg-talearnt-BG_Background mt-[120px] h-fit w-[440px] rounded-xl p-6"
         )}
       >
-        <h1 className={classNames("text-base font-semibold")}>
-          {promptData.title}
-        </h1>
+        <h1 className={"text-body2_16_semibold"}>{promptData.title}</h1>
         <p
           className={classNames(
             "mt-2",
-            "whitespace-pre-line text-sm font-medium"
+            "whitespace-pre-line text-body3_14_medium"
           )}
         >
           {promptData.content}
@@ -36,7 +34,8 @@ function Prompt() {
           {promptData.cancelOnClickHandler && (
             <Button
               buttonStyle={"outlined-blue"}
-              className={"h-[40px] w-[95px]"}
+              className={"w-[95px]"}
+              size={"small"}
               onClick={() => {
                 promptData.cancelOnClickHandler?.();
                 setPrompt();
@@ -46,7 +45,8 @@ function Prompt() {
             </Button>
           )}
           <Button
-            className={"h-[40px] w-[95px]"}
+            className={"w-[95px]"}
+            size={"small"}
             onClick={promptData.confirmOnClickHandler ?? (() => setPrompt())}
           >
             확인

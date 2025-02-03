@@ -60,7 +60,7 @@ function KakaoOauth() {
 
   return (
     <div className={"flex flex-col items-center gap-10"}>
-      <h1 className={"text-center text-3xl font-semibold"}>
+      <h1 className={"text-center text-heading1_30_semibold"}>
         회원님의 정보를
         <br />
         가져오는 중이에요

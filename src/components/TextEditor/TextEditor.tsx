@@ -28,7 +28,7 @@ function TextEditor() {
     <div
       className={classNames(
         "flex flex-col",
-        "overflow-hidden rounded-xl border border-talearnt-Line_01",
+        "border-talearnt-Line_01 overflow-hidden rounded-xl border",
         (isFocused || isExpanded) && "border-talearnt-Primary_01"
       )}
     >
@@ -47,7 +47,10 @@ function TextEditor() {
           onBlur={() => setIsFocused(false)}
         />
         <span
-          className={"ml-auto !text-base/6 font-medium text-talearnt-Text_04"}
+          className={classNames(
+            "ml-auto",
+            "text-talearnt-Text_04 text-body2_16_medium"
+          )}
         >
           {(quillRef.current?.editor?.getLength() ?? 1) - 1}/1000
         </span>
