@@ -55,7 +55,7 @@ function MainLayout() {
 
   return (
     <>
-      <header className={"shadow-talearnt-Line_01 shadow-[inset_0_-1px_0_0]"}>
+      <header className={"shadow-[inset_0_-1px_0_0] shadow-talearnt_Line_01"}>
         <div
           className={classNames(
             "flex items-center justify-between",
@@ -78,7 +78,7 @@ function MainLayout() {
                     className={classNames(
                       "flex items-center justify-center",
                       "h-[40px] w-[94px]",
-                      "text-talearnt-Text_02 text-body2_16_semibold"
+                      "text-body2_16_semibold text-talearnt_Text_02"
                     )}
                     to={path}
                     key={path}
@@ -104,7 +104,7 @@ function MainLayout() {
                 <div className={"flex items-center"}>
                   <div
                     className={
-                      "border-talearnt-Icon_02 bg-talearnt-BG_Up_02 h-8 w-8 rounded-full border"
+                      "h-8 w-8 rounded-full border border-talearnt_Icon_02 bg-talearnt_BG_Up_02"
                     }
                   />
                   <svg

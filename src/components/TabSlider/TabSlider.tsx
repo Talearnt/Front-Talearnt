@@ -22,20 +22,20 @@ const tabSliderVariants = cva<TabSliderVariantsType>(
     "flex items-center justify-center",
     "w-full",
     "cursor-pointer text-body2_16_medium",
-    "has-[:checked]:text-talearnt-Primary_01",
+    "has-[:checked]:text-talearnt_Primary_01",
     "has-[:disabled]:cursor-not-allowed"
   ),
   {
     variants: {
       type: {
         default: classNames(
-          "shadow-[inset_0_0_0_1px] shadow-talearnt-Line_01",
-          "has-[:checked]:z-10 has-[:checked]:shadow-talearnt-Primary_01"
+          "shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01",
+          "has-[:checked]:z-10 has-[:checked]:shadow-talearnt_Primary_01"
         ),
         shadow: classNames(
           "px-[15px] py-[7px] rounded-full border border-transparent",
-          "text-body1_18_medium text-talearnt-Text_04",
-          "has-[:checked]:text-talearnt-Primary_01 has-[:checked]:bg-talearnt-BG_Background has-[:checked]:border-talearnt-Line_02 has-[:checked]:shadow-[0_0_20px_0_rgba(0,0,0,0.08)]"
+          "text-body1_18_medium text-talearnt_Text_04",
+          "has-[:checked]:text-talearnt_Primary_01 has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-[0_0_20px_0_rgba(0,0,0,0.08)]"
         )
       }
     },
@@ -56,7 +56,7 @@ const defaultStyle = ({
 }) =>
   classNames(
     disabled &&
-      "!text-talearnt-Text_04 has-[:checked]:bg-talearnt-BG_Up_01 has-[:checked]:shadow-talearnt-Line_01",
+      "!text-talearnt_Text_04 has-[:checked]:bg-talearnt_BG_Up_01 has-[:checked]:shadow-talearnt_Line_01",
     index === 0 ? "rounded-l-xl" : "-ml-px",
     index === maxLength && "rounded-r-xl"
   );
@@ -74,7 +74,7 @@ function TabSlider({
       className={classNames(
         "flex",
         type === "shadow" &&
-          "border-talearnt-Line_02 bg-talearnt-BG_Up_01 gap-4 rounded-full border p-[7px]",
+          "gap-4 rounded-full border border-talearnt_Line_02 bg-talearnt_BG_Up_01 p-[7px]",
         className
       )}
     >

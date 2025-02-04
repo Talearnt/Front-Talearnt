@@ -24,24 +24,24 @@ function MultiSelectDropdown<T = string>({
           "flex items-center justify-between",
           "m-2 h-[70px] rounded-lg pl-4 pr-2",
           "cursor-pointer",
-          "hover:bg-talearnt-BG_Up_01 has-[:checked]:bg-talearnt-BG_Up_01"
+          "hover:bg-talearnt_BG_Up_01 has-[:checked]:bg-talearnt_BG_Up_01"
         )}
       >
         <input className={"peer/checkbox hidden"} type={"checkbox"} />
         <span
           className={classNames(
-            "text-talearnt-Text_04 text-body1_18_medium",
-            "group-hover/label:text-talearnt-Text_02",
-            "peer-checked/checkbox:text-talearnt-Text_01 peer-checked/checkbox:text-body1_18_semibold"
+            "text-body1_18_medium text-talearnt_Text_04",
+            "group-hover/label:text-talearnt_Text_02",
+            "peer-checked/checkbox:text-body1_18_semibold peer-checked/checkbox:text-talearnt_Text_01"
           )}
         >
           {title}
         </span>
         <CaretIcon
           className={classNames(
-            "stroke-talearnt-Icon_03",
-            "group-hover/label:stroke-talearnt-Icon_01",
-            "peer-checked/checkbox:stroke-talearnt-Icon_01 peer-checked/checkbox:rotate-180"
+            "stroke-talearnt_Icon_03",
+            "group-hover/label:stroke-talearnt_Icon_01",
+            "peer-checked/checkbox:rotate-180 peer-checked/checkbox:stroke-talearnt_Icon_01"
           )}
         />
       </label>

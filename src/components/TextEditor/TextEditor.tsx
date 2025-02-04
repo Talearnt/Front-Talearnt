@@ -28,8 +28,8 @@ function TextEditor() {
     <div
       className={classNames(
         "flex flex-col",
-        "border-talearnt-Line_01 overflow-hidden rounded-xl border",
-        (isFocused || isExpanded) && "border-talearnt-Primary_01"
+        "overflow-hidden rounded-xl border border-talearnt_Line_01",
+        (isFocused || isExpanded) && "border-talearnt_Primary_01"
       )}
     >
       <Toolbar />
@@ -49,7 +49,7 @@ function TextEditor() {
         <span
           className={classNames(
             "ml-auto",
-            "text-talearnt-Text_04 text-body2_16_medium"
+            "text-body2_16_medium text-talearnt_Text_04"
           )}
         >
           {(quillRef.current?.editor?.getLength() ?? 1) - 1}/1000

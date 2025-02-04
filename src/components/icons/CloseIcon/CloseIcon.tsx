@@ -4,7 +4,7 @@ import { CommonIconProps } from "@common/common.type";
 
 /**
  * X 아이콘
- * 색 변경은 className에 "stroke-talearnt-Primary_01" 와 같이 넣어주면 됨
+ * 색 변경은 className에 "stroke-talearnt_Primary_01" 와 같이 넣어주면 됨
  * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className
@@ -22,7 +22,7 @@ function CloseIcon({ className, size = 24, ...props }: CommonIconProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
-        "cursor-pointer stroke-talearnt-Icon_01",
+        "cursor-pointer stroke-talearnt_Icon_01",
         className
       )}
       {...props}

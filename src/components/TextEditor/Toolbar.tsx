@@ -46,7 +46,7 @@ Quill.register(color as unknown as string, true);
 Quill.register(size as unknown as string, true);
 
 function Divider() {
-  return <div className={"h-6 w-[1px] bg-talearnt-Line_01"} />;
+  return <div className={"h-6 w-[1px] bg-talearnt_Line_01"} />;
 }
 
 function Toolbar() {

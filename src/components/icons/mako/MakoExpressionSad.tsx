@@ -44,7 +44,7 @@ function MakoExpressionSad() {
           fill="#DEE1E3"
         />
         <rect
-          className={"animate-mako-sad"}
+          className={"animate-mako_sad"}
           x="68"
           y="115"
           width="4"

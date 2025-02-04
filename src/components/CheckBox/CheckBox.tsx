@@ -42,7 +42,7 @@ function CheckBox({
       />
       <CircleCheckIcon
         className={
-          "peer-checked:fill-talearnt-Primary_01 peer-checked:stroke-white"
+          "peer-checked:fill-talearnt_Primary_01 peer-checked:stroke-white"
         }
       />
       {children}

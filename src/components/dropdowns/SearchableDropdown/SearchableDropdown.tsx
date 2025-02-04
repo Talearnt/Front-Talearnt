@@ -41,7 +41,7 @@ const optionsStyle = classNames(
 const optionItemStyle = classNames(
   "flex-shrink-0",
   "h-[50px] rounded-lg px-4",
-  "text-left text-body2_16_medium text-talearnt-Text_04"
+  "text-left text-body2_16_medium text-talearnt_Text_04"
 );
 
 function SearchableDropdown<T = string>({
@@ -236,7 +236,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "peer/label group/label",
           "flex items-center",
-          "border-talearnt-Line_01 rounded-lg border px-[15px] py-[10px]",
+          "rounded-lg border border-talearnt_Line_01 px-[15px] py-[10px]",
           "cursor-pointer"
         )}
       >
@@ -251,7 +251,7 @@ function SearchableDropdown<T = string>({
             <div
               className={classNames(
                 "flex items-center gap-1",
-                "bg-talearnt-BG_Up_02 rounded-[6px] px-2 py-[5px]"
+                "rounded-[6px] bg-talearnt_BG_Up_02 px-2 py-[5px]"
               )}
               key={String(value)}
             >
@@ -283,9 +283,9 @@ function SearchableDropdown<T = string>({
         <CaretIcon
           className={classNames(
             "shrink-0",
-            "stroke-talearnt-Icon_03",
-            "group-hover/label:stroke-talearnt-Icon_01",
-            isOpen && "stroke-talearnt-Icon_01 rotate-180"
+            "stroke-talearnt_Icon_03",
+            "group-hover/label:stroke-talearnt_Icon_01",
+            isOpen && "rotate-180 stroke-talearnt_Icon_01"
           )}
         />
       </label>
@@ -294,7 +294,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "absolute hidden",
           "mt-2 max-h-[298px] w-full rounded-lg",
-          "border-talearnt-Line_01 bg-talearnt-BG_Background border shadow-[0_0_20px_0_rgba(0,0,0,0.08)]",
+          "border border-talearnt_Line_01 bg-talearnt_BG_Background shadow-[0_0_20px_0_rgba(0,0,0,0.08)]",
           "peer-has-[:checked]/label:flex"
         )}
       >
@@ -310,9 +310,9 @@ function SearchableDropdown<T = string>({
                     className={classNames(
                       optionItemStyle,
                       "group/item",
-                      "hover:bg-talearnt-BG_Up_01 hover:text-talearnt-Text_02",
+                      "hover:bg-talearnt_BG_Up_01 hover:text-talearnt_Text_02",
                       index === selectedCategoryIndex &&
-                        "bg-talearnt-BG_Up_01 text-talearnt-Text_01 text-body2_16_semibold"
+                        "bg-talearnt_BG_Up_01 text-body2_16_semibold text-talearnt_Text_01"
                     )}
                     onClick={() => setValue("selectedCategoryIndex", index)}
                     key={`main-option-${label}`}
@@ -321,10 +321,10 @@ function SearchableDropdown<T = string>({
                       {label}
                       <CaretIcon
                         className={classNames(
-                          "stroke-talearnt-Icon_03",
-                          "group-hover/item:stroke-talearnt-Icon_01",
+                          "stroke-talearnt_Icon_03",
+                          "group-hover/item:stroke-talearnt_Icon_01",
                           index === selectedCategoryIndex &&
-                            "stroke-talearnt-Icon_01"
+                            "stroke-talearnt_Icon_01"
                         )}
                         direction={"right"}
                       />
@@ -392,7 +392,7 @@ function SearchableDropdown<T = string>({
                   className={classNames(
                     optionItemStyle,
                     index === selectedOptionIndex &&
-                      "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
+                      "bg-talearnt_BG_Up_01 text-talearnt_Text_02"
                   )}
                   onClick={() => {
                     handleOnChange({ label, value });
@@ -410,7 +410,7 @@ function SearchableDropdown<T = string>({
             ) : (
               <>
                 <span
-                  className={"text-talearnt-Text_03 text-heading4_20_semibold"}
+                  className={"text-heading4_20_semibold text-talearnt_Text_03"}
                 >
                   이 키워드는 없어요...
                 </span>

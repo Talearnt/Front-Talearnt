@@ -30,7 +30,7 @@ function Agreements() {
         <CheckBox
           className={classNames(
             "gap-4",
-            "border-b-talearnt-Line_01 h-[72px] border-b"
+            "h-[72px] border-b border-b-talearnt_Line_01"
           )}
           checked={isAllAgreementsAgreed()}
           onChange={({ target }) => setAllAgreement(target.checked)}
@@ -43,7 +43,7 @@ function Agreements() {
           <CheckBox
             className={classNames(
               "gap-4",
-              "border-b-talearnt-Line_01 h-[72px] border-b"
+              "h-[72px] border-b border-b-talearnt_Line_01"
             )}
             checked={agree}
             onChange={({ target }) => setAgreement(agreeCodeId, target.checked)}
@@ -51,7 +51,7 @@ function Agreements() {
           >
             <p className={"w-full text-body2_16_semibold"}>
               {required ? (
-                <span className={"text-talearnt-Error_01"}>(필수)</span>
+                <span className={"text-talearnt_Error_01"}>(필수)</span>
               ) : (
                 "(선택)"
               )}

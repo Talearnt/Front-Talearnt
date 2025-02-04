@@ -19,17 +19,17 @@ const buttonVariants = cva<ButtonVariantsType>(
     "flex items-center justify-center",
     "rounded-lg px-4 py-2",
     "cursor-pointer",
-    "disabled:text-talearnt-Text_04 disabled:cursor-not-allowed"
+    "disabled:text-talearnt_Text_04 disabled:cursor-not-allowed"
   ),
   {
     variants: {
       buttonStyle: {
         filled:
-          "bg-talearnt-Primary_01 text-talearnt-BG_Background hover:bg-talearnt-PrimaryBG_02 disabled:bg-talearnt-BG_Up_02",
+          "bg-talearnt_Primary_01 text-talearnt_BG_Background hover:bg-talearnt_PrimaryBG_02 disabled:bg-talearnt_BG_Up_02",
         outlined:
-          "bg-talearnt-BG_Background text-talearnt-Text_02 border border-talearnt-Icon_02",
+          "bg-talearnt_BG_Background text-talearnt_Text_02 border border-talearnt_Icon_02",
         "outlined-blue":
-          "bg-talearnt-BG_Background text-talearnt-Primary_01 border border-talearnt-Primary_01 disabled:border-talearnt-Icon_02 "
+          "bg-talearnt_BG_Background text-talearnt_Primary_01 border border-talearnt_Primary_01 disabled:border-talearnt_Icon_02 "
       },
       size: {
         small: "h-[40px] text-body2_16_medium",

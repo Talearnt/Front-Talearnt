@@ -4,7 +4,7 @@ import { CommonIconProps } from "@common/common.type";
 
 /**
  * 에러 아이콘
- * 색 변경은 className에 "fill-talearnt-Error_01" 와 같이 넣어주면 됨
+ * 색 변경은 className에 "fill-talearnt_Error_01" 와 같이 넣어주면 됨
  * size 변경은 원하는 size를 넣어주면 됨
  *
  * @param {string | undefined} className
@@ -21,7 +21,7 @@ function ErrorIcon({ className, size = 14, ...props }: CommonIconProps) {
       viewBox="0 0 14 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames("fill-talearnt-Error_01", className)}
+      className={classNames("fill-talearnt_Error_01", className)}
       {...props}
     >
       <path

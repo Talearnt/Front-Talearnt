@@ -18,7 +18,7 @@ function Prompt() {
       <div
         className={classNames(
           "flex flex-col",
-          "bg-talearnt-BG_Background mt-[120px] h-fit w-[440px] rounded-xl p-6"
+          "mt-[120px] h-fit w-[440px] rounded-xl bg-talearnt_BG_Background p-6"
         )}
       >
         <h1 className={"text-body2_16_semibold"}>{promptData.title}</h1>
