@@ -103,7 +103,7 @@ function FindId() {
               아이디 찾기 완료
             </h1>
             <CircleCheckIcon
-              className={"stroke-talearnt-Primary_01"}
+              className={"stroke-talearnt_Primary_01"}
               size={70}
             />
             <div
@@ -118,7 +118,7 @@ function FindId() {
               <div
                 className={classNames(
                   "flex flex-col items-center justify-center gap-2",
-                  "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
+                  "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 py-[31px]"
                 )}
               >
                 <span className={"text-body2_16_medium"}>
@@ -130,7 +130,7 @@ function FindId() {
                   입니다.
                 </span>
                 <span
-                  className={"text-talearnt-Error_01 text-caption1_14_medium"}
+                  className={"text-talearnt_Error_01 text-caption1_14_medium"}
                 >
                   {dayjs(idData.current.createdAt).format("YYYY-MM-DD HH:mm")}에
                   가입함
@@ -148,8 +148,8 @@ function FindId() {
                 <span
                   className={classNames(
                     "flex items-center justify-center",
-                    "border-talearnt-Icon_02 h-[50px] w-[160px] rounded-lg border",
-                    "text-talearnt-Text_04 text-body1_18_medium"
+                    "h-[50px] w-[160px] rounded-lg border border-talearnt_Icon_02",
+                    "text-body1_18_medium text-talearnt_Text_04"
                   )}
                 >
                   아이디 발송됨

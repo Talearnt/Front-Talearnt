@@ -81,14 +81,14 @@ function Input({
         <input
           className={classNames(
             "peer/input",
-            "bg-talearnt-BG_Background h-[50px] w-full rounded-lg border px-[15px]",
-            "placeholder:text-talearnt-Text_04 text-body2_16_medium",
-            "focus:border-talearnt-Primary_01 focus:outline-none",
-            "disabled:bg-talearnt-BG_Up_01 disabled:text-talearnt-Text_04 disabled:cursor-not-allowed",
-            "hover:border-talearnt-PrimaryBG_03",
+            "h-[50px] w-full rounded-lg border bg-talearnt_BG_Background px-[15px]",
+            "text-body2_16_medium placeholder:text-talearnt_Text_04",
+            "focus:border-talearnt_Primary_01 focus:outline-none",
+            "disabled:cursor-not-allowed disabled:bg-talearnt_BG_Up_01 disabled:text-talearnt_Text_04",
+            "hover:border-talearnt_PrimaryBG_03",
             error !== undefined
-              ? "border-talearnt-Error_02 focus:border-talearnt-Error_02"
-              : "border-talearnt-Line_01",
+              ? "border-talearnt_Error_02 focus:border-talearnt_Error_02"
+              : "border-talearnt_Line_01",
             className
           )}
           id={id}
@@ -113,8 +113,8 @@ function Input({
           <p
             className={classNames(
               "text-caption1_14_medium",
-              hasError && "text-talearnt-Error_01",
-              hasComplete && "text-talearnt-Primary_01"
+              hasError && "text-talearnt_Error_01",
+              hasComplete && "text-talearnt_Primary_01"
             )}
           >
             {hasComplete && complete}

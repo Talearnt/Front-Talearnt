@@ -79,11 +79,11 @@ function FindPassword() {
           <h1 className={"text-center text-heading1_30_semibold"}>
             비밀번호 재설정 링크 발송 완료
           </h1>
-          <CircleCheckIcon className={"stroke-talearnt-Primary_01"} size={70} />
+          <CircleCheckIcon className={"stroke-talearnt_Primary_01"} size={70} />
           <div
             className={classNames(
               "flex flex-col items-center justify-center gap-2",
-              "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
+              "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 py-[31px]"
             )}
           >
             <span className={"text-center text-body2_16_medium"}>
@@ -94,7 +94,7 @@ function FindPassword() {
               으로 <br />
               비밀번호 재설정을 위한 인증 메일을 발송하였습니다.
             </span>
-            <span className={"text-talearnt-Error_01 text-caption1_14_medium"}>
+            <span className={"text-talearnt_Error_01 text-caption1_14_medium"}>
               {dayjs(sentDateRef.current).format("YYYY-MM-DD HH:mm")}에 메일
               발송함
             </span>

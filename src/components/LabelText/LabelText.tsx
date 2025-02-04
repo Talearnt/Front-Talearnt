@@ -21,8 +21,8 @@ const labelTextVariants = cva<LabelTextVariantsType>(
   {
     variants: {
       type: {
-        primary: "text-talearnt-Primary_01 bg-talearnt-PrimaryBG_01",
-        error: "text-talearnt-Error_01 bg-talearnt-ErrorBG_01"
+        primary: "text-talearnt_Primary_01 bg-talearnt_PrimaryBG_01",
+        error: "text-talearnt_Error_01 bg-talearnt_ErrorBG_01"
       }
     },
     defaultVariants: {

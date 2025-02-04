@@ -5,7 +5,7 @@ import { CommonIconProps } from "@common/common.type";
 function Spinner({ className, size = 25, ...props }: CommonIconProps) {
   return (
     <svg
-      className={classNames("animate-spinner-spin", className)}
+      className={classNames("animate-spinner_spin", className)}
       width={size}
       height={size}
       viewBox="0 0 24 24"

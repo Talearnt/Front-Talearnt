@@ -91,13 +91,13 @@ function ChangePassword() {
               비밀번호 변경 완료
             </h1>
             <CircleCheckIcon
-              className={"stroke-talearnt-Primary_01"}
+              className={"stroke-talearnt_Primary_01"}
               size={70}
             />
             <div
               className={classNames(
                 "flex items-center justify-center",
-                "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border py-[31px]"
+                "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 py-[31px]"
               )}
             >
               <span className={"text-body2_16_medium"}>

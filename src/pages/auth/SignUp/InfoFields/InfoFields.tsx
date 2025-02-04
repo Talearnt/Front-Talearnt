@@ -224,7 +224,7 @@ function InfoFields() {
                   <span
                     className={classNames(
                       "mt-1",
-                      "text-talearnt-Text_03 text-caption1_14_medium"
+                      "text-caption1_14_medium text-talearnt_Text_03"
                     )}
                   >
                     *&nbsp;
@@ -235,7 +235,7 @@ function InfoFields() {
                   {nickname !== nickNameRef.current && (
                     <span
                       className={
-                        "text-talearnt-Primary_01 text-caption1_14_medium"
+                        "text-caption1_14_medium text-talearnt_Primary_01"
                       }
                     >
                       * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는

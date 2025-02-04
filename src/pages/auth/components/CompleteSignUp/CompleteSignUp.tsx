@@ -16,11 +16,11 @@ function CompleteSignUp() {
           <br />
           talearnt에서 만나요!
         </h1>
-        <CircleCheckIcon className={"stroke-talearnt-Primary_01"} size={70} />
+        <CircleCheckIcon className={"stroke-talearnt_Primary_01"} size={70} />
         <p
           className={classNames(
             "flex items-center justify-center",
-            "border-talearnt-Line_01 bg-talearnt-BG_Up_01 w-full rounded-xl border px-[31px]",
+            "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 px-[31px]",
             "text-body2_16_medium"
           )}
         >

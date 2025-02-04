@@ -306,7 +306,7 @@ function VerificationCode({
           <p
             className={classNames(
               "absolute right-[119px] top-1/2 -translate-y-1/2",
-              "text-talearnt-Primary_01 text-body2_16_medium"
+              "text-body2_16_medium text-talearnt_Primary_01"
             )}
           >
             {time}

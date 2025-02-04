@@ -193,13 +193,13 @@ function TalentsSettingModalBody() {
       {isSuccess ? (
         <>
           <CircleCheckIcon
-            className={classNames("mx-auto mb-2", "stroke-talearnt-Primary_01")}
+            className={classNames("mx-auto mb-2", "stroke-talearnt_Primary_01")}
             size={70}
           />
           <div className={classNames("flex flex-col gap-6", "px-[30px]")}>
             {Object.keys(talentsData).map(key => (
               <div className={"flex flex-col gap-2"} key={key}>
-                <h3 className={"text-talearnt-Text_03 text-caption1_14_medium"}>
+                <h3 className={"text-caption1_14_medium text-talearnt_Text_03"}>
                   {CURRENT_TALENTS_TYPE_NAME[key as talentsType]} 키워드
                 </h3>
                 <div className={"flex flex-wrap gap-2"}>
@@ -207,8 +207,8 @@ function TalentsSettingModalBody() {
                     <span
                       className={classNames(
                         "flex items-center",
-                        "bg-talearnt-BG_Up_02 h-[40px] rounded-[6px] px-4",
-                        "text-talearnt-Text_02 whitespace-nowrap text-body2_16_medium"
+                        "h-[40px] rounded-[6px] bg-talearnt_BG_Up_02 px-4",
+                        "whitespace-nowrap text-body2_16_medium text-talearnt_Text_02"
                       )}
                       key={value}
                     >
@@ -224,7 +224,7 @@ function TalentsSettingModalBody() {
         <>
           <Input
             className={classNames(
-              "border-talearnt-Line_01 rounded-full",
+              "rounded-full border-talearnt_Line_01",
               "text-caption1_14_medium"
             )}
             onKeyDown={handleKeyDown}
@@ -237,7 +237,7 @@ function TalentsSettingModalBody() {
               className={classNames(
                 "absolute right-4 top-[13px]",
                 "cursor-pointer fill-transparent",
-                "peer-hover/input:stroke-talearnt-Primary_01 peer-focus/input:stroke-talearnt-Primary_01"
+                "peer-hover/input:stroke-talearnt_Primary_01 peer-focus/input:stroke-talearnt_Primary_01"
               )}
             />
           </Input>
@@ -296,9 +296,9 @@ function TalentsSettingModalBody() {
                     className={classNames(
                       "flex-shrink-0",
                       "m-2 h-[70px] rounded-lg px-4",
-                      "text-talearnt-Text_04 text-left text-body1_18_medium",
+                      "text-left text-body1_18_medium text-talearnt_Text_04",
                       index === selectedTalentIndex &&
-                        "bg-talearnt-BG_Up_01 text-talearnt-Text_02"
+                        "bg-talearnt_BG_Up_01 text-talearnt_Text_02"
                     )}
                     onClick={() => {
                       if (isTalentsExceedingLimit()) {
@@ -328,7 +328,7 @@ function TalentsSettingModalBody() {
                 <>
                   <span
                     className={
-                      "text-talearnt-Text_03 text-heading4_20_semibold"
+                      "text-heading4_20_semibold text-talearnt_Text_03"
                     }
                   >
                     이 키워드는 없어요...
@@ -344,7 +344,7 @@ function TalentsSettingModalBody() {
                 <div
                   className={classNames(
                     "flex items-center gap-1",
-                    "bg-talearnt-BG_Up_02 h-[30px] rounded-[6px] px-2"
+                    "h-[30px] rounded-[6px] bg-talearnt_BG_Up_02 px-2"
                   )}
                   key={value}
                 >

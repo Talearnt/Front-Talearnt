@@ -17,8 +17,8 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
             <svg
               className={
                 currentStep > index
-                  ? "fill-talearnt-Primary_01"
-                  : "fill-talearnt-Icon_03"
+                  ? "fill-talearnt_Primary_01"
+                  : "fill-talearnt_Icon_03"
               }
               width={50}
               height={50}
@@ -29,7 +29,7 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
               <circle cx="25" cy="25" r="25" />
               <text
                 className={classNames(
-                  "fill-talearnt-BG_Background",
+                  "fill-talearnt_BG_Background",
                   "text-body1_18_semibold"
                 )}
                 x="25"
@@ -56,8 +56,8 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
                 className={classNames(
                   "block border-t",
                   currentStep > index + 1
-                    ? "border-talearnt-Primary_01"
-                    : "border-talearnt-Icon_03"
+                    ? "border-talearnt_Primary_01"
+                    : "border-talearnt_Icon_03"
                 )}
               />
             </div>

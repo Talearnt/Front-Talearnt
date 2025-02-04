@@ -28,7 +28,7 @@ const circleCaretIconVariants = cva<CircleCaretIconVariantsType>("", {
 
 /**
  * 동그란 화살표 아이콘
- * 색 변경은 className에 "stroke-talearnt-Icon_01" 와 같이 넣어주면 됨
+ * 색 변경은 className에 "stroke-talearnt_Icon_01" 와 같이 넣어주면 됨
  * direction은 화살표가 가르킬 방향
  * size 변경은 원하는 size를 넣어주면 됨
  *
@@ -52,7 +52,7 @@ function CircleCaretIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
-        "stroke-talearnt-Icon_01",
+        "stroke-talearnt_Icon_01",
         circleCaretIconVariants({ className, direction })
       )}
       {...props}

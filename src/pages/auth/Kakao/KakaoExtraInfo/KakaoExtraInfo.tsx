@@ -189,7 +189,7 @@ function KakaoExtraInfo() {
               <span
                 className={classNames(
                   "mt-1",
-                  "text-talearnt-Text_03 text-caption1_14_medium"
+                  "text-caption1_14_medium text-talearnt_Text_03"
                 )}
               >
                 *&nbsp;
@@ -199,7 +199,7 @@ function KakaoExtraInfo() {
               </span>
               {nickname !== nickNameRef.current && (
                 <span
-                  className={"text-talearnt-Primary_01 text-caption1_14_medium"}
+                  className={"text-caption1_14_medium text-talearnt_Primary_01"}
                 >
                   * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는 #만
                   입력 가능해요
@@ -213,7 +213,7 @@ function KakaoExtraInfo() {
         <CheckBox
           className={classNames(
             "gap-4",
-            "border-b-talearnt-Line_01 h-[72px] border-b"
+            "h-[72px] border-b border-b-talearnt_Line_01"
           )}
           formData={{ ...agreementsForm.register("all") }}
           onChange={handleAllCheckboxChange}
@@ -226,7 +226,7 @@ function KakaoExtraInfo() {
           <CheckBox
             className={classNames(
               "gap-4",
-              "border-b-talearnt-Line_01 h-[72px] border-b"
+              "h-[72px] border-b border-b-talearnt_Line_01"
             )}
             formData={{
               ...agreementsForm.register(agreeCodeId.toString())
@@ -235,7 +235,7 @@ function KakaoExtraInfo() {
           >
             <span className={classNames("w-full", "text-body2_16_semibold")}>
               {required ? (
-                <span className={"text-talearnt-Error_01"}>(필수)</span>
+                <span className={"text-talearnt_Error_01"}>(필수)</span>
               ) : (
                 "(선택)"
               )}

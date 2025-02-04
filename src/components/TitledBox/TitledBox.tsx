@@ -15,7 +15,7 @@ function TitledBox({ title, children, canOpen }: TitledBoxProps) {
     <div
       className={classNames(
         "flex flex-col",
-        "rounded-xl shadow-[inset_0_0_0_1px] shadow-talearnt-Line_01"
+        "rounded-xl shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01"
       )}
     >
       <label
@@ -23,7 +23,7 @@ function TitledBox({ title, children, canOpen }: TitledBoxProps) {
           "peer/label",
           "flex items-center justify-between gap-4",
           "px-6 py-[19px]",
-          "has-[:checked]:shadow-[inset_0_-1px_0_0] has-[:checked]:shadow-talearnt-Line_01",
+          "has-[:checked]:shadow-[inset_0_-1px_0_0] has-[:checked]:shadow-talearnt_Line_01",
           canOpen && "cursor-pointer"
         )}
       >
@@ -37,7 +37,7 @@ function TitledBox({ title, children, canOpen }: TitledBoxProps) {
         {canOpen && (
           <CaretIcon
             className={classNames(
-              "stroke-talearnt-Icon_01",
+              "stroke-talearnt_Icon_01",
               "peer-checked/checkbox:rotate-180"
             )}
           />
