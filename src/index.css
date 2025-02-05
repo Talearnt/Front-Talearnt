@@ -4,7 +4,6 @@
 
 @layer base {
     * {
-        line-height: 1.3 !important;
         letter-spacing: -0.02em;
         font-family: 'Pretendard', sans-serif;
         ::-webkit-scrollbar {
@@ -20,7 +19,6 @@
 .separator {
     @apply flex basis-full items-center text-talearnt_Text_04 text-sm;
 }
-
 .separator::before {
     content: "";
     @apply flex-grow bg-talearnt_Line_01 h-px mr-6;
