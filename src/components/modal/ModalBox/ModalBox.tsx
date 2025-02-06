@@ -12,7 +12,7 @@ function ModalBox({ className, children }: ModalBoxProps) {
     <div
       className={classNames(
         "flex flex-col",
-        "h-fit w-[600px] overflow-hidden rounded-3xl bg-talearnt_BG_Background",
+        "h-fit overflow-hidden rounded-3xl bg-talearnt_BG_Background shadow-shadow_03",
         className
       )}
     >

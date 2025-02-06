@@ -8,7 +8,7 @@ import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer"
 function TalentsSettingModal() {
   return (
     <ModalContainer>
-      <ModalBox>
+      <ModalBox className={"w-[600px]"}>
         <TalentsSettingModalHeader />
         <TalentsSettingModalBody />
         <TalentsSettingModalBottom />

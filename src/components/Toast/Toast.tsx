@@ -16,7 +16,7 @@ function Toast() {
         <div
           className={classNames(
             "flex items-center gap-2",
-            "h-[50px] w-fit rounded-full bg-talearnt_BG_Toast_02 px-8",
+            "h-[50px] w-fit rounded-full bg-talearnt_BG_Toast_02 px-8 shadow-shadow_03",
             isRemoving ? "animate-fade_out" : "animate-fade_in"
           )}
           key={id.toString()}
