@@ -89,10 +89,8 @@ function MainLayout() {
               })}
               <Button
                 buttonStyle={"outlined"}
-                className={classNames(
-                  "h-[40px] w-[110px]",
-                  "text-body2_16_semibold"
-                )}
+                className={"w-[110px]"}
+                size={"small"}
                 onClick={() => navigator(accessToken ? "" : "sign-in")}
               >
                 {accessToken ? "글쓰기" : "로그인"}
