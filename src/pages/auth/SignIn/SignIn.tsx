@@ -128,7 +128,7 @@ function SignIn() {
       </p>
       <Button
         className={classNames(
-          "mb-6 h-[50px] w-full gap-2",
+          "mb-6 w-full gap-2",
           "bg-[#FAE100]",
           "text-[#212121]",
           "hover:bg-[#FAE100]"
