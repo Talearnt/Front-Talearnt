@@ -114,10 +114,10 @@
           .ql-picker-options {
             border: none;
             border-radius: 8px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.08);
             margin-top: 8px;
             padding: 4px;
             width: 80px;
+            @apply shadow-shadow_02;
 
             .ql-picker-item {
               border-radius: 8px;
@@ -142,10 +142,10 @@
             gap: 8px;
             border: none;
             border-radius: 8px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.08);
             margin-top: 8px;
             padding: 8px;
             width: 120px;
+            @apply shadow-shadow_02;
 
             .ql-picker-item {
               border: none;

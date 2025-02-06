@@ -294,7 +294,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "absolute hidden",
           "mt-2 max-h-[298px] w-full rounded-lg",
-          "border border-talearnt_Line_01 bg-talearnt_BG_Background shadow-[0_0_20px_0_rgba(0,0,0,0.08)]",
+          "border border-talearnt_Line_01 bg-talearnt_BG_Background shadow-shadow_02",
           "peer-has-[:checked]/label:flex"
         )}
       >
