@@ -10,4 +10,4 @@ function WriteArticle() {
   );
 }
 
-export { WriteArticle };
+export default WriteArticle;

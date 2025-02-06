@@ -123,7 +123,7 @@ export default [
         "warn",
         {
           selector: "variable",
-          format: ["camelCase", "UPPER_CASE"] // 변수 이름 규칙
+          format: ["camelCase", "PascalCase", "UPPER_CASE"] // 변수 이름 규칙
         },
         {
           selector: "function",
