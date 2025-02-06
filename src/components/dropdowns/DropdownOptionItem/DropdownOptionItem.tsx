@@ -32,7 +32,7 @@ function DropdownOptionItem({
         className={classNames(
           "text-body1_18_medium text-talearnt_Text_04",
           "group-hover/checkbox:text-talearnt_Text_02",
-          checked && "!text-body1_18_semibold !text-talearnt_Text_01",
+          checked && "text-body1_18_semibold text-talearnt_Text_01",
           className
         )}
       >
