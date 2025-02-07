@@ -7,6 +7,7 @@ type DropdownOptionItemProps = ComponentProps<"button"> & {
   checked: boolean;
   children?: ReactNode;
   label: string;
+  hasHoverStyle?: boolean;
 };
 
 function DropdownOptionItem({
@@ -14,6 +15,7 @@ function DropdownOptionItem({
   checked,
   children,
   label,
+  hasHoverStyle,
   ...props
 }: DropdownOptionItemProps) {
   return (
@@ -23,6 +25,7 @@ function DropdownOptionItem({
         "group/button",
         "flex flex-shrink-0 items-center justify-between",
         "h-[50px] rounded-lg px-4",
+        hasHoverStyle && "hover:bg-talearnt_BG_Up_01",
         checked && "bg-talearnt_BG_Up_01"
       )}
       {...props}
@@ -31,6 +34,7 @@ function DropdownOptionItem({
       <span
         className={classNames(
           "text-body2_16_medium text-talearnt_Text_04",
+          hasHoverStyle && "group-hover/button:text-talearnt_Text_02",
           checked && "text-talearnt_Text_02"
         )}
       >
