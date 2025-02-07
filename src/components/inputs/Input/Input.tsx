@@ -110,7 +110,7 @@ function Input({
         <div className={"mt-1 flex items-center gap-0.5"}>
           {hasComplete && <CompleteIcon />}
           {hasError && <ErrorIcon />}
-          <p
+          <span
             className={classNames(
               "text-caption1_14_medium",
               hasError && "text-talearnt_Error_01",
@@ -119,7 +119,7 @@ function Input({
           >
             {hasComplete && complete}
             {hasError && error}
-          </p>
+          </span>
         </div>
       )}
     </div>
