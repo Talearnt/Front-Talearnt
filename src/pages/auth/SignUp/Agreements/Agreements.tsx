@@ -5,7 +5,7 @@ import { classNames } from "@utils/classNames";
 import { useAgreementStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
-import { CheckBox } from "@components/CheckBox/CheckBox";
+import { Checkbox } from "@components/Checkbox/Checkbox";
 
 function Agreements() {
   const navigator = useNavigate();
@@ -27,7 +27,7 @@ function Agreements() {
         <br /> 약관에 동의해 주세요
       </h1>
       <div className={"flex flex-col"}>
-        <CheckBox
+        <Checkbox
           className={classNames(
             "gap-4",
             "h-[72px] border-b border-b-talearnt_Line_01"
@@ -38,9 +38,9 @@ function Agreements() {
           <span className={"text-body1_18_semibold1 w-full"}>
             전체 동의하기 (선택 정보를 포함합니다.)
           </span>
-        </CheckBox>
+        </Checkbox>
         {agreements.map(({ agreeCodeId, agree, required, title }) => (
-          <CheckBox
+          <Checkbox
             className={classNames(
               "gap-4",
               "h-[72px] border-b border-b-talearnt_Line_01"
@@ -58,7 +58,7 @@ function Agreements() {
               &nbsp;
               {title}
             </p>
-          </CheckBox>
+          </Checkbox>
         ))}
       </div>
       <Button

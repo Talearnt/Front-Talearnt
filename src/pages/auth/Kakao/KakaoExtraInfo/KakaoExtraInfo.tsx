@@ -20,7 +20,7 @@ import {
 } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
-import { CheckBox } from "@components/CheckBox/CheckBox";
+import { Checkbox } from "@components/Checkbox/Checkbox";
 import { Input } from "@components/inputs/Input/Input";
 import { LabelText } from "@components/LabelText/LabelText";
 import { Spinner } from "@components/Spinner/Spinner";
@@ -210,20 +210,23 @@ function KakaoExtraInfo() {
         </div>
       </div>
       <div className={"flex flex-col"}>
-        <CheckBox
+        <Checkbox
           className={classNames(
             "gap-4",
             "h-[72px] border-b border-b-talearnt_Line_01"
           )}
-          formData={{ ...agreementsForm.register("all") }}
-          onChange={handleAllCheckboxChange}
+          formData={{
+            ...agreementsForm.register("all", {
+              onChange: handleAllCheckboxChange
+            })
+          }}
         >
           <span className={"w-full text-body1_18_semibold"}>
             전체 동의하기 (선택 정보를 포함합니다.)
           </span>
-        </CheckBox>
+        </Checkbox>
         {agreementsList.map(({ agreeCodeId, required, title }) => (
-          <CheckBox
+          <Checkbox
             className={classNames(
               "gap-4",
               "h-[72px] border-b border-b-talearnt_Line_01"
@@ -242,7 +245,7 @@ function KakaoExtraInfo() {
               &nbsp;
               {title}
             </span>
-          </CheckBox>
+          </Checkbox>
         ))}
       </div>
       <Button disabled={buttonIsDisabled} onClick={handleSignUp}>
