@@ -8,18 +8,16 @@ import useDebounce from "@hook/useDebounce";
 import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
+import { Chip } from "@components/Chip/Chip";
 import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
-import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
 import { MakoExpressionSad } from "@components/icons/mako/MakoExpressionSad";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/inputs/Input/Input";
 import { ModalBody } from "@components/modal/ModalBody/ModalBody";
 
-import {
-  CATEGORIZED_TALENTS_LIST,
-  CURRENT_TALENTS_TYPE_NAME
-} from "@modal/TalentsSettingModal/core/talentsList.constants";
+import { CATEGORIZED_TALENTS_LIST } from "@common/common.constants";
+import { CURRENT_TALENTS_TYPE_NAME } from "@modal/TalentsSettingModal/core/talentsList.constants";
 
 import { talentsType } from "@modal/TalentsSettingModal/core/talentsSettingModal.type";
 
@@ -341,24 +339,18 @@ function TalentsSettingModalBody() {
           {talentsData[currentTalentsType].length > 0 && (
             <div className={classNames("flex flex-wrap gap-2", "px-[30px]")}>
               {talentsData[currentTalentsType].map(({ label, value }) => (
-                <div
-                  className={classNames(
-                    "flex items-center gap-1",
-                    "h-[30px] rounded-[6px] bg-talearnt_BG_Up_02 px-2"
-                  )}
+                <Chip
+                  onCloseHandler={() =>
+                    setTalentsData({
+                      type: "remove",
+                      talent: { label, value }
+                    })
+                  }
+                  type={"keyword"}
                   key={value}
                 >
-                  <span className={"text-body3_14_medium"}>{label}</span>
-                  <CloseIcon
-                    onClick={() =>
-                      setTalentsData({
-                        type: "remove",
-                        talent: { label, value }
-                      })
-                    }
-                    size={16}
-                  />
-                </div>
+                  {label}
+                </Chip>
               ))}
             </div>
           )}
