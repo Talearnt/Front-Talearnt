@@ -82,7 +82,10 @@ export const getAPI = async <T>(
 
 export const postAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  body?: Record<
+    string,
+    string | number | boolean | Record<string, unknown> | unknown[]
+  >,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.post<responseDataType<T>>(
