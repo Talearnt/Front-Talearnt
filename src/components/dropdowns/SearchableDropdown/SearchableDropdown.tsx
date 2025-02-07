@@ -1,5 +1,4 @@
 import React, {
-  ChangeEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -12,22 +11,25 @@ import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
 
+import { Chip } from "@components/Chip/Chip";
+import { DropdownOptionCheckbox } from "@components/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
+import { EmptySearchOption } from "@components/EmptySearchOption/EmptySearchOption";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
-import { CloseIcon } from "@components/icons/CloseIcon/CloseIcon";
-import { MakoExpressionSad } from "@components/icons/mako/MakoExpressionSad";
 import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeInput";
 
-import {
-  commonDropdownProps,
-  dropdownOptionType
-} from "@components/dropdowns/dropdown.type";
+import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
 import styles from "./SearchableDropdown.module.css";
 
-type SearchableDropdownProps<T> = commonDropdownProps<
-  T | dropdownOptionType<T>[]
-> & {
+type SearchableDropdownProps<T> = {
+  isMultiple?: boolean;
+  options: dropdownOptionType<T | dropdownOptionType<T>[]>[];
+  onSelectHandler: ({
+    checked,
+    label,
+    value
+  }: { checked: boolean } & dropdownOptionType<T>) => void;
   placeholder?: string;
   selectedOptionsArray: dropdownOptionType<T>[];
 };
@@ -38,13 +40,9 @@ const optionsStyle = classNames(
   "overflow-y-auto",
   styles.scrollbar
 );
-const optionItemStyle = classNames(
-  "flex-shrink-0",
-  "h-[50px] rounded-lg px-4",
-  "text-left text-body2_16_medium text-talearnt_Text_04"
-);
 
 function SearchableDropdown<T = string>({
+  isMultiple = true,
   options,
   onSelectHandler,
   placeholder,
@@ -71,8 +69,8 @@ function SearchableDropdown<T = string>({
     "checkbox",
     "selectedCategoryIndex"
   ]);
-  const hasSubOption = Array.isArray(options[0].value);
-  const search = useDebounce(watch("search"));
+  const hasSubOption = Array.isArray(options[0]?.value);
+  const search = useDebounce(watch("search")) ?? watch("search");
   // 옵션이 선택되었는지 확인
   const isOptionSelected = useCallback(
     (value: T) =>
@@ -100,17 +98,6 @@ function SearchableDropdown<T = string>({
     ) as dropdownOptionType<T>[];
   }, [hasSubOption, isOptionSelected, options, search]);
 
-  const handleOnChange = useCallback(
-    ({ label, value }: { label: string; value: T }) =>
-      ({ target }: ChangeEvent<HTMLInputElement>) =>
-        onSelectHandler({
-          checked: target.checked,
-          label,
-          value
-        }),
-    [onSelectHandler]
-  );
-
   // 키보드로 재능을 선택
   const handleKeyDown = ({
     key,
@@ -122,9 +109,13 @@ function SearchableDropdown<T = string>({
     }
 
     if (key === "Enter") {
-      handleOnChange(searchedOptionsList[selectedOptionIndex]);
-      setValue("search", "");
+      onSelectHandler({
+        checked: true,
+        ...searchedOptionsList[selectedOptionIndex]
+      });
 
+      setValue("checkbox", false);
+      setValue("search", "");
       return;
     }
 
@@ -208,7 +199,6 @@ function SearchableDropdown<T = string>({
     const isScrollable = scrollHeight > parentElement.offsetHeight;
 
     parentElement.classList.toggle(styles.divider, isScrollable);
-    scrollRefArray.current[1].scrollTo({ top: 0 });
   }, [selectedCategoryIndex, isOpen, search]);
 
   useEffect(() => {
@@ -226,9 +216,19 @@ function SearchableDropdown<T = string>({
 
     parentElement.classList.toggle(styles.divider, isScrollable);
     parentElement.classList.remove(styles.middleDivider);
-    scrollRefArray.current[2].scrollTo({ top: 0 });
     setSelectedOptionIndex(0);
   }, [isOpen, search]);
+
+  useEffect(() => {
+    // 드롭다운 옵션 닫히면 스크롤 초기화
+    if (isOpen) {
+      return;
+    }
+
+    scrollRefArray.current.forEach(scrollRef => {
+      scrollRef?.scrollTo({ top: 0 });
+    });
+  }, [isOpen]);
 
   return (
     <div className={"relative w-[388px]"}>
@@ -236,7 +236,7 @@ function SearchableDropdown<T = string>({
         className={classNames(
           "peer/label group/label",
           "flex items-center",
-          "rounded-lg border border-talearnt_Line_01 px-[15px] py-[10px]",
+          "min-h-[50px] rounded-lg border border-talearnt_Line_01 px-[15px] py-[10px]",
           "cursor-pointer"
         )}
       >
@@ -245,26 +245,32 @@ function SearchableDropdown<T = string>({
           className={"hidden"}
           type={"checkbox"}
         />
-        <div className={classNames("flex flex-wrap gap-2", "min-h-7 w-full")}>
+        <div className={classNames("flex flex-wrap gap-2", "w-full min-w-0")}>
           {/*선택한 값 버튼칩*/}
           {selectedOptionsArray.map(({ label, value }) => (
-            <div
-              className={classNames(
-                "flex items-center gap-1",
-                "rounded-[6px] bg-talearnt_BG_Up_02 px-2 py-[5px]"
-              )}
-              key={String(value)}
+            <Chip
+              onCloseHandler={e => {
+                e.preventDefault();
+
+                onSelectHandler({
+                  checked: false,
+                  label,
+                  value
+                });
+              }}
+              type={"keyword"}
+              key={`selected-${String(value)}`}
             >
-              <span className={"text-body3_14_medium"}>{label}</span>
-              <CloseIcon size={16} />
-            </div>
+              {label}
+            </Chip>
           ))}
           <AutoResizeInput
             className={classNames(
               "flex-1",
-              "text-body2_16_medium",
+              "h-[30.2px] text-body2_16_medium",
               "focus:outline-none"
             )}
+            formData={{ ...register("search") }}
             onClick={({ target }) => {
               setValue("checkbox", !isOpen);
 
@@ -272,11 +278,11 @@ function SearchableDropdown<T = string>({
                 (target as HTMLInputElement).blur();
               }
             }}
-            onChange={({ target }) => setValue("search", target.value)}
             onKeyDown={handleKeyDown}
             placeholder={
               selectedOptionsArray.length === 0 ? placeholder : undefined
             }
+            value={search}
             autoComplete={"off"}
           />
         </div>
@@ -293,8 +299,8 @@ function SearchableDropdown<T = string>({
       <div
         className={classNames(
           "absolute hidden",
-          "mt-2 max-h-[298px] w-full rounded-lg",
-          "border border-talearnt_Line_01 bg-talearnt_BG_Background shadow-shadow_02",
+          "mt-1 max-h-[298px] w-full rounded-lg",
+          "z-10 border border-talearnt_Line_01 bg-talearnt_BG_Background shadow-shadow_02",
           "peer-has-[:checked]/label:flex"
         )}
       >
@@ -306,43 +312,49 @@ function SearchableDropdown<T = string>({
             >
               {options.map(({ label, value }, index) =>
                 hasSubOption ? (
-                  <button
-                    className={classNames(
-                      optionItemStyle,
-                      "group/item",
-                      "hover:bg-talearnt_BG_Up_01 hover:text-talearnt_Text_02",
-                      index === selectedCategoryIndex &&
-                        "bg-talearnt_BG_Up_01 text-body2_16_semibold text-talearnt_Text_01"
-                    )}
+                  <DropdownOptionItem
+                    checked={index === selectedCategoryIndex}
+                    label={label}
                     onClick={() => setValue("selectedCategoryIndex", index)}
+                    hasHoverStyle
                     key={`main-option-${label}`}
                   >
-                    <div className={"flex items-center justify-between"}>
-                      {label}
-                      <CaretIcon
-                        className={classNames(
+                    <CaretIcon
+                      className={classNames(
+                        index !== selectedCategoryIndex &&
                           "stroke-talearnt_Icon_03",
-                          "group-hover/item:stroke-talearnt_Icon_01",
-                          index === selectedCategoryIndex &&
-                            "stroke-talearnt_Icon_01"
-                        )}
-                        direction={"right"}
-                      />
-                    </div>
-                  </button>
+                        "group-hover/button:stroke-talearnt_Icon_01"
+                      )}
+                      direction={"right"}
+                    />
+                  </DropdownOptionItem>
+                ) : isMultiple ? (
+                  <DropdownOptionCheckbox
+                    checked={isOptionSelected(value as T)}
+                    onChangeHandler={({ target }) => {
+                      setValue("checkbox", false);
+                      onSelectHandler({
+                        checked: target.checked,
+                        label,
+                        value: value as T
+                      });
+                    }}
+                    label={label}
+                    key={`main-option-${label}`}
+                  />
                 ) : (
                   <DropdownOptionItem
-                    className={classNames(
-                      "text-body2_16_medium",
-                      isOptionSelected(value as T) && "text-body2_16_semibold"
-                    )}
                     checked={isOptionSelected(value as T)}
-                    onChangeHandler={handleOnChange({
-                      label,
-                      value: value as T
-                    })}
+                    onClick={() => {
+                      setValue("checkbox", false);
+                      onSelectHandler({
+                        checked: true,
+                        label,
+                        value: value as T
+                      });
+                    }}
                     label={label}
-                    key={String(value)}
+                    key={`main-option-${label}`}
                   />
                 )
               )}
@@ -357,18 +369,39 @@ function SearchableDropdown<T = string>({
                   (
                     options[selectedCategoryIndex]
                       .value as dropdownOptionType<T>[]
-                  ).map(({ label, value }) => (
-                    <DropdownOptionItem
-                      className={classNames(
-                        "text-body2_16_medium",
-                        isOptionSelected(value) && "text-body2_16_semibold"
-                      )}
-                      checked={isOptionSelected(value)}
-                      onChangeHandler={handleOnChange({ label, value })}
-                      label={label}
-                      key={`sub-option-${label}`}
-                    />
-                  ))}
+                  ).map(({ label, value }) =>
+                    isMultiple ? (
+                      <DropdownOptionCheckbox
+                        checked={isOptionSelected(value)}
+                        onChangeHandler={({ target }) => {
+                          setValue("checkbox", false);
+                          setValue("selectedCategoryIndex", undefined);
+                          onSelectHandler({
+                            checked: target.checked,
+                            label,
+                            value
+                          });
+                        }}
+                        label={label}
+                        key={`sub-option-${label}`}
+                      />
+                    ) : (
+                      <DropdownOptionItem
+                        checked={isOptionSelected(value)}
+                        onClick={() => {
+                          setValue("checkbox", false);
+                          setValue("selectedCategoryIndex", undefined);
+                          onSelectHandler({
+                            checked: true,
+                            label,
+                            value
+                          });
+                        }}
+                        label={label}
+                        key={`sub-option-${label}`}
+                      />
+                    )
+                  )}
               </div>
             )}
           </>
@@ -377,45 +410,38 @@ function SearchableDropdown<T = string>({
             className={classNames(
               optionsStyle,
               searchedOptionsList.length === 0 &&
-                "h-[298px] items-center justify-center gap-4"
+                "h-[298px] items-center justify-center gap-4 px-4"
             )}
             ref={element => (scrollRefArray.current[2] = element)}
           >
             {searchedOptionsList.length > 0 ? (
               searchedOptionsList.map(({ label, value }, index) => (
-                <button
-                  ref={
+                <DropdownOptionItem
+                  buttonRef={
                     selectedOptionIndex === index
                       ? selectedTalentRef
                       : undefined
                   }
-                  className={classNames(
-                    optionItemStyle,
-                    index === selectedOptionIndex &&
-                      "bg-talearnt_BG_Up_01 text-talearnt_Text_02"
-                  )}
+                  checked={index === selectedOptionIndex}
+                  label={label}
                   onClick={() => {
-                    handleOnChange({ label, value });
+                    setValue("checkbox", false);
                     setValue("search", "");
+                    onSelectHandler({
+                      checked: true,
+                      label,
+                      value
+                    });
                   }}
                   onMouseEnter={() => {
                     inputSourceRef.current = "mouse";
                     setSelectedOptionIndex(index);
                   }}
                   key={`search-option-${label}`}
-                >
-                  {label}
-                </button>
+                />
               ))
             ) : (
-              <>
-                <span
-                  className={"text-heading4_20_semibold text-talearnt_Text_03"}
-                >
-                  이 키워드는 없어요...
-                </span>
-                <MakoExpressionSad />
-              </>
+              <EmptySearchOption search={search} />
             )}
           </div>
         )}
