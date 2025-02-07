@@ -3,7 +3,7 @@ import ReactQuill from "react-quill-new";
 
 import { classNames } from "@utils/classNames";
 
-import { Toolbar } from "@components/TextEditor/Toolbar";
+import { Toolbar } from "@components/TextEditor/Toolbar/Toolbar";
 
 import "react-quill-new/dist/quill.snow.css";
 

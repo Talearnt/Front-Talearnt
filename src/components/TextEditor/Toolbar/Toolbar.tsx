@@ -7,7 +7,6 @@ import { ImageIcon } from "@components/icons/textEditor/ImageIcon";
 import { ItalicIcon } from "@components/icons/textEditor/ItalicIcon";
 import { LinkIcon } from "@components/icons/textEditor/LinkIcon";
 import { UnderlineIcon } from "@components/icons/textEditor/UnderlineIcon";
-
 import {
   alignOptions,
   attributorsType,
@@ -18,7 +17,7 @@ import {
   quillIconsType,
   sizeOptions,
   updatePickerItemColors
-} from "@components/TextEditor/toolbar.constants";
+} from "@components/TextEditor/Toolbar/toolbar.constants";
 
 import "./Toolbar.css";
 
