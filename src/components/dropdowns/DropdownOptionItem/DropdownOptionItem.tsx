@@ -1,44 +1,42 @@
-import { ChangeEvent } from "react";
+import { ComponentProps, ReactNode, RefObject } from "react";
 
 import { classNames } from "@utils/classNames";
 
-import { CheckBox } from "@components/CheckBox/CheckBox";
-
-type DropdownOptionItemProps = {
-  className?: string;
+type DropdownOptionItemProps = ComponentProps<"button"> & {
+  buttonRef?: RefObject<HTMLButtonElement>;
   checked: boolean;
-  onChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
+  children?: ReactNode;
   label: string;
 };
 
 function DropdownOptionItem({
-  className,
+  buttonRef,
   checked,
-  onChangeHandler,
-  label
+  children,
+  label,
+  ...props
 }: DropdownOptionItemProps) {
   return (
-    <CheckBox
+    <button
+      ref={buttonRef}
       className={classNames(
-        "group/checkbox",
+        "group/button",
+        "flex flex-shrink-0 items-center justify-between",
         "h-[50px] rounded-lg px-4",
-        "hover:bg-talearnt_BG_Up_01",
         checked && "bg-talearnt_BG_Up_01"
       )}
-      checked={checked}
-      onChange={onChangeHandler}
+      {...props}
     >
+      {children}
       <span
         className={classNames(
-          "text-body1_18_medium text-talearnt_Text_04",
-          "group-hover/checkbox:text-talearnt_Text_02",
-          checked && "text-body1_18_semibold text-talearnt_Text_01",
-          className
+          "text-body2_16_medium text-talearnt_Text_04",
+          checked && "text-talearnt_Text_02"
         )}
       >
         {label}
       </span>
-    </CheckBox>
+    </button>
   );
 }
 
