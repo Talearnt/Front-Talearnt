@@ -9,9 +9,10 @@ import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
 import { Chip } from "@components/Chip/Chip";
+import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
+import { EmptySearchOption } from "@components/EmptySearchOption/EmptySearchOption";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
-import { MakoExpressionSad } from "@components/icons/mako/MakoExpressionSad";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
 import { Input } from "@components/inputs/Input/Input";
 import { ModalBody } from "@components/modal/ModalBody/ModalBody";
@@ -48,7 +49,7 @@ function TalentsSettingModalBody() {
   const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
 
   // 검색한 값
-  const search = useDebounce(watch("search"));
+  const search = useDebounce(watch("search")) ?? watch("search");
   // 검색한 재능 키워드 목록
   const searchedTalentsList = useMemo(() => {
     if (!search) {
@@ -285,19 +286,14 @@ function TalentsSettingModalBody() {
               ) : searchedTalentsList.length > 0 ? (
                 // 검색한 결과가 있는 경우
                 searchedTalentsList.map(({ talentCode, talentName }, index) => (
-                  <button
-                    ref={
+                  <DropdownOptionItem
+                    buttonRef={
                       selectedTalentIndex === index
                         ? selectedTalentRef
                         : undefined
                     }
-                    className={classNames(
-                      "flex-shrink-0",
-                      "m-2 h-[70px] rounded-lg px-4",
-                      "text-left text-body1_18_medium text-talearnt_Text_04",
-                      index === selectedTalentIndex &&
-                        "bg-talearnt_BG_Up_01 text-talearnt_Text_02"
-                    )}
+                    checked={index === selectedTalentIndex}
+                    label={talentName}
                     onClick={() => {
                       if (isTalentsExceedingLimit()) {
                         return;
@@ -317,22 +313,11 @@ function TalentsSettingModalBody() {
                       setSelectedTalentIndex(index);
                     }}
                     key={talentCode}
-                  >
-                    {talentName}
-                  </button>
+                  />
                 ))
               ) : (
                 // 검색한 결과가 없는 경우
-                <>
-                  <span
-                    className={
-                      "text-heading4_20_semibold text-talearnt_Text_03"
-                    }
-                  >
-                    이 키워드는 없어요...
-                  </span>
-                  <MakoExpressionSad />
-                </>
+                <EmptySearchOption search={search} />
               )}
             </div>
           </div>
