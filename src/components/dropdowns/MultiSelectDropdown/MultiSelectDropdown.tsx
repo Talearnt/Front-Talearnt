@@ -1,11 +1,17 @@
 import { classNames } from "@utils/classNames";
 
-import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
+import { DropdownOptionCheckbox } from "@components/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 
-import { commonDropdownProps } from "@components/dropdowns/dropdown.type";
+import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
-type MultiSelectDropdownProps<T> = commonDropdownProps<T> & {
+type MultiSelectDropdownProps<T> = {
+  options: dropdownOptionType<T>[];
+  onSelectHandler: ({
+    checked,
+    label,
+    value
+  }: { checked: boolean } & dropdownOptionType<T>) => void;
   title: string;
   selectedValueArray: T[];
 };
@@ -22,7 +28,7 @@ function MultiSelectDropdown<T = string>({
         className={classNames(
           "peer/label group/label",
           "flex items-center justify-between",
-          "m-2 h-[70px] rounded-lg pl-4 pr-2",
+          "mx-2 my-1 h-[70px] rounded-lg px-4",
           "cursor-pointer",
           "hover:bg-talearnt_BG_Up_01 has-[:checked]:bg-talearnt_BG_Up_01"
         )}
@@ -48,12 +54,12 @@ function MultiSelectDropdown<T = string>({
       <div
         className={classNames(
           "hidden flex-col gap-2",
-          "px-2 py-1",
+          "mt-2 px-2 py-1",
           "peer-has-[:checked]/label:flex"
         )}
       >
         {options.map(({ label, value }) => (
-          <DropdownOptionItem
+          <DropdownOptionCheckbox
             checked={selectedValueArray.includes(value)}
             onChangeHandler={({ target }) =>
               onSelectHandler({ checked: target.checked, label, value })
