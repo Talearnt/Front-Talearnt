@@ -5,25 +5,27 @@ import { classNames } from "@utils/classNames";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
 
 type TitledBoxProps = {
-  title: ReactNode;
-  children: ReactNode;
   canOpen?: boolean;
+  children: ReactNode;
+  className?: string;
+  title: ReactNode;
 };
 
-function TitledBox({ title, children, canOpen }: TitledBoxProps) {
+function TitledBox({ canOpen, children, className, title }: TitledBoxProps) {
   return (
     <div
       className={classNames(
         "flex flex-col",
-        "rounded-xl shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01"
+        "rounded-xl border border-talearnt_Line_01",
+        className
       )}
     >
       <label
         className={classNames(
           "peer/label",
           "flex items-center justify-between gap-4",
-          "px-6 py-[19px]",
-          "has-[:checked]:shadow-[inset_0_-1px_0_0] has-[:checked]:shadow-talearnt_Line_01",
+          "px-6 py-[18px]",
+          "has-[:checked]:border-b has-[:checked]:border-talearnt_Line_01",
           canOpen && "cursor-pointer"
         )}
       >
@@ -46,7 +48,7 @@ function TitledBox({ title, children, canOpen }: TitledBoxProps) {
       <div
         className={classNames(
           "hidden",
-          "px-6 py-8",
+          "px-[23px] pb-[31px] pt-8",
           "peer-has-[:checked]/label:block"
         )}
       >
