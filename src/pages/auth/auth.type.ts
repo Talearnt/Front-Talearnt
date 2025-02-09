@@ -2,6 +2,7 @@
 export type accountType = {
   userId: string;
   pw: string;
+  autoLogin: boolean;
 };
 
 // 이용 약관

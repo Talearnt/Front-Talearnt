@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string } from "yup";
+import { boolean, object, string } from "yup";
 
 import { postSignIn } from "@pages/auth/auth.api";
 
@@ -12,12 +12,15 @@ import { classNames } from "@utils/classNames";
 import { useAuthStore } from "@pages/auth/auth.store";
 
 import { Button } from "@components/Button/Button";
-import { CheckBox } from "@components/CheckBox/CheckBox";
+import { Checkbox } from "@components/Checkbox/Checkbox";
 import { Input } from "@components/inputs/Input/Input";
 
+import { accountType } from "@pages/auth/auth.type";
+
 const signInSchema = object({
-  userId: string(),
-  pw: string()
+  userId: string().required("이메일을 입력해 주세요"),
+  pw: string().required("비밀번호를 입력해 주세요"),
+  autoLogin: boolean().required()
 }).required();
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
@@ -42,26 +45,9 @@ function SignIn() {
 
   const [userId, pw] = watch(["userId", "pw"]);
 
-  const handleSignIn = async ({
-    userId,
-    pw
-  }: {
-    userId?: string;
-    pw?: string;
-  }) => {
-    if (!userId || !pw) {
-      if (!userId) {
-        setError("userId", { message: "이메일을 입력해 주세요" });
-      }
-
-      if (!pw) {
-        setError("pw", { message: "비밀번호를 입력해 주세요" });
-      }
-      return;
-    }
-
+  const handleSignIn = async ({ userId, pw, autoLogin }: accountType) => {
     try {
-      const { data } = await postSignIn({ userId, pw });
+      const { data } = await postSignIn({ userId, pw, autoLogin });
 
       setAccessToken(data.accessToken);
       navigator("/");
@@ -112,8 +98,13 @@ function SignIn() {
           type={"password"}
           wrapperClassName={"mb-4"}
         />
-        <CheckBox className={"mb-6 mr-auto"}>자동 로그인</CheckBox>
-        <Button className={"mb-10 h-[50px] w-full"} type={"submit"}>
+        <Checkbox
+          className={"mb-6 mr-auto"}
+          formData={{ ...register("autoLogin") }}
+        >
+          자동 로그인
+        </Checkbox>
+        <Button className={"mb-10 w-full"} type={"submit"}>
           로그인
         </Button>
       </form>
