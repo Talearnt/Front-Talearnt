@@ -8,7 +8,18 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./index.css";
 
 const mode = import.meta.env.MODE;
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false
+    },
+    mutations: {
+      retry: 0
+    }
+  }
+});
 const root = document.getElementById("root");
 
 if (root) {
