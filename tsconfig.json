@@ -27,6 +27,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@api/*": ["src/api/*"],
       "@common/*": ["src/common/*"],
       "@components/*": ["src/components/*"],
       "@hook/*": ["src/hook/*"],
@@ -34,6 +35,7 @@
       "@modal/*": ["src/modal/*"],
       "@pages/*": ["src/pages/*"],
       "@routes/*": ["src/routes/*"],
+      "@type/*": ["src/type/*"],
       "@utils/*": ["src/utils/*"]
     },
 
