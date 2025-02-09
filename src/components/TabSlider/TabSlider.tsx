@@ -92,6 +92,7 @@ function TabSlider({
             className={"hidden"}
             disabled={disabled}
             onClick={() => onClickHandler?.(value)}
+            readOnly
             type={"radio"}
           />
           {label}
