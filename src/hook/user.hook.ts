@@ -1,24 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-
 import { getProfile } from "@api/user.api";
 
 import { createAfterSignInQueryKey } from "@utils/queryKey";
 
-export const useGetProfile = () =>
-  useQuery({
-    queryKey: createAfterSignInQueryKey(["profile"]),
-    queryFn: async () => await getProfile(),
-    initialData: {
+import { useQueryWithInitial } from "@hook/useQueryWithInitial";
+
+export const useGetProfile = (enabled = true) =>
+  useQueryWithInitial(
+    {
       data: {
-        giveTalentCodes: [],
+        giveTalents: [],
         nickname: "",
         profileImg: null,
-        receiveTalentCodes: [],
+        receiveTalents: [],
         userNo: 0
       },
       errorCode: null,
       errorMessage: null,
       success: true,
       status: 0
+    },
+    {
+      queryKey: createAfterSignInQueryKey(["profile"]),
+      queryFn: async () => await getProfile(),
+      enabled
     }
-  });
+  );
