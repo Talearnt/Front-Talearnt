@@ -48,10 +48,12 @@ export default [
         {
           groups: [
             // 1. React 관련 패키지
-            ["^react"],
+            ["^react(-router-dom)?$"],
 
             // 2. 라이브러리
-            ["^[@\\w]"],
+            [
+              "^(?!@/|@api/|@common/|@components/|@hook/|@layout/|@modal/|@pages/|@routes/|@type/|@utils/)[@\\w]"
+            ],
 
             // 3. api 파일
             ["^.+\\.api$"],
@@ -66,13 +68,13 @@ export default [
             ["^@store/.*|^.*/(store|.*.store)$"],
 
             // 7. 페이지
-            ["^@pages/.*/[A-Z].*$"],
+            ["^@pages/.*/[A-Z][^/]*$"],
 
             // 8. 모달
-            ["^@modal/.*/[A-Z].*$"],
+            ["^@modal/.*/[A-Z][^/]*$"],
 
             // 9. 컴포넌트
-            ["^@components/.*/[A-Z].*$"],
+            ["^@components/.*/[A-Z][^/]*$"],
 
             // 10. json, 상수
             ["^.+\\.(json|constants)$"],
