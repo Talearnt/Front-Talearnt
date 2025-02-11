@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
 const WriteArticle = lazy(
@@ -7,7 +7,11 @@ const WriteArticle = lazy(
 
 const articlesRouter: RouteObject[] = [
   {
-    element: <WriteArticle />,
+    element: (
+      <Suspense>
+        <WriteArticle />
+      </Suspense>
+    ),
     path: "write-article"
   }
 ];
