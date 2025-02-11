@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
 // 공통
@@ -35,11 +35,19 @@ const SignUp = lazy(() => import("@pages/auth/SignUp/SignUp"));
 
 const authRouter: RouteObject[] = [
   {
-    element: <SignIn />,
+    element: (
+      <Suspense>
+        <SignIn />
+      </Suspense>
+    ),
     path: "sign-in"
   },
   {
-    element: <Kakao />,
+    element: (
+      <Suspense>
+        <Kakao />
+      </Suspense>
+    ),
     path: "kakao",
     children: [
       { element: <KakaoOauth />, path: "oauth" },
@@ -48,7 +56,11 @@ const authRouter: RouteObject[] = [
     ]
   },
   {
-    element: <SignUp />,
+    element: (
+      <Suspense>
+        <SignUp />
+      </Suspense>
+    ),
     path: "sign-up",
     children: [
       { element: <Agreements />, path: "agreements" },
@@ -57,7 +69,11 @@ const authRouter: RouteObject[] = [
     ]
   },
   {
-    element: <FindAccount />,
+    element: (
+      <Suspense>
+        <FindAccount />
+      </Suspense>
+    ),
     path: "find-account",
     children: [
       { element: <FindId />, path: "id" },
