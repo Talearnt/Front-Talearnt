@@ -20,14 +20,14 @@ type ChipProps = CustomVariantProps<ChipVariantsType> & {
 };
 
 const chipVariants = cva<ChipVariantsType>(
-  "px-[15px] border border-talearnt_Icon_03 rounded-lg cursor-pointer",
+  "flex justify-center items-center px-[15px] border border-talearnt_Icon_03 rounded-lg cursor-pointer",
   {
     variants: {
       type: {
         "default-small": "h-10 ",
         "default-large": "h-[50px]",
         keyword: classNames(
-          "flex items-center gap-1",
+          "gap-1",
           "rounded-md px-2 py-[6px] bg-talearnt_BG_Up_02 border-none cursor-default",
           "text-body3_14_medium text-talearnt_Text_02"
         )
