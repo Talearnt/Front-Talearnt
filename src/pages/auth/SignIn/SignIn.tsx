@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { boolean, object, string } from "yup";
 
 import { postSignIn } from "@pages/auth/auth.api";
@@ -15,7 +15,7 @@ import { Button } from "@components/Button/Button";
 import { Checkbox } from "@components/Checkbox/Checkbox";
 import { Input } from "@components/inputs/Input/Input";
 
-import { accountType } from "@pages/auth/auth.type";
+import { signInBodyType } from "@pages/auth/auth.type";
 
 const signInSchema = object({
   userId: string().required("이메일을 입력해 주세요"),
@@ -45,7 +45,7 @@ function SignIn() {
 
   const [userId, pw] = watch(["userId", "pw"]);
 
-  const handleSignIn = async ({ userId, pw, autoLogin }: accountType) => {
+  const handleSignIn = async ({ userId, pw, autoLogin }: signInBodyType) => {
     try {
       const { data } = await postSignIn({ userId, pw, autoLogin });
 
