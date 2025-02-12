@@ -7,7 +7,8 @@ import { customAxiosResponseType } from "@common/common.type";
 test("should allow users to login with valid credentials", async () => {
   const { status } = await postSignIn({
     userId: "test@test.com",
-    pw: "test"
+    pw: "test",
+    autoLogin: false
   });
 
   expect(status).toBe(200);
@@ -17,7 +18,8 @@ test("should not allow users to login with invalid credentials", async () => {
   try {
     await postSignIn({
       userId: "invalid_user",
-      pw: "invalid_password"
+      pw: "invalid_password",
+      autoLogin: false
     });
   } catch (e) {
     const { status } = e as customAxiosResponseType<null>;

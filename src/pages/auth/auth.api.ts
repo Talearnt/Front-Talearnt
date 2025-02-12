@@ -2,14 +2,14 @@ import { getAPI, postAPI, putAPI } from "@utils/apiMethods";
 
 import {
   accessTokenType,
-  accountType,
   findIdResponseType,
+  signInBodyType,
   signUpBodyType,
   verificationBodyType
 } from "@pages/auth/auth.type";
 
 // 로그인
-export const postSignIn = async (account: accountType) =>
+export const postSignIn = async (account: signInBodyType) =>
   await postAPI<accessTokenType>("/v1/auth/login", account, {
     withCredentials: true
   });

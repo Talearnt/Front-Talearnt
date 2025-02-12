@@ -2,7 +2,6 @@
 export type accountType = {
   userId: string;
   pw: string;
-  autoLogin: boolean;
 };
 
 // 이용 약관
@@ -15,6 +14,10 @@ export type agreementType = {
 
 export type accessTokenType = {
   accessToken: string;
+};
+
+export type signInBodyType = accountType & {
+  autoLogin: boolean;
 };
 
 // 회원가입 body
