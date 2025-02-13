@@ -21,7 +21,7 @@ const tabSliderVariants = cva<TabSliderVariantsType>(
   classNames(
     "flex items-center justify-center",
     "w-full",
-    "cursor-pointer text-body2_16_medium",
+    "cursor-pointer text-body2_16_medium whitespace-nowrap",
     "has-[:checked]:text-talearnt_Primary_01",
     "has-[:disabled]:cursor-not-allowed"
   ),
@@ -35,7 +35,7 @@ const tabSliderVariants = cva<TabSliderVariantsType>(
         shadow: classNames(
           "px-[15px] py-[7px] rounded-full border border-transparent",
           "text-body1_18_medium text-talearnt_Text_04",
-          "has-[:checked]:text-talearnt_Primary_01 has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02"
+          "has-[:checked]:text-talearnt_Primary_01 has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-shadow_02"
         )
       }
     },
