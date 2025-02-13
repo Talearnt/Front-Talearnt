@@ -35,6 +35,7 @@
       "@modal/*": ["src/modal/*"],
       "@pages/*": ["src/pages/*"],
       "@routes/*": ["src/routes/*"],
+      "@test/*": ["src/test/*"],
       "@type/*": ["src/type/*"],
       "@utils/*": ["src/utils/*"]
     },

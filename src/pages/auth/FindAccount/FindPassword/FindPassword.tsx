@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
+import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
 import { postFindPwEmail } from "@pages/auth/auth.api";
@@ -94,7 +94,7 @@ function FindPassword() {
               으로 <br />
               비밀번호 재설정을 위한 인증 메일을 발송하였습니다.
             </span>
-            <span className={"text-talearnt_Error_01 text-caption1_14_medium"}>
+            <span className={"text-caption1_14_medium text-talearnt_Error_01"}>
               {dayjs(sentDateRef.current).format("YYYY-MM-DD HH:mm")}에 메일
               발송함
             </span>

@@ -1,4 +1,5 @@
 import { ComponentProps, useEffect, useRef } from "react";
+
 import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 type AutoResizeInputProps = ComponentProps<"input"> & {
