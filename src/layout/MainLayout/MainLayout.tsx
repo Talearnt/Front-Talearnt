@@ -40,6 +40,9 @@ function MainLayout() {
 
   useEffect(() => {
     if (accessToken === null) {
+      // TODO useQuery 적용해서 자동로그인, 일반로그인 쿠키 유지시간에 따라 캐시 유지
+      // 껐다 키면 새로 캐싱이 될 텐데 쿠키 만료시간을 어떻게 파악하지
+      // 로컬스토리지에 담아서 저장하는것도 방법
       getAccessTokenUseRefreshToken()
         .then(({ data }) => {
           setAccessToken(data.accessToken);
@@ -91,7 +94,9 @@ function MainLayout() {
                 buttonStyle={"outlined"}
                 className={"w-[110px]"}
                 size={"small"}
-                onClick={() => navigator(accessToken ? "" : "sign-in")}
+                onClick={() =>
+                  navigator(accessToken ? "write-article" : "sign-in")
+                }
               >
                 {accessToken ? "글쓰기" : "로그인"}
               </Button>
