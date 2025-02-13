@@ -1,12 +1,19 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+
+import { postArticle } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
+import { useToastStore } from "@common/common.store";
+
 import { WriteArticleInfo } from "@pages/articles/WriteArticle/components/WriteArticleInfo/WriteArticleInfo";
 
+import { Button } from "@components/Button/Button";
 import { ArticleIcon } from "@components/icons/textEditor/ArticleIcon";
 import { Input } from "@components/inputs/Input/Input";
 import { TabSlider } from "@components/TabSlider/TabSlider";
@@ -14,41 +21,113 @@ import { TextEditor } from "@components/TextEditor/TextEditor";
 import { TitledBox } from "@components/TitledBox/TitledBox";
 
 import {
+  articleTypeOptions,
+  communityArticleSchema,
+  matchArticleSchema
+} from "@pages/articles/WriteArticle/core/writeArticle.constants";
+
+import {
   articleType,
   communityArticleDataType,
-  matchArticleFormDataType
+  matchArticleFormDataType,
+  postType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
-
-const articleTypeOptions = [
-  { label: "매칭 게시물 글쓰기", value: "match" },
-  { label: "커뮤니티 게시물 글쓰기", value: "community" }
-];
 
 function WriteArticle() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const type = (searchParams.get("type") as articleType | null) ?? "match";
+  const isMatchType = type === "match";
 
-  const { isSuccess } = useGetProfile(type === "match");
+  const { isSuccess } = useGetProfile(isMatchType);
 
-  const [communityArticleData, setCommunityArticleData] =
-    useState<communityArticleDataType>({
-      title: "",
-      content: "",
-      boardType: ""
-    });
-  const [matchArticleData, setMatchArticleData] =
-    useState<matchArticleFormDataType>({
+  const {
+    formState: { errors: matchErrors },
+    handleSubmit: handleMatchSubmit,
+    watch: matchWatch,
+    setValue: setMatchArticleData,
+    trigger: matchTrigger
+  } = useForm({
+    resolver: yupResolver(matchArticleSchema),
+    defaultValues: {
       duration: [],
       exchangeType: "온라인",
-      imageUrls: [],
       giveTalents: [],
       receiveTalents: [],
       title: "",
-      content: ""
-    });
+      content: "",
+      pureText: "",
+      imageUrls: []
+    }
+  });
+  const {
+    formState: { errors: communityErrors },
+    watch: communityWatch,
+    setValue: setCommunityArticleData,
+    trigger: communityTrigger
+  } = useForm({
+    resolver: yupResolver(communityArticleSchema),
+    defaultValues: {
+      postType: "질문 게시판" as postType,
+      title: "",
+      content: "",
+      pureText: "",
+      imageUrls: []
+    }
+  });
 
-  if (type === "match" && !isSuccess) {
+  const setToast = useToastStore(state => state.setToast);
+
+  const communityArticleData = communityWatch();
+  const matchArticleData = matchWatch();
+
+  const handleCommunityDataChange = (
+    field: keyof communityArticleDataType,
+    value: communityArticleDataType[keyof communityArticleDataType]
+  ) => {
+    setCommunityArticleData(field, value);
+
+    if (communityErrors[field]) {
+      void communityTrigger(field);
+    }
+  };
+  const handleMatchDataChange = (
+    field: keyof matchArticleFormDataType,
+    value: matchArticleFormDataType[keyof matchArticleFormDataType]
+  ) => {
+    setMatchArticleData(field, value);
+
+    if (matchErrors[field]) {
+      void matchTrigger(field);
+    }
+  };
+  const validateRequiredFields = () =>
+    Object.values(isMatchType ? matchArticleData : communityArticleData).every(
+      value => (Array.isArray(value) ? value.some(Boolean) : Boolean(value))
+    );
+  const postMatchArticle = async () => {
+    // TODO 이미지 업로드
+    const {
+      title,
+      content,
+      exchangeType,
+      duration,
+      giveTalents,
+      receiveTalents
+    } = matchArticleData;
+
+    await postArticle({
+      title,
+      content,
+      exchangeType,
+      duration: duration[0].value,
+      giveTalents: giveTalents.map(({ value }) => value),
+      receiveTalents: receiveTalents.map(({ value }) => value),
+      imageUrls: []
+    });
+  };
+
+  if (isMatchType && !isSuccess) {
     return null;
   }
 
@@ -100,39 +179,66 @@ function WriteArticle() {
         type={type}
         communityArticleData={communityArticleData}
         matchArticleData={matchArticleData}
-        setCommunityArticleData={setCommunityArticleData}
-        setMatchArticleData={setMatchArticleData}
+        handleCommunityDataChange={handleCommunityDataChange}
+        handleMatchDataChange={handleMatchDataChange}
+        errors={matchErrors}
       />
       <Input
         onChange={({ target }) =>
-          type === "match"
-            ? setMatchArticleData(prev => ({ ...prev, title: target.value }))
-            : setCommunityArticleData(prev => ({
-                ...prev,
-                title: target.value
-              }))
+          isMatchType
+            ? handleMatchDataChange("title", target.value)
+            : handleCommunityDataChange("title", target.value)
         }
         value={
-          type === "match" ? matchArticleData.title : communityArticleData.title
+          isMatchType ? matchArticleData.title : communityArticleData.title
+        }
+        error={
+          isMatchType
+            ? matchErrors.title?.message
+            : communityErrors.title?.message
         }
         size={"large"}
       />
       <TextEditor
         value={
-          type === "match"
-            ? matchArticleData.content
-            : communityArticleData.content
+          isMatchType ? matchArticleData.content : communityArticleData.content
         }
-        onChangeHandler={value =>
-          type === "match"
-            ? setMatchArticleData(prev => ({ ...prev, content: value }))
-            : setCommunityArticleData(prev => ({
-                ...prev,
-                content: value
-              }))
-        }
+        onChangeHandler={({ value, pureText }) => {
+          if (isMatchType) {
+            handleMatchDataChange("content", value);
+            handleMatchDataChange("pureText", pureText);
+
+            return;
+          }
+
+          handleCommunityDataChange("content", value);
+          handleCommunityDataChange("pureText", pureText);
+        }}
         editorKey={type}
+        error={
+          isMatchType
+            ? matchErrors.pureText?.message
+            : communityErrors.pureText?.message
+        }
       />
+      <div
+        className={classNames("grid grid-cols-[1fr_110px_110px] gap-4", "mt-8")}
+      >
+        <Button
+          buttonStyle={"outlined"}
+          className={"w-[110px]"}
+          onClick={() => {
+            if (!validateRequiredFields()) {
+              setToast({ message: "필수 정보", type: "error" });
+              return;
+            }
+          }}
+        >
+          미리보기
+        </Button>
+        <Button buttonStyle={"outlined-blue"}>취소하기</Button>
+        <Button onClick={handleMatchSubmit(postMatchArticle)}>등록하기</Button>
+      </div>
     </div>
   );
 }
