@@ -52,7 +52,7 @@ export default [
 
             // 2. 라이브러리
             [
-              "^(?!@/|@api/|@common/|@components/|@hook/|@layout/|@modal/|@pages/|@routes/|@type/|@utils/)[@\\w]"
+              "^(?!@/|@api/|@common/|@components/|@hook/|@layout/|@modal/|@pages/|@routes/|@test/|@type/|@utils/)[@\\w]"
             ],
 
             // 3. api 파일

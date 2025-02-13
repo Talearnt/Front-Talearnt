@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import { Quill } from "react-quill-new";
 
 import { AlignIcon } from "@components/icons/textEditor/AlignIcon";
@@ -7,6 +8,7 @@ import { ImageIcon } from "@components/icons/textEditor/ImageIcon";
 import { ItalicIcon } from "@components/icons/textEditor/ItalicIcon";
 import { LinkIcon } from "@components/icons/textEditor/LinkIcon";
 import { UnderlineIcon } from "@components/icons/textEditor/UnderlineIcon";
+
 import {
   alignOptions,
   attributorsType,

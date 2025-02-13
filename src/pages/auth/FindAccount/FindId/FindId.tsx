@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
+import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
 import {
@@ -130,7 +130,7 @@ function FindId() {
                   입니다.
                 </span>
                 <span
-                  className={"text-talearnt_Error_01 text-caption1_14_medium"}
+                  className={"text-caption1_14_medium text-talearnt_Error_01"}
                 >
                   {dayjs(idData.current.createdAt).format("YYYY-MM-DD HH:mm")}에
                   가입함

@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
 import { getRandomNickName, postKakaoSignUp } from "@pages/auth/auth.api";
