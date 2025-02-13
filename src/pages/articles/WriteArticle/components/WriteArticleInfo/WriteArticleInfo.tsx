@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
+
+import { FieldErrors } from "react-hook-form";
 
 import { useGetProfile } from "@hook/user.hook";
 
@@ -9,9 +11,9 @@ import { TitledBox } from "@components/TitledBox/TitledBox";
 
 import { CATEGORIZED_TALENTS_LIST } from "@common/common.constants";
 import {
-  boardTypeList,
   durationOptions,
   exchangeTypeList,
+  postTypeList,
   receiveTalentsOptions
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
@@ -19,6 +21,7 @@ import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 import {
   articleType,
   communityArticleDataType,
+  durationType,
   matchArticleFormDataType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
@@ -26,16 +29,28 @@ type writeArticleInfoProps = {
   type: articleType;
   communityArticleData: communityArticleDataType;
   matchArticleData: matchArticleFormDataType;
-  setCommunityArticleData: Dispatch<SetStateAction<communityArticleDataType>>;
-  setMatchArticleData: Dispatch<SetStateAction<matchArticleFormDataType>>;
+  handleCommunityDataChange: (
+    field: keyof communityArticleDataType,
+    value: communityArticleDataType[keyof communityArticleDataType]
+  ) => void;
+  handleMatchDataChange: (
+    field: keyof matchArticleFormDataType,
+    value: matchArticleFormDataType[keyof matchArticleFormDataType]
+  ) => void;
+  errors: FieldErrors<{
+    duration: dropdownOptionType<durationType>[];
+    giveTalents: dropdownOptionType<number>[];
+    receiveTalents: dropdownOptionType<number>[];
+  }>;
 };
 
 function WriteArticleInfo({
   type,
-  communityArticleData: { boardType },
+  communityArticleData: { postType },
   matchArticleData: { duration, exchangeType, giveTalents, receiveTalents },
-  setCommunityArticleData,
-  setMatchArticleData
+  handleCommunityDataChange,
+  handleMatchDataChange,
+  errors
 }: writeArticleInfoProps) {
   const {
     data: {
@@ -81,25 +96,18 @@ function WriteArticleInfo({
           <div className={"flex flex-col gap-2"}>
             <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
             <SearchableDropdown
+              error={errors.giveTalents?.message}
               options={giveTalentsOptions}
-              onSelectHandler={({ checked, label, value }) =>
-                setMatchArticleData(prev => {
-                  if (checked) {
-                    const talent = { label, value };
-
-                    return {
-                      ...prev,
-                      giveTalents: [...prev.giveTalents, talent]
-                    };
-                  } else {
-                    return {
-                      ...prev,
-                      giveTalents: prev.giveTalents.filter(
-                        talent => talent.value !== value
-                      )
-                    };
-                  }
-                })
+              onSelectHandler={({ checked, ...talent }) =>
+                checked
+                  ? handleMatchDataChange("giveTalents", [
+                      ...giveTalents,
+                      talent
+                    ])
+                  : handleMatchDataChange(
+                      "giveTalents",
+                      giveTalents.filter(({ value }) => talent.value !== value)
+                    )
               }
               placeholder={"주고 싶은 재능을 선택해 주세요"}
               selectedOptionsArray={giveTalents}
@@ -108,23 +116,20 @@ function WriteArticleInfo({
           <div className={"flex flex-col gap-2"}>
             <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
             <SearchableDropdown
+              error={errors.receiveTalents?.message}
               options={receiveTalentsOptions}
               onSelectHandler={({ checked, ...talent }) =>
-                setMatchArticleData(prev => {
-                  if (checked) {
-                    return {
-                      ...prev,
-                      receiveTalents: [...prev.receiveTalents, talent]
-                    };
-                  } else {
-                    return {
-                      ...prev,
-                      receiveTalents: prev.receiveTalents.filter(
+                checked
+                  ? handleMatchDataChange("receiveTalents", [
+                      ...receiveTalents,
+                      talent
+                    ])
+                  : handleMatchDataChange(
+                      "receiveTalents",
+                      receiveTalents.filter(
                         ({ value }) => talent.value !== value
                       )
-                    };
-                  }
-                })
+                    )
               }
               placeholder={
                 "받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"
@@ -136,12 +141,10 @@ function WriteArticleInfo({
             <span className={"text-body2_16_medium"}>진행 기간</span>
             <SearchableDropdown
               isMultiple={false}
+              error={errors.duration?.message}
               options={durationOptions}
               onSelectHandler={({ label, value }) =>
-                setMatchArticleData(prev => ({
-                  ...prev,
-                  duration: [{ label, value }]
-                }))
+                handleMatchDataChange("duration", [{ label, value }])
               }
               placeholder={"진행 기간을 선택해 주세요."}
               selectedOptionsArray={duration}
@@ -153,10 +156,7 @@ function WriteArticleInfo({
               {exchangeTypeList.map(type => (
                 <Chip
                   onClickHandler={() =>
-                    setMatchArticleData(prev => ({
-                      ...prev,
-                      exchangeType: type
-                    }))
+                    handleMatchDataChange("exchangeType", type)
                   }
                   pressed={exchangeType === type}
                   type={"default-large"}
@@ -173,19 +173,16 @@ function WriteArticleInfo({
         <div className={"flex flex-col gap-2"}>
           <span className={"text-body2_16_medium"}>진행 방식</span>
           <div className={"grid grid-cols-[repeat(3,156px)] gap-4"}>
-            {boardTypeList.map(board => (
+            {postTypeList.map(type => (
               <Chip
                 onClickHandler={() =>
-                  setCommunityArticleData(prev => ({
-                    ...prev,
-                    type: board
-                  }))
+                  handleCommunityDataChange("postType", type)
                 }
-                pressed={board === boardType}
+                pressed={postType === type}
                 type={"default-large"}
-                key={board}
+                key={type}
               >
-                {exchangeType}
+                {type}
               </Chip>
             ))}
           </div>
