@@ -1,5 +1,6 @@
 import { ComponentProps, ReactNode, useEffect, useRef } from "react";
 
+import { cva } from "class-variance-authority";
 import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
 
 import { classNames } from "@utils/classNames";
@@ -7,15 +8,42 @@ import { classNames } from "@utils/classNames";
 import { CompleteIcon } from "@components/icons/CompleteIcon/CompleteIcon";
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 
-type InputProps = ComponentProps<"input"> & {
-  children?: ReactNode;
-  complete?: string;
-  error?: string;
-  formData?: UseFormRegisterReturn;
-  insideNode?: ReactNode;
-  label?: string;
-  wrapperClassName?: string;
+import { CustomVariantProps } from "@common/common.type";
+
+type InputVariantsType = {
+  size: Record<"small" | "large", string>;
 };
+
+type InputProps = CustomVariantProps<InputVariantsType> &
+  Omit<ComponentProps<"input">, "size"> & {
+    children?: ReactNode;
+    complete?: string;
+    error?: string;
+    formData?: UseFormRegisterReturn;
+    insideNode?: ReactNode;
+    label?: string;
+    wrapperClassName?: string;
+  };
+
+const inputVariants = cva<InputVariantsType>(
+  classNames(
+    "peer/input",
+    "w-full border bg-talearnt_BG_Background px-[15px]",
+    "placeholder:text-talearnt_Text_04 focus:border-talearnt_Primary_01 focus:outline-none",
+    "disabled:cursor-not-allowed disabled:bg-talearnt_BG_Up_01 disabled:text-talearnt_Text_04"
+  ),
+  {
+    variants: {
+      size: {
+        small: "h-[50px] rounded-lg text-body2_16_medium",
+        large: "h-[60px] rounded-xl text-heading4_20_semibold"
+      }
+    },
+    defaultVariants: {
+      size: "small"
+    }
+  }
+);
 
 /**
  *
@@ -35,6 +63,7 @@ type InputProps = ComponentProps<"input"> & {
  * @param {string | undefined} insideNode
  * @param {string | undefined} label
  * @param {string | undefined} wrapperClassName
+ * @param {string} size
  * @param {Omit<InputProps, "wrapperClassName" | "children" | "className" | "formData" | "id" | "label" | "error">} props
  * @constructor
  */
@@ -48,6 +77,7 @@ function Input({
   insideNode,
   label,
   wrapperClassName,
+  size,
   ...props
 }: InputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -81,12 +111,7 @@ function Input({
       <div className={"relative flex"}>
         <input
           className={classNames(
-            "peer/input",
-            "h-[50px] w-full rounded-lg border bg-talearnt_BG_Background px-[15px]",
-            "text-body2_16_medium placeholder:text-talearnt_Text_04",
-            "focus:border-talearnt_Primary_01 focus:outline-none",
-            "disabled:cursor-not-allowed disabled:bg-talearnt_BG_Up_01 disabled:text-talearnt_Text_04",
-            "hover:border-talearnt_PrimaryBG_03",
+            inputVariants({ size }),
             error !== undefined
               ? "border-talearnt_Error_02 focus:border-talearnt_Error_02"
               : "border-talearnt_Line_01",
