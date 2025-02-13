@@ -11,7 +11,7 @@ import "react-quill-new/dist/quill.snow.css";
 
 type TextEditorProps = {
   value: string;
-  onChangeHandler: (value: string) => void;
+  onChangeHandler: (data: { value: string; pureText: string }) => void;
   editorKey?: string;
   error?: string;
 };
@@ -28,6 +28,16 @@ function TextEditor({
   const [isFocused, setIsFocused] = useState(false);
 
   const hasError = !!error;
+
+  const handleChange = (value: string) => {
+    if (!quillRef.current) {
+      return;
+    }
+
+    const editor = quillRef.current.getEditor();
+
+    onChangeHandler({ value, pureText: editor.getText() });
+  };
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -59,7 +69,7 @@ function TextEditor({
               }
             }}
             value={value}
-            onChange={onChangeHandler}
+            onChange={handleChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             key={editorKey}
