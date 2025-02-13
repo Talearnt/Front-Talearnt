@@ -17,6 +17,7 @@ import { DropdownOptionCheckbox } from "@components/dropdowns/DropdownOptionChec
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { EmptySearchOption } from "@components/EmptySearchOption/EmptySearchOption";
 import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
+import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeInput";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
@@ -24,6 +25,7 @@ import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 import styles from "./SearchableDropdown.module.css";
 
 type SearchableDropdownProps<T> = {
+  error?: string;
   isMultiple?: boolean;
   options: dropdownOptionType<T | dropdownOptionType<T>[]>[];
   onSelectHandler: ({
@@ -43,6 +45,7 @@ const optionsStyle = classNames(
 );
 
 function SearchableDropdown<T = string>({
+  error,
   isMultiple = true,
   options,
   onSelectHandler,
@@ -70,6 +73,7 @@ function SearchableDropdown<T = string>({
     "checkbox",
     "selectedCategoryIndex"
   ]);
+  const hasError = !!error;
   const hasSubOption = Array.isArray(options[0]?.value);
   const search = useDebounce(watch("search")) ?? watch("search");
   // 옵션이 선택되었는지 확인
@@ -232,13 +236,14 @@ function SearchableDropdown<T = string>({
   }, [isOpen]);
 
   return (
-    <div className={"relative w-[388px]"}>
+    <div className={classNames("relative", "w-[388px]")}>
       <label
         className={classNames(
           "peer/label group/label",
           "flex items-center",
           "min-h-[50px] rounded-lg border border-talearnt_Line_01 px-[15px] py-[10px]",
-          "cursor-pointer"
+          "cursor-pointer",
+          hasError && "border-talearnt_Error_01"
         )}
       >
         <input
@@ -447,6 +452,14 @@ function SearchableDropdown<T = string>({
           </div>
         )}
       </div>
+      {hasError && (
+        <div className={"mt-1 flex items-center gap-1"}>
+          <ErrorIcon />
+          <span className={"text-caption1_14_medium text-talearnt_Error_01"}>
+            {error}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

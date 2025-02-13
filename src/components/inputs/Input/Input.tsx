@@ -133,7 +133,7 @@ function Input({
         )}
       </div>
       {(hasComplete || hasError) && (
-        <div className={"mt-1 flex items-center gap-0.5"}>
+        <div className={"mt-1 flex items-center gap-1"}>
           {hasComplete && <CompleteIcon />}
           {hasError && <ErrorIcon />}
           <span
