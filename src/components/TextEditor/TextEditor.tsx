@@ -8,12 +8,16 @@ import { Toolbar } from "@components/TextEditor/Toolbar/Toolbar";
 
 import "react-quill-new/dist/quill.snow.css";
 
-function TextEditor() {
+type TextEditorProps = {
+  value: string;
+  onChangeHandler: (value: string) => void;
+};
+
+function TextEditor({ value, onChangeHandler }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [value, setValue] = useState("");
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -43,7 +47,7 @@ function TextEditor() {
             }
           }}
           value={value}
-          onChange={setValue}
+          onChange={onChangeHandler}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
