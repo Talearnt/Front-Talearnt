@@ -29,6 +29,13 @@ const color = Quill.import("attributors/style/color") as attributorsType;
 const background = Quill.import(
   "attributors/style/background"
 ) as attributorsType;
+const image = Quill.import("formats/image") as {
+  sanitize: (url: string) => string;
+};
+
+image.sanitize = function (url: string) {
+  return url.startsWith("blob:") ? url : "";
+};
 
 icons.bold = null;
 icons.italic = null;
