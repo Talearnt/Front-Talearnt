@@ -4,8 +4,12 @@ import { createAfterSignInQueryKey } from "@utils/queryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
-export const useGetProfile = (enabled = true) =>
-  useQueryWithInitial(
+import { useAuthStore } from "@pages/auth/auth.store";
+
+export const useGetProfile = (enabled = true) => {
+  const accessToken = useAuthStore(state => state.accessToken);
+
+  return useQueryWithInitial(
     {
       giveTalents: [],
       nickname: "",
@@ -16,6 +20,7 @@ export const useGetProfile = (enabled = true) =>
     {
       queryKey: createAfterSignInQueryKey(["profile"]),
       queryFn: async () => await getProfile(),
-      enabled
+      enabled: enabled && !!accessToken
     }
   );
+};

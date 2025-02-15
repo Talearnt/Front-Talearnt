@@ -5,8 +5,12 @@ import { getAccessTokenUseRefreshToken } from "@pages/auth/auth.api";
 
 import { classNames } from "@utils/classNames";
 
+import { useGetProfile } from "@hook/user.hook";
+
 import { usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/auth.store";
+
+import { TalentsSettingModal } from "@modal/TalentsSettingModal/TalentsSettingModal";
 
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
@@ -31,6 +35,13 @@ const linkArray = [
 
 function MainLayout() {
   const navigator = useNavigate();
+
+  const {
+    data: {
+      data: { giveTalents }
+    },
+    isSuccess
+  } = useGetProfile();
 
   const accessToken = useAuthStore(state => state.accessToken);
   const setAccessToken = useAuthStore(state => state.setAccessToken);
@@ -130,6 +141,7 @@ function MainLayout() {
       </main>
       <Toast />
       {promptData && <Prompt />}
+      {isSuccess && giveTalents.length === 0 && <TalentsSettingModal />}
     </>
   );
 }
