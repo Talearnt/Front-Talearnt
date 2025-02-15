@@ -55,10 +55,16 @@ const buttonVariants = cva<ButtonVariantsType>(
  * @param {Omit<ButtonProps, "className" | "children" | "buttonStyle">} props
  * @constructor
  */
-function Button({ buttonStyle, children, className, ...props }: ButtonProps) {
+function Button({
+  buttonStyle,
+  children,
+  className,
+  size,
+  ...props
+}: ButtonProps) {
   return (
     <button
-      className={classNames(buttonVariants({ buttonStyle, className }))}
+      className={classNames(buttonVariants({ buttonStyle, size, className }))}
       {...props}
     >
       {children}

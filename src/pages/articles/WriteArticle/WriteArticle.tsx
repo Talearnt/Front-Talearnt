@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
-import { useToastStore } from "@common/common.store";
+import { usePromptStore, useToastStore } from "@common/common.store";
 
 import { WriteArticleInfo } from "@pages/articles/WriteArticle/components/WriteArticleInfo/WriteArticleInfo";
 
@@ -38,6 +38,7 @@ import {
 
 function WriteArticle() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigator = useNavigate();
 
   const type = (searchParams.get("type") as articleType | null) ?? "match";
   const isMatchType = type === "match";
@@ -80,6 +81,7 @@ function WriteArticle() {
   });
 
   const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const communityArticleData = communityWatch();
   const matchArticleData = matchWatch();
@@ -319,7 +321,25 @@ function WriteArticle() {
         >
           미리보기
         </Button>
-        <Button buttonStyle={"outlined-blue"}>취소하기</Button>
+        <Button
+          buttonStyle={"outlined-blue"}
+          onClick={() =>
+            setPrompt({
+              title: "게시물 작성 취소",
+              content:
+                "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
+              cancelOnClickHandler: () => {
+                setPrompt();
+              },
+              confirmOnClickHandler: () => {
+                navigator(-1);
+                setPrompt();
+              }
+            })
+          }
+        >
+          취소하기
+        </Button>
         <Button onClick={handleMatchSubmit(postMatchArticle)}>등록하기</Button>
       </div>
     </div>
