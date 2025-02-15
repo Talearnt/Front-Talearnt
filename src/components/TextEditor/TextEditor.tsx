@@ -1,17 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import ReactQuill from "react-quill-new";
 
 import { classNames } from "@utils/classNames";
 
+import { useToastStore } from "@common/common.store";
+
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 import { Toolbar } from "@components/TextEditor/Toolbar/Toolbar";
 
-import "react-quill-new/dist/quill.snow.css";
+import { imageFileType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 type TextEditorProps = {
   value: string;
   onChangeHandler: (data: { value: string; pureText: string }) => void;
+  onImageHandler: (data: imageFileType[]) => void;
   editorKey?: string;
   error?: string;
 };
@@ -19,25 +22,98 @@ type TextEditorProps = {
 function TextEditor({
   value,
   onChangeHandler,
+  onImageHandler,
   editorKey,
   error
 }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
 
+  const setToast = useToastStore(state => state.setToast);
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [imageFileList, setImageFileList] = useState<imageFileType[]>([]);
 
   const hasError = !!error;
 
-  const handleChange = (value: string) => {
+  const handleImageUpload = () => {
     if (!quillRef.current) {
       return;
     }
 
     const editor = quillRef.current.getEditor();
+    const currentValue = editor.getSemanticHTML();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(currentValue, "text/html");
+    const imageCount = Array.from(doc.querySelectorAll("img")).length;
 
-    onChangeHandler({ value, pureText: editor.getText() });
+    if (imageCount >= 5) {
+      setToast({
+        message: "이미지 개수는 최대 5개까지 허용됩니다.",
+        type: "error"
+      });
+
+      return;
+    }
+
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute(
+      "accept",
+      "image/jpeg, image/png, image/jfif, image/tiff, image/gif, image/webp"
+    );
+    input.setAttribute("multiple", "true");
+    input.click();
+
+    input.onchange = () => {
+      if (!input.files) {
+        return;
+      }
+
+      const files = Array.from(input.files);
+
+      if (imageCount + files.length > 5) {
+        setToast({
+          message: "이미지 개수는 최대 5개까지 허용됩니다.",
+          type: "error"
+        });
+        return;
+      }
+
+      for (const file of files) {
+        const blobUrl = URL.createObjectURL(file);
+        const range = editor.getSelection();
+
+        setImageFileList(prev => [
+          ...prev,
+          {
+            file,
+            fileName: file.name,
+            fileType: file.type,
+            fileSize: file.size,
+            url: blobUrl
+          }
+        ]);
+
+        if (range) {
+          editor.insertEmbed(range.index, "image", blobUrl);
+        }
+      }
+    };
   };
+
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: "#toolbar",
+        handlers: {
+          image: handleImageUpload
+        }
+      }
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -48,9 +124,13 @@ function TextEditor({
 
     return () => window.removeEventListener("click", handleExpanded);
   }, []);
+  useEffect(() => {
+    onImageHandler(imageFileList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageFileList]);
 
   return (
-    <div className={"flex flex-col"}>
+    <div className="flex flex-col">
       <div
         className={classNames(
           "flex flex-col",
@@ -63,13 +143,11 @@ function TextEditor({
         <div className={classNames("flex flex-col", "p-6 pb-[23px]")}>
           <ReactQuill
             ref={quillRef}
-            modules={{
-              toolbar: {
-                container: "#toolbar"
-              }
-            }}
+            modules={modules}
             value={value}
-            onChange={handleChange}
+            onChange={(value, _1, _2, editor) =>
+              onChangeHandler({ value, pureText: editor.getText() })
+            }
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             key={editorKey}
