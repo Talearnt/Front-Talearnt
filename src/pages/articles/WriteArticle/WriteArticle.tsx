@@ -3,7 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import { postArticle } from "@pages/articles/WriteArticle/core/writeArticle.api";
+import {
+  postArticle,
+  postToGetPresignedURL
+} from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
 
@@ -57,7 +60,7 @@ function WriteArticle() {
       title: "",
       content: "",
       pureText: "",
-      imageUrls: []
+      imageFileList: []
     }
   });
   const {
@@ -72,7 +75,7 @@ function WriteArticle() {
       title: "",
       content: "",
       pureText: "",
-      imageUrls: []
+      imageFileList: []
     }
   });
 
@@ -106,25 +109,88 @@ function WriteArticle() {
       value => (Array.isArray(value) ? value.some(Boolean) : Boolean(value))
     );
   const postMatchArticle = async () => {
-    // TODO 이미지 업로드
     const {
       title,
       content,
+      imageFileList,
       exchangeType,
       duration,
       giveTalents,
       receiveTalents
     } = matchArticleData;
 
-    await postArticle({
-      title,
-      content,
-      exchangeType,
-      duration: duration[0].value,
-      giveTalents: giveTalents.map(({ value }) => value),
-      receiveTalents: receiveTalents.map(({ value }) => value),
-      imageUrls: []
-    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const contentImages = Array.from(doc.querySelectorAll("img"));
+    const files = imageFileList.filter(({ url }) =>
+      contentImages.some(image => image.src === url)
+    );
+    let updatedContent = content;
+
+    if (files.length > 0) {
+      let presignedURLs: string[];
+
+      try {
+        const { data } = await postToGetPresignedURL(
+          files.map(({ fileName, fileType, fileSize }) => ({
+            fileName,
+            fileSize,
+            fileType
+          }))
+        );
+
+        presignedURLs = data;
+      } catch {
+        setToast({
+          message: "이미지 업로드 URL을 가져오는 데 실패했습니다.",
+          type: "error"
+        });
+        return;
+      }
+
+      for (const [index, img] of contentImages.entries()) {
+        try {
+          const presignedURL = presignedURLs[index];
+          const { origin, pathname } = new URL(presignedURL);
+
+          await fetch(presignedURL, {
+            method: "PUT",
+            body: files[index].file as File,
+            headers: new Headers({
+              "Content-Type": files[index].fileType
+            })
+          });
+
+          img.src = origin + pathname;
+        } catch {
+          setToast({
+            message: "이미지 업로드 중 오류가 발생했습니다.",
+            type: "error"
+          });
+          return;
+        }
+      }
+
+      updatedContent = new XMLSerializer().serializeToString(doc);
+    }
+
+    try {
+      await postArticle({
+        title,
+        content: updatedContent,
+        exchangeType,
+        duration: duration[0].value,
+        giveTalents: giveTalents.map(({ value }) => value),
+        receiveTalents: receiveTalents.map(({ value }) => value),
+        imageUrls: []
+      });
+      // TODO 게시물 목록 애니메이션 추가
+    } catch {
+      setToast({
+        message: "게시글 업로드 중 오류가 발생했습니다.",
+        type: "error"
+      });
+    }
   };
 
   if (isMatchType && !isSuccess) {
@@ -214,6 +280,12 @@ function WriteArticle() {
           handleCommunityDataChange("content", value);
           handleCommunityDataChange("pureText", pureText);
         }}
+        onImageHandler={imageFileList =>
+          (isMatchType ? handleMatchDataChange : handleCommunityDataChange)(
+            "imageFileList",
+            imageFileList
+          )
+        }
         editorKey={type}
         error={
           isMatchType
