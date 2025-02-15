@@ -186,7 +186,7 @@
 
     .ql-editor  {
       padding: 0;
-      height: 328px;
+      min-height: 328px;
       font-size: 16px;
       color: #1E2224;
       background-color: #FFFFFF

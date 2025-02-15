@@ -263,6 +263,17 @@ function WriteArticle() {
             ? matchErrors.title?.message
             : communityErrors.title?.message
         }
+        insideNode={
+          <span className={"text-body2_16_medium text-talearnt_Text_04"}>
+            {
+              (isMatchType
+                ? matchArticleData.title
+                : communityArticleData.title
+              ).length
+            }
+            /50
+          </span>
+        }
         size={"large"}
       />
       <TextEditor
