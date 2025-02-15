@@ -32,8 +32,8 @@ const buttonVariants = cva<ButtonVariantsType>(
           "bg-talearnt_BG_Background text-talearnt_Primary_01 border border-talearnt_Primary_01 disabled:border-talearnt_Icon_02 "
       },
       size: {
-        small: "h-[40px] text-body2_16_medium",
-        large: "h-[50px] text-body1_18_medium"
+        small: "min-w-20 h-[40px] text-body2_16_medium",
+        large: "min-w-[101px] h-[50px] text-body1_18_medium"
       }
     },
     defaultVariants: {

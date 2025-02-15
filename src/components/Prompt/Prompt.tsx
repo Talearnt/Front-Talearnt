@@ -34,7 +34,6 @@ function Prompt() {
           {promptData.cancelOnClickHandler && (
             <Button
               buttonStyle={"outlined-blue"}
-              className={"w-20"}
               size={"small"}
               onClick={() => {
                 promptData.cancelOnClickHandler?.();
@@ -45,7 +44,6 @@ function Prompt() {
             </Button>
           )}
           <Button
-            className={"w-20"}
             size={"small"}
             onClick={promptData.confirmOnClickHandler ?? (() => setPrompt())}
           >
