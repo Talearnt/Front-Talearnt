@@ -27,8 +27,8 @@ import {
 
 type writeArticleInfoProps = {
   type: articleType;
-  communityArticleData: communityArticleDataType;
-  matchArticleData: matchArticleFormDataType;
+  communityArticleData: Omit<communityArticleDataType, "imageFileList">;
+  matchArticleData: Omit<matchArticleFormDataType, "imageFileList">;
   handleCommunityDataChange: (
     field: keyof communityArticleDataType,
     value: communityArticleDataType[keyof communityArticleDataType]
