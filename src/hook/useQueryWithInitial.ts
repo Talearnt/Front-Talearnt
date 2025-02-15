@@ -1,10 +1,12 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import { customAxiosResponseType } from "@common/common.type";
+
 export const useQueryWithInitial = <T>(
   initialData: T,
-  options: UseQueryOptions<T>
+  options: UseQueryOptions<customAxiosResponseType<T>>
 ): {
-  data: T;
+  data: customAxiosResponseType<T>;
   isError: boolean;
   isLoading: boolean;
   isSuccess: boolean;
@@ -12,5 +14,23 @@ export const useQueryWithInitial = <T>(
 } => {
   const { data, isSuccess, ...value } = useQuery(options);
 
-  return { data: isSuccess ? data : initialData, isSuccess, ...value };
+  return {
+    data: isSuccess
+      ? {
+          data: data.data,
+          errorCode: null,
+          errorMessage: null,
+          success: true,
+          status: 0
+        }
+      : {
+          data: initialData,
+          errorCode: null,
+          errorMessage: null,
+          success: true,
+          status: 0
+        },
+    isSuccess,
+    ...value
+  };
 };
