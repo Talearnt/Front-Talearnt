@@ -64,7 +64,7 @@ function Button({
 }: ButtonProps) {
   return (
     <button
-      className={classNames(buttonVariants({ buttonStyle, size, className }))}
+      className={buttonVariants({ buttonStyle, size, className })}
       {...props}
     >
       {children}
