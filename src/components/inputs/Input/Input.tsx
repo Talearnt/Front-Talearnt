@@ -125,7 +125,10 @@ function Input({
         {children}
         {insideNode && (
           <div
-            className={"absolute right-2 top-1/2 -translate-y-1/2"}
+            className={classNames(
+              "absolute right-2 top-1/2 -translate-y-1/2",
+              size === "large" && "right-6"
+            )}
             ref={insideNodeRef}
           >
             {insideNode}
