@@ -1,4 +1,4 @@
-import { array, number, object, string } from "yup";
+import { array, mixed, number, object, string } from "yup";
 
 import { CATEGORIZED_TALENTS_LIST } from "@common/common.constants";
 
@@ -69,7 +69,17 @@ const matchArticleSchema = object({
     .required("제목을 입력해 주세요")
     .min(2, "제목을 2글자 이상 입력해 주세요"),
   content: string().required(),
-  imageUrls: array().of(string().required()).required(),
+  imageFileList: array()
+    .of(
+      object({
+        file: mixed().required(),
+        fileName: string().required(),
+        fileType: string().required(),
+        fileSize: number().required(),
+        url: string().required()
+      }).required()
+    )
+    .required(),
   pureText: string()
     .required("내용을 입력해 주세요")
     .test(
@@ -84,7 +94,17 @@ const communityArticleSchema = object({
     .required("제목을 입력해 주세요")
     .min(2, "제목을 2글자 이상 입력해 주세요"),
   content: string().required(),
-  imageUrls: array().of(string().required()).required(),
+  imageFileList: array()
+    .of(
+      object({
+        file: mixed().required(),
+        fileName: string().required(),
+        fileType: string().required(),
+        fileSize: number().required(),
+        url: string().required()
+      }).required()
+    )
+    .required(),
   pureText: string()
     .required("내용을 입력해 주세요")
     .test(
