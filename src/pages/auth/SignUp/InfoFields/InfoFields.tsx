@@ -74,21 +74,22 @@ function InfoFields() {
   const debounceNickname = useDebounce(watch("nickname"));
   const debounceUserId = useDebounce(watch("userId"));
   const { data, isLoading } = useCheckNickname(
-    debounceNickname as string,
+    debounceNickname,
     !!debounceNickname &&
       debounceNickname !== nickNameRef.current &&
+      debounceNickname === watch("nickname") &&
       !errors.nickname
   );
   const { data: userIdData, isLoading: userIdIsLoading } = useCheckUserId(
-    debounceUserId as string,
-    !!debounceUserId && !errors.userId
+    debounceUserId,
+    !!debounceUserId && !errors.userId && debounceUserId === watch("userId")
   );
 
   const agreements = useAgreementStore(state => state.agreements);
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
 
-  const [canProceed, setCanProceed] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false
   });
