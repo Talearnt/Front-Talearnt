@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import { FieldErrors } from "react-hook-form";
 
+import { classNames } from "@utils/classNames";
+
 import { useGetProfile } from "@hook/user.hook";
 
 import { Chip } from "@components/Chip/Chip";
@@ -92,79 +94,85 @@ function WriteArticleInfo({
       }
     >
       {type === "match" && (
-        <div className={"grid grid-cols-2 grid-rows-2 gap-6"}>
-          <div className={"flex flex-col gap-2"}>
-            <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
-            <SearchableDropdown
-              error={errors.giveTalents?.message}
-              options={giveTalentsOptions}
-              onSelectHandler={({ checked, ...talent }) =>
-                checked
-                  ? handleMatchDataChange("giveTalents", [
-                      ...giveTalents,
-                      talent
-                    ])
-                  : handleMatchDataChange(
-                      "giveTalents",
-                      giveTalents.filter(({ value }) => talent.value !== value)
-                    )
-              }
-              placeholder={"주고 싶은 재능을 선택해 주세요"}
-              selectedOptionsArray={giveTalents}
-            />
-          </div>
-          <div className={"flex flex-col gap-2"}>
-            <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
-            <SearchableDropdown
-              error={errors.receiveTalents?.message}
-              options={receiveTalentsOptions}
-              onSelectHandler={({ checked, ...talent }) =>
-                checked
-                  ? handleMatchDataChange("receiveTalents", [
-                      ...receiveTalents,
-                      talent
-                    ])
-                  : handleMatchDataChange(
-                      "receiveTalents",
-                      receiveTalents.filter(
-                        ({ value }) => talent.value !== value
+        <div className={"flex flex-col gap-6"}>
+          <div className={"flex gap-6"}>
+            <div className={"flex flex-col gap-2"}>
+              <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
+              <SearchableDropdown
+                error={errors.giveTalents?.message}
+                options={giveTalentsOptions}
+                onSelectHandler={({ checked, ...talent }) =>
+                  checked
+                    ? handleMatchDataChange("giveTalents", [
+                        ...giveTalents,
+                        talent
+                      ])
+                    : handleMatchDataChange(
+                        "giveTalents",
+                        giveTalents.filter(
+                          ({ value }) => talent.value !== value
+                        )
                       )
-                    )
-              }
-              placeholder={
-                "받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"
-              }
-              selectedOptionsArray={receiveTalents}
-            />
+                }
+                placeholder={"주고 싶은 재능을 선택해 주세요"}
+                selectedOptionsArray={giveTalents}
+              />
+            </div>
+            <div className={"flex flex-col gap-2"}>
+              <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
+              <SearchableDropdown
+                error={errors.receiveTalents?.message}
+                options={receiveTalentsOptions}
+                onSelectHandler={({ checked, ...talent }) =>
+                  checked
+                    ? handleMatchDataChange("receiveTalents", [
+                        ...receiveTalents,
+                        talent
+                      ])
+                    : handleMatchDataChange(
+                        "receiveTalents",
+                        receiveTalents.filter(
+                          ({ value }) => talent.value !== value
+                        )
+                      )
+                }
+                placeholder={
+                  "받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"
+                }
+                selectedOptionsArray={receiveTalents}
+              />
+            </div>
           </div>
-          <div className={"flex flex-col gap-2"}>
-            <span className={"text-body2_16_medium"}>진행 기간</span>
-            <SearchableDropdown
-              isMultiple={false}
-              error={errors.duration?.message}
-              options={durationOptions}
-              onSelectHandler={({ label, value }) =>
-                handleMatchDataChange("duration", [{ label, value }])
-              }
-              placeholder={"진행 기간을 선택해 주세요."}
-              selectedOptionsArray={duration}
-            />
-          </div>
-          <div className={"flex flex-col gap-2"}>
-            <span className={"text-body2_16_medium"}>진행 방식</span>
-            <div className={"grid grid-cols-3 gap-2"}>
-              {exchangeTypeList.map(type => (
-                <Chip
-                  onClickHandler={() =>
-                    handleMatchDataChange("exchangeType", type)
-                  }
-                  pressed={exchangeType === type}
-                  type={"default-large"}
-                  key={type}
-                >
-                  {type}
-                </Chip>
-              ))}
+          <div className={"flex gap-6"}>
+            <div className={"flex flex-col gap-2"}>
+              <span className={"text-body2_16_medium"}>진행 기간</span>
+              <SearchableDropdown
+                isMultiple={false}
+                error={errors.duration?.message}
+                options={durationOptions}
+                onSelectHandler={({ label, value }) =>
+                  handleMatchDataChange("duration", [{ label, value }])
+                }
+                placeholder={"진행 기간을 선택해 주세요."}
+                selectedOptionsArray={duration}
+              />
+            </div>
+            <div className={classNames("flex flex-col gap-2", "w-full")}>
+              <span className={"text-body2_16_medium"}>진행 방식</span>
+              <div className={"grid grid-cols-3 gap-2"}>
+                {exchangeTypeList.map(type => (
+                  <Chip
+                    onClickHandler={() =>
+                      handleMatchDataChange("exchangeType", type)
+                    }
+                    pressed={exchangeType === type}
+                    type={"default-large"}
+                    key={type}
+                  >
+                    {type}
+                  </Chip>
+                ))}
+              </div>
             </div>
           </div>
         </div>
