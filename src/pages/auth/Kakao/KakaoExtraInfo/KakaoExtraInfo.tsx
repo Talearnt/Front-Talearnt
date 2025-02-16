@@ -53,9 +53,10 @@ function KakaoExtraInfo() {
 
   const debounceNickname = useDebounce(watch("nickname"));
   const { data, isLoading } = useCheckNickname(
-    debounceNickname as string,
+    debounceNickname,
     !!debounceNickname &&
       debounceNickname !== nickNameRef.current &&
+      debounceNickname === watch("nickname") &&
       !errors.nickname
   );
 
