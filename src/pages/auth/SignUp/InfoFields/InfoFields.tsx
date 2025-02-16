@@ -74,13 +74,13 @@ function InfoFields() {
   const debounceNickname = useDebounce(watch("nickname"));
   const debounceUserId = useDebounce(watch("userId"));
   const { data, isLoading } = useCheckNickname(
-    debounceNickname,
+    debounceNickname as string,
     !!debounceNickname &&
       debounceNickname !== nickNameRef.current &&
       !errors.nickname
   );
   const { data: userIdData, isLoading: userIdIsLoading } = useCheckUserId(
-    debounceUserId,
+    debounceUserId as string,
     !!debounceUserId && !errors.userId
   );
 
