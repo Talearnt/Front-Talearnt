@@ -1,15 +1,18 @@
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 
 import { classNames } from "@utils/classNames";
 
 type ModalBodyProps = {
+  bodyRef?: RefObject<HTMLDivElement>;
   className?: string;
   children: ReactNode;
 };
 
-function ModalBody({ className, children }: ModalBodyProps) {
+function ModalBody({ bodyRef, className, children }: ModalBodyProps) {
   return (
-    <div className={classNames("flex flex-col", className)}>{children}</div>
+    <div className={classNames("flex flex-col", className)} ref={bodyRef}>
+      {children}
+    </div>
   );
 }
 
