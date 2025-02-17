@@ -25,7 +25,7 @@ function DropdownOptionItem({
       className={classNames(
         "group/button",
         "flex flex-shrink-0 items-center justify-between",
-        "h-[50px] rounded-lg px-4",
+        "min-h-[50px] rounded-lg px-4 py-[11px]",
         hasHoverStyle && "hover:bg-talearnt_BG_Up_01",
         checked && "bg-talearnt_BG_Up_01",
         className
