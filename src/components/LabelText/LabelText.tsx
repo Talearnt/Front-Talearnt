@@ -33,7 +33,7 @@ const labelTextVariants = cva<LabelTextVariantsType>(
 
 function LabelText({ className, children, type }: LabelTextProps) {
   return (
-    <span className={classNames(labelTextVariants({ type, className }))}>
+    <span className={classNames(labelTextVariants({ type }), className)}>
       {children}
     </span>
   );

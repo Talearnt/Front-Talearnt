@@ -53,7 +53,8 @@ function CaretIcon({
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
         "stroke-talearnt_Icon_01",
-        caretIconVariants({ className, direction })
+        caretIconVariants({ direction }),
+        className
       )}
       {...props}
     >

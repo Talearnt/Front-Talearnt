@@ -53,7 +53,8 @@ function CircleCaretIcon({
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
         "stroke-talearnt_Icon_01",
-        circleCaretIconVariants({ className, direction })
+        circleCaretIconVariants({ direction }),
+        className
       )}
       {...props}
     >
