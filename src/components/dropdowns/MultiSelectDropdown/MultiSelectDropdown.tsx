@@ -23,7 +23,7 @@ function MultiSelectDropdown<T = string>({
   selectedValueArray
 }: MultiSelectDropdownProps<T>) {
   return (
-    <div className={classNames("flex flex-col")}>
+    <div className={"flex flex-col"}>
       <label
         className={classNames(
           "peer/label group/label",

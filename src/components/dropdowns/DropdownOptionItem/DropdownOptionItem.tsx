@@ -12,6 +12,7 @@ type DropdownOptionItemProps = ComponentProps<"button"> & {
 
 function DropdownOptionItem({
   buttonRef,
+  className,
   checked,
   children,
   label,
@@ -26,7 +27,8 @@ function DropdownOptionItem({
         "flex flex-shrink-0 items-center justify-between",
         "h-[50px] rounded-lg px-4",
         hasHoverStyle && "hover:bg-talearnt_BG_Up_01",
-        checked && "bg-talearnt_BG_Up_01"
+        checked && "bg-talearnt_BG_Up_01",
+        className
       )}
       {...props}
     >
