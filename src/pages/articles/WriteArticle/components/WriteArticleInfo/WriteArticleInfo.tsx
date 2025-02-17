@@ -6,6 +6,8 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
+import { useToastStore } from "@common/common.store";
+
 import { Chip } from "@components/Chip/Chip";
 import { SearchableDropdown } from "@components/dropdowns/SearchableDropdown/SearchableDropdown";
 import { PencilIcon } from "@components/icons/textEditor/PencilIcon";
@@ -60,6 +62,8 @@ function WriteArticleInfo({
     }
   } = useGetProfile(type === "match");
 
+  const setToast = useToastStore(state => state.setToast);
+
   const giveTalentsOptions = useMemo(() => {
     if (type === "community") {
       return [];
@@ -101,19 +105,30 @@ function WriteArticleInfo({
               <SearchableDropdown
                 error={errors.giveTalents?.message}
                 options={giveTalentsOptions}
-                onSelectHandler={({ checked, ...talent }) =>
-                  checked
-                    ? handleMatchDataChange("giveTalents", [
-                        ...giveTalents,
-                        talent
-                      ])
-                    : handleMatchDataChange(
-                        "giveTalents",
-                        giveTalents.filter(
-                          ({ value }) => talent.value !== value
-                        )
-                      )
-                }
+                onSelectHandler={({ checked, ...talent }) => {
+                  if (checked) {
+                    if (giveTalents.length >= 5) {
+                      setToast({
+                        message: "키워드는 5개까지만 설정 가능해요",
+                        type: "error"
+                      });
+
+                      return;
+                    }
+
+                    handleMatchDataChange("giveTalents", [
+                      ...giveTalents,
+                      talent
+                    ]);
+
+                    return;
+                  }
+
+                  handleMatchDataChange(
+                    "giveTalents",
+                    giveTalents.filter(({ value }) => talent.value !== value)
+                  );
+                }}
                 placeholder={"주고 싶은 재능을 선택해 주세요"}
                 selectedOptionsArray={giveTalents}
               />
@@ -123,19 +138,30 @@ function WriteArticleInfo({
               <SearchableDropdown
                 error={errors.receiveTalents?.message}
                 options={receiveTalentsOptions}
-                onSelectHandler={({ checked, ...talent }) =>
-                  checked
-                    ? handleMatchDataChange("receiveTalents", [
-                        ...receiveTalents,
-                        talent
-                      ])
-                    : handleMatchDataChange(
-                        "receiveTalents",
-                        receiveTalents.filter(
-                          ({ value }) => talent.value !== value
-                        )
-                      )
-                }
+                onSelectHandler={({ checked, ...talent }) => {
+                  if (checked) {
+                    if (receiveTalents.length >= 5) {
+                      setToast({
+                        message: "키워드는 5개까지만 설정 가능해요",
+                        type: "error"
+                      });
+
+                      return;
+                    }
+
+                    handleMatchDataChange("receiveTalents", [
+                      ...receiveTalents,
+                      talent
+                    ]);
+
+                    return;
+                  }
+
+                  handleMatchDataChange(
+                    "receiveTalents",
+                    receiveTalents.filter(({ value }) => talent.value !== value)
+                  );
+                }}
                 placeholder={
                   "받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"
                 }
