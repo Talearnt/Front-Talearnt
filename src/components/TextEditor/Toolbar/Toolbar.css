@@ -189,7 +189,11 @@
       min-height: 328px;
       font-size: 16px;
       color: #1E2224;
-      background-color: #FFFFFF
+      background-color: #FFFFFF;
+
+      &.ql-blank::before {
+        @apply text-body1_18_medium text-talearnt_Text_04 not-italic right-0 left-0;
+      }
     }
   }
 }

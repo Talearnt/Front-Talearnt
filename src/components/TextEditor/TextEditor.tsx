@@ -150,6 +150,9 @@ function TextEditor({
             }
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            placeholder={
+              "내용을 20글자 이상 입력해 주세요\n\n“저는 어릴 때 일본에서 지내서 일본어를 잘 가르쳐 드릴 수 있어요!”"
+            }
             key={editorKey}
           />
           <span
