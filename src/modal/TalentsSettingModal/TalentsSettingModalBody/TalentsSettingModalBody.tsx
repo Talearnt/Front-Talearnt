@@ -9,6 +9,7 @@ import useDebounce from "@hook/useDebounce";
 import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
+import { Badge } from "@components/Badge/Badge";
 import { Chip } from "@components/Chip/Chip";
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
@@ -189,17 +190,13 @@ function TalentsSettingModalBody() {
                   {CURRENT_TALENTS_TYPE_NAME[key as talentsType]} 키워드
                 </h3>
                 <div className={"flex flex-wrap gap-2"}>
-                  {talentsData[key as talentsType].map(({ label, value }) => (
-                    <span
-                      className={classNames(
-                        "flex items-center",
-                        "h-[40px] rounded-[6px] bg-talearnt_BG_Up_02 px-4",
-                        "whitespace-nowrap text-body2_16_medium text-talearnt_Text_02"
-                      )}
-                      key={value}
-                    >
-                      {label}
-                    </span>
+                  {talentsData[key as talentsType].map(({ label }) => (
+                    <Badge
+                      label={label}
+                      type={"keyword"}
+                      size={"medium"}
+                      key={`${key}-${label}`}
+                    />
                   ))}
                 </div>
               </div>
