@@ -39,4 +39,46 @@
             @apply w-[6px] h-[6px] rounded-full bg-talearnt_Icon_01 mr-2;
         }
     }
+
+    .scrollbar {
+        &::-webkit-scrollbar {
+            @apply block;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            @apply rounded-full bg-clip-padding bg-talearnt_Icon_03;
+        }
+
+        &::-webkit-scrollbar-track {
+            @apply bg-transparent;
+        }
+    }
+
+    .scrollbar-w10 {
+        &::-webkit-scrollbar {
+            @apply w-[26px];
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border: 8px solid transparent;
+        }
+    }
+
+    .scrollbar-w12 {
+        &::-webkit-scrollbar {
+            @apply w-8;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border: 10px solid transparent;
+        }
+    }
+}
+
+.ql-align-center {
+    text-align: center;
+}
+
+.ql-align-right {
+    text-align: right;
 }
