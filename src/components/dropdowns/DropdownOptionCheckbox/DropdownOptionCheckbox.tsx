@@ -20,7 +20,7 @@ function DropdownOptionCheckbox({
       className={classNames(
         "group/checkbox",
         "flex-shrink-0",
-        "h-[50px] rounded-lg px-4",
+        "min-h-[50px] rounded-lg px-4 py-[11px]",
         "hover:bg-talearnt_BG_Up_01",
         checked && "bg-talearnt_BG_Up_01"
       )}
