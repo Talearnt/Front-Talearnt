@@ -22,8 +22,6 @@ import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeIn
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
-import styles from "./SearchableDropdown.module.css";
-
 type SearchableDropdownProps<T> = {
   error?: string;
   isMultiple?: boolean;
@@ -39,9 +37,8 @@ type SearchableDropdownProps<T> = {
 
 const optionsStyle = classNames(
   "flex flex-col gap-2",
-  "m-[7px] w-full pr-4",
-  "overflow-y-auto",
-  styles.scrollbar
+  "p-[7px] w-full",
+  "scrollbar scrollbar-w10 overflow-y-auto"
 );
 
 function SearchableDropdown<T = string>({
@@ -59,6 +56,7 @@ function SearchableDropdown<T = string>({
   // 현재 선택된 재능
   const selectedTalentRef = useRef<HTMLButtonElement>(null);
   const scrollRefArray = useRef<(HTMLDivElement | null)[]>([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const { register, setValue, watch } = useForm<{
     checkbox: boolean;
@@ -75,7 +73,7 @@ function SearchableDropdown<T = string>({
   ]);
   const hasError = !!error;
   const hasSubOption = Array.isArray(options[0]?.value);
-  const search = useDebounce(watch("search")) ?? watch("search");
+  const search = useDebounce(watch("search"));
   // 옵션이 선택되었는지 확인
   const isOptionSelected = useCallback(
     (value: T) =>
@@ -119,8 +117,6 @@ function SearchableDropdown<T = string>({
         ...searchedOptionsList[selectedOptionIndex]
       });
 
-      setValue("checkbox", false);
-      setValue("search", "");
       return;
     }
 
@@ -176,67 +172,37 @@ function SearchableDropdown<T = string>({
   }, [selectedOptionIndex]);
 
   useEffect(() => {
-    // 기본 or 메인 옵션 스크롤 바 스타일 적용
-    if (
-      !scrollRefArray.current[0] ||
-      !scrollRefArray.current[0].parentElement
-    ) {
-      return;
-    }
-
-    const { parentElement, scrollHeight } = scrollRefArray.current[0];
-    const isScrollable = scrollHeight > parentElement.offsetHeight;
-    const dividerStyle = hasSubOption ? styles.middleDivider : styles.divider;
-
-    parentElement.classList.toggle(dividerStyle, isScrollable);
-  }, [hasSubOption, isOpen, search]);
-
-  useEffect(() => {
-    // 서브 옵션 스크롤 바 스타일, 스크롤 위치 변경
-    if (
-      !scrollRefArray.current[1] ||
-      !scrollRefArray.current[1].parentElement
-    ) {
-      return;
-    }
-
-    const { parentElement, scrollHeight } = scrollRefArray.current[1];
-    const isScrollable = scrollHeight > parentElement.offsetHeight;
-
-    parentElement.classList.toggle(styles.divider, isScrollable);
-  }, [selectedCategoryIndex, isOpen, search]);
-
-  useEffect(() => {
-    // 검색한 옵션 스크롤 바 스타일, 스크롤 위치 변경
-    if (
-      !scrollRefArray.current[2] ||
-      !scrollRefArray.current[2].parentElement ||
-      !search
-    ) {
-      return;
-    }
-
-    const { parentElement, scrollHeight } = scrollRefArray.current[2];
-    const isScrollable = scrollHeight > parentElement.offsetHeight;
-
-    parentElement.classList.toggle(styles.divider, isScrollable);
-    parentElement.classList.remove(styles.middleDivider);
-    setSelectedOptionIndex(0);
-  }, [isOpen, search]);
-
-  useEffect(() => {
     // 드롭다운 옵션 닫히면 스크롤 초기화
-    if (isOpen) {
+    if (!isOpen) {
+      setValue("selectedCategoryIndex", undefined);
+
       return;
     }
 
     scrollRefArray.current.forEach(scrollRef => {
       scrollRef?.scrollTo({ top: 0 });
     });
-  }, [isOpen]);
+  }, [isOpen, setValue, search, selectedCategoryIndex]);
+
+  useEffect(() => {
+    const handleClose = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setValue("checkbox", false);
+      }
+    };
+
+    window.addEventListener("mousedown", handleClose);
+
+    return () => {
+      window.removeEventListener("mousedown", handleClose);
+    };
+  }, [setValue]);
 
   return (
-    <div className={classNames("relative", "w-[388px]")}>
+    <div ref={wrapperRef} className={classNames("relative", "w-[388px]")}>
       <label
         className={classNames(
           "peer/label group/label",
@@ -277,11 +243,9 @@ function SearchableDropdown<T = string>({
               "focus:outline-none"
             )}
             formData={{ ...register("search") }}
-            onClick={({ target }) => {
-              setValue("checkbox", !isOpen);
-
-              if (isOpen) {
-                (target as HTMLInputElement).blur();
+            onClick={() => {
+              if (!isOpen) {
+                setValue("checkbox", !isOpen);
               }
             }}
             onKeyDown={handleKeyDown}
@@ -338,7 +302,6 @@ function SearchableDropdown<T = string>({
                   <DropdownOptionCheckbox
                     checked={isOptionSelected(value as T)}
                     onChangeHandler={({ target }) => {
-                      setValue("checkbox", false);
                       onSelectHandler({
                         checked: target.checked,
                         label,
@@ -352,7 +315,6 @@ function SearchableDropdown<T = string>({
                   <DropdownOptionItem
                     checked={isOptionSelected(value as T)}
                     onClick={() => {
-                      setValue("checkbox", false);
                       onSelectHandler({
                         checked: true,
                         label,
@@ -360,6 +322,7 @@ function SearchableDropdown<T = string>({
                       });
                     }}
                     label={label}
+                    hasHoverStyle
                     key={`main-option-${label}`}
                   />
                 )
@@ -380,8 +343,6 @@ function SearchableDropdown<T = string>({
                       <DropdownOptionCheckbox
                         checked={isOptionSelected(value)}
                         onChangeHandler={({ target }) => {
-                          setValue("checkbox", false);
-                          setValue("selectedCategoryIndex", undefined);
                           onSelectHandler({
                             checked: target.checked,
                             label,
@@ -395,8 +356,6 @@ function SearchableDropdown<T = string>({
                       <DropdownOptionItem
                         checked={isOptionSelected(value)}
                         onClick={() => {
-                          setValue("checkbox", false);
-                          setValue("selectedCategoryIndex", undefined);
                           onSelectHandler({
                             checked: true,
                             label,
@@ -404,6 +363,7 @@ function SearchableDropdown<T = string>({
                           });
                         }}
                         label={label}
+                        hasHoverStyle
                         key={`sub-option-${label}`}
                       />
                     )
@@ -431,8 +391,6 @@ function SearchableDropdown<T = string>({
                   checked={index === selectedOptionIndex}
                   label={label}
                   onClick={() => {
-                    setValue("checkbox", false);
-                    setValue("search", "");
                     onSelectHandler({
                       checked: true,
                       label,
