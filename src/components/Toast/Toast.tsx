@@ -9,7 +9,7 @@ function Toast() {
     <div
       className={classNames(
         "fixed bottom-[140px] left-1/2 -translate-x-1/2 transform",
-        "flex flex-col items-center gap-4"
+        "z-50 flex flex-col items-center gap-4"
       )}
     >
       {toastList.map(({ id, isRemoving, message, type }) => (
