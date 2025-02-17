@@ -23,8 +23,6 @@ import { CURRENT_TALENTS_TYPE_NAME } from "@modal/TalentsSettingModal/core/talen
 
 import { talentsType } from "@modal/TalentsSettingModal/core/talentsSettingModal.type";
 
-import styles from "./TalentsSettingModalBody.module.css";
-
 function TalentsSettingModalBody() {
   // 현재 눌린 키보드의 방향
   const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
@@ -50,7 +48,7 @@ function TalentsSettingModalBody() {
   const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
 
   // 검색한 값
-  const search = useDebounce(watch("search")) ?? watch("search");
+  const search = useDebounce(watch("search"));
   // 검색한 재능 키워드 목록
   const searchedTalentsList = useMemo(() => {
     if (!search) {
@@ -134,18 +132,6 @@ function TalentsSettingModalBody() {
     );
   };
 
-  // 스크롤 바 디바이더 style 탈부착
-  useEffect(() => {
-    if (!scrollRef.current || !scrollRef.current.firstElementChild) {
-      return;
-    }
-
-    const { firstElementChild } = scrollRef.current;
-    const isScrollable =
-      firstElementChild.clientHeight > scrollRef.current.clientHeight;
-
-    firstElementChild.classList.toggle(styles.divider, isScrollable);
-  }, [scrollRef, search]);
   // 키보드로 재능 선택할 때 스크롤 이동
   useEffect(() => {
     if (inputSourceRef.current === "mouse" || !selectedTalentRef.current) {
@@ -243,84 +229,78 @@ function TalentsSettingModalBody() {
           </Input>
           <div
             className={classNames(
-              "mr-[10px] h-[344px] pl-[32px] pr-[10px]",
-              "overflow-y-scroll",
-              styles.scrollbar
+              "flex flex-col",
+              "h-[344px] pl-[32px]",
+              "scrollbar scrollbar-w12 overflow-y-scroll",
+              search &&
+                searchedTalentsList.length === 0 &&
+                "h-full items-center justify-center gap-4"
             )}
             ref={scrollRef}
           >
-            <div
-              className={classNames(
-                "flex flex-col",
-                search &&
-                  searchedTalentsList.length === 0 &&
-                  "h-full items-center justify-center gap-4"
-              )}
-            >
-              {!search ? (
-                // 검색을 하지 않은 경우
-                CATEGORIZED_TALENTS_LIST.map(
-                  ({ categoryCode, categoryName, talents }) => (
-                    <MultiSelectDropdown<number>
-                      title={categoryName}
-                      options={talents.map(({ talentCode, talentName }) => ({
-                        label: talentName,
-                        value: talentCode
-                      }))}
-                      onSelectHandler={({ checked, label, value }) => {
-                        if (checked) {
-                          if (isTalentsExceedingLimit()) {
-                            return;
-                          }
+            {!search ? (
+              // 검색을 하지 않은 경우
+              CATEGORIZED_TALENTS_LIST.map(
+                ({ categoryCode, categoryName, talents }) => (
+                  <MultiSelectDropdown<number>
+                    title={categoryName}
+                    options={talents.map(({ talentCode, talentName }) => ({
+                      label: talentName,
+                      value: talentCode
+                    }))}
+                    onSelectHandler={({ checked, label, value }) => {
+                      if (checked) {
+                        if (isTalentsExceedingLimit()) {
+                          return;
                         }
-
-                        setTalentsData({
-                          type: checked ? "add" : "remove",
-                          talent: { label, value }
-                        });
-                      }}
-                      selectedValueArray={selectedValueArray}
-                      key={categoryCode}
-                    />
-                  )
-                )
-              ) : searchedTalentsList.length > 0 ? (
-                // 검색한 결과가 있는 경우
-                searchedTalentsList.map(({ talentCode, talentName }, index) => (
-                  <DropdownOptionItem
-                    buttonRef={
-                      selectedTalentIndex === index
-                        ? selectedTalentRef
-                        : undefined
-                    }
-                    checked={index === selectedTalentIndex}
-                    label={talentName}
-                    onClick={() => {
-                      if (isTalentsExceedingLimit()) {
-                        return;
                       }
 
                       setTalentsData({
-                        type: "add",
-                        talent: {
-                          label: talentName,
-                          value: talentCode
-                        }
+                        type: checked ? "add" : "remove",
+                        talent: { label, value }
                       });
-                      reset();
                     }}
-                    onMouseEnter={() => {
-                      inputSourceRef.current = "mouse";
-                      setSelectedTalentIndex(index);
-                    }}
-                    key={talentCode}
+                    selectedValueArray={selectedValueArray}
+                    key={categoryCode}
                   />
-                ))
-              ) : (
-                // 검색한 결과가 없는 경우
-                <EmptySearchOption search={search} />
-              )}
-            </div>
+                )
+              )
+            ) : searchedTalentsList.length > 0 ? (
+              // 검색한 결과가 있는 경우
+              searchedTalentsList.map(({ talentCode, talentName }, index) => (
+                <DropdownOptionItem
+                  buttonRef={
+                    selectedTalentIndex === index
+                      ? selectedTalentRef
+                      : undefined
+                  }
+                  checked={index === selectedTalentIndex}
+                  label={talentName}
+                  onClick={() => {
+                    if (isTalentsExceedingLimit()) {
+                      return;
+                    }
+
+                    setTalentsData({
+                      type: "add",
+                      talent: {
+                        label: talentName,
+                        value: talentCode
+                      }
+                    });
+                    reset();
+                  }}
+                  onMouseEnter={() => {
+                    inputSourceRef.current = "mouse";
+                    setSelectedTalentIndex(index);
+                  }}
+                  key={talentCode}
+                />
+              ))
+            ) : (
+              // 검색한 결과가 없는 경우
+              <EmptySearchOption search={search} />
+            )}
           </div>
           {talentsData[currentTalentsType].length > 0 && (
             <div className={classNames("flex flex-wrap gap-2", "px-[30px]")}>
