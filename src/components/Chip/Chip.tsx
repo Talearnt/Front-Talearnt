@@ -24,7 +24,7 @@ const chipVariants = cva<ChipVariantsType>(
   {
     variants: {
       type: {
-        "default-small": "h-10 ",
+        "default-small": "h-10",
         "default-large": "h-[50px]",
         keyword: classNames(
           "gap-1",

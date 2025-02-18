@@ -85,7 +85,7 @@ function TabSlider({
             type !== "shadow" &&
               defaultStyle({ disabled, index, maxLength: array.length - 1 })
           )}
-          key={`${value}-${index.toString()}`}
+          key={`${value}-${index}`}
         >
           <input
             checked={currentValue === value}

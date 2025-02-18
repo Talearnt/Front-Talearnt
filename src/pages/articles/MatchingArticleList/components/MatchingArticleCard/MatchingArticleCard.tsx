@@ -44,7 +44,7 @@ function MatchingArticleCard({
               lastElementChild.classList.add("slide-talents");
               (lastElementChild as HTMLDivElement).style.setProperty(
                 "--dynamic-translate-x",
-                `-${(scrollWidth - clientWidth).toString()}px`
+                `-${scrollWidth - clientWidth}px`
               );
             }
           }
@@ -116,7 +116,7 @@ function MatchingArticleCard({
               <Badge
                 label={talentName}
                 type={"keyword"}
-                key={`${exchangePostNo.toString()}st-card-giveTalent-${talentName}`}
+                key={`${exchangePostNo}st-card-giveTalent-${talentName}`}
               />
             ))}
           </div>
@@ -133,7 +133,7 @@ function MatchingArticleCard({
               <Badge
                 label={talentName}
                 type={"keyword"}
-                key={`${exchangePostNo.toString()}st-card-receiveTalent-${talentName}`}
+                key={`${exchangePostNo}st-card-receiveTalent-${talentName}`}
               />
             ))}
           </div>

@@ -43,6 +43,10 @@ export default [
       "@typescript-eslint/no-misused-promises": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/prefer-promise-reject-errors": "off",
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        { allowNumber: true }
+      ],
       "simple-import-sort/imports": [
         "error",
         {

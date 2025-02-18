@@ -97,7 +97,7 @@ function Input({
     if (insideNodeRef.current && inputRef.current) {
       const insideNodeWidth = insideNodeRef.current.offsetWidth;
 
-      inputRef.current.style.paddingRight = `${(insideNodeWidth + 8).toString()}px`;
+      inputRef.current.style.paddingRight = `${insideNodeWidth + 8}px`;
     }
   }, [insideNode]);
 
