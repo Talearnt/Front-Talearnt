@@ -28,11 +28,10 @@ type SearchableDropdownProps<T> = {
   options: dropdownOptionType<T | dropdownOptionType<T>[]>[];
   onSelectHandler: ({
     checked,
-    label,
     value
   }: { checked: boolean } & dropdownOptionType<T>) => void;
   placeholder?: string;
-  selectedOptionsArray: dropdownOptionType<T>[];
+  selectedValue: T[] | T;
 };
 
 const optionsStyle = classNames(
@@ -47,7 +46,7 @@ function SearchableDropdown<T = string>({
   options,
   onSelectHandler,
   placeholder,
-  selectedOptionsArray
+  selectedValue
 }: SearchableDropdownProps<T>) {
   // 현재 눌린 키보드의 방향
   const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
@@ -71,18 +70,27 @@ function SearchableDropdown<T = string>({
     "checkbox",
     "selectedCategoryIndex"
   ]);
-  const hasError = !!error;
-  const hasSubOption = Array.isArray(options[0]?.value);
+  const hasSubOption = useMemo(
+    () => Array.isArray(options[0]?.value),
+    [options]
+  );
+  const finalOptions = useMemo(
+    () =>
+      hasSubOption
+        ? options.flatMap(({ value }) => value as dropdownOptionType<T>[])
+        : options,
+    [hasSubOption, options]
+  ) as dropdownOptionType<T>[];
   const search = useDebounce(watch("search"));
   // 옵션이 선택되었는지 확인
   const isOptionSelected = useCallback(
     (value: T) =>
-      selectedOptionsArray.some(
-        ({ value: selectedValue }) => selectedValue === value
-      ),
-    [selectedOptionsArray]
+      isMultiple
+        ? (selectedValue as T[]).some(selectedValue => selectedValue === value)
+        : selectedValue === value,
+    [isMultiple, selectedValue]
   );
-  // 검색한 재능 키워드 목록
+  // 검색한 옵션 목록
   const searchedOptionsList = useMemo(() => {
     if (!search) {
       return [];
@@ -90,16 +98,17 @@ function SearchableDropdown<T = string>({
 
     // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
     const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
-    const searchOption = hasSubOption
-      ? options.flatMap(({ value }) => value as dropdownOptionType<T>[])
-      : options;
 
-    return searchOption.filter(
+    return finalOptions.filter(
       ({ label, value }) =>
-        searchRegex.test(label.replace(/\s+/g, "")) &&
-        !isOptionSelected(value as T)
-    ) as dropdownOptionType<T>[];
-  }, [hasSubOption, isOptionSelected, options, search]);
+        searchRegex.test(label.replace(/\s+/g, "")) && !isOptionSelected(value)
+    );
+  }, [finalOptions, isOptionSelected, search]);
+  // 선택한 옵션 목록
+  const selectedOptionsList = useMemo(
+    () => finalOptions.filter(({ value }) => isOptionSelected(value)),
+    [finalOptions, isOptionSelected]
+  );
 
   // 키보드로 재능을 선택
   const handleKeyDown = ({
@@ -183,8 +192,8 @@ function SearchableDropdown<T = string>({
       scrollRef?.scrollTo({ top: 0 });
     });
   }, [isOpen, setValue, search, selectedCategoryIndex]);
-
   useEffect(() => {
+    // 다른 영역 클릭 시 초기화
     const handleClose = (e: MouseEvent) => {
       if (
         wrapperRef.current &&
@@ -209,7 +218,7 @@ function SearchableDropdown<T = string>({
           "flex items-center",
           "min-h-[50px] rounded-lg border border-talearnt_Line_01 px-[15px] py-[10px]",
           "cursor-pointer",
-          hasError && "border-talearnt_Error_01"
+          !!error && "border-talearnt_Error_01"
         )}
       >
         <input
@@ -219,7 +228,7 @@ function SearchableDropdown<T = string>({
         />
         <div className={classNames("flex flex-wrap gap-2", "w-full min-w-0")}>
           {/*선택한 값 버튼칩*/}
-          {selectedOptionsArray.map(({ label, value }) => (
+          {selectedOptionsList.map(({ label, value }) => (
             <Chip
               onCloseHandler={e => {
                 e.preventDefault();
@@ -250,7 +259,10 @@ function SearchableDropdown<T = string>({
             }}
             onKeyDown={handleKeyDown}
             placeholder={
-              selectedOptionsArray.length === 0 ? placeholder : undefined
+              (isMultiple && (selectedValue as T[]).length === 0) ||
+              (!isMultiple && !selectedValue)
+                ? placeholder
+                : undefined
             }
             value={search}
             autoComplete={"off"}
@@ -410,7 +422,7 @@ function SearchableDropdown<T = string>({
           </div>
         )}
       </div>
-      {hasError && (
+      {!!error && (
         <div className={"mt-1 flex items-center gap-1"}>
           <ErrorIcon />
           <span className={"text-caption1_14_medium text-talearnt_Error_01"}>
