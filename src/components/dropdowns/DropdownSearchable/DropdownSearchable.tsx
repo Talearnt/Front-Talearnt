@@ -22,14 +22,11 @@ import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeIn
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
-type SearchableDropdownProps<T> = {
+type DropdownSearchableProps<T> = {
   error?: string;
   isMultiple?: boolean;
   options: dropdownOptionType<T | dropdownOptionType<T>[]>[];
-  onSelectHandler: ({
-    checked,
-    value
-  }: { checked: boolean } & dropdownOptionType<T>) => void;
+  onSelectHandler: ({ checked, value }: { checked: boolean; value: T }) => void;
   placeholder?: string;
   selectedValue: T[] | T;
 };
@@ -37,17 +34,17 @@ type SearchableDropdownProps<T> = {
 const optionsStyle = classNames(
   "flex flex-col gap-2",
   "p-[7px] w-full",
-  "scrollbar scrollbar-w10 overflow-y-auto"
+  "scrollbar scrollbar-w10-8 overflow-y-auto"
 );
 
-function SearchableDropdown<T = string>({
+function DropdownSearchable<T = string>({
   error,
   isMultiple = true,
   options,
   onSelectHandler,
   placeholder,
   selectedValue
-}: SearchableDropdownProps<T>) {
+}: DropdownSearchableProps<T>) {
   // 현재 눌린 키보드의 방향
   const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
   // 키보드, 마우스 어떤 source 선택하는지 저장
@@ -211,7 +208,7 @@ function SearchableDropdown<T = string>({
   }, [setValue]);
 
   return (
-    <div ref={wrapperRef} className={classNames("relative", "w-[388px]")}>
+    <div ref={wrapperRef} className={"relative"}>
       <label
         className={classNames(
           "peer/label group/label",
@@ -235,7 +232,6 @@ function SearchableDropdown<T = string>({
 
                 onSelectHandler({
                   checked: false,
-                  label,
                   value
                 });
               }}
@@ -298,7 +294,6 @@ function SearchableDropdown<T = string>({
                     checked={index === selectedCategoryIndex}
                     label={label}
                     onClick={() => setValue("selectedCategoryIndex", index)}
-                    hasHoverStyle
                     key={`main-option-${label}`}
                   >
                     <CaretIcon
@@ -314,7 +309,6 @@ function SearchableDropdown<T = string>({
                     onChangeHandler={({ target }) => {
                       onSelectHandler({
                         checked: target.checked,
-                        label,
                         value: value as T
                       });
                     }}
@@ -327,12 +321,12 @@ function SearchableDropdown<T = string>({
                     onClick={() => {
                       onSelectHandler({
                         checked: true,
-                        label,
                         value: value as T
                       });
+
+                      setValue("checkbox", false);
                     }}
                     label={label}
-                    hasHoverStyle
                     key={`main-option-${label}`}
                   />
                 )
@@ -355,7 +349,6 @@ function SearchableDropdown<T = string>({
                         onChangeHandler={({ target }) => {
                           onSelectHandler({
                             checked: target.checked,
-                            label,
                             value
                           });
                         }}
@@ -368,12 +361,10 @@ function SearchableDropdown<T = string>({
                         onClick={() => {
                           onSelectHandler({
                             checked: true,
-                            label,
                             value
                           });
                         }}
                         label={label}
-                        hasHoverStyle
                         key={`sub-option-${label}`}
                       />
                     )
@@ -403,14 +394,19 @@ function SearchableDropdown<T = string>({
                   onClick={() => {
                     onSelectHandler({
                       checked: true,
-                      label,
                       value
                     });
+
+                    if (!isMultiple) {
+                      setValue("checkbox", false);
+                      setValue("search", "");
+                    }
                   }}
                   onMouseEnter={() => {
                     inputSourceRef.current = "mouse";
                     setSelectedOptionIndex(index);
                   }}
+                  hasHoverStyle={false}
                   key={`search-option-${label}`}
                 />
               ))
@@ -432,4 +428,4 @@ function SearchableDropdown<T = string>({
   );
 }
 
-export { SearchableDropdown };
+export { DropdownSearchable };
