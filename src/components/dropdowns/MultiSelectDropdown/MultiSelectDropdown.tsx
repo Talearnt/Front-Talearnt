@@ -9,7 +9,6 @@ type MultiSelectDropdownProps<T> = {
   options: dropdownOptionType<T>[];
   onSelectHandler: ({
     checked,
-    label,
     value
   }: { checked: boolean } & dropdownOptionType<T>) => void;
   title: string;
