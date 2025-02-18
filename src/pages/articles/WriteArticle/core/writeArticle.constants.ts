@@ -26,7 +26,7 @@ const durationOptions = durationList.map(item => ({
   label: item,
   value: item
 }));
-const receiveTalentsOptions = CATEGORIZED_TALENTS_LIST.map(
+const talentsOptions = CATEGORIZED_TALENTS_LIST.map(
   ({ categoryName, talents }) => ({
     label: categoryName,
     value: talents.map(({ talentCode, talentName }) => ({
@@ -104,5 +104,5 @@ export {
   exchangeTypeList,
   matchArticleSchema,
   postTypeList,
-  receiveTalentsOptions
+  talentsOptions
 };
