@@ -18,7 +18,7 @@ import {
   durationOptions,
   exchangeTypeList,
   postTypeList,
-  receiveTalentsOptions
+  talentsOptions
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
@@ -98,7 +98,7 @@ function WriteArticleInfo({
     >
       {type === "match" && (
         <div className={"flex flex-col gap-6"}>
-          <div className={"flex gap-6"}>
+          <div className={"grid grid-cols-2 gap-6"}>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
               <DropdownSearchable<number>
@@ -136,7 +136,7 @@ function WriteArticleInfo({
               <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
               <DropdownSearchable<number>
                 error={errors.receiveTalents?.message}
-                options={receiveTalentsOptions}
+                options={talentsOptions}
                 onSelectHandler={({ checked, value }) => {
                   if (checked) {
                     if (receiveTalents.length >= 5) {
@@ -170,7 +170,7 @@ function WriteArticleInfo({
               />
             </div>
           </div>
-          <div className={"flex gap-6"}>
+          <div className={"grid grid-cols-2 gap-6"}>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>진행 기간</span>
               <DropdownSearchable
