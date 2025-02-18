@@ -7,7 +7,7 @@ type commonArticleDataType = {
 // 매칭 게시글 - 진행 기간
 type durationType = "기간 미정" | "1개월" | "2개월" | "3개월" | "3개월 이상";
 // 매칭 게시글 - 진행 방식
-type exchangeType = "온라인" | "오프라인" | "온_오프라인";
+type exchangeType = "온라인" | "오프라인" | "온/오프라인";
 // 매칭 게시글 - body
 type matchArticleBodyType = commonArticleDataType & {
   duration: durationType;

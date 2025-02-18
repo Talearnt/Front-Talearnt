@@ -196,7 +196,7 @@ function WriteArticleInfo({
                     type={"default-large"}
                     key={type}
                   >
-                    {type.replace("_", "/")}
+                    {type}
                   </Chip>
                 ))}
               </div>

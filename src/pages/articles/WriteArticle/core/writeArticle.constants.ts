@@ -19,7 +19,7 @@ const durationList: durationType[] = [
   "3개월",
   "3개월 이상"
 ];
-const exchangeTypeList: exchangeType[] = ["온라인", "오프라인", "온_오프라인"];
+const exchangeTypeList: exchangeType[] = ["온라인", "오프라인", "온/오프라인"];
 const postTypeList: postType[] = ["자유 게시판", "질문 게시판", "스터디 모집"];
 
 const durationOptions = durationList.map(item => ({
@@ -45,7 +45,7 @@ const matchArticleSchema = object({
     .of(number().required())
     .min(1, "재능 키워드를 선택해 주세요")
     .required(),
-  duration: string().oneOf(durationList).required(),
+  duration: string().oneOf(durationList).required("진행 기간을 선택해 주세요"),
   exchangeType: string().oneOf(exchangeTypeList).required(),
   title: string()
     .required("제목을 입력해 주세요")
