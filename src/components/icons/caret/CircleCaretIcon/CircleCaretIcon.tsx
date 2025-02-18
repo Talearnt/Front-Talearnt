@@ -1,30 +1,9 @@
-import { cva } from "class-variance-authority";
-
 import { classNames } from "@utils/classNames";
 
-import { CommonIconProps, CustomVariantProps } from "@common/common.type";
-
-type CircleCaretIconVariantsType = Record<
-  "direction",
-  Record<"top" | "right" | "bottom" | "left", string>
->;
-
-type CircleCaretIconProps = CommonIconProps &
-  CustomVariantProps<CircleCaretIconVariantsType>;
-
-const circleCaretIconVariants = cva<CircleCaretIconVariantsType>("", {
-  variants: {
-    direction: {
-      top: "-rotate-90",
-      right: "rotate-0",
-      bottom: "rotate-90",
-      left: "rotate-180"
-    }
-  },
-  defaultVariants: {
-    direction: "right"
-  }
-});
+import {
+  CaretIconProps,
+  caretIconVariants
+} from "@components/icons/caret/caret.type";
 
 /**
  * 동그란 화살표 아이콘
@@ -43,7 +22,7 @@ function CircleCaretIcon({
   direction,
   size = 30,
   ...props
-}: CircleCaretIconProps) {
+}: CaretIconProps) {
   return (
     <svg
       width={size}
@@ -51,11 +30,7 @@ function CircleCaretIcon({
       viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(
-        "stroke-talearnt_Icon_01",
-        circleCaretIconVariants({ direction }),
-        className
-      )}
+      className={classNames(caretIconVariants({ direction }), className)}
       {...props}
     >
       <circle cx="15" cy="15" r="14.3" strokeWidth="1.4" />

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { classNames } from "@utils/classNames";
 
-import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 
 type TitledBoxProps = {
   canOpen?: boolean;
@@ -40,8 +40,9 @@ function TitledBox({ canOpen, children, className, title }: TitledBoxProps) {
           <CaretIcon
             className={classNames(
               "stroke-talearnt_Icon_01",
-              "peer-checked/checkbox:rotate-180"
+              "peer-checked/checkbox:-rotate-90"
             )}
+            direction={"bottom"}
           />
         )}
       </label>
