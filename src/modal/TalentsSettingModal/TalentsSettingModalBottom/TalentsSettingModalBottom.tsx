@@ -53,10 +53,7 @@ function TalentsSettingModalBottom() {
     setStatus("loading");
 
     try {
-      await postTalents({
-        giveTalents: talentsData.giveTalents.map(({ value }) => value),
-        receiveTalents: talentsData.receiveTalents.map(({ value }) => value)
-      });
+      await postTalents(talentsData);
       setStatus("success");
     } catch (e) {
       setStatus("default");

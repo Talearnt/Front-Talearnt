@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 
 import { classNames } from "@utils/classNames";
 
+import { useFilteredTalents } from "@hook/useFilteredTalents";
 import { useGetProfile } from "@hook/user.hook";
 
 import { Avatar } from "@components/Avatar/Avatar";
@@ -15,17 +16,15 @@ import { ModalBox } from "@components/modal/ModalBox/ModalBox";
 import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer";
 import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 
-import {
-  articleType,
-  postType
-} from "@pages/articles/WriteArticle/core/writeArticle.type";
+import { postType } from "@pages/articles/articles.type";
+import { articleType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 type PreviewArticleModalProps = {
   type: articleType;
   duration: string;
   exchangeType: string;
-  giveTalents: string[];
-  receiveTalents: string[];
+  giveTalents: number[];
+  receiveTalents: number[];
   postType: postType;
   imageUrls: string[];
   title: string;
@@ -52,6 +51,9 @@ function PreviewArticleModal({
       data: { nickname, profileImg }
     }
   } = useGetProfile();
+
+  const giveTalentsList = useFilteredTalents(giveTalents);
+  const receiveTalentsList = useFilteredTalents(receiveTalents);
 
   return (
     <ModalContainer>
@@ -103,12 +105,12 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {giveTalents.map(talent => (
+                      {giveTalentsList.map(({ talentCode, talentName }) => (
                         <Badge
-                          label={talent}
+                          label={talentName}
                           type={"keyword"}
                           size={"medium"}
-                          key={`preview-giveTalent-${talent}`}
+                          key={`preview-giveTalent-${talentCode.toString()}`}
                         />
                       ))}
                     </div>
@@ -120,12 +122,12 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {receiveTalents.map(talent => (
+                      {receiveTalentsList.map(({ talentCode, talentName }) => (
                         <Badge
-                          label={talent}
+                          label={talentName}
                           type={"keyword"}
                           size={"medium"}
-                          key={`preview-receiveTalent-${talent}`}
+                          key={`preview-receiveTalent-${talentCode.toString()}`}
                         />
                       ))}
                     </div>

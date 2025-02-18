@@ -34,8 +34,7 @@ import {
 import {
   articleType,
   communityArticleDataType,
-  matchArticleFormDataType,
-  postType
+  matchArticleFormDataType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 const imageRegex = /src="([^"]+)"/g;
@@ -58,7 +57,6 @@ function WriteArticle() {
   } = useForm({
     resolver: yupResolver(matchArticleSchema),
     defaultValues: {
-      duration: [],
       exchangeType: "온라인",
       giveTalents: [],
       receiveTalents: [],
@@ -76,7 +74,7 @@ function WriteArticle() {
   } = useForm({
     resolver: yupResolver(communityArticleSchema),
     defaultValues: {
-      postType: "자유 게시판" as postType,
+      postType: "자유 게시판",
       title: "",
       content: "",
       pureText: "",
@@ -129,7 +127,7 @@ function WriteArticle() {
     const files = imageFileList.filter(({ url }) =>
       contentImages.some(image => image.src === url)
     );
-    let updatedContent = content;
+    const imageUrls = [];
 
     if (files.length > 0) {
       let presignedURLs: string[];
@@ -165,7 +163,10 @@ function WriteArticle() {
             })
           });
 
-          img.src = origin + pathname;
+          const url = origin + pathname;
+
+          img.src = url;
+          imageUrls.push(url);
         } catch {
           setToast({
             message: "이미지 업로드 중 오류가 발생했습니다.",
@@ -174,19 +175,17 @@ function WriteArticle() {
           return;
         }
       }
-
-      updatedContent = new XMLSerializer().serializeToString(doc);
     }
 
     try {
       await postArticle({
         title,
-        content: updatedContent,
+        content: doc.body.innerHTML,
         exchangeType,
-        duration: duration[0].value,
-        giveTalents: giveTalents.map(({ value }) => value),
-        receiveTalents: receiveTalents.map(({ value }) => value),
-        imageUrls: []
+        duration,
+        giveTalents,
+        receiveTalents,
+        imageUrls
       });
       // TODO 게시물 목록 애니메이션 추가
     } catch {
@@ -354,12 +353,10 @@ function WriteArticle() {
       {isOpenPreview && (
         <PreviewArticleModal
           type={type}
-          duration={matchArticleData.duration[0].label}
+          duration={matchArticleData.duration}
           exchangeType={matchArticleData.exchangeType}
-          giveTalents={matchArticleData.giveTalents.map(({ label }) => label)}
-          receiveTalents={matchArticleData.receiveTalents.map(
-            ({ label }) => label
-          )}
+          giveTalents={matchArticleData.giveTalents}
+          receiveTalents={matchArticleData.receiveTalents}
           postType={communityArticleData.postType}
           imageUrls={[
             ...(isMatchType

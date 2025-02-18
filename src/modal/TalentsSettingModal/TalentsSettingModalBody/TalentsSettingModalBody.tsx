@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
+import { useFilteredTalents } from "@hook/useFilteredTalents";
 
 import { useToastStore } from "@common/common.store";
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
@@ -50,6 +51,11 @@ function TalentsSettingModalBody() {
 
   // 검색한 값
   const search = useDebounce(watch("search"));
+  const currentTalentsList = useFilteredTalents(
+    talentsData[currentTalentsType]
+  );
+  const giveTalentsList = useFilteredTalents(talentsData.giveTalents);
+  const receiveTalentsList = useFilteredTalents(talentsData.receiveTalents);
   // 검색한 재능 키워드 목록
   const searchedTalentsList = useMemo(() => {
     if (!search) {
@@ -63,17 +69,10 @@ function TalentsSettingModalBody() {
       talents.filter(
         ({ talentCode, talentName }) =>
           searchRegex.test(talentName.replace(/\s+/g, "")) &&
-          !talentsData[currentTalentsType].some(
-            ({ value }) => value === talentCode
-          )
+          !talentsData[currentTalentsType].some(code => code === talentCode)
       )
     );
   }, [currentTalentsType, search, talentsData]);
-  // 선택된 값 배열
-  const selectedValueArray = useMemo(
-    () => talentsData[currentTalentsType].map(({ value }) => value),
-    [currentTalentsType, talentsData]
-  );
 
   // 키워드가 최대 개수라면 토스트 노출
   const isTalentsExceedingLimit = () => {
@@ -103,12 +102,11 @@ function TalentsSettingModalBody() {
         return;
       }
 
-      const { talentCode, talentName } =
-        searchedTalentsList[selectedTalentIndex];
+      const { talentCode } = searchedTalentsList[selectedTalentIndex];
 
       setTalentsData({
         type: "add",
-        talent: { label: talentName, value: talentCode }
+        talentCode
       });
       reset();
 
@@ -184,18 +182,21 @@ function TalentsSettingModalBody() {
             size={70}
           />
           <div className={classNames("flex flex-col gap-6", "px-[30px]")}>
-            {Object.keys(talentsData).map(key => (
+            {(Object.keys(talentsData) as talentsType[]).map(key => (
               <div className={"flex flex-col gap-2"} key={key}>
                 <h3 className={"text-caption1_14_medium text-talearnt_Text_03"}>
-                  {CURRENT_TALENTS_TYPE_NAME[key as talentsType]} 키워드
+                  {CURRENT_TALENTS_TYPE_NAME[key]} 키워드
                 </h3>
                 <div className={"flex flex-wrap gap-2"}>
-                  {talentsData[key as talentsType].map(({ label }) => (
+                  {(key === "giveTalents"
+                    ? giveTalentsList
+                    : receiveTalentsList
+                  ).map(({ talentCode, talentName }) => (
                     <Badge
-                      label={label}
+                      label={talentName}
                       type={"keyword"}
                       size={"medium"}
-                      key={`${key}-${label}`}
+                      key={`${key}-${talentCode}`}
                     />
                   ))}
                 </div>
@@ -245,7 +246,7 @@ function TalentsSettingModalBody() {
                       label: talentName,
                       value: talentCode
                     }))}
-                    onSelectHandler={({ checked, label, value }) => {
+                    onSelectHandler={({ checked, value }) => {
                       if (checked) {
                         if (isTalentsExceedingLimit()) {
                           return;
@@ -254,10 +255,10 @@ function TalentsSettingModalBody() {
 
                       setTalentsData({
                         type: checked ? "add" : "remove",
-                        talent: { label, value }
+                        talentCode: value
                       });
                     }}
-                    selectedValueArray={selectedValueArray}
+                    selectedValueArray={talentsData[currentTalentsType]}
                     key={categoryCode}
                   />
                 )
@@ -280,10 +281,7 @@ function TalentsSettingModalBody() {
 
                     setTalentsData({
                       type: "add",
-                      talent: {
-                        label: talentName,
-                        value: talentCode
-                      }
+                      talentCode
                     });
                     reset();
                   }}
@@ -301,18 +299,18 @@ function TalentsSettingModalBody() {
           </div>
           {talentsData[currentTalentsType].length > 0 && (
             <div className={classNames("flex flex-wrap gap-2", "px-[30px]")}>
-              {talentsData[currentTalentsType].map(({ label, value }) => (
+              {currentTalentsList.map(({ talentCode, talentName }) => (
                 <Chip
                   onCloseHandler={() =>
                     setTalentsData({
                       type: "remove",
-                      talent: { label, value }
+                      talentCode
                     })
                   }
                   type={"keyword"}
-                  key={value}
+                  key={`${currentTalentsType}-${talentCode.toString()}`}
                 >
-                  {label}
+                  {talentName}
                 </Chip>
               ))}
             </div>
