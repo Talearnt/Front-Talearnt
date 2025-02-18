@@ -110,7 +110,7 @@ function PreviewArticleModal({
                           label={talentName}
                           type={"keyword"}
                           size={"medium"}
-                          key={`preview-giveTalent-${talentCode.toString()}`}
+                          key={`preview-giveTalent-${talentCode}`}
                         />
                       ))}
                     </div>
@@ -127,7 +127,7 @@ function PreviewArticleModal({
                           label={talentName}
                           type={"keyword"}
                           size={"medium"}
-                          key={`preview-receiveTalent-${talentCode.toString()}`}
+                          key={`preview-receiveTalent-${talentCode}`}
                         />
                       ))}
                     </div>
@@ -180,7 +180,7 @@ function PreviewArticleModal({
                           "aspect-square w-full rounded-2xl object-cover"
                         }
                         src={url}
-                        alt={`${index.toString()}번째 업로드 이미지`}
+                        alt={`${index}번째 업로드 이미지`}
                       />
                       {index === 3 && (
                         <div

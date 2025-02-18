@@ -12,7 +12,7 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
   return (
     <div className={classNames("flex items-center", "pb-[26px]", className)}>
       {stepArray.map((step, index) => (
-        <Fragment key={`${step}-${index.toString()}`}>
+        <Fragment key={`${step}-${index}`}>
           <div className={"relative"}>
             <svg
               className={

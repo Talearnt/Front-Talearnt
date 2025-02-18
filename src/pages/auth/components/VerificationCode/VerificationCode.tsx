@@ -232,7 +232,7 @@ function VerificationCode({
     if (verificationAttempts > 0) {
       // 실패한 횟수 보여주기
       setError("verificationCode", {
-        message: `인증번호가 일치하지 않습니다(${(verificationAttempts % 5).toString()}/5)`
+        message: `인증번호가 일치하지 않습니다(${verificationAttempts % 5}/5)`
       });
       return;
     }

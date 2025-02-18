@@ -27,7 +27,7 @@ function AutoResizeInput({
       return;
     }
 
-    inputRef.current.style.width = `${measureWidthRef.current.offsetWidth.toString()}px`;
+    inputRef.current.style.width = `${measureWidthRef.current.offsetWidth}px`;
   }, [value, placeholder]);
 
   return (
