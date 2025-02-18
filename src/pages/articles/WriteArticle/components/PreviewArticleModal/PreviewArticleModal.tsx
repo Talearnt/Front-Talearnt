@@ -67,7 +67,7 @@ function PreviewArticleModal({
           bodyRef={scrollRef}
           className={classNames(
             "mr-[10px] max-h-[600px] min-h-[400px] pr-[9px]",
-            "scrollbar scrollbar-w12 overflow-y-scroll"
+            "scrollbar scrollbar-w12-10 overflow-y-scroll"
           )}
         >
           <div

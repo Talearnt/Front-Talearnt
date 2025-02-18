@@ -229,7 +229,7 @@ function TalentsSettingModalBody() {
             className={classNames(
               "flex flex-col",
               "h-[344px] pl-[32px]",
-              "scrollbar scrollbar-w12 overflow-y-scroll",
+              "scrollbar scrollbar-w12-10 overflow-y-scroll",
               search &&
                 searchedTalentsList.length === 0 &&
                 "h-full items-center justify-center gap-4"
@@ -289,6 +289,7 @@ function TalentsSettingModalBody() {
                     inputSourceRef.current = "mouse";
                     setSelectedTalentIndex(index);
                   }}
+                  hasHoverStyle={false}
                   key={talentCode}
                 />
               ))

@@ -54,7 +54,17 @@
         }
     }
 
-    .scrollbar-w10 {
+    .scrollbar-w10-5 {
+        &::-webkit-scrollbar {
+            @apply w-[20px];
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border: 5px solid transparent;
+        }
+    }
+
+    .scrollbar-w10-8 {
         &::-webkit-scrollbar {
             @apply w-[26px];
         }
@@ -64,7 +74,7 @@
         }
     }
 
-    .scrollbar-w12 {
+    .scrollbar-w12-10 {
         &::-webkit-scrollbar {
             @apply w-8;
         }
