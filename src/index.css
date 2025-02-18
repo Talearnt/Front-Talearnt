@@ -100,3 +100,8 @@
 .slide-talents:hover {
     transform: translateX(var(--dynamic-translate-x));
 }
+
+.horizontal > * {
+    flex-shrink: 0;
+    user-select: none;
+}
