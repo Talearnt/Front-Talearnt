@@ -20,7 +20,7 @@ type customAxiosResponseType<T> = responseDataType<T> & {
 };
 
 type paginationType<T> = {
-  data: T[];
+  results: T[];
   pagination: {
     hasNext: boolean;
     hasPrevious: boolean;
