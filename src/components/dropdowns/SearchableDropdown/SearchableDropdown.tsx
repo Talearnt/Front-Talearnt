@@ -16,7 +16,7 @@ import { Chip } from "@components/Chip/Chip";
 import { DropdownOptionCheckbox } from "@components/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { EmptySearchOption } from "@components/EmptySearchOption/EmptySearchOption";
-import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
 import { AutoResizeInput } from "@components/inputs/AutoResizeInput/AutoResizeInput";
 
@@ -271,10 +271,10 @@ function SearchableDropdown<T = string>({
         <CaretIcon
           className={classNames(
             "shrink-0",
-            "stroke-talearnt_Icon_03",
             "group-hover/label:stroke-talearnt_Icon_01",
-            isOpen && "rotate-180 stroke-talearnt_Icon_01"
+            isOpen && "-rotate-90 stroke-talearnt_Icon_01"
           )}
+          direction={"bottom"}
         />
       </label>
       {/*드롭다운 옵션*/}
@@ -304,10 +304,8 @@ function SearchableDropdown<T = string>({
                     <CaretIcon
                       className={classNames(
                         index !== selectedCategoryIndex &&
-                          "stroke-talearnt_Icon_03",
-                        "group-hover/button:stroke-talearnt_Icon_01"
+                          "group-hover/button:stroke-talearnt_Icon_01"
                       )}
-                      direction={"right"}
                     />
                   </DropdownOptionItem>
                 ) : isMultiple ? (

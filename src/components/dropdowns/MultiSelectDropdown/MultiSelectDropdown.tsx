@@ -1,7 +1,7 @@
 import { classNames } from "@utils/classNames";
 
 import { DropdownOptionCheckbox } from "@components/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
-import { CaretIcon } from "@components/icons/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
@@ -44,10 +44,10 @@ function MultiSelectDropdown<T = string>({
         </span>
         <CaretIcon
           className={classNames(
-            "stroke-talearnt_Icon_03",
             "group-hover/label:stroke-talearnt_Icon_01",
-            "peer-checked/checkbox:rotate-180 peer-checked/checkbox:stroke-talearnt_Icon_01"
+            "peer-checked/checkbox:-rotate-90 peer-checked/checkbox:stroke-talearnt_Icon_01"
           )}
+          direction={"bottom"}
         />
       </label>
       <div

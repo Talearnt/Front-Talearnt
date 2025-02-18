@@ -1,5 +1,12 @@
 export default {
   content: ["./src/**/*.tsx"],
+  safelist: [
+    "rotate-90",
+    "rotate-0",
+    "rotate-180",
+    "-rotate-90",
+    "box-content"
+  ],
   theme: {
     extend: {
       colors: {
