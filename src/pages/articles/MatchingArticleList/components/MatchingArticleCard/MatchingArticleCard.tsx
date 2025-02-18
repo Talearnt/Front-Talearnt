@@ -4,8 +4,6 @@ import dayjs from "dayjs";
 
 import { classNames } from "@utils/classNames";
 
-import { useFilteredTalents } from "@hook/useFilteredTalents";
-
 import { Avatar } from "@components/Avatar/Avatar";
 import { Badge } from "@components/Badge/Badge";
 import { PostFavoriteIcon } from "@components/icons/PostFavoriteIcon/PostFavoriteIcon";
@@ -29,9 +27,6 @@ function MatchingArticleCard({
 }: matchingArticleType) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
-
-  const giveTalentsList = useFilteredTalents(giveTalents);
-  const receiveTalentsList = useFilteredTalents(receiveTalents);
 
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -72,7 +67,7 @@ function MatchingArticleCard({
     <div
       className={classNames(
         "flex flex-col",
-        "w-[308px] rounded-2xl border border-talearnt_Line_01 p-[23px]"
+        "rounded-2xl border border-talearnt_Line_01 p-[23px]"
       )}
     >
       <div className={classNames("flex items-center", "mb-6")}>
@@ -94,15 +89,15 @@ function MatchingArticleCard({
       </div>
       <h2
         className={classNames(
-          "mb-2",
-          "text-heading3_22_semibold text-talearnt_Text_Strong"
+          "mb-2 h-[57.2px]",
+          "line-clamp-2 text-heading3_22_semibold text-talearnt_Text_Strong"
         )}
       >
         {title}
       </h2>
       <p
         className={classNames(
-          "mb-4",
+          "mb-4 h-[36.4px]",
           "line-clamp-2 text-body3_14_medium text-talearnt_Text_03"
         )}
         dangerouslySetInnerHTML={{ __html: content }}
@@ -121,11 +116,11 @@ function MatchingArticleCard({
               "transition-transform duration-[1000ms] ease-linear"
             )}
           >
-            {giveTalentsList.map(({ talentCode, talentName }) => (
+            {giveTalents.map(talentName => (
               <Badge
                 label={talentName}
                 type={"keyword"}
-                key={`${exchangePostNo.toString()}st-card-giveTalent-${talentCode.toString()}`}
+                key={`${exchangePostNo.toString()}st-card-giveTalent-${talentName}`}
               />
             ))}
           </div>
@@ -143,11 +138,11 @@ function MatchingArticleCard({
               "transition-transform duration-[1000ms] ease-linear"
             )}
           >
-            {receiveTalentsList.map(({ talentCode, talentName }) => (
+            {receiveTalents.map(talentName => (
               <Badge
                 label={talentName}
                 type={"keyword"}
-                key={`${exchangePostNo.toString()}st-card-receiveTalent-${talentCode.toString()}`}
+                key={`${exchangePostNo.toString()}st-card-receiveTalent-${talentName}`}
               />
             ))}
           </div>
