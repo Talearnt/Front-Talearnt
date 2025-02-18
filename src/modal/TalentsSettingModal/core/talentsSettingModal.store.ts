@@ -14,7 +14,7 @@ type talentsSettingModalStoreType = {
   talentsData: talentsDataType; // 주고싶은, 받고싶은 재능을 저장
   setTalentsData: (data: {
     type: "add" | "remove";
-    talent: { label: string; value: number };
+    talentCode: number;
   }) => void;
   status: "default" | "loading" | "success";
   setStatus: (status: "default" | "loading" | "success") => void;
@@ -31,13 +31,16 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
       giveTalents: [],
       receiveTalents: []
     },
-    setTalentsData: ({ type, talent }) =>
+    setTalentsData: ({ type, talentCode }) =>
       set(({ currentTalentsType, talentsData }) => {
         if (type === "add") {
           return {
             talentsData: {
               ...talentsData,
-              [currentTalentsType]: [...talentsData[currentTalentsType], talent]
+              [currentTalentsType]: [
+                ...talentsData[currentTalentsType],
+                talentCode
+              ]
             }
           };
         } else {
@@ -45,7 +48,7 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
             talentsData: {
               ...talentsData,
               [currentTalentsType]: talentsData[currentTalentsType].filter(
-                ({ value }) => value !== talent.value
+                selectedCode => talentCode !== selectedCode
               )
             }
           };

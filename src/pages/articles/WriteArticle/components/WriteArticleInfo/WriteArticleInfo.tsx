@@ -22,10 +22,10 @@ import {
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
+import { durationType } from "@pages/articles/articles.type";
 import {
   articleType,
   communityArticleDataType,
-  durationType,
   matchArticleFormDataType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
@@ -85,7 +85,6 @@ function WriteArticleInfo({
 
   return (
     <TitledBox
-      className={"mb-6"}
       title={
         <div className={"flex items-center gap-4"}>
           <PencilIcon />
@@ -102,10 +101,10 @@ function WriteArticleInfo({
           <div className={"flex gap-6"}>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
-              <SearchableDropdown
+              <SearchableDropdown<number>
                 error={errors.giveTalents?.message}
                 options={giveTalentsOptions}
-                onSelectHandler={({ checked, ...talent }) => {
+                onSelectHandler={({ checked, value }) => {
                   if (checked) {
                     if (giveTalents.length >= 5) {
                       setToast({
@@ -118,7 +117,7 @@ function WriteArticleInfo({
 
                     handleMatchDataChange("giveTalents", [
                       ...giveTalents,
-                      talent
+                      value
                     ]);
 
                     return;
@@ -126,19 +125,19 @@ function WriteArticleInfo({
 
                   handleMatchDataChange(
                     "giveTalents",
-                    giveTalents.filter(({ value }) => talent.value !== value)
+                    giveTalents.filter(selectedValue => selectedValue !== value)
                   );
                 }}
                 placeholder={"주고 싶은 재능을 선택해 주세요"}
-                selectedOptionsArray={giveTalents}
+                selectedValue={giveTalents}
               />
             </div>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
-              <SearchableDropdown
+              <SearchableDropdown<number>
                 error={errors.receiveTalents?.message}
                 options={receiveTalentsOptions}
-                onSelectHandler={({ checked, ...talent }) => {
+                onSelectHandler={({ checked, value }) => {
                   if (checked) {
                     if (receiveTalents.length >= 5) {
                       setToast({
@@ -151,7 +150,7 @@ function WriteArticleInfo({
 
                     handleMatchDataChange("receiveTalents", [
                       ...receiveTalents,
-                      talent
+                      value
                     ]);
 
                     return;
@@ -159,13 +158,15 @@ function WriteArticleInfo({
 
                   handleMatchDataChange(
                     "receiveTalents",
-                    receiveTalents.filter(({ value }) => talent.value !== value)
+                    receiveTalents.filter(
+                      selectedValue => selectedValue !== value
+                    )
                   );
                 }}
                 placeholder={
                   "받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"
                 }
-                selectedOptionsArray={receiveTalents}
+                selectedValue={receiveTalents}
               />
             </div>
           </div>
@@ -176,11 +177,11 @@ function WriteArticleInfo({
                 isMultiple={false}
                 error={errors.duration?.message}
                 options={durationOptions}
-                onSelectHandler={({ label, value }) =>
-                  handleMatchDataChange("duration", [{ label, value }])
+                onSelectHandler={({ checked, value }) =>
+                  handleMatchDataChange("duration", checked ? value : "")
                 }
                 placeholder={"진행 기간을 선택해 주세요."}
-                selectedOptionsArray={duration}
+                selectedValue={duration}
               />
             </div>
             <div className={classNames("flex flex-col gap-2", "w-full")}>
@@ -195,7 +196,7 @@ function WriteArticleInfo({
                     type={"default-large"}
                     key={type}
                   >
-                    {type}
+                    {type.replace("_", "/")}
                   </Chip>
                 ))}
               </div>
