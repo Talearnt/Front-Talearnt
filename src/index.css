@@ -82,3 +82,11 @@
 .ql-align-right {
     text-align: right;
 }
+
+.slide-talents {
+    transition: transform 2s linear;
+}
+
+.slide-talents:hover {
+    transform: translateX(var(--dynamic-translate-x));
+}

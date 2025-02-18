@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import dayjs from "dayjs";
 
@@ -28,32 +28,32 @@ function MatchingArticleCard({
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
 
-  const handleIntersection = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && entry.target instanceof HTMLElement) {
-          const { clientWidth, scrollWidth, lastElementChild } = entry.target;
-
-          if (scrollWidth > clientWidth && lastElementChild) {
-            // 재능 목록 잘리는 경우 hover 시 보이도록
-            lastElementChild.classList.add(
-              `hover:translate-x-[-${scrollWidth - clientWidth}px]`
-            );
-          }
-        }
-      });
-    },
-    []
-  );
-
   useEffect(() => {
     if (!giveTalentsRef.current || !receiveTalentsRef.current) {
       return;
     }
 
-    const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.1
-    });
+    const observer = new IntersectionObserver(
+      (entries: IntersectionObserverEntry[]) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+            const { clientWidth, scrollWidth, lastElementChild } = entry.target;
+
+            if (scrollWidth > clientWidth && lastElementChild) {
+              // 재능 목록 잘리는 경우 hover 시 보이도록
+              lastElementChild.classList.add("slide-talents");
+              (lastElementChild as HTMLDivElement).style.setProperty(
+                "--dynamic-translate-x",
+                `-${(scrollWidth - clientWidth).toString()}px`
+              );
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.1
+      }
+    );
 
     observer.observe(giveTalentsRef.current);
     observer.observe(receiveTalentsRef.current);
@@ -61,13 +61,14 @@ function MatchingArticleCard({
     return () => {
       observer.disconnect();
     };
-  }, [handleIntersection]);
+  }, []);
 
   return (
     <div
       className={classNames(
         "flex flex-col",
-        "rounded-2xl border border-talearnt_Line_01 p-[23px]"
+        "cursor-pointer rounded-2xl border border-talearnt_Line_01 p-[23px]",
+        "hover:border-talearnt_Primary_01"
       )}
     >
       <div className={classNames("flex items-center", "mb-6")}>
@@ -110,12 +111,7 @@ function MatchingArticleCard({
           <span className={"text-caption2_12_semibold text-talearnt_Text_04"}>
             주고 싶은 재능
           </span>
-          <div
-            className={classNames(
-              "flex gap-2",
-              "transition-transform duration-[1000ms] ease-linear"
-            )}
-          >
+          <div className={"flex gap-2"}>
             {giveTalents.map(talentName => (
               <Badge
                 label={talentName}
@@ -132,12 +128,7 @@ function MatchingArticleCard({
           <span className={"text-caption2_12_semibold text-talearnt_Text_04"}>
             받고 싶은 재능
           </span>
-          <div
-            className={classNames(
-              "flex gap-2",
-              "transition-transform duration-[1000ms] ease-linear"
-            )}
-          >
+          <div className={"flex gap-2"}>
             {receiveTalents.map(talentName => (
               <Badge
                 label={talentName}
@@ -167,6 +158,7 @@ function MatchingArticleCard({
         <div className={"flex items-center gap-1"}>
           <PostFavoriteIcon
             className={"fill-talearnt_Icon_03 stroke-talearnt_Icon_03"}
+            size={24}
           />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {favoriteCount}
