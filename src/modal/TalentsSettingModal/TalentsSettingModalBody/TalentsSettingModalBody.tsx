@@ -12,8 +12,8 @@ import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/tal
 
 import { Badge } from "@components/Badge/Badge";
 import { Chip } from "@components/Chip/Chip";
+import { DropdownFixedLabel } from "@components/dropdowns/DropdownFixedLabel/DropdownFixedLabel";
 import { DropdownOptionItem } from "@components/dropdowns/DropdownOptionItem/DropdownOptionItem";
-import { MultiSelectDropdown } from "@components/dropdowns/MultiSelectDropdown/MultiSelectDropdown";
 import { EmptySearchOption } from "@components/EmptySearchOption/EmptySearchOption";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 import { SearchIcon } from "@components/icons/SearchIcon/SearchIcon";
@@ -240,7 +240,7 @@ function TalentsSettingModalBody() {
               // 검색을 하지 않은 경우
               CATEGORIZED_TALENTS_LIST.map(
                 ({ categoryCode, categoryName, talents }) => (
-                  <MultiSelectDropdown<number>
+                  <DropdownFixedLabel<number>
                     title={categoryName}
                     options={talents.map(({ talentCode, talentName }) => ({
                       label: talentName,
@@ -308,7 +308,7 @@ function TalentsSettingModalBody() {
                     })
                   }
                   type={"keyword"}
-                  key={`${currentTalentsType}-${talentCode.toString()}`}
+                  key={`${currentTalentsType}-${talentCode}`}
                 >
                   {talentName}
                 </Chip>

@@ -5,22 +5,19 @@ import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
-type MultiSelectDropdownProps<T> = {
+type DropdownFixedLabelProps<T> = {
   options: dropdownOptionType<T>[];
-  onSelectHandler: ({
-    checked,
-    value
-  }: { checked: boolean } & dropdownOptionType<T>) => void;
+  onSelectHandler: ({ checked, value }: { checked: boolean; value: T }) => void;
   title: string;
   selectedValueArray: T[];
 };
 
-function MultiSelectDropdown<T = string>({
+function DropdownFixedLabel<T = string>({
   title,
   options,
   onSelectHandler,
   selectedValueArray
-}: MultiSelectDropdownProps<T>) {
+}: DropdownFixedLabelProps<T>) {
   return (
     <div className={"flex flex-col"}>
       <label
@@ -61,7 +58,7 @@ function MultiSelectDropdown<T = string>({
           <DropdownOptionCheckbox
             checked={selectedValueArray.includes(value)}
             onChangeHandler={({ target }) =>
-              onSelectHandler({ checked: target.checked, label, value })
+              onSelectHandler({ checked: target.checked, value })
             }
             label={label}
           />
@@ -71,4 +68,4 @@ function MultiSelectDropdown<T = string>({
   );
 }
 
-export { MultiSelectDropdown };
+export { DropdownFixedLabel };

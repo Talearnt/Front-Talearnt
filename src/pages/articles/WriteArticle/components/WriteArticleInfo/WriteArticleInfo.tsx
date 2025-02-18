@@ -9,7 +9,7 @@ import { useGetProfile } from "@hook/user.hook";
 import { useToastStore } from "@common/common.store";
 
 import { Chip } from "@components/Chip/Chip";
-import { SearchableDropdown } from "@components/dropdowns/SearchableDropdown/SearchableDropdown";
+import { DropdownSearchable } from "@components/dropdowns/DropdownSearchable/DropdownSearchable";
 import { PencilIcon } from "@components/icons/textEditor/PencilIcon";
 import { TitledBox } from "@components/TitledBox/TitledBox";
 
@@ -101,7 +101,7 @@ function WriteArticleInfo({
           <div className={"flex gap-6"}>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>주고 싶은 재능</span>
-              <SearchableDropdown<number>
+              <DropdownSearchable<number>
                 error={errors.giveTalents?.message}
                 options={giveTalentsOptions}
                 onSelectHandler={({ checked, value }) => {
@@ -134,7 +134,7 @@ function WriteArticleInfo({
             </div>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>받고 싶은 재능</span>
-              <SearchableDropdown<number>
+              <DropdownSearchable<number>
                 error={errors.receiveTalents?.message}
                 options={receiveTalentsOptions}
                 onSelectHandler={({ checked, value }) => {
@@ -173,7 +173,7 @@ function WriteArticleInfo({
           <div className={"flex gap-6"}>
             <div className={"flex flex-col gap-2"}>
               <span className={"text-body2_16_medium"}>진행 기간</span>
-              <SearchableDropdown
+              <DropdownSearchable
                 isMultiple={false}
                 error={errors.duration?.message}
                 options={durationOptions}

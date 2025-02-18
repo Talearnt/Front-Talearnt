@@ -16,7 +16,7 @@ function DropdownOptionItem({
   checked,
   children,
   label,
-  hasHoverStyle,
+  hasHoverStyle = true,
   ...props
 }: DropdownOptionItemProps) {
   return (
@@ -37,7 +37,10 @@ function DropdownOptionItem({
         className={classNames(
           "text-body2_16_medium text-talearnt_Text_04",
           hasHoverStyle && "group-hover/button:text-talearnt_Text_02",
-          checked && "text-talearnt_Text_02"
+          checked &&
+            (hasHoverStyle
+              ? "text-body2_16_semibold text-talearnt_Text_01"
+              : "text-talearnt_Text_02")
         )}
       >
         {label}
