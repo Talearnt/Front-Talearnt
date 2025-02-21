@@ -11,6 +11,7 @@ type BadgeVariantsType = {
 };
 
 type BadgeProps = CustomVariantProps<BadgeVariantsType> & {
+  className?: string;
   label: string;
 };
 
@@ -37,8 +38,10 @@ const badgeVariants = cva<BadgeVariantsType>("rounded-full", {
   }
 });
 
-function Badge({ label, type, size }: BadgeProps) {
-  return <span className={badgeVariants({ type, size })}>{label}</span>;
+function Badge({ className, label, type, size }: BadgeProps) {
+  return (
+    <span className={badgeVariants({ type, size, className })}>{label}</span>
+  );
 }
 
 export { Badge };
