@@ -11,12 +11,14 @@ import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 
 type DropdownSearchableProps<T> = {
+  label?: string;
   options: dropdownOptionType<T>[];
   onSelectHandler: ({ checked, value }: { checked: boolean; value: T }) => void;
-  selectedValue: T[] | T;
+  selectedValue: T[] | T | undefined;
 };
 
 function DropdownLabeled<T = string>({
+  label,
   options,
   onSelectHandler,
   selectedValue
@@ -33,8 +35,8 @@ function DropdownLabeled<T = string>({
           ? selectedValue.includes(value)
           : selectedValue === value
       ),
-    [selectedValue]
-  ) as dropdownOptionType<T>;
+    [options, selectedValue]
+  );
 
   return (
     <div ref={wrapperRef} className={"relative w-fit"}>
@@ -44,7 +46,8 @@ function DropdownLabeled<T = string>({
           "flex items-center gap-2",
           "rounded-full border border-talearnt_Icon_03 py-[7px] pl-[23px] pr-[11px]",
           "cursor-pointer",
-          "has-[:checked]:border-talearnt_Primary_01"
+          "has-[:checked]:border-talearnt_Primary_01",
+          selectedOption && label && "border-talearnt_Primary_01"
         )}
       >
         <input
@@ -56,10 +59,11 @@ function DropdownLabeled<T = string>({
           className={classNames(
             "text-body2_16_medium text-talearnt_Text_02",
             "group-hover/label:text-talearnt_Primary_01",
-            "peer-checked/checkbox:text-talearnt_Primary_01"
+            "peer-checked/checkbox:text-talearnt_Primary_01",
+            selectedOption && label && "text-talearnt_Primary_01"
           )}
         >
-          {selectedOption.label}
+          {selectedOption?.label ?? label}
         </span>
         <CaretIcon
           className={
