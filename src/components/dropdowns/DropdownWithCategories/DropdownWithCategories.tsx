@@ -16,13 +16,7 @@ import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 type DropdownSearchableProps<T> = {
   label: string;
   options: dropdownOptionType<dropdownOptionType<T>[]>[];
-  onSelectHandler: ({
-    checked,
-    value
-  }: {
-    checked: boolean;
-    value: T[];
-  }) => void;
+  onSelectHandler: (value: T[]) => void;
   selectedValue: T[];
   maximumConfig?: {
     count: number;
@@ -48,18 +42,37 @@ function DropdownWithCategories<T = string>({
   const setToast = useToastStore(state => state.setToast);
 
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [selectedValueList, setSelectedValueList] =
-    useState<T[]>(selectedValue);
+  const [selectedValueList, setSelectedValueList] = useState<
+    dropdownOptionType<T>[]
+  >(() => {
+    if (selectedValue.length === 0) {
+      return [];
+    }
+
+    const result = [];
+    const selectedValueSet = new Set(selectedValue);
+
+    for (const { value } of options) {
+      for (const option of value) {
+        if (selectedValueSet.has(option.value)) {
+          result.push(option);
+        }
+      }
+    }
+
+    return result;
+  });
 
   return (
-    <div ref={wrapperRef} className={"relative w-fit"}>
+    <div ref={wrapperRef} className={classNames("relative", "w-fit")}>
       <label
         className={classNames(
           "peer/label group/label",
           "flex items-center gap-2",
           "rounded-full border border-talearnt_Icon_03 py-[7px] pl-[23px] pr-[11px]",
           "cursor-pointer",
-          "has-[:checked]:border-talearnt_Primary_01"
+          "has-[:checked]:border-talearnt_Primary_01",
+          selectedValueList.length > 0 && "border-talearnt_Primary_01"
         )}
       >
         <input
@@ -71,7 +84,8 @@ function DropdownWithCategories<T = string>({
           className={classNames(
             "text-body2_16_medium text-talearnt_Text_02",
             "group-hover/label:text-talearnt_Primary_01",
-            "peer-checked/checkbox:text-talearnt_Primary_01"
+            "peer-checked/checkbox:text-talearnt_Primary_01",
+            selectedValueList.length > 0 && "text-talearnt_Primary_01"
           )}
         >
           {label}
@@ -93,7 +107,7 @@ function DropdownWithCategories<T = string>({
         )}
       >
         <HorizontalScrollWrapper>
-          {(options as dropdownOptionType<T[]>[]).map(({ label }, index) => (
+          {options.map(({ label: category }, index) => (
             <label
               className={classNames(
                 "group/label",
@@ -101,7 +115,7 @@ function DropdownWithCategories<T = string>({
                 "cursor-pointer",
                 "has-[:checked]:text-talearnt_Text_02 has-[:checked]:shadow-[inset_0_-2px_0_0] has-[:checked]:shadow-talearnt_Primary_01"
               )}
-              key={`main-option-${label}`}
+              key={`${label}-main-option-${category}`}
             >
               <input
                 className={"peer/radio hidden"}
@@ -109,7 +123,7 @@ function DropdownWithCategories<T = string>({
                 onChange={({ target }) =>
                   setSelectedCategoryIndex(Number(target.value))
                 }
-                name={"category"}
+                name={`${label}-category-${category}`}
                 value={index}
                 type={"radio"}
               />
@@ -120,7 +134,7 @@ function DropdownWithCategories<T = string>({
                   "peer-checked/radio:text-talearnt_Text_02"
                 )}
               >
-                {label}
+                {category}
               </span>
             </label>
           ))}
@@ -132,54 +146,92 @@ function DropdownWithCategories<T = string>({
             "scrollbar-w10-5 scrollbar overflow-y-scroll"
           )}
         >
-          {options[selectedCategoryIndex].value.map(({ label, value }) => {
-            const isSelected = selectedValueList.includes(value);
-            return (
-              <Chip
-                onClickHandler={() => {
-                  if (isSelected) {
-                    setSelectedValueList(prev =>
-                      prev.filter(selected => selected !== value)
-                    );
+          {options[selectedCategoryIndex].value.map(
+            ({ label: option, value }) => {
+              const isSelected = selectedValueList.some(
+                ({ value: selectedValue }) => value === selectedValue
+              );
 
-                    return;
-                  }
+              return (
+                <Chip
+                  onClickHandler={() => {
+                    if (isSelected) {
+                      setSelectedValueList(prev =>
+                        prev.filter(
+                          ({ value: selectedValue }) => value !== selectedValue
+                        )
+                      );
 
-                  if (!!count && selectedValueList.length >= count) {
-                    setToast({ message: errorText, type: "error" });
+                      return;
+                    }
 
-                    return;
-                  }
+                    if (!!count && selectedValueList.length >= count) {
+                      setToast({ message: errorText, type: "error" });
 
-                  setSelectedValueList(prev => [...prev, value]);
-                }}
-                pressed={isSelected}
-                key={`categories-dropdown-option-${label}`}
-              >
-                {label}
-              </Chip>
-            );
-          })}
+                      return;
+                    }
+
+                    setSelectedValueList(prev => [
+                      ...prev,
+                      { label: option, value }
+                    ]);
+                  }}
+                  pressed={isSelected}
+                  key={`${label}-categories-option-${option}`}
+                >
+                  {option}
+                </Chip>
+              );
+            }
+          )}
         </div>
         <div className={"h-px w-full bg-talearnt_Line_01"} />
+        {selectedValueList.length > 0 && (
+          <div className={classNames("flex flex-wrap gap-2")}>
+            {selectedValueList.map(({ label: option, value }) => (
+              <Chip
+                onCloseHandler={() =>
+                  setSelectedValueList(prev =>
+                    prev.filter(
+                      ({ value: selectedValue }) => value !== selectedValue
+                    )
+                  )
+                }
+                type={"keyword"}
+                key={`${label}-selected-option-${option}`}
+              >
+                {option}
+              </Chip>
+            ))}
+          </div>
+        )}
         <div className={"flex"}>
           {!!count && (
-            <span className={"text-body2_16_medium text-talearnt_Text_04"}>
+            <span
+              className={"mt-auto text-body2_16_medium text-talearnt_Text_04"}
+            >
               {selectedValueList.length}/{count}
             </span>
           )}
           <Button
-            buttonStyle={"outlined"}
             className={"ml-auto px-[23px]"}
             onClick={() => setSelectedValueList([])}
+            buttonStyle={"outlined"}
+            size={"small"}
           >
             초기화
           </Button>
           <Button
-            className={"px-[23px]"}
-            onClick={() =>
-              onSelectHandler({ checked: true, value: selectedValueList })
-            }
+            className={"ml-4 px-[23px]"}
+            onClick={() => {
+              if (!checkboxRef.current) {
+                return;
+              }
+
+              onSelectHandler(selectedValueList.map(({ value }) => value));
+              checkboxRef.current.checked = false;
+            }}
+            size={"small"}
           >
             등록하기
           </Button>
