@@ -15,7 +15,7 @@ type BadgeProps = CustomVariantProps<BadgeVariantsType> & {
   label: string;
 };
 
-const badgeVariants = cva<BadgeVariantsType>("rounded-full", {
+const badgeVariants = cva<BadgeVariantsType>("rounded-full whitespace-nowrap", {
   variants: {
     type: {
       primary: "bg-talearnt_PrimaryBG_04 text-talearnt_Primary_01",
@@ -24,8 +24,7 @@ const badgeVariants = cva<BadgeVariantsType>("rounded-full", {
       error: "bg-talearnt_BG_Badge_01 text-talearnt_Text_Red",
       "primary-border":
         "shadow-[inset_0_0_0_1px] shadow-talearnt_PrimaryBG_03 bg-talearnt_PrimaryBG_01 text-talearnt_Primary_01",
-      keyword:
-        "rounded-md bg-talearnt_BG_Up_02 text-talearnt_Text_02 whitespace-nowrap"
+      keyword: "rounded-md bg-talearnt_BG_Up_02 text-talearnt_Text_02 "
     },
     size: {
       small: "px-2 py-1 text-caption2_12_semibold",
