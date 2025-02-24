@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@utils/classNames";
 
 import { useGetMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.hook";
 
-import useFilterStore from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
+import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { MatchingArticleCard } from "@pages/articles/MatchingArticleList/components/MatchingArticleCard/MatchingArticleCard";
 
@@ -32,6 +34,8 @@ function MatchingArticleList() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const {
     data: {
@@ -67,6 +71,12 @@ function MatchingArticleList() {
       resetFilters: state.resetFilters
     }))
   );
+  const hasNewMatchingArticle = useHasNewMatchingArticleStore(
+    state => state.hasNewMatchingArticle
+  );
+  const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
+    state => state.setHasNewMatchingArticle
+  );
 
   const [list, setList] = useState<matchingArticleType[]>([]);
   const [isFirstLoading, setIsFirstLoading] = useState(true);
@@ -79,6 +89,7 @@ function MatchingArticleList() {
     type !== undefined ||
     status !== undefined;
 
+  // 페이지 이동 시 기존 카드를 보여주기 위해 state 저장
   useEffect(() => {
     if (!isSuccess) {
       return;
@@ -90,6 +101,7 @@ function MatchingArticleList() {
 
     setList(results);
   }, [isFirstLoading, isSuccess, results]);
+  // 탑 버튼이 필터가 가려진 이후 보여야해서 추적
   useEffect(() => {
     if (!filterRef.current) {
       return;
@@ -103,6 +115,16 @@ function MatchingArticleList() {
 
     return () => observer.disconnect();
   }, []);
+  // 애니메이션 완료 후(페이지 이동/이탈) 플래그 원복
+  useEffect(() => {
+    if (page === 1 || !hasNewMatchingArticle) {
+      return;
+    }
+
+    setHasNewMatchingArticle(false);
+
+    return () => setHasNewMatchingArticle(false);
+  }, [hasNewMatchingArticle, page, queryClient, setHasNewMatchingArticle]);
 
   return (
     <div
@@ -205,8 +227,17 @@ function MatchingArticleList() {
       >
         {/*목록 있는 경우*/}
         {list.length > 0
-          ? list.map(article => (
-              <MatchingArticleCard {...article} key={article.exchangePostNo} />
+          ? list.map((article, index) => (
+              <MatchingArticleCard
+                className={classNames(
+                  hasNewMatchingArticle &&
+                    (index === 0
+                      ? "animate-new_matching_article_reveal z-10"
+                      : index < 4 && "animate-new_matching_article_slide")
+                )}
+                {...article}
+                key={article.exchangePostNo}
+              />
             ))
           : isSuccess && (
               // 목록이 없고 API 호출 성공한 경우
