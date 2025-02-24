@@ -1,6 +1,6 @@
 import { postAPI } from "@utils/apiMethods";
 
-import { matchArticleBodyType } from "@pages/articles/articles.type";
+import { matchArticleBodyType } from "@pages/articles/core/articles.type";
 import { presignedURLBodyType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 // TODO 커뮤니티용 body 가져오기

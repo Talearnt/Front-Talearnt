@@ -2,7 +2,7 @@ import {
   durationType,
   exchangeType,
   matchArticleBodyType
-} from "@pages/articles/articles.type";
+} from "@pages/articles/core/articles.type";
 import { profileType } from "@type/user.type";
 
 type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &

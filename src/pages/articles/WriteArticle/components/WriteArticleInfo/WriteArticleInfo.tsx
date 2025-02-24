@@ -22,7 +22,7 @@ import {
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
 import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
-import { durationType } from "@pages/articles/articles.type";
+import { durationType } from "@pages/articles/core/articles.type";
 import {
   articleType,
   communityArticleDataType,
