@@ -79,7 +79,7 @@ type kakaoAuthResponseStoreType = {
 export const useKakaoAuthResponseStore = create<kakaoAuthResponseStoreType>(
   set => ({
     kakaoAuthResponse: null,
-    setResponse: response => set(() => ({ kakaoAuthResponse: response }))
+    setResponse: response => set({ kakaoAuthResponse: response })
   })
 );
 
