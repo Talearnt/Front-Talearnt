@@ -2,18 +2,23 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 
+import { getMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.api";
 import {
   postArticle,
   postToGetPresignedURL
 } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
+import { createQueryKey } from "@utils/queryKey";
 
 import { useGetProfile } from "@hook/user.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
+import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
 
 import { PreviewArticleModal } from "@pages/articles/WriteArticle/components/PreviewArticleModal/PreviewArticleModal";
 import { WriteArticleInfo } from "@pages/articles/WriteArticle/components/WriteArticleInfo/WriteArticleInfo";
@@ -31,6 +36,8 @@ import {
   matchArticleSchema
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
+import { customAxiosResponseType, paginationType } from "@common/common.type";
+import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 import {
   articleType,
   communityArticleDataType,
@@ -43,10 +50,17 @@ function WriteArticle() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigator = useNavigate();
 
+  const queryClient = useQueryClient();
+
   const type = (searchParams.get("type") as articleType | null) ?? "match";
   const isMatchType = type === "match";
 
-  const { isSuccess } = useGetProfile(isMatchType);
+  const {
+    data: {
+      data: { profileImg, nickname }
+    },
+    isSuccess
+  } = useGetProfile(isMatchType);
 
   const {
     formState: { errors: matchErrors },
@@ -84,6 +98,9 @@ function WriteArticle() {
 
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
+  const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
+    state => state.setHasNewMatchingArticle
+  );
 
   const [isOpenPreview, setIsOpenPreview] = useState(false);
 
@@ -178,6 +195,28 @@ function WriteArticle() {
     }
 
     try {
+      // 모든 매칭 게시물 목록 캐시 무효화
+      await queryClient.invalidateQueries({
+        queryKey: createQueryKey(["MATCH"], { isArticleList: true })
+      });
+      // 필터링 되지 않은 매칭 게시물 목록 프리패치
+      await queryClient.prefetchQuery({
+        queryKey: createQueryKey(
+          [
+            "MATCH",
+            { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
+          ],
+          { isArticleList: true }
+        ),
+        queryFn: async () =>
+          await getMatchingArticleList({
+            giveTalents: [],
+            receiveTalents: [],
+            order: "recent",
+            page: 1
+          })
+      });
+      // 게시물 작성
       await postArticle({
         title,
         content: doc.body.innerHTML,
@@ -187,7 +226,51 @@ function WriteArticle() {
         receiveTalents,
         imageUrls
       });
-      // TODO 게시물 목록 애니메이션 추가
+      // 새롭게 작성된 게시물 저장
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >(
+        createQueryKey(
+          [
+            "MATCH",
+            { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
+          ],
+          { isArticleList: true }
+        ),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: [
+                {
+                  profileImg,
+                  nickname,
+                  duration,
+                  exchangeType,
+                  giveTalents: [],
+                  receiveTalents: [],
+                  exchangePostNo: -1,
+                  status: "모집중",
+                  title,
+                  content: doc.body.innerText,
+                  createdAt: dayjs().format("YYYY-MM-DD"),
+                  favoriteCount: 0,
+                  isFavorite: false
+                },
+                ...oldData.data.results.slice(0, -1)
+              ]
+            }
+          };
+        }
+      );
+      // 애니메이션을 위한 새로운 게시물 플래그
+      setHasNewMatchingArticle(true);
+      navigator("/matching");
     } catch {
       setToast({
         message: "게시글 업로드 중 오류가 발생했습니다.",
