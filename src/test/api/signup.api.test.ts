@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { getRandomNickName, postSignIn } from "@pages/auth/auth.api";
+import { getRandomNickName, postSignIn } from "@pages/auth/core/auth.api";
 
 import { customAxiosResponseType } from "@common/common.type";
 

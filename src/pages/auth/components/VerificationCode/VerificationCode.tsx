@@ -16,7 +16,7 @@ import { Button } from "@components/Button/Button";
 import { Input } from "@components/inputs/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { verificationStateType } from "@pages/auth/auth.type";
+import { verificationStateType } from "@pages/auth/core/auth.type";
 
 type sendCodeDataType = {
   sendTime: Date | undefined;

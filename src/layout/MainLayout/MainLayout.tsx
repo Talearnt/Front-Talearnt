@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
-import { getAccessTokenUseRefreshToken } from "@pages/auth/auth.api";
+import { getAccessTokenUseRefreshToken } from "@pages/auth/core/auth.api";
 
 import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
 import { usePromptStore } from "@common/common.store";
-import { useAuthStore } from "@pages/auth/auth.store";
+import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { TalentsSettingModal } from "@modal/TalentsSettingModal/TalentsSettingModal";
 

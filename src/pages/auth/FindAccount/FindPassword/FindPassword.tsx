@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
-import { postFindPwEmail } from "@pages/auth/auth.api";
+import { postFindPwEmail } from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
@@ -15,7 +15,7 @@ import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIc
 import { Input } from "@components/inputs/Input/Input";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { userIdRegex } from "@pages/auth/common/common.constants";
+import { userIdRegex } from "@pages/auth/core/auth.constants";
 
 const findIdSchema = object({
   phone: string().matches(

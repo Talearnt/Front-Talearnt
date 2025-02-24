@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { PathParams } from "msw/src/core/utils/matching/matchRequestUrl";
 
-import { accountType } from "@pages/auth/auth.type";
+import { accountType } from "@pages/auth/core/auth.type";
 
 export const handlers = [
   http.post<PathParams, accountType>(

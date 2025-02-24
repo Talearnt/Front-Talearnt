@@ -6,7 +6,7 @@ import {
   signInBodyType,
   signUpBodyType,
   verificationBodyType
-} from "@pages/auth/auth.type";
+} from "@pages/auth/core/auth.type";
 
 // 로그인
 export const postSignIn = async (account: signInBodyType) =>

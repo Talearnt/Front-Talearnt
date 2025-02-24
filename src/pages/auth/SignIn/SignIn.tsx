@@ -4,18 +4,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { boolean, object, string } from "yup";
 
-import { postSignIn } from "@pages/auth/auth.api";
+import { postSignIn } from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
-import { useAuthStore } from "@pages/auth/auth.store";
+import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { Checkbox } from "@components/Checkbox/Checkbox";
 import { Input } from "@components/inputs/Input/Input";
 
-import { signInBodyType } from "@pages/auth/auth.type";
+import { signInBodyType } from "@pages/auth/core/auth.type";
 
 const signInSchema = object({
   userId: string().required("이메일을 입력해 주세요"),

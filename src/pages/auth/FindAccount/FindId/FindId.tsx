@@ -9,7 +9,7 @@ import { object, string } from "yup";
 import {
   postConfirmVerificationCode,
   postSendVerificationCode
-} from "@pages/auth/auth.api";
+} from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
@@ -20,12 +20,12 @@ import { Button } from "@components/Button/Button";
 import { CircleCheckIcon } from "@components/icons/CircleCheckIcon/CircleCheckIcon";
 import { Input } from "@components/inputs/Input/Input";
 
-import { nameRegex } from "@pages/auth/common/common.constants";
+import { nameRegex } from "@pages/auth/core/auth.constants";
 
 import {
   findIdResponseType,
   verificationStateType
-} from "@pages/auth/auth.type";
+} from "@pages/auth/core/auth.type";
 
 const findIdSchema = object({
   name: string().matches(

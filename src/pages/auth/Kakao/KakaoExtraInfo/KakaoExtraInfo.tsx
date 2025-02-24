@@ -5,19 +5,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 
-import { getRandomNickName, postKakaoSignUp } from "@pages/auth/auth.api";
+import { getRandomNickName, postKakaoSignUp } from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
-import { useCheckNickname } from "@pages/auth/auth.hook";
+import { useCheckNickname } from "@pages/auth/core/auth.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
 import {
   useAgreementStore,
   useKakaoAuthResponseStore
-} from "@pages/auth/auth.store";
+} from "@pages/auth/core/auth.store";
 
 import { Button } from "@components/Button/Button";
 import { Checkbox } from "@components/Checkbox/Checkbox";
@@ -26,10 +26,7 @@ import { LabelText } from "@components/LabelText/LabelText";
 import { Spinner } from "@components/Spinner/Spinner";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 
-import {
-  genderOptions,
-  nicknameRegex
-} from "@pages/auth/common/common.constants";
+import { genderOptions, nicknameRegex } from "@pages/auth/core/auth.constants";
 
 const kakaoExtraInfoSchema = object({
   nickname: string().matches(nicknameRegex, "match")
