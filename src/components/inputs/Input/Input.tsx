@@ -28,15 +28,15 @@ type InputProps = CustomVariantProps<InputVariantsType> &
 const inputVariants = cva<InputVariantsType>(
   classNames(
     "peer/input",
-    "w-full border bg-talearnt_BG_Background px-[15px]",
+    "w-full border bg-talearnt_BG_Background ",
     "placeholder:text-talearnt_Text_04 focus:border-talearnt_Primary_01 focus:outline-none",
     "disabled:cursor-not-allowed disabled:bg-talearnt_BG_Up_01 disabled:text-talearnt_Text_04"
   ),
   {
     variants: {
       size: {
-        small: "h-[50px] rounded-lg text-body2_16_medium",
-        large: "h-[60px] rounded-xl text-heading4_20_semibold"
+        small: "h-[50px] pl-[15px] rounded-lg text-body2_16_medium",
+        large: "h-[60px] pl-[23px] rounded-xl text-heading4_20_semibold"
       }
     },
     defaultVariants: {
@@ -97,9 +97,9 @@ function Input({
     if (insideNodeRef.current && inputRef.current) {
       const insideNodeWidth = insideNodeRef.current.offsetWidth;
 
-      inputRef.current.style.paddingRight = `${insideNodeWidth + 8}px`;
+      inputRef.current.style.paddingRight = `${insideNodeWidth + 8 + (size === "small" ? 8 : 23)}px`;
     }
-  }, [insideNode]);
+  }, [insideNode, size]);
 
   return (
     <div className={classNames("flex flex-col", "w-full", wrapperClassName)}>

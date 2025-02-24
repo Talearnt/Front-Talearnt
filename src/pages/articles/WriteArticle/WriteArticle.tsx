@@ -363,6 +363,7 @@ function WriteArticle() {
               /50
             </span>
           }
+          maxLength={50}
           size={"large"}
           placeholder={"제목을 2글자 이상 입력해 주세요"}
         />
