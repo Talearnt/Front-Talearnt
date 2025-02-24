@@ -27,7 +27,7 @@ if (root) {
   createRoot(root).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      {mode === "development" && <ReactQueryDevtools initialIsOpen={false} />}
+      {mode === "dev-local" && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }
