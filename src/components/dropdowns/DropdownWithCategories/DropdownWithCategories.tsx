@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { classNames } from "@utils/classNames";
 
@@ -44,9 +44,12 @@ function DropdownWithCategories<T = string>({
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedValueList, setSelectedValueList] = useState<
     dropdownOptionType<T>[]
-  >(() => {
+  >([]);
+
+  useEffect(() => {
     if (selectedValue.length === 0) {
-      return [];
+      setSelectedValueList([]);
+      return;
     }
 
     const result = [];
@@ -60,8 +63,8 @@ function DropdownWithCategories<T = string>({
       }
     }
 
-    return result;
-  });
+    setSelectedValueList(result);
+  }, [options, selectedValue]);
 
   return (
     <div ref={wrapperRef} className={classNames("relative", "w-fit")}>
