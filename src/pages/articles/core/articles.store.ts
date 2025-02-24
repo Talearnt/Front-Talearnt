@@ -2,15 +2,12 @@ import { create } from "zustand";
 
 type hasNewMatchingArticleStoreType = {
   hasNewMatchingArticle: boolean;
-  setNewMatchingArticle: (hasNewMatchingArticle: boolean) => void;
+  setHasNewMatchingArticle: (hasNewMatchingArticle: boolean) => void;
 };
 
-const useHasNewMatchingArticleStore = create<hasNewMatchingArticleStoreType>(
-  set => ({
+export const useHasNewMatchingArticleStore =
+  create<hasNewMatchingArticleStoreType>(set => ({
     hasNewMatchingArticle: false,
-    setNewMatchingArticle: hasNewMatchingArticle =>
+    setHasNewMatchingArticle: hasNewMatchingArticle =>
       set({ hasNewMatchingArticle })
-  })
-);
-
-export default useHasNewMatchingArticleStore;
+  }));

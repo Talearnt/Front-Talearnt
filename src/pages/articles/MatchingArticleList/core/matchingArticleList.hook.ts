@@ -6,7 +6,7 @@ import { createQueryKey } from "@utils/queryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
-import useFilterStore from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 export const useGetMatchingArticleList = () => {
   const filter = useFilterStore(
