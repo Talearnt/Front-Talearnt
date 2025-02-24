@@ -11,6 +11,7 @@ import { PostFavoriteIcon } from "@components/icons/PostFavoriteIcon/PostFavorit
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 function MatchingArticleCard({
+  className,
   exchangePostNo,
   profileImg,
   nickname,
@@ -24,7 +25,7 @@ function MatchingArticleCard({
   receiveTalents,
   createdAt,
   favoriteCount
-}: matchingArticleType) {
+}: matchingArticleType & { className?: string }) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
 
@@ -69,8 +70,9 @@ function MatchingArticleCard({
     <div
       className={classNames(
         "flex flex-col",
-        "cursor-pointer rounded-2xl border border-talearnt_Line_01 p-[23px]",
-        "hover:border-talearnt_Primary_01"
+        "cursor-pointer rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]",
+        "hover:border-talearnt_Primary_01",
+        className
       )}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
