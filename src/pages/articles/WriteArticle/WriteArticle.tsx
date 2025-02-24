@@ -13,6 +13,7 @@ import {
 } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
+import { filteredTalents } from "@utils/filteredTalents";
 import { createQueryKey } from "@utils/queryKey";
 
 import { useGetProfile } from "@hook/user.hook";
@@ -252,8 +253,12 @@ function WriteArticle() {
                   nickname,
                   duration,
                   exchangeType,
-                  giveTalents: [],
-                  receiveTalents: [],
+                  giveTalents: filteredTalents(giveTalents).map(
+                    ({ talentName }) => talentName
+                  ),
+                  receiveTalents: filteredTalents(receiveTalents).map(
+                    ({ talentName }) => talentName
+                  ),
                   exchangePostNo: -1,
                   status: "모집중",
                   title,
