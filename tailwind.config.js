@@ -86,7 +86,11 @@ export default {
         spinner_spin: "spinner_spin 0.8s linear infinite",
         fade_in: "fade_in 0.5s ease-in-out",
         fade_out: "fade_out 0.5s ease-in-out",
-        mako_sad: "mako_sad 0.6s linear infinite"
+        mako_sad: "mako_sad 0.6s linear infinite",
+        new_matching_article_slide:
+          "new_matching_article_slide 0.5s ease-in-out",
+        new_matching_article_reveal:
+          "depth_drop 0.5s ease-out forwards, border_flash 0.5s ease-in-out 0.5s forwards"
       },
       keyframes: {
         spinner_spin: {
@@ -105,6 +109,33 @@ export default {
           "0%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(15px)" },
           "100%": { transform: "translateY(30px)" }
+        },
+        new_matching_article_slide: {
+          "0%": {
+            transform: "translateX(-325px)"
+          },
+          "100%": {
+            transform: "translateX(0)"
+          }
+        },
+        depth_drop: {
+          "0%": {
+            transform: "scale(2)"
+          },
+          "100%": {
+            transform: "scale(1)"
+          }
+        },
+        border_flash: {
+          "0%": {
+            borderColor: "#D0D5D8"
+          },
+          "50%": {
+            borderColor: "#1B76FF"
+          },
+          "100%": {
+            borderColor: "#D0D5D8"
+          }
         }
       }
     }
