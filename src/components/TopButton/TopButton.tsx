@@ -12,7 +12,7 @@ function TopButton({ onClick }: { onClick: () => void }) {
         "fixed bottom-10 right-10",
         "rounded-full fill-talearnt_Icon_03",
         "cursor-pointer",
-        "hover:fill-talearnt_Icon_02"
+        "hover:fill-talearnt_Icon_01"
       )}
       onClick={onClick}
     >
