@@ -12,25 +12,25 @@ type matchingArticleListFilterStoreType = matchingArticleListFilterType & {
   resetFilters: () => void;
 };
 
-const useFilterStore = create<matchingArticleListFilterStoreType>(set => ({
-  giveTalents: [],
-  receiveTalents: [],
-  order: "recent",
-  duration: undefined,
-  type: undefined,
-  status: undefined,
-  page: 1,
-  setFilter: updater => set(state => updater(state)),
-  resetFilters: () =>
-    set({
-      giveTalents: [],
-      receiveTalents: [],
-      order: "recent",
-      duration: undefined,
-      type: undefined,
-      status: undefined,
-      page: 1
-    })
-}));
-
-export default useFilterStore;
+export const useFilterStore = create<matchingArticleListFilterStoreType>(
+  set => ({
+    giveTalents: [],
+    receiveTalents: [],
+    order: "recent",
+    duration: undefined,
+    type: undefined,
+    status: undefined,
+    page: 1,
+    setFilter: updater => set(state => updater(state)),
+    resetFilters: () =>
+      set({
+        giveTalents: [],
+        receiveTalents: [],
+        order: "recent",
+        duration: undefined,
+        type: undefined,
+        status: undefined,
+        page: 1
+      })
+  })
+);
