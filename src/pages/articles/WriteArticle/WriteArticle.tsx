@@ -202,7 +202,7 @@ function WriteArticle() {
 
   return (
     <>
-      <div className={classNames("flex flex-col gap-6", "w-[848px]")}>
+      <div className={classNames("flex flex-col gap-6", "mt-8 w-[848px]")}>
         <TabSlider
           className={"mx-auto mb-2 w-min"}
           currentValue={type}

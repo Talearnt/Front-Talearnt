@@ -65,7 +65,9 @@ function SignIn() {
   };
 
   return (
-    <div className={classNames("flex flex-col items-center", "w-[416px]")}>
+    <div
+      className={classNames("flex flex-col items-center", "mt-24 w-[416px]")}
+    >
       <h1 className={classNames("mb-[56px]", "text-heading1_30_semibold")}>
         로그인
       </h1>
