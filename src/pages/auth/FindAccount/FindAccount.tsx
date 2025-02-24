@@ -23,7 +23,7 @@ function FindAccount() {
   const currentPage = pathArray[pathArray.length - 1];
 
   return (
-    <div className={classNames("flex flex-col gap-[56px]", "w-[632px]")}>
+    <div className={classNames("flex flex-col gap-[56px]", "mt-24 w-[632px]")}>
       <TabSlider
         className={"h-[50px]"}
         currentValue={currentPage === "change" ? "pw" : currentPage}

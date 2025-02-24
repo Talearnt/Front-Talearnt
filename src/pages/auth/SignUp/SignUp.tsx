@@ -43,7 +43,7 @@ function SignUp() {
   }, [agreements, navigator]);
 
   return (
-    <div className={classNames("flex flex-col gap-[56px]", "w-[632px]")}>
+    <div className={classNames("flex flex-col gap-[56px]", "mt-24 w-[632px]")}>
       <Stepper currentStep={returnCurrentStep()} stepArray={stepArray} />
       <Outlet />
     </div>

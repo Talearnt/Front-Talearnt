@@ -69,7 +69,7 @@ function MainLayout() {
       <header
         className={classNames(
           "flex items-center justify-between",
-          "mx-auto h-[90px] max-w-[1440px] border-b border-talearnt_Line_01 px-[80px]"
+          "h-[90px] border-b border-talearnt_Line_01 px-[80px]"
         )}
       >
         <LogoIcon className={"cursor-pointer"} onClick={() => navigator("/")} />
@@ -133,7 +133,7 @@ function MainLayout() {
           )}
         </div>
       </header>
-      <main className={"mx-auto mb-[120px] max-w-[1440px]"}>
+      <main>
         <Outlet />
       </main>
       <Toast />
