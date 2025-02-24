@@ -1,6 +1,6 @@
 import { create } from "zustand/react";
 
-import { agreementType, kakaoSignUpBodyType } from "@pages/auth/auth.type";
+import { agreementType, kakaoSignUpBodyType } from "@pages/auth/core/auth.type";
 
 type agreementStoreType = {
   agreements: agreementType[];

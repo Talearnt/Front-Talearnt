@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
-import { useKakaoAuthResponseStore } from "@pages/auth/auth.store";
+import { useKakaoAuthResponseStore } from "@pages/auth/core/auth.store";
 
 function Kakao() {
   const navigator = useNavigate();

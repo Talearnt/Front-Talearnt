@@ -4,7 +4,7 @@ import { createQueryKey } from "@utils/queryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
-import { useAuthStore } from "@pages/auth/auth.store";
+import { useAuthStore } from "@pages/auth/core/auth.store";
 
 export const useGetProfile = (enabled = true) => {
   const accessToken = useAuthStore(state => state.accessToken);

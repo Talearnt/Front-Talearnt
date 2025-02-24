@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { getKakaoAccessToken } from "@pages/auth/auth.api";
+import { getKakaoAccessToken } from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 
@@ -9,7 +9,7 @@ import { usePromptStore } from "@common/common.store";
 import {
   useAuthStore,
   useKakaoAuthResponseStore
-} from "@pages/auth/auth.store";
+} from "@pages/auth/core/auth.store";
 
 function KakaoOauth() {
   const navigator = useNavigate();

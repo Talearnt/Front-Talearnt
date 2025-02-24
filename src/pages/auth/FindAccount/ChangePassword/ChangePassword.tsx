@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { object, ref as yupRef, string } from "yup";
 
-import { putChangePw } from "@pages/auth/auth.api";
+import { putChangePw } from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
@@ -16,7 +16,7 @@ import { Input } from "@components/inputs/Input/Input";
 import { LabelText } from "@components/LabelText/LabelText";
 import { Spinner } from "@components/Spinner/Spinner";
 
-import { pwRegex } from "@pages/auth/common/common.constants";
+import { pwRegex } from "@pages/auth/core/auth.constants";
 
 const changePasswordSchema = object({
   pw: string().matches(

@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
-import { useAgreementStore } from "@pages/auth/auth.store";
+import { useAgreementStore } from "@pages/auth/core/auth.store";
 
 import { Stepper } from "@components/Stepper/Stepper";
 

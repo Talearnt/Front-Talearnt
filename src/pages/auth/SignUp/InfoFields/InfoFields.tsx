@@ -10,16 +10,16 @@ import {
   postConfirmVerificationCode,
   postSendVerificationCode,
   postSignUp
-} from "@pages/auth/auth.api";
+} from "@pages/auth/core/auth.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
 import { classNames } from "@utils/classNames";
 
 import useDebounce from "@hook/useDebounce";
-import { useCheckNickname, useCheckUserId } from "@pages/auth/auth.hook";
+import { useCheckNickname, useCheckUserId } from "@pages/auth/core/auth.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
-import { useAgreementStore } from "@pages/auth/auth.store";
+import { useAgreementStore } from "@pages/auth/core/auth.store";
 
 import { VerificationCode } from "@pages/auth/components/VerificationCode/VerificationCode";
 
@@ -35,9 +35,9 @@ import {
   nicknameRegex,
   pwRegex,
   userIdRegex
-} from "@pages/auth/common/common.constants";
+} from "@pages/auth/core/auth.constants";
 
-import { verificationStateType } from "@pages/auth/auth.type";
+import { verificationStateType } from "@pages/auth/core/auth.type";
 
 const infoFieldsSchema = object({
   nickname: string().matches(nicknameRegex, "match"),
