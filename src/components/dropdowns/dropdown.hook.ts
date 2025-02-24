@@ -15,10 +15,10 @@ const useOutsideClick = (
       }
     };
 
-    window.addEventListener("click", handleClose);
+    window.addEventListener("mousedown", handleClose);
 
     return () => {
-      window.removeEventListener("click", handleClose);
+      window.removeEventListener("mousedown", handleClose);
     };
   }, [wrapperRef, checkboxRef]);
 };
