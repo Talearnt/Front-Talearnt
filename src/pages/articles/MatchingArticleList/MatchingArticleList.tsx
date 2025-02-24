@@ -25,7 +25,7 @@ import {
   talentsOptions
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
-import { durationType, exchangeType } from "@pages/articles/articles.type";
+import { durationType, exchangeType } from "@pages/articles/core/articles.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 function MatchingArticleList() {

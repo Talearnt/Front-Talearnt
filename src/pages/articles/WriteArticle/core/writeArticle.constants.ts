@@ -6,7 +6,7 @@ import {
   durationType,
   exchangeType,
   postType
-} from "@pages/articles/articles.type";
+} from "@pages/articles/core/articles.type";
 
 const articleTypeOptions = [
   { label: "매칭 게시물 글쓰기", value: "match" },

@@ -16,7 +16,7 @@ import { ModalBox } from "@components/modal/ModalBox/ModalBox";
 import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer";
 import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 
-import { postType } from "@pages/articles/articles.type";
+import { postType } from "@pages/articles/core/articles.type";
 import { articleType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 type PreviewArticleModalProps = {

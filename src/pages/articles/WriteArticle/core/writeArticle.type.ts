@@ -1,7 +1,7 @@
 import {
   communityArticleBodyType,
   matchArticleBodyType
-} from "@pages/articles/articles.type";
+} from "@pages/articles/core/articles.type";
 
 // 게시글 타입
 type articleType = "match" | "community";
