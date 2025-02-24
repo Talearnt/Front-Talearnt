@@ -4,6 +4,7 @@ import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 import { DoubleCaretIcon } from "@components/icons/caret/DoubleCaretIcon/DoubleCaretIcon";
 
 type PaginationProps = {
+  className?: string;
   currentPage: number;
   totalPages: number;
   handlePageChange: (page: number) => void;
@@ -15,6 +16,7 @@ const caretStyle = classNames(
 );
 
 function Pagination({
+  className,
   currentPage,
   totalPages,
   handlePageChange
@@ -29,16 +31,21 @@ function Pagination({
       : totalPages; // 전체 페이지가 5 미만일 때
 
   return (
-    <div className={"flex items-center justify-center gap-2"}>
+    <div
+      className={classNames(
+        "flex items-center justify-center gap-2",
+        className
+      )}
+    >
       <DoubleCaretIcon
-        className={classNames(caretStyle, currentPage <= 5 && "opacity-0")}
+        className={classNames(caretStyle, currentPage <= 5 && "invisible")}
         onClick={() => handlePageChange(1)}
         direction={"left"}
       />
       <CaretIcon
         className={classNames(
           caretStyle,
-          currentPage <= 5 && "opacity-0",
+          currentPage <= 5 && "invisible",
           "mr-4"
         )}
         onClick={() => handlePageChange((currentPageRange - 1) * 5)}
@@ -73,7 +80,7 @@ function Pagination({
       <CaretIcon
         className={classNames(
           caretStyle,
-          currentPageRange === lastPageRange && "opacity-0",
+          currentPageRange === lastPageRange && "invisible",
           "ml-4"
         )}
         onClick={() => handlePageChange(currentPageRange * 5 + 1)}
@@ -82,7 +89,7 @@ function Pagination({
       <DoubleCaretIcon
         className={classNames(
           caretStyle,
-          currentPageRange === lastPageRange && "opacity-0"
+          currentPageRange === lastPageRange && "invisible"
         )}
         onClick={() => handlePageChange(totalPages)}
       />
