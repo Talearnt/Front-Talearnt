@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import dayjs from "dayjs";
 
@@ -27,6 +27,8 @@ function MatchingArticleCard({
 }: matchingArticleType) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
+
+  const [isHover, setIsHover] = useState(false);
 
   useEffect(() => {
     if (!giveTalentsRef.current || !receiveTalentsRef.current) {
@@ -70,6 +72,8 @@ function MatchingArticleCard({
         "cursor-pointer rounded-2xl border border-talearnt_Line_01 p-[23px]",
         "hover:border-talearnt_Primary_01"
       )}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
     >
       <div className={classNames("flex items-center", "mb-6")}>
         <Avatar imageUrl={profileImg} size={40} />
@@ -101,8 +105,9 @@ function MatchingArticleCard({
           "mb-4 h-[36.4px]",
           "line-clamp-2 text-body3_14_medium text-talearnt_Text_03"
         )}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      >
+        {content}
+      </p>
       <div className={classNames("grid grid-cols-2 gap-4", "mb-4")}>
         <div
           ref={giveTalentsRef}
@@ -114,8 +119,9 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {giveTalents.map(talentName => (
               <Badge
+                className={"rounded-md"}
                 label={talentName}
-                type={"keyword"}
+                type={isHover ? "primary" : "keyword"}
                 key={`${exchangePostNo}st-card-giveTalent-${talentName}`}
               />
             ))}
@@ -131,8 +137,9 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {receiveTalents.map(talentName => (
               <Badge
+                className={"rounded-md"}
                 label={talentName}
-                type={"keyword"}
+                type={isHover ? "primary" : "keyword"}
                 key={`${exchangePostNo}st-card-receiveTalent-${talentName}`}
               />
             ))}
