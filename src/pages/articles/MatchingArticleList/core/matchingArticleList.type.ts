@@ -5,7 +5,7 @@ import {
 } from "@pages/articles/core/articles.type";
 import { profileType } from "@type/user.type";
 
-type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
+export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
   Omit<matchArticleBodyType, "giveTalents" | "receiveTalents" | "imageUrls"> & {
     giveTalents: string[];
     receiveTalents: string[];
@@ -15,7 +15,7 @@ type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
     favoriteCount: number;
     isFavorite: boolean;
   };
-type matchingArticleListFilterType = {
+export type matchingArticleListFilterType = {
   giveTalents: number[];
   receiveTalents: number[];
   duration?: durationType;
@@ -24,5 +24,3 @@ type matchingArticleListFilterType = {
   order: "recent" | "popular";
   page: number;
 };
-
-export type { matchingArticleListFilterType, matchingArticleType };

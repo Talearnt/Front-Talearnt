@@ -1,25 +1,27 @@
 import { ComponentProps } from "react";
 
-type CustomVariantProps<T extends Record<string, Record<string, string>>> = {
+export type CustomVariantProps<
+  T extends Record<string, Record<string, string>>
+> = {
   [K in keyof T]?: keyof T[K];
 };
 
-type CommonIconProps = ComponentProps<"svg"> & {
+export type CommonIconProps = ComponentProps<"svg"> & {
   size?: number;
 };
 
-type responseDataType<T> = {
+export type responseDataType<T> = {
   data: T;
   errorCode: string | null;
   errorMessage: string | null;
   success: boolean;
 };
 
-type customAxiosResponseType<T> = responseDataType<T> & {
+export type customAxiosResponseType<T> = responseDataType<T> & {
   status: number;
 };
 
-type paginationType<T> = {
+export type paginationType<T> = {
   results: T[];
   pagination: {
     hasNext: boolean;
@@ -27,12 +29,4 @@ type paginationType<T> = {
     totalPages: number;
     currentPage: number;
   };
-};
-
-export type {
-  CommonIconProps,
-  customAxiosResponseType,
-  CustomVariantProps,
-  paginationType,
-  responseDataType
 };
