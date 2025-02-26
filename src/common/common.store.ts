@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 
 import { create } from "zustand/react";
 
@@ -64,4 +64,14 @@ type promptStoreType = {
 export const usePromptStore = create<promptStoreType>(set => ({
   promptData: undefined,
   setPrompt: prompt => set({ promptData: prompt })
+}));
+
+type mainScrollRefStoreType = {
+  mainScrollRef: RefObject<HTMLDivElement> | null;
+  setMainScrollRef: (ref: RefObject<HTMLDivElement>) => void;
+};
+
+export const useMainScrollRefStore = create<mainScrollRefStoreType>(set => ({
+  mainScrollRef: null,
+  setMainScrollRef: ref => set({ mainScrollRef: ref })
 }));
