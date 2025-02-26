@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { getAccessTokenUseRefreshToken } from "@pages/auth/core/auth.api";
@@ -7,16 +7,16 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
-import { usePromptStore } from "@common/common.store";
+import { useMainScrollRefStore, usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/core/auth.store";
 
+import { Prompt } from "@modal/Prompt/Prompt";
 import { TalentsSettingModal } from "@modal/TalentsSettingModal/TalentsSettingModal";
+import { Toast } from "@modal/Toast/Toast";
 
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
-import { Prompt } from "@components/Prompt/Prompt";
-import { Toast } from "@components/Toast/Toast";
 
 const linkArray = [
   {
@@ -34,6 +34,7 @@ const linkArray = [
 ];
 
 function MainLayout() {
+  const scrollRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
 
   const {
@@ -44,8 +45,11 @@ function MainLayout() {
   } = useGetProfile();
 
   const accessToken = useAuthStore(state => state.accessToken);
-  const setAccessToken = useAuthStore(state => state.setAccessToken);
   const promptData = usePromptStore(state => state.promptData);
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
+  const setMainScrollRef = useMainScrollRefStore(
+    state => state.setMainScrollRef
+  );
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,6 +63,10 @@ function MainLayout() {
         .finally(() => setIsLoading(false));
     }
   }, [accessToken, setAccessToken]);
+
+  useEffect(() => {
+    setMainScrollRef(scrollRef);
+  }, [setMainScrollRef]);
 
   if (isLoading) {
     return null;
@@ -133,7 +141,7 @@ function MainLayout() {
           )}
         </div>
       </header>
-      <main>
+      <main ref={scrollRef} className={"h-[calc(100vh-90px)] overflow-y-auto"}>
         <Outlet />
       </main>
       <Toast />
