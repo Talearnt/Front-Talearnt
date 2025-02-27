@@ -35,10 +35,7 @@ function Prompt() {
             <Button
               buttonStyle={"outlined-blue"}
               size={"small"}
-              onClick={() => {
-                promptData.cancelOnClickHandler?.();
-                setPrompt();
-              }}
+              onClick={promptData.cancelOnClickHandler}
             >
               취소
             </Button>
