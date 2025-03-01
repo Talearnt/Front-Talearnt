@@ -1,10 +1,12 @@
 import { getProfile } from "@api/user.api";
 
-import { createQueryKey } from "@utils/queryKey";
+import { createQueryKey } from "@utils/createQueryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
 import { useAuthStore } from "@pages/auth/core/auth.store";
+
+import { queryKeys } from "@common/common.constants";
 
 export const useGetProfile = (enabled = true) => {
   const accessToken = useAuthStore(state => state.accessToken);
@@ -18,7 +20,9 @@ export const useGetProfile = (enabled = true) => {
       userNo: 0
     },
     {
-      queryKey: createQueryKey(["profile"], { isLoggedIn: true }),
+      queryKey: createQueryKey([queryKeys.USER, "profile"], {
+        isLoggedIn: true
+      }),
       queryFn: async () => await getProfile(),
       enabled: enabled && !!accessToken
     }
