@@ -1,3 +1,8 @@
+export enum queryKeys {
+  USER = "USER",
+  MATCH = "MATCH"
+}
+
 export const CATEGORIZED_TALENTS_LIST: {
   categoryCode: number;
   categoryName: string;
