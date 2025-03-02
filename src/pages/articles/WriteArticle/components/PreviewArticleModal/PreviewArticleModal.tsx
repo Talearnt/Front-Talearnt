@@ -66,16 +66,11 @@ function PreviewArticleModal({
         <ModalBody
           bodyRef={scrollRef}
           className={classNames(
-            "mr-[10px] max-h-[600px] min-h-[400px] pr-[9px]",
-            "scrollbar scrollbar-w12-10 overflow-y-scroll"
+            "max-h-[600px] min-h-[400px]",
+            "scrollbar scrollbar-w12-10 overflow-y-auto"
           )}
         >
-          <div
-            className={classNames(
-              "flex flex-col gap-6",
-              "border-r border-r-transparent px-8 pb-6"
-            )}
-          >
+          <div className={classNames("flex flex-col gap-6", "px-8 pb-6")}>
             <h1
               className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
             >
@@ -174,7 +169,7 @@ function PreviewArticleModal({
                   }
 
                   return (
-                    <div className={"relative"}>
+                    <div className={"relative"} key={`${url}-${index}`}>
                       <img
                         className={
                           "aspect-square w-full rounded-2xl object-cover"

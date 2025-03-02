@@ -24,7 +24,7 @@ function AnimatedLoader({ className, isGray }: AnimatedLoaderProps) {
     <div
       className={classNames(
         "relative",
-        "h-[100px] w-[100px] rounded-[11px]",
+        "h-[100px] w-[100px] rounded-xl",
         isGray ? "bg-talearnt_BG_Up_02" : "bg-talearnt_Primary_01",
         className
       )}
