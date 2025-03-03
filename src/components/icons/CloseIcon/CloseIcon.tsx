@@ -13,12 +13,12 @@ import { CommonIconProps } from "@common/common.type";
  * @constructor
  */
 
-function CloseIcon({ className, size = 24, ...props }: CommonIconProps) {
+function CloseIcon({ className, size = 32, ...props }: CommonIconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
@@ -27,7 +27,7 @@ function CloseIcon({ className, size = 24, ...props }: CommonIconProps) {
       )}
       {...props}
     >
-      <path d="M19 5L5 19M19 19L5 5" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M24 8L8 24M24 24L8 8" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }

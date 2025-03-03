@@ -20,22 +20,38 @@ import {
 function CircleCaretIcon({
   className,
   direction,
-  size = 30,
+  size = 60,
   ...props
 }: CaretIconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 30 30"
+      viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(caretIconVariants({ direction }), className)}
       {...props}
     >
-      <circle cx="15" cy="15" r="14.3" strokeWidth="1.4" />
+      <rect
+        x="-0.7"
+        y="0.7"
+        width="58.6"
+        height="58.6"
+        rx="29.3"
+        transform="matrix(-1 0 0 1 58.6 0)"
+      />
+      <rect
+        x="-0.7"
+        y="0.7"
+        width="58.6"
+        height="58.6"
+        rx="29.3"
+        transform="matrix(-1 0 0 1 58.6 0)"
+        strokeWidth="1.4"
+      />
       <path
-        d="M13 9L19 15L13 21"
+        d="M25 21L34 30L25 39"
         strokeWidth="1.4"
         strokeLinecap="round"
         strokeLinejoin="round"
