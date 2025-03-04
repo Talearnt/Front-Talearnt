@@ -1,6 +1,18 @@
 import { classNames } from "@utils/classNames";
 
-function TopButton({ onClick }: { onClick: () => void }) {
+import { useMainScrollRefStore } from "@common/common.store";
+
+function TopButton() {
+  const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
+
+  const handleScroll = () => {
+    if (!mainScrollRef?.current) {
+      return;
+    }
+
+    mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <svg
       width="60"
@@ -14,7 +26,7 @@ function TopButton({ onClick }: { onClick: () => void }) {
         "cursor-pointer",
         "hover:fill-talearnt_Icon_01"
       )}
-      onClick={onClick}
+      onClick={handleScroll}
     >
       <rect width="60" height="60" rx="30" />
       <path
