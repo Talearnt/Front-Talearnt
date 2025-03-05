@@ -8,6 +8,7 @@ import { classNames } from "@utils/classNames";
 
 import { useGetMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.hook";
 
+import { useMainScrollRefStore } from "@common/common.store";
 import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
 import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
@@ -31,7 +32,6 @@ import { durationType, exchangeType } from "@pages/articles/core/articles.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 function MatchingArticleList() {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
 
@@ -39,10 +39,7 @@ function MatchingArticleList() {
 
   const {
     data: {
-      data: {
-        results,
-        pagination: { totalPages }
-      }
+      data: { results, pagination }
     },
     isLoading,
     isSuccess
@@ -77,8 +74,15 @@ function MatchingArticleList() {
   const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
     state => state.setHasNewMatchingArticle
   );
+  const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
-  const [list, setList] = useState<matchingArticleType[]>([]);
+  const [{ list, totalPages }, setMatchingArticleListData] = useState<{
+    list: matchingArticleType[];
+    totalPages: number;
+  }>({
+    list: [],
+    totalPages: 1
+  });
   const [isFirstLoading, setIsFirstLoading] = useState(true);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 
@@ -99,8 +103,11 @@ function MatchingArticleList() {
       setIsFirstLoading(false);
     }
 
-    setList(results);
-  }, [isFirstLoading, isSuccess, results]);
+    setMatchingArticleListData({
+      list: results,
+      totalPages: pagination.totalPages
+    });
+  }, [isFirstLoading, isSuccess, pagination.totalPages, results]);
   // 탑 버튼이 필터가 가려진 이후 보여야해서 추적
   useEffect(() => {
     if (!filterRef.current) {
@@ -128,10 +135,10 @@ function MatchingArticleList() {
 
   return (
     <div
-      ref={scrollRef}
       className={classNames(
+        "relative",
         "flex flex-col items-center",
-        "max-h-[calc(100vh-90px)] overflow-y-auto px-20 pt-8"
+        "h-full px-20 pt-8"
       )}
     >
       {/*상단 필터*/}
@@ -227,16 +234,20 @@ function MatchingArticleList() {
       >
         {/*목록 있는 경우*/}
         {list.length > 0
-          ? list.map((article, index) => (
+          ? list.map(({ exchangePostNo, ...article }, index) => (
               <MatchingArticleCard
+                {...article}
                 className={classNames(
                   hasNewMatchingArticle &&
                     (index === 0
-                      ? "animate-new_matching_article_reveal z-10"
+                      ? "animate-new_matching_article_reveal"
                       : index < 4 && "animate-new_matching_article_slide")
                 )}
-                {...article}
-                key={article.exchangePostNo}
+                onClickHandler={() =>
+                  navigator(`/matching-article/${exchangePostNo}`)
+                }
+                exchangePostNo={exchangePostNo}
+                key={exchangePostNo}
               />
             ))
           : isSuccess && (
@@ -275,52 +286,37 @@ function MatchingArticleList() {
                 </div>
               </>
             )}
-        {/*로딩중 상태*/}
-        {isLoading && (
-          // dim
-          <div
-            className={classNames(
-              "absolute",
-              "h-full w-[calc(100%-160px)] bg-white bg-opacity-70"
-            )}
-          >
-            <AnimatedLoader
-              className={classNames(
-                "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              )}
-              isGray={!isFirstLoading}
-            />
-          </div>
-        )}
       </div>
+      {/*로딩중 상태*/}
+      {isLoading && (
+        // dim
+        <div className={classNames("absolute", "h-full w-full bg-white/70")}>
+          <AnimatedLoader
+            className={classNames(
+              "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            )}
+            isGray={!isFirstLoading}
+          />
+        </div>
+      )}
       {/*페이지네이션*/}
       {list.length > 0 && (
         <Pagination
           className={"mt-14"}
           currentPage={page}
-          totalPages={totalPages || 1}
+          totalPages={totalPages}
           handlePageChange={page => {
-            if (!scrollRef.current) {
+            if (!mainScrollRef?.current) {
               return;
             }
 
             setFilter(prev => ({ ...prev, page }));
-            scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
           }}
         />
       )}
       {/*탑 버튼*/}
-      {!isFilterVisible && (
-        <TopButton
-          onClick={() => {
-            if (!scrollRef.current) {
-              return;
-            }
-
-            scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        />
-      )}
+      {!isFilterVisible && <TopButton />}
     </div>
   );
 }
