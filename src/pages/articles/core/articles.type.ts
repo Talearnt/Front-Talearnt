@@ -14,7 +14,7 @@ export type durationType =
 // 매칭 게시글 - 진행 방식
 export type exchangeType = "온라인" | "오프라인" | "온/오프라인";
 // 매칭 게시글 - body
-export type matchArticleBodyType = commonArticleDataType & {
+export type matchingArticleBodyType = commonArticleDataType & {
   duration: durationType;
   exchangeType: exchangeType;
   giveTalents: number[];

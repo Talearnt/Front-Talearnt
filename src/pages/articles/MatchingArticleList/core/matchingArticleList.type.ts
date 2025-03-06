@@ -1,12 +1,15 @@
 import {
   durationType,
   exchangeType,
-  matchArticleBodyType
+  matchingArticleBodyType
 } from "@pages/articles/core/articles.type";
 import { profileType } from "@type/user.type";
 
 export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
-  Omit<matchArticleBodyType, "giveTalents" | "receiveTalents" | "imageUrls"> & {
+  Omit<
+    matchingArticleBodyType,
+    "giveTalents" | "receiveTalents" | "imageUrls"
+  > & {
     giveTalents: string[];
     receiveTalents: string[];
     exchangePostNo: number;
