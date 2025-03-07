@@ -25,21 +25,21 @@ import { dropdownOptionType } from "@components/dropdowns/dropdown.type";
 import { durationType } from "@pages/articles/core/articles.type";
 import {
   articleType,
-  communityArticleDataType,
-  matchArticleFormDataType
+  communityArticleFormDataType,
+  matchingArticleFormDataType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 type writeArticleInfoProps = {
   type: articleType;
-  communityArticleData: Omit<communityArticleDataType, "imageFileList">;
-  matchArticleData: Omit<matchArticleFormDataType, "imageFileList">;
+  communityArticleData: Omit<communityArticleFormDataType, "imageFileList">;
+  matchArticleData: Omit<matchingArticleFormDataType, "imageFileList">;
   handleCommunityDataChange: (
-    field: keyof communityArticleDataType,
-    value: communityArticleDataType[keyof communityArticleDataType]
+    field: keyof communityArticleFormDataType,
+    value: communityArticleFormDataType[keyof communityArticleFormDataType]
   ) => void;
   handleMatchDataChange: (
-    field: keyof matchArticleFormDataType,
-    value: matchArticleFormDataType[keyof matchArticleFormDataType]
+    field: keyof matchingArticleFormDataType,
+    value: matchingArticleFormDataType[keyof matchingArticleFormDataType]
   ) => void;
   errors: FieldErrors<{
     duration: dropdownOptionType<durationType>[];
