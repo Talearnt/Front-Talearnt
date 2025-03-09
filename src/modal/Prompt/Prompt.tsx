@@ -42,7 +42,13 @@ function Prompt() {
           )}
           <Button
             size={"small"}
-            onClick={promptData.confirmOnClickHandler ?? (() => setPrompt())}
+            onClick={() => {
+              if (promptData.confirmOnClickHandler) {
+                promptData.confirmOnClickHandler();
+              }
+
+              setPrompt();
+            }}
           >
             확인
           </Button>
