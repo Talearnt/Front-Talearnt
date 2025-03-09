@@ -98,6 +98,14 @@ function MatchingArticleDetail() {
     const doc = parser.parseFromString(content, "text/html");
 
     setEditMatchingArticle({
+      userNo,
+      nickname,
+      profileImg,
+      status,
+      createdAt,
+      favoriteCount,
+      isFavorite,
+      count,
       title,
       content,
       duration,
@@ -268,7 +276,7 @@ function MatchingArticleDetail() {
                   src={url}
                   alt={`${index}번째 업로드 이미지`}
                 />
-                {imageUrls.length > 4 && (
+                {imageUrls.length > 4 && index === 3 && (
                   <div
                     className={classNames(
                       "absolute top-0",

@@ -1,7 +1,10 @@
 import { postAPI, putAPI } from "@utils/apiMethods";
 
-import { matchingArticleBodyType } from "@pages/articles/core/articles.type";
-import { presignedURLBodyType } from "@pages/articles/WriteArticle/core/writeArticle.type";
+import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
+import {
+  matchingArticleBodyType,
+  presignedURLBodyType
+} from "@pages/articles/WriteArticle/core/writeArticle.type";
 
 export const postMatchingArticle = async (body: matchingArticleBodyType) =>
   await postAPI<number>("/v1/posts/exchanges", body, { withCredentials: true });
@@ -9,9 +12,7 @@ export const postMatchingArticle = async (body: matchingArticleBodyType) =>
 export const putMatchingArticle = async ({
   exchangePostNo,
   ...body
-}: matchingArticleBodyType & {
-  exchangePostNo: number;
-}) =>
+}: matchingArticleBodyType & Pick<matchingArticleType, "exchangePostNo">) =>
   await putAPI(`/v1/posts/exchanges/${exchangePostNo}`, body, {
     withCredentials: true
   });
