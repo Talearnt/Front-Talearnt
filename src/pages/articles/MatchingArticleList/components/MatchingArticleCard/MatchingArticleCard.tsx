@@ -24,8 +24,9 @@ function MatchingArticleCard({
   giveTalents,
   receiveTalents,
   createdAt,
-  favoriteCount
-}: matchingArticleType & { className?: string }) {
+  favoriteCount,
+  onClickHandler
+}: matchingArticleType & { className?: string; onClickHandler?: () => void }) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +75,7 @@ function MatchingArticleCard({
         "hover:border-talearnt_Primary_01",
         className
       )}
+      onClick={onClickHandler}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
@@ -87,7 +89,11 @@ function MatchingArticleCard({
         >
           {nickname}
         </span>
-        <PostFavoriteIcon className={"ml-auto"} isFavorite={isFavorite} />
+        <PostFavoriteIcon
+          className={"ml-auto"}
+          isFavorite={isFavorite}
+          size={28}
+        />
       </div>
       <div className={classNames("flex gap-1", "mb-2")}>
         <Badge label={status} />
@@ -167,7 +173,6 @@ function MatchingArticleCard({
         <div className={"flex items-center gap-1"}>
           <PostFavoriteIcon
             className={"fill-talearnt_Icon_03 stroke-talearnt_Icon_03"}
-            size={24}
           />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {favoriteCount}
