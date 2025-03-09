@@ -1,0 +1,319 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
+
+import { deleteMatchingArticle } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.api";
+
+import { classNames } from "@utils/classNames";
+import { createQueryKey } from "@utils/createQueryKey";
+import { filteredTalents } from "@utils/filteredTalents";
+
+import { useGetProfile } from "@hook/user.hook";
+import { useGetMatchingArticleDetail } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.hook";
+
+import { usePromptStore, useToastStore } from "@common/common.store";
+import { useEditMatchingArticleDataStore } from "@pages/articles/core/articles.store";
+
+import { ImageCarousel } from "@modal/ImageCarousel/ImageCarousel";
+
+import { Avatar } from "@components/Avatar/Avatar";
+import { Badge } from "@components/Badge/Badge";
+import { PostFavoriteIcon } from "@components/icons/PostFavoriteIcon/PostFavoriteIcon";
+import { TopButton } from "@components/TopButton/TopButton";
+
+import { queryKeys } from "@common/common.constants";
+
+function MatchingArticleDetail() {
+  const nickNameRef = useRef<HTMLSpanElement>(null);
+  const navigator = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: {
+      data: { userNo: profileUserNo }
+    }
+  } = useGetProfile();
+  const {
+    data: {
+      data: {
+        exchangePostNo,
+        userNo,
+        nickname,
+        profileImg,
+        title,
+        content,
+        duration,
+        exchangeType,
+        giveTalents,
+        receiveTalents,
+        status,
+        createdAt,
+        favoriteCount,
+        isFavorite,
+        imageUrls,
+        count
+      }
+    },
+    isError
+  } = useGetMatchingArticleDetail();
+
+  const setEditMatchingArticle = useEditMatchingArticleDataStore(
+    state => state.setEditMatchingArticle
+  );
+  const setPrompt = usePromptStore(state => state.setPrompt);
+  const setToast = useToastStore(state => state.setToast);
+
+  const [clickedIndex, setClickedIndex] = useState<number | undefined>(
+    undefined
+  );
+  const [isFilterVisible, setIsFilterVisible] = useState(true);
+
+  const isMyPost = userNo === profileUserNo;
+
+  const handleDelete = () =>
+    setPrompt({
+      title: "게시물 삭제",
+      content:
+        "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
+      cancelOnClickHandler: () => setPrompt(),
+      confirmOnClickHandler: async () => {
+        try {
+          await deleteMatchingArticle(exchangePostNo);
+          await queryClient.invalidateQueries({
+            queryKey: createQueryKey([queryKeys.MATCH], { isArticleList: true })
+          });
+          navigator("/matching");
+          setToast({ message: "게시물이 삭제되었습니다" });
+        } catch (e) {
+          // TODO 디자인 에러케이스 나오면 적용
+          console.log(e);
+        }
+      }
+    });
+  const handleEdit = () => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+
+    setEditMatchingArticle({
+      title,
+      content,
+      duration,
+      exchangeType,
+      giveTalents: filteredTalents(giveTalents).map(
+        ({ talentCode }) => talentCode
+      ),
+      receiveTalents: filteredTalents(receiveTalents).map(
+        ({ talentCode }) => talentCode
+      ),
+      pureText: doc.body.textContent ?? "",
+      imageFileList: [],
+      exchangePostNo
+    });
+
+    navigator("/write-article");
+  };
+
+  useEffect(() => {
+    if (isError) {
+      // TODO 디자인 에러케이스 나오면 적용
+      navigator("/matching");
+    }
+  }, [isError, navigator]);
+  useEffect(() => {
+    if (!nickNameRef.current) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsFilterVisible(entry.isIntersecting);
+    });
+
+    observer.observe(nickNameRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className={classNames("flex flex-col gap-6", "mt-8 w-[848px]")}>
+      {isMyPost && (
+        <div className={"flex justify-end gap-4"}>
+          <button
+            className={classNames(
+              "h-10 w-[60px] rounded-md bg-talearnt_BG_Background",
+              "text-body1_18_medium text-talearnt_Text_03",
+              "hover:bg-talearnt_BG_Up_01 hover:text-talearnt_Text_02"
+            )}
+            onClick={handleEdit}
+          >
+            수정
+          </button>
+          <button
+            className={classNames(
+              "h-10 w-[60px] rounded-md bg-talearnt_BG_Background",
+              "text-body1_18_medium text-talearnt_Text_03",
+              "hover:bg-talearnt_BG_Up_01 hover:text-talearnt_Text_02"
+            )}
+            onClick={handleDelete}
+          >
+            삭제
+          </button>
+        </div>
+      )}
+      <h1 className={"text-heading1_30_semibold text-talearnt_Text_Strong"}>
+        {title}
+      </h1>
+      <div className={"flex items-center gap-4"}>
+        <Avatar imageUrl={profileImg} />
+        <span
+          className={"text-body1_18_semibold text-talearnt_Text_01"}
+          ref={nickNameRef}
+        >
+          {nickname}
+        </span>
+        <div className={"h-5 w-px bg-talearnt_Line_01"} />
+        <span className={"text-body1_18_semibold text-talearnt_Text_04"}>
+          {dayjs(createdAt).format("YYYY-MM-DD")}
+        </span>
+        <Badge
+          label={status}
+          size={"medium"}
+          type={status === "모집중" ? "primary" : "disabled"}
+        />
+        <div
+          className={classNames(
+            "ml-auto rounded-lg border border-talearnt_Line_01 p-2",
+            "cursor-pointer",
+            "hover:bg-talearnt_BG_Up_01"
+          )}
+        >
+          <PostFavoriteIcon isFavorite={isFavorite} size={32} />
+        </div>
+      </div>
+      <div className={"grid grid-cols-2 gap-6"}>
+        <div className={"flex flex-col gap-2"}>
+          <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
+            주고 싶은 나의 재능
+          </label>
+          <div className={"flex flex-wrap gap-2"}>
+            {giveTalents.map(talentName => (
+              <Badge
+                label={talentName}
+                type={"keyword"}
+                size={"medium"}
+                key={`preview-giveTalent-${talentName}`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className={"flex flex-col gap-2"}>
+          <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
+            주고 싶은 나의 재능
+          </label>
+          <div className={"flex flex-wrap gap-2"}>
+            {receiveTalents.map(talentName => (
+              <Badge
+                label={talentName}
+                type={"keyword"}
+                size={"medium"}
+                key={`preview-receiveTalent-${talentName}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className={"flex gap-16"}>
+        <div className={"flex gap-4"}>
+          <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
+            진행 방식
+          </label>
+          <span className={"text-body2_16_semibold text-talearnt_Text_02"}>
+            {exchangeType}
+          </span>
+        </div>
+        <div className={"flex gap-4"}>
+          <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
+            진행 기간
+          </label>
+          <span className={"text-body2_16_semibold text-talearnt_Text_02"}>
+            {duration}
+          </span>
+        </div>
+      </div>
+      {imageUrls.length > 0 && (
+        <div
+          className={classNames(
+            "flex gap-4",
+            "rounded-2xl bg-talearnt_BG_Up_02 p-6"
+          )}
+        >
+          {imageUrls.map((url, index) => {
+            if (index > 3) {
+              return null;
+            }
+
+            return (
+              <div
+                className={classNames(
+                  "relative",
+                  "h-[188px] w-[188px] cursor-pointer overflow-hidden rounded-2xl"
+                )}
+                onClick={() => setClickedIndex(index === 3 ? 0 : index)}
+                key={url}
+              >
+                <img
+                  className={"h-full w-full object-cover"}
+                  src={url}
+                  alt={`${index}번째 업로드 이미지`}
+                />
+                {imageUrls.length > 4 && (
+                  <div
+                    className={classNames(
+                      "absolute top-0",
+                      "flex items-center justify-center",
+                      "h-full w-full bg-black/60"
+                    )}
+                  >
+                    <span
+                      className={
+                        "text-body2_16_semibold text-talearnt_BG_Background"
+                      }
+                    >
+                      이미지
+                      <br />
+                      더보기
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <div className={"h-px w-full bg-talearnt_Line_01"} />
+      <p className={"mb-8"} dangerouslySetInnerHTML={{ __html: content }} />
+      <div className={"flex items-center gap-2"}>
+        <span className={"text-body3_14_medium text-talearnt_Text_03"}>
+          찜 {favoriteCount}
+        </span>
+        <div className={"h-1 w-1 rounded-full bg-talearnt_Text_03"} />
+        <span className={"text-body3_14_medium text-talearnt_Text_03"}>
+          조회수 {count}
+        </span>
+      </div>
+      {clickedIndex !== undefined && (
+        <ImageCarousel
+          title={title}
+          clickedIndex={clickedIndex}
+          imageUrls={imageUrls}
+          onCloseHandler={() => setClickedIndex(undefined)}
+        />
+      )}
+      {!isFilterVisible && <TopButton />}
+    </div>
+  );
+}
+
+export default MatchingArticleDetail;
