@@ -1,25 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useQueryClient } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 
-import { getMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.api";
 import {
-  postArticle,
-  postToGetPresignedURL
+  postToGetPresignedURL,
+  putMatchingArticle
 } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
-import { filteredTalents } from "@utils/filteredTalents";
-import { createQueryKey } from "@utils/queryKey";
 
 import { useGetProfile } from "@hook/user.hook";
+import { usePostMatchingArticle } from "@pages/articles/WriteArticle/core/writeArticle.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
-import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
+import { useEditMatchingArticleDataStore } from "@pages/articles/core/articles.store";
 
 import { PreviewArticleModal } from "@pages/articles/WriteArticle/components/PreviewArticleModal/PreviewArticleModal";
 import { WriteArticleInfo } from "@pages/articles/WriteArticle/components/WriteArticleInfo/WriteArticleInfo";
@@ -37,38 +33,25 @@ import {
   matchArticleSchema
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
-import { customAxiosResponseType, paginationType } from "@common/common.type";
-import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 import {
   articleType,
-  communityArticleDataType,
-  matchArticleFormDataType
+  communityArticleFormDataType,
+  matchingArticleFormDataType
 } from "@pages/articles/WriteArticle/core/writeArticle.type";
-
-const imageRegex = /src="([^"]+)"/g;
 
 function WriteArticle() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigator = useNavigate();
 
-  const queryClient = useQueryClient();
-
-  const type = (searchParams.get("type") as articleType | null) ?? "match";
-  const isMatchType = type === "match";
-
-  const {
-    data: {
-      data: { profileImg, nickname }
-    },
-    isSuccess
-  } = useGetProfile(isMatchType);
+  const { isSuccess } = useGetProfile();
 
   const {
     formState: { errors: matchErrors },
     handleSubmit: handleMatchSubmit,
     watch: matchWatch,
     setValue: setMatchArticleData,
-    trigger: matchTrigger
+    trigger: matchTrigger,
+    reset
   } = useForm({
     resolver: yupResolver(matchArticleSchema),
     defaultValues: {
@@ -97,20 +80,24 @@ function WriteArticle() {
     }
   });
 
+  const { mutateAsync } = usePostMatchingArticle();
+
+  const editMatchingArticle = useEditMatchingArticleDataStore(
+    state => state.editMatchingArticle
+  );
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
-  const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
-    state => state.setHasNewMatchingArticle
-  );
 
   const [isOpenPreview, setIsOpenPreview] = useState(false);
 
   const communityArticleData = communityWatch();
   const matchArticleData = matchWatch();
+  const type = (searchParams.get("type") as articleType | null) ?? "match";
+  const isMatchType = type === "match";
 
   const handleCommunityDataChange = (
-    field: keyof communityArticleDataType,
-    value: communityArticleDataType[keyof communityArticleDataType]
+    field: keyof communityArticleFormDataType,
+    value: communityArticleFormDataType[keyof communityArticleFormDataType]
   ) => {
     setCommunityArticleData(field, value);
 
@@ -119,8 +106,8 @@ function WriteArticle() {
     }
   };
   const handleMatchDataChange = (
-    field: keyof matchArticleFormDataType,
-    value: matchArticleFormDataType[keyof matchArticleFormDataType]
+    field: keyof matchingArticleFormDataType,
+    value: matchingArticleFormDataType[keyof matchingArticleFormDataType]
   ) => {
     setMatchArticleData(field, value);
 
@@ -128,6 +115,8 @@ function WriteArticle() {
       void matchTrigger(field);
     }
   };
+  const extractImageSrcList = (content: string) =>
+    [...content.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]);
   const postMatchArticle = async () => {
     const {
       title,
@@ -139,18 +128,20 @@ function WriteArticle() {
       receiveTalents
     } = matchArticleData;
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const contentImages = Array.from(doc.querySelectorAll("img"));
-    const files = imageFileList.filter(({ url }) =>
-      contentImages.some(image => image.src === url)
-    );
-    const imageUrls = [];
+    // content에 있는 image의 src 목록
+    const imageSrcList = extractImageSrcList(content);
+    // 누적된 파일 중 현재 content에 있는 image의 파일만 필터
+    const files = imageFileList.filter(({ url }) => imageSrcList.includes(url));
+    // 필터링 된 파일이 0개라면 게시물 수정 시 기존에 있던 image들만 있는 경우
+    const imageUrls: string[] = files.length === 0 ? imageSrcList : [];
 
+    // 업로드 할 파일이 있는 경우에만 실행
     if (files.length > 0) {
-      let presignedURLs: string[];
+      let presignedURLs: string[] = [];
+      let presignedURLIndex = 0;
 
       try {
+        // 이미지 올릴 주소 요청
         const { data } = await postToGetPresignedURL(
           files.map(({ fileName, fileType, fileSize }) => ({
             fileName,
@@ -168,23 +159,29 @@ function WriteArticle() {
         return;
       }
 
-      for (const [index, img] of contentImages.entries()) {
+      for (const src of imageSrcList) {
+        // src가 파일에 없다면 기존에 업로드 한 이미지
+        if (!files.some(({ url }) => url === src)) {
+          imageUrls.push(src);
+          continue;
+        }
+
         try {
-          const presignedURL = presignedURLs[index];
+          const presignedURL = presignedURLs[presignedURLIndex];
           const { origin, pathname } = new URL(presignedURL);
+          // presingedURL에서 필요없는 부분 제거하고 저장
+          const url = origin + pathname;
 
           await fetch(presignedURL, {
             method: "PUT",
-            body: files[index].file as File,
+            body: files[presignedURLIndex].file as File,
             headers: new Headers({
-              "Content-Type": files[index].fileType
+              "Content-Type": files[presignedURLIndex].fileType
             })
           });
 
-          const url = origin + pathname;
-
-          img.src = url;
           imageUrls.push(url);
+          presignedURLIndex++;
         } catch {
           setToast({
             message: "이미지 업로드 중 오류가 발생했습니다.",
@@ -196,86 +193,38 @@ function WriteArticle() {
     }
 
     try {
-      // 모든 매칭 게시물 목록 캐시 무효화
-      await queryClient.invalidateQueries({
-        queryKey: createQueryKey(["MATCH"], { isArticleList: true })
-      });
-      // 필터링 되지 않은 매칭 게시물 목록 프리패치
-      await queryClient.prefetchQuery({
-        queryKey: createQueryKey(
-          [
-            "MATCH",
-            { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
-          ],
-          { isArticleList: true }
-        ),
-        queryFn: async () =>
-          await getMatchingArticleList({
-            giveTalents: [],
-            receiveTalents: [],
-            order: "recent",
-            page: 1
-          })
-      });
-      // 게시물 작성
-      await postArticle({
-        title,
-        content: doc.body.innerHTML,
-        exchangeType,
-        duration,
-        giveTalents,
-        receiveTalents,
-        imageUrls
-      });
-      // 새롭게 작성된 게시물 저장
-      queryClient.setQueryData<
-        customAxiosResponseType<paginationType<matchingArticleType>>
-      >(
-        createQueryKey(
-          [
-            "MATCH",
-            { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
-          ],
-          { isArticleList: true }
-        ),
-        oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              results: [
-                {
-                  profileImg,
-                  nickname,
-                  duration,
-                  exchangeType,
-                  giveTalents: filteredTalents(giveTalents).map(
-                    ({ talentName }) => talentName
-                  ),
-                  receiveTalents: filteredTalents(receiveTalents).map(
-                    ({ talentName }) => talentName
-                  ),
-                  exchangePostNo: -1,
-                  status: "모집중",
-                  title,
-                  content: doc.body.innerText,
-                  createdAt: dayjs().format("YYYY-MM-DD"),
-                  favoriteCount: 0,
-                  isFavorite: false
-                },
-                ...oldData.data.results.slice(0, -1)
-              ]
-            }
-          };
-        }
+      // content내 image src변경할 때 사용할 용도
+      const newImageUrls = [...imageUrls];
+      // content내 image src 변경
+      const newContent = content.replace(
+        /(<img\s+[^>]*src=")([^"]+)(")/g,
+        (match, start, _src, end) =>
+          newImageUrls.length ? `${start}${newImageUrls.shift()}${end}` : match
       );
-      // 애니메이션을 위한 새로운 게시물 플래그
-      setHasNewMatchingArticle(true);
-      navigator("/matching");
+
+      if (editMatchingArticle) {
+        // TODO hook 개발
+        await putMatchingArticle({
+          title,
+          content: newContent,
+          exchangeType,
+          duration,
+          giveTalents,
+          receiveTalents,
+          imageUrls,
+          exchangePostNo: editMatchingArticle.exchangePostNo
+        });
+      } else {
+        await mutateAsync({
+          title,
+          content: newContent,
+          exchangeType,
+          duration,
+          giveTalents,
+          receiveTalents,
+          imageUrls
+        });
+      }
     } catch {
       setToast({
         message: "게시글 업로드 중 오류가 발생했습니다.",
@@ -283,6 +232,12 @@ function WriteArticle() {
       });
     }
   };
+
+  useEffect(() => {
+    if (editMatchingArticle) {
+      reset(editMatchingArticle);
+    }
+  }, [editMatchingArticle, reset]);
 
   if (isMatchType && !isSuccess) {
     return null;
@@ -422,13 +377,8 @@ function WriteArticle() {
                 title: "게시물 작성 취소",
                 content:
                   "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
-                cancelOnClickHandler: () => {
-                  setPrompt();
-                },
-                confirmOnClickHandler: () => {
-                  navigator(-1);
-                  setPrompt();
-                }
+                cancelOnClickHandler: () => setPrompt(),
+                confirmOnClickHandler: () => navigator(-1)
               })
             }
           >
@@ -447,12 +397,9 @@ function WriteArticle() {
           giveTalents={matchArticleData.giveTalents}
           receiveTalents={matchArticleData.receiveTalents}
           postType={communityArticleData.postType}
-          imageUrls={[
-            ...(isMatchType
-              ? matchArticleData
-              : communityArticleData
-            ).content.matchAll(imageRegex)
-          ].map(match => match[1])}
+          imageUrls={extractImageSrcList(
+            (isMatchType ? matchArticleData : communityArticleData).content
+          )}
           title={(isMatchType ? matchArticleData : communityArticleData).title}
           content={
             (isMatchType ? matchArticleData : communityArticleData).content

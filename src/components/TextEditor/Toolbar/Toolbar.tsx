@@ -33,9 +33,12 @@ const image = Quill.import("formats/image") as {
   sanitize: (url: string) => string;
 };
 
-image.sanitize = function (url: string) {
-  return url.startsWith("blob:") ? url : "";
-};
+image.sanitize = (url: string) =>
+  url.startsWith("blob:") ||
+  url.startsWith("http://") ||
+  url.startsWith("https://")
+    ? url
+    : "";
 
 icons.bold = null;
 icons.italic = null;
