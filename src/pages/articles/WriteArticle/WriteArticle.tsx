@@ -4,15 +4,15 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import {
-  postToGetPresignedURL,
-  putMatchingArticle
-} from "@pages/articles/WriteArticle/core/writeArticle.api";
+import { postToGetPresignedURL } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
 import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
-import { usePostMatchingArticle } from "@pages/articles/WriteArticle/core/writeArticle.hook";
+import {
+  usePostMatchingArticle,
+  usePutEditMatchingArticle
+} from "@pages/articles/WriteArticle/core/writeArticle.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
 import { useEditMatchingArticleDataStore } from "@pages/articles/core/articles.store";
@@ -80,9 +80,10 @@ function WriteArticle() {
     }
   });
 
-  const { mutateAsync } = usePostMatchingArticle();
+  const { mutateAsync: postMatchingArticle } = usePostMatchingArticle();
+  const { mutateAsync: editMatchingArticle } = usePutEditMatchingArticle();
 
-  const editMatchingArticle = useEditMatchingArticleDataStore(
+  const editMatchingArticleData = useEditMatchingArticleDataStore(
     state => state.editMatchingArticle
   );
   const setToast = useToastStore(state => state.setToast);
@@ -202,20 +203,18 @@ function WriteArticle() {
           newImageUrls.length ? `${start}${newImageUrls.shift()}${end}` : match
       );
 
-      if (editMatchingArticle) {
-        // TODO hook 개발
-        await putMatchingArticle({
+      if (editMatchingArticleData) {
+        await editMatchingArticle({
           title,
           content: newContent,
           exchangeType,
           duration,
           giveTalents,
           receiveTalents,
-          imageUrls,
-          exchangePostNo: editMatchingArticle.exchangePostNo
+          imageUrls
         });
       } else {
-        await mutateAsync({
+        await postMatchingArticle({
           title,
           content: newContent,
           exchangeType,
@@ -234,10 +233,19 @@ function WriteArticle() {
   };
 
   useEffect(() => {
-    if (editMatchingArticle) {
-      reset(editMatchingArticle);
+    if (editMatchingArticleData) {
+      reset({
+        title: editMatchingArticleData.title,
+        content: editMatchingArticleData.content,
+        duration: editMatchingArticleData.duration,
+        exchangeType: editMatchingArticleData.exchangeType,
+        giveTalents: editMatchingArticleData.giveTalents,
+        receiveTalents: editMatchingArticleData.receiveTalents,
+        pureText: editMatchingArticleData.pureText,
+        imageFileList: []
+      });
     }
-  }, [editMatchingArticle, reset]);
+  }, [editMatchingArticleData, reset]);
 
   if (isMatchType && !isSuccess) {
     return null;

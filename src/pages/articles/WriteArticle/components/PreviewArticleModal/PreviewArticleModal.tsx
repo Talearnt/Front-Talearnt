@@ -159,7 +159,7 @@ function PreviewArticleModal({
             {imageUrls.length > 0 && (
               <div
                 className={classNames(
-                  "grid grid-cols-4 gap-4",
+                  "flex gap-4",
                   "rounded-2xl bg-talearnt_BG_Up_02 p-6"
                 )}
               >
@@ -169,20 +169,24 @@ function PreviewArticleModal({
                   }
 
                   return (
-                    <div className={"relative"} key={`${url}-${index}`}>
+                    <div
+                      className={classNames(
+                        "relative",
+                        "h-[152px] w-[152px] cursor-pointer overflow-hidden rounded-2xl"
+                      )}
+                      key={url}
+                    >
                       <img
-                        className={
-                          "aspect-square w-full rounded-2xl object-cover"
-                        }
+                        className={"h-full w-full object-cover"}
                         src={url}
                         alt={`${index}번째 업로드 이미지`}
                       />
-                      {index === 3 && (
+                      {imageUrls.length > 4 && (
                         <div
                           className={classNames(
                             "absolute top-0",
                             "flex items-center justify-center",
-                            "h-full w-full rounded-2xl bg-[rgba(0,0,0,0.6)]"
+                            "h-full w-full bg-black/60"
                           )}
                         >
                           <span
