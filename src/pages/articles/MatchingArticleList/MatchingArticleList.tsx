@@ -290,7 +290,9 @@ function MatchingArticleList() {
       {/*로딩중 상태*/}
       {isLoading && (
         // dim
-        <div className={classNames("absolute", "h-full w-full bg-white/70")}>
+        <div
+          className={classNames("absolute top-0", "h-full w-full bg-white/70")}
+        >
           <AnimatedLoader
             className={classNames(
               "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
