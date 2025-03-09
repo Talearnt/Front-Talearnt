@@ -1,7 +1,10 @@
 import {
+  commonArticleDataType,
   communityArticleBodyType,
-  matchingArticleBodyType
+  durationType,
+  exchangeType
 } from "@pages/articles/core/articles.type";
+import { matchingArticleDetailType } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.type";
 
 // 게시글 타입
 export type articleType = "match" | "community";
@@ -16,6 +19,15 @@ export type imageFileType = {
 };
 export type presignedURLBodyType = Omit<imageFileType, "file" | "url">;
 
+// 매칭 게시글 - body
+export type matchingArticleBodyType = commonArticleDataType & {
+  duration: durationType;
+  exchangeType: exchangeType;
+  giveTalents: number[];
+  receiveTalents: number[];
+  imageUrls: string[];
+};
+
 // 매칭 게시글 - state
 export type matchingArticleFormDataType = Omit<
   matchingArticleBodyType,
@@ -26,9 +38,19 @@ export type matchingArticleFormDataType = Omit<
 };
 
 // 매칭 게시글 수정
-export type editMatchingArticleDataType = matchingArticleFormDataType & {
-  exchangePostNo: number;
-};
+export type editMatchingArticleDataType = matchingArticleFormDataType &
+  Pick<
+    matchingArticleDetailType,
+    | "userNo"
+    | "nickname"
+    | "profileImg"
+    | "exchangePostNo"
+    | "status"
+    | "createdAt"
+    | "favoriteCount"
+    | "isFavorite"
+    | "count"
+  >;
 
 // 커뮤니티 게시글 - state
 export type communityArticleFormDataType = Omit<
