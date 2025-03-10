@@ -28,5 +28,7 @@ export type paginationType<T> = {
     hasPrevious: boolean;
     totalPages: number;
     currentPage: number;
+    totalCount: number;
+    latestCreatedAt: string;
   };
 };
