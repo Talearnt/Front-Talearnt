@@ -29,7 +29,6 @@ import {
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
 import { durationType, exchangeType } from "@pages/articles/core/articles.type";
-import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 function MatchingArticleList() {
   const filterRef = useRef<HTMLDivElement>(null);
@@ -39,7 +38,10 @@ function MatchingArticleList() {
 
   const {
     data: {
-      data: { results, pagination }
+      data: {
+        results,
+        pagination: { totalPages }
+      }
     },
     isLoading,
     isSuccess
@@ -76,14 +78,6 @@ function MatchingArticleList() {
   );
   const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
-  const [{ list, totalPages }, setMatchingArticleListData] = useState<{
-    list: matchingArticleType[];
-    totalPages: number;
-  }>({
-    list: [],
-    totalPages: 1
-  });
-  const [isFirstLoading, setIsFirstLoading] = useState(true);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
 
   const hasFilter =
@@ -93,21 +87,6 @@ function MatchingArticleList() {
     type !== undefined ||
     status !== undefined;
 
-  // 페이지 이동 시 기존 카드를 보여주기 위해 state 저장
-  useEffect(() => {
-    if (!isSuccess) {
-      return;
-    }
-
-    if (isFirstLoading) {
-      setIsFirstLoading(false);
-    }
-
-    setMatchingArticleListData({
-      list: results,
-      totalPages: pagination.totalPages
-    });
-  }, [isFirstLoading, isSuccess, pagination.totalPages, results]);
   // 탑 버튼이 필터가 가려진 이후 보여야해서 추적
   useEffect(() => {
     if (!filterRef.current) {
@@ -124,11 +103,11 @@ function MatchingArticleList() {
   }, []);
   // 애니메이션 완료 후(페이지 이동/이탈) 플래그 원복
   useEffect(() => {
-    if (page === 1 || !hasNewMatchingArticle) {
+    if (!hasNewMatchingArticle) {
       return;
     }
 
-    setHasNewMatchingArticle(false);
+    setTimeout(() => setHasNewMatchingArticle(false), 1000);
 
     return () => setHasNewMatchingArticle(false);
   }, [hasNewMatchingArticle, page, queryClient, setHasNewMatchingArticle]);
@@ -227,14 +206,14 @@ function MatchingArticleList() {
       {/*매칭 게시물 목록 결과*/}
       <div
         className={
-          list.length > 0
+          results.length > 0
             ? "grid grid-cols-[repeat(4,305px)] gap-5"
             : classNames("flex flex-col items-center", "mt-[72px]")
         }
       >
         {/*목록 있는 경우*/}
-        {list.length > 0
-          ? list.map(({ exchangePostNo, ...article }, index) => (
+        {results.length > 0
+          ? results.map(({ exchangePostNo, ...article }, index) => (
               <MatchingArticleCard
                 {...article}
                 className={classNames(
@@ -291,18 +270,21 @@ function MatchingArticleList() {
       {isLoading && (
         // dim
         <div
-          className={classNames("absolute top-0", "h-full w-full bg-white/70")}
+          className={classNames(
+            "fixed top-[90px]",
+            "h-[calc(100vh-90px)] w-full bg-white/70"
+          )}
         >
           <AnimatedLoader
             className={classNames(
               "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             )}
-            isGray={!isFirstLoading}
+            isGray={results.length > 0}
           />
         </div>
       )}
       {/*페이지네이션*/}
-      {list.length > 0 && (
+      {results.length > 0 && (
         <Pagination
           className={"mt-14"}
           currentPage={page}
