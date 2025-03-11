@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
-import { deleteMatchingArticle } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.api";
-
 import { classNames } from "@utils/classNames";
-import { createQueryKey } from "@utils/createQueryKey";
 import { filteredTalents } from "@utils/filteredTalents";
 
 import { useGetProfile } from "@hook/user.hook";
-import { useGetMatchingArticleDetail } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.hook";
+import {
+  useDeleteMatchingArticle,
+  useGetMatchingArticleDetail
+} from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.hook";
 
-import { usePromptStore, useToastStore } from "@common/common.store";
+import { usePromptStore } from "@common/common.store";
 import { useEditMatchingArticleDataStore } from "@pages/articles/core/articles.store";
 
 import { ImageCarousel } from "@modal/ImageCarousel/ImageCarousel";
@@ -23,13 +22,9 @@ import { Badge } from "@components/Badge/Badge";
 import { PostFavoriteIcon } from "@components/icons/PostFavoriteIcon/PostFavoriteIcon";
 import { TopButton } from "@components/TopButton/TopButton";
 
-import { queryKeys } from "@common/common.constants";
-
 function MatchingArticleDetail() {
   const nickNameRef = useRef<HTMLSpanElement>(null);
   const navigator = useNavigate();
-
-  const queryClient = useQueryClient();
 
   const {
     data: {
@@ -59,12 +54,12 @@ function MatchingArticleDetail() {
     },
     isError
   } = useGetMatchingArticleDetail();
+  const { mutate } = useDeleteMatchingArticle();
 
   const setEditMatchingArticle = useEditMatchingArticleDataStore(
     state => state.setEditMatchingArticle
   );
   const setPrompt = usePromptStore(state => state.setPrompt);
-  const setToast = useToastStore(state => state.setToast);
 
   const [clickedIndex, setClickedIndex] = useState<number | undefined>(
     undefined
@@ -79,33 +74,13 @@ function MatchingArticleDetail() {
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
       cancelOnClickHandler: () => setPrompt(),
-      confirmOnClickHandler: async () => {
-        try {
-          await deleteMatchingArticle(exchangePostNo);
-          await queryClient.invalidateQueries({
-            queryKey: createQueryKey([queryKeys.MATCH], { isArticleList: true })
-          });
-          navigator("/matching");
-          setToast({ message: "게시물이 삭제되었습니다" });
-        } catch (e) {
-          // TODO 디자인 에러케이스 나오면 적용
-          console.log(e);
-        }
-      }
+      confirmOnClickHandler: () => mutate(exchangePostNo)
     });
   const handleEdit = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
 
     setEditMatchingArticle({
-      userNo,
-      nickname,
-      profileImg,
-      status,
-      createdAt,
-      favoriteCount,
-      isFavorite,
-      count,
       title,
       content,
       duration,
