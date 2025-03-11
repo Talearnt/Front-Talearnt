@@ -234,16 +234,7 @@ function WriteArticle() {
 
   useEffect(() => {
     if (editMatchingArticleData) {
-      reset({
-        title: editMatchingArticleData.title,
-        content: editMatchingArticleData.content,
-        duration: editMatchingArticleData.duration,
-        exchangeType: editMatchingArticleData.exchangeType,
-        giveTalents: editMatchingArticleData.giveTalents,
-        receiveTalents: editMatchingArticleData.receiveTalents,
-        pureText: editMatchingArticleData.pureText,
-        imageFileList: []
-      });
+      reset(editMatchingArticleData);
     }
   }, [editMatchingArticleData, reset]);
 

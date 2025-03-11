@@ -39,18 +39,7 @@ export type matchingArticleFormDataType = Omit<
 
 // 매칭 게시글 수정
 export type editMatchingArticleDataType = matchingArticleFormDataType &
-  Pick<
-    matchingArticleDetailType,
-    | "userNo"
-    | "nickname"
-    | "profileImg"
-    | "exchangePostNo"
-    | "status"
-    | "createdAt"
-    | "favoriteCount"
-    | "isFavorite"
-    | "count"
-  >;
+  Pick<matchingArticleDetailType, "exchangePostNo">;
 
 // 커뮤니티 게시글 - state
 export type communityArticleFormDataType = Omit<
