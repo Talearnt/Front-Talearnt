@@ -12,12 +12,15 @@ export const useQueryWithInitial = <T>(
   isSuccess: boolean;
   status: "error" | "pending" | "success";
 } => {
-  const { data, isSuccess, ...value } = useQuery(options);
+  const { data, ...value } = useQuery(options);
+
+  const isSuccess = value.isSuccess && value.fetchStatus === "idle";
+  const isLoading = value.isLoading || value.isFetching;
 
   return {
     data: isSuccess
       ? {
-          data: data.data,
+          data: (data as customAxiosResponseType<T>).data,
           errorCode: null,
           errorMessage: null,
           success: true,
@@ -30,7 +33,8 @@ export const useQueryWithInitial = <T>(
           success: true,
           status: 0
         },
+    ...value,
     isSuccess,
-    ...value
+    isLoading
   };
 };
