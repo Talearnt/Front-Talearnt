@@ -1,10 +1,20 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { getMatchingArticleDetail } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useShallow } from "zustand/shallow";
+
+import {
+  deleteMatchingArticle,
+  getMatchingArticleDetail
+} from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.api";
+import { getMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.api";
 
 import { createQueryKey } from "@utils/createQueryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
+
+import { useToastStore } from "@common/common.store";
+import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { queryKeys } from "@common/common.constants";
 
@@ -38,4 +48,42 @@ export const useGetMatchingArticleDetail = () => {
       enabled: exchangePostNo !== undefined
     }
   );
+};
+
+export const useDeleteMatchingArticle = () => {
+  const navigator = useNavigate();
+
+  const queryClient = useQueryClient();
+
+  const filter = useFilterStore(
+    useShallow(state => ({
+      giveTalents: state.giveTalents,
+      receiveTalents: state.receiveTalents,
+      duration: state.duration,
+      type: state.type,
+      status: state.status,
+      order: state.order,
+      page: state.page
+    }))
+  );
+  const setToast = useToastStore(state => state.setToast);
+
+  return useMutation({
+    mutationFn: deleteMatchingArticle,
+    onSuccess: async () => {
+      // 모든 매칭 게시물 목록 캐시 제거
+      queryClient.removeQueries({
+        queryKey: createQueryKey([queryKeys.MATCH], { isArticleList: true })
+      });
+      // 매칭 게시물 목록 프리패치
+      await queryClient.prefetchQuery({
+        queryKey: createQueryKey([queryKeys.MATCH, filter], {
+          isArticleList: true
+        }),
+        queryFn: async () => await getMatchingArticleList(filter)
+      });
+      navigator("/matching");
+      setToast({ message: "게시물이 삭제되었습니다" });
+    }
+  });
 };
