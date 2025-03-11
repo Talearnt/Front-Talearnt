@@ -9,7 +9,7 @@ import { useAuthStore } from "@pages/auth/core/auth.store";
 import { queryKeys } from "@common/common.constants";
 
 export const useGetProfile = (enabled = true) => {
-  const accessToken = useAuthStore(state => state.accessToken);
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   return useQueryWithInitial(
     {
@@ -24,7 +24,7 @@ export const useGetProfile = (enabled = true) => {
         isLoggedIn: true
       }),
       queryFn: async () => await getProfile(),
-      enabled: enabled && !!accessToken
+      enabled: enabled && isLoggedIn
     }
   );
 };
