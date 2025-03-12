@@ -27,7 +27,7 @@ export const exchangeTypeList: exchangeType[] = [
 export const postTypeList: postType[] = [
   "자유 게시판",
   "질문 게시판",
-  "스터디 모집"
+  "스터디 모집 게시판"
 ];
 
 export const durationOptions = durationList.map(item => ({
