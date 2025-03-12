@@ -2,6 +2,7 @@
 export type commonArticleDataType = {
   title: string;
   content: string;
+  createdAt: string;
 };
 
 // 매칭 게시글 - 진행 기간
@@ -15,9 +16,4 @@ export type durationType =
 export type exchangeType = "온라인" | "오프라인" | "온/오프라인";
 
 // 커뮤니티 게시글 - 게시판 타입
-export type postType = "자유 게시판" | "질문 게시판" | "스터디 모집";
-// 커뮤니티 게시글 - body
-export type communityArticleBodyType = commonArticleDataType & {
-  postType: postType;
-  imageUrls: string[];
-};
+export type postType = "자유 게시판" | "질문 게시판" | "스터디 모집 게시판";
