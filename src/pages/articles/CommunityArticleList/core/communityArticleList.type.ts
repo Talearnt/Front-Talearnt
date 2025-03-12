@@ -20,6 +20,5 @@ export type communityArticleType = Pick<
     count: number;
     isLike: boolean;
     likeCount: number;
-    popularScore: number;
     postType: postType;
   };

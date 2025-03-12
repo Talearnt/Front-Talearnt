@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
+import CommunityArticleDetail from "@pages/articles/CommunityArticleDetail/CommunityArticleDetail";
 import { CommunityArticleList } from "@pages/articles/CommunityArticleList/CommunityArticleList";
 
 const MatchingArticleList = lazy(
@@ -37,6 +38,14 @@ const articlesRouter: RouteObject[] = [
       </Suspense>
     ),
     path: "community"
+  },
+  {
+    element: (
+      <Suspense>
+        <CommunityArticleDetail />
+      </Suspense>
+    ),
+    path: "community-article/:communityPostNo"
   },
   {
     element: (
