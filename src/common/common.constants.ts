@@ -1,6 +1,7 @@
 export enum queryKeys {
   USER = "USER",
-  MATCH = "MATCH"
+  MATCH = "MATCH",
+  COMMUNITY = "COMMUNITY"
 }
 
 export const CATEGORIZED_TALENTS_LIST: {
