@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@utils/classNames";
@@ -10,7 +9,7 @@ import { useGetMatchingArticleList } from "@pages/articles/MatchingArticleList/c
 
 import { useMainScrollRefStore } from "@common/common.store";
 import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
-import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useMatchingArticleListFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { MatchingArticleCard } from "@pages/articles/MatchingArticleList/components/MatchingArticleCard/MatchingArticleCard";
 
@@ -34,8 +33,6 @@ function MatchingArticleList() {
   const filterRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
 
-  const queryClient = useQueryClient();
-
   const {
     data: {
       data: {
@@ -57,7 +54,7 @@ function MatchingArticleList() {
     page,
     setFilter,
     resetFilters
-  } = useFilterStore(
+  } = useMatchingArticleListFilterStore(
     useShallow(state => ({
       giveTalents: state.giveTalents,
       receiveTalents: state.receiveTalents,
@@ -110,7 +107,7 @@ function MatchingArticleList() {
     setTimeout(() => setHasNewMatchingArticle(false), 1000);
 
     return () => setHasNewMatchingArticle(false);
-  }, [hasNewMatchingArticle, page, queryClient, setHasNewMatchingArticle]);
+  }, [hasNewMatchingArticle, setHasNewMatchingArticle]);
 
   return (
     <div

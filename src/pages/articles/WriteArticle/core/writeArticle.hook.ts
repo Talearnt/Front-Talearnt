@@ -17,7 +17,7 @@ import {
   useEditMatchingArticleDataStore,
   useHasNewMatchingArticleStore
 } from "@pages/articles/core/articles.store";
-import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useMatchingArticleListFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { queryKeys } from "@common/common.constants";
 
@@ -43,7 +43,9 @@ export const usePostMatchingArticle = () => {
     }
   } = useGetProfile();
 
-  const resetFilters = useFilterStore(state => state.resetFilters);
+  const resetFilters = useMatchingArticleListFilterStore(
+    state => state.resetFilters
+  );
   const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
     state => state.setHasNewMatchingArticle
   );

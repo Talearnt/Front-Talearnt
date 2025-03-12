@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { matchingArticleListFilterType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 type matchingArticleListFilterStoreType = matchingArticleListFilterType & {
-  page: number;
   setFilter: (
     updater: (
       prev: matchingArticleListFilterType
@@ -12,8 +11,8 @@ type matchingArticleListFilterStoreType = matchingArticleListFilterType & {
   resetFilters: () => void;
 };
 
-export const useFilterStore = create<matchingArticleListFilterStoreType>(
-  set => ({
+export const useMatchingArticleListFilterStore =
+  create<matchingArticleListFilterStoreType>(set => ({
     giveTalents: [],
     receiveTalents: [],
     order: "recent",
@@ -32,5 +31,4 @@ export const useFilterStore = create<matchingArticleListFilterStoreType>(
         status: undefined,
         page: 1
       })
-  })
-);
+  }));
