@@ -9,7 +9,7 @@ import { createQueryKey } from "@utils/createQueryKey";
 
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
-import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useMatchingArticleListFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { queryKeys } from "@common/common.constants";
 
@@ -23,7 +23,7 @@ const matchingArticleListQueryKey = createQueryKey([queryKeys.MATCH], {
 export const useGetMatchingArticleList = () => {
   const queryClient = useQueryClient();
 
-  const filter = useFilterStore(
+  const filter = useMatchingArticleListFilterStore(
     useShallow(state => ({
       giveTalents: state.giveTalents,
       receiveTalents: state.receiveTalents,

@@ -14,7 +14,7 @@ import { createQueryKey } from "@utils/createQueryKey";
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
 import { useToastStore } from "@common/common.store";
-import { useFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
+import { useMatchingArticleListFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
 import { queryKeys } from "@common/common.constants";
 
@@ -55,7 +55,7 @@ export const useDeleteMatchingArticle = () => {
 
   const queryClient = useQueryClient();
 
-  const filter = useFilterStore(
+  const filter = useMatchingArticleListFilterStore(
     useShallow(state => ({
       giveTalents: state.giveTalents,
       receiveTalents: state.receiveTalents,
