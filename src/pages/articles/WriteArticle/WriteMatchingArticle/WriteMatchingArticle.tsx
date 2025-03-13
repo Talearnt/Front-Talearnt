@@ -5,6 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 
 import { postToGetPresignedURL } from "@pages/articles/WriteArticle/core/writeArticle.api";
 
+import { extractImageSrcList } from "@pages/articles/WriteArticle/core/writeArticle.util";
 import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
@@ -118,8 +119,6 @@ function WriteMatchingArticle() {
       void trigger(field);
     }
   };
-  const extractImageSrcList = (content: string) =>
-    [...content.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]);
   const postMatchArticle = async () => {
     setIsPostInProgress(true);
 

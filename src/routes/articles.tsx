@@ -1,17 +1,32 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
-import CommunityArticleDetail from "@pages/articles/CommunityArticleDetail/CommunityArticleDetail";
-import { CommunityArticleList } from "@pages/articles/CommunityArticleList/CommunityArticleList";
-
 const MatchingArticleList = lazy(
   () => import("@pages/articles/MatchingArticleList/MatchingArticleList")
 );
 const MatchingArticleDetail = lazy(
   () => import("@pages/articles/MatchingArticleDetail/MatchingArticleDetail")
 );
+const CommunityArticleList = lazy(
+  () => import("@pages/articles/CommunityArticleList/CommunityArticleList")
+);
+const CommunityArticleDetail = lazy(
+  () => import("@pages/articles/CommunityArticleDetail/CommunityArticleDetail")
+);
 const WriteArticle = lazy(
   () => import("@pages/articles/WriteArticle/WriteArticle")
+);
+const WriteMatchingArticle = lazy(
+  () =>
+    import(
+      "@pages/articles/WriteArticle/WriteMatchingArticle/WriteMatchingArticle"
+    )
+);
+const WriteCommunityArticle = lazy(
+  () =>
+    import(
+      "@pages/articles/WriteArticle/WriteCommunityArticle/WriteCommunityArticle"
+    )
 );
 
 const articlesRouter: RouteObject[] = [
@@ -53,7 +68,11 @@ const articlesRouter: RouteObject[] = [
         <WriteArticle />
       </Suspense>
     ),
-    path: "write-article"
+    path: "write-article",
+    children: [
+      { element: <WriteMatchingArticle />, path: "match" },
+      { element: <WriteCommunityArticle />, path: "community" }
+    ]
   }
 ];
 
