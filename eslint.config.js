@@ -43,6 +43,13 @@ export default [
       "@typescript-eslint/no-misused-promises": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/prefer-promise-reject-errors": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_"
+        }
+      ],
       "@typescript-eslint/restrict-template-expressions": [
         "error",
         { allowNumber: true }
@@ -129,7 +136,8 @@ export default [
         "warn",
         {
           selector: "variable",
-          format: ["camelCase", "PascalCase", "UPPER_CASE"] // 변수 이름 규칙
+          format: ["camelCase", "PascalCase", "UPPER_CASE"], // 변수 이름 규칙,
+          leadingUnderscore: "allow"
         },
         {
           selector: "function",
