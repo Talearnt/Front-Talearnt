@@ -3,8 +3,8 @@ import { useRef } from "react";
 import dayjs from "dayjs";
 
 import { classNames } from "@utils/classNames";
+import { filteredTalents } from "@utils/filteredTalents";
 
-import { useFilteredTalents } from "@hook/useFilteredTalents";
 import { useGetProfile } from "@hook/user.hook";
 
 import { Avatar } from "@components/Avatar/Avatar";
@@ -17,32 +17,32 @@ import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer"
 import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 
 import { postType } from "@pages/articles/core/articles.type";
-import { articleType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
-type PreviewArticleModalProps = {
-  type: articleType;
+type communityArticlePreviewProps = {
+  type: "community";
+  postType: postType;
+};
+type matchingArticlePreviewProps = {
+  type: "matching";
   duration: string;
   exchangeType: string;
   giveTalents: number[];
   receiveTalents: number[];
-  postType: postType;
+};
+type PreviewArticleModalProps = {
   imageUrls: string[];
   title: string;
   content: string;
   onCloseHandler: () => void;
-};
+} & (matchingArticlePreviewProps | communityArticlePreviewProps);
 
 function PreviewArticleModal({
   type,
-  duration,
-  exchangeType,
-  giveTalents,
-  receiveTalents,
-  postType,
   imageUrls,
   title,
   content,
-  onCloseHandler
+  onCloseHandler,
+  ...data
 }: PreviewArticleModalProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -51,9 +51,6 @@ function PreviewArticleModal({
       data: { nickname, profileImg }
     }
   } = useGetProfile();
-
-  const giveTalentsList = useFilteredTalents(giveTalents);
-  const receiveTalentsList = useFilteredTalents(receiveTalents);
 
   return (
     <ModalContainer>
@@ -86,11 +83,15 @@ function PreviewArticleModal({
                 {dayjs().format("YYYY-MM-DD")}
               </span>
               <Badge
-                label={type === "match" ? "모집중" : postType}
+                label={
+                  type === "matching"
+                    ? "모집중"
+                    : (data as communityArticlePreviewProps).postType
+                }
                 size={"medium"}
               />
             </div>
-            {type === "match" && (
+            {type === "matching" && (
               <>
                 <div className={"grid grid-cols-2 gap-6"}>
                   <div className={"flex flex-col gap-2"}>
@@ -100,7 +101,9 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {giveTalentsList.map(({ talentCode, talentName }) => (
+                      {filteredTalents(
+                        (data as matchingArticlePreviewProps).giveTalents
+                      ).map(({ talentCode, talentName }) => (
                         <Badge
                           label={talentName}
                           type={"keyword"}
@@ -117,7 +120,9 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {receiveTalentsList.map(({ talentCode, talentName }) => (
+                      {filteredTalents(
+                        (data as matchingArticlePreviewProps).receiveTalents
+                      ).map(({ talentCode, talentName }) => (
                         <Badge
                           label={talentName}
                           type={"keyword"}
@@ -138,7 +143,7 @@ function PreviewArticleModal({
                     <span
                       className={"text-body2_16_semibold text-talearnt_Text_02"}
                     >
-                      {exchangeType}
+                      {(data as matchingArticlePreviewProps).exchangeType}
                     </span>
                   </div>
                   <div className={"flex gap-4"}>
@@ -150,7 +155,7 @@ function PreviewArticleModal({
                     <span
                       className={"text-body2_16_semibold text-talearnt_Text_02"}
                     >
-                      {duration}
+                      {(data as matchingArticlePreviewProps).duration}
                     </span>
                   </div>
                 </div>
