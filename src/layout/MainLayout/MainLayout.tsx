@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { getAccessTokenUseRefreshToken } from "@pages/auth/core/auth.api";
 
@@ -36,6 +36,7 @@ const linkArray = [
 function MainLayout() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
+  const { pathname } = useLocation();
 
   const {
     data: {
@@ -53,6 +54,7 @@ function MainLayout() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  // 메모리에 accessToken 저장
   useEffect(() => {
     if (accessToken === null) {
       getAccessTokenUseRefreshToken()
@@ -63,10 +65,18 @@ function MainLayout() {
         .finally(() => setIsLoading(false));
     }
   }, [accessToken, setAccessToken]);
-
+  // 스크롤용 ref 저장
   useEffect(() => {
     setMainScrollRef(scrollRef);
   }, [setMainScrollRef]);
+  // 페이지 이동 시 스크롤 초기화
+  useEffect(() => {
+    if (!scrollRef.current) {
+      return;
+    }
+
+    scrollRef.current.scrollTo({ top: 0 });
+  }, [pathname]);
 
   if (isLoading) {
     return null;
@@ -109,7 +119,7 @@ function MainLayout() {
               className={classNames("w-[100px]", "text-body2_16_semibold")}
               size={"small"}
               onClick={() =>
-                navigator(accessToken ? "write-article" : "sign-in")
+                navigator(accessToken ? "write-article/match" : "sign-in")
               }
             >
               {accessToken ? "글쓰기" : "로그인"}
