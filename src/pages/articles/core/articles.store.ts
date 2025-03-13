@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { editMatchingArticleDataType } from "@pages/articles/WriteArticle/core/writeArticle.type";
+import { editMatchingArticleDataType } from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
 
 type hasNewMatchingArticleStoreType = {
   hasNewMatchingArticle: boolean;
