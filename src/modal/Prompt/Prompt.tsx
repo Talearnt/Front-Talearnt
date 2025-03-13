@@ -1,3 +1,5 @@
+import { useShallow } from "zustand/shallow";
+
 import { classNames } from "@utils/classNames";
 
 import { usePromptStore } from "@common/common.store";
@@ -6,8 +8,12 @@ import { Button } from "@components/Button/Button";
 import { ModalContainer } from "@components/modal/ModalContainer/ModalContainer";
 
 function Prompt() {
-  const promptData = usePromptStore(state => state.promptData);
-  const setPrompt = usePromptStore(state => state.setPrompt);
+  const { promptData, setPrompt } = usePromptStore(
+    useShallow(state => ({
+      promptData: state.promptData,
+      setPrompt: state.setPrompt
+    }))
+  );
 
   if (promptData === undefined) {
     return null;

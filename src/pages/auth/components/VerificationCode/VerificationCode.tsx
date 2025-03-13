@@ -73,6 +73,7 @@ function VerificationCode({
   });
 
   const { isFinished, isRunning, time, startTimer, stopTimer } = useTimer();
+
   const setPrompt = usePromptStore(state => state.setPrompt);
 
   const [{ isCodeVerified }, setVerification] = verificationState;

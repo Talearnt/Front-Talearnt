@@ -1,3 +1,5 @@
+import { useShallow } from "zustand/shallow";
+
 import { postTalents } from "@modal/TalentsSettingModal/core/talentsSettingModal.api";
 
 import { checkObjectType } from "@utils/checkObjectType";
@@ -13,17 +15,25 @@ import { Spinner } from "@components/Spinner/Spinner";
 import { talentsType } from "@modal/TalentsSettingModal/core/talentsSettingModal.type";
 
 function TalentsSettingModalBottom() {
-  const scrollRef = useTalentsSettingModalStore(state => state.scrollRef);
-  const currentTalentsType = useTalentsSettingModalStore(
-    state => state.currentTalentsType
+  const {
+    scrollRef,
+    currentTalentsType,
+    talentsData,
+    isSuccess,
+    isLoading,
+    setCurrentTalentsType,
+    setStatus
+  } = useTalentsSettingModalStore(
+    useShallow(state => ({
+      scrollRef: state.scrollRef,
+      currentTalentsType: state.currentTalentsType,
+      talentsData: state.talentsData,
+      isSuccess: state.isSuccess,
+      isLoading: state.isLoading,
+      setCurrentTalentsType: state.setCurrentTalentsType,
+      setStatus: state.setStatus
+    }))
   );
-  const talentsData = useTalentsSettingModalStore(state => state.talentsData);
-  const setCurrentTalentsType = useTalentsSettingModalStore(
-    state => state.setCurrentTalentsType
-  );
-  const setStatus = useTalentsSettingModalStore(state => state.setStatus);
-  const isLoading = useTalentsSettingModalStore(state => state.isLoading);
-  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
   const setToast = useToastStore(state => state.setToast);
 
   // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동

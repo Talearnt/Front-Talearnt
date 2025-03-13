@@ -1,3 +1,5 @@
+import { useShallow } from "zustand/shallow";
+
 import { useTalentsSettingModalStore } from "@modal/TalentsSettingModal/core/talentsSettingModal.store";
 
 import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
@@ -5,10 +7,12 @@ import { ModalHeader } from "@components/modal/ModalHeader/ModalHeader";
 import { CURRENT_TALENTS_TYPE_NAME } from "@modal/TalentsSettingModal/core/talentsList.constants";
 
 function TalentsSettingModalHeader() {
-  const currentTalentsType = useTalentsSettingModalStore(
-    state => state.currentTalentsType
+  const { currentTalentsType, isSuccess } = useTalentsSettingModalStore(
+    useShallow(state => ({
+      currentTalentsType: state.currentTalentsType,
+      isSuccess: state.isSuccess
+    }))
   );
-  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
 
   return (
     <ModalHeader>

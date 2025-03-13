@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import { useShallow } from "zustand/shallow";
+
 import { classNames } from "@utils/classNames";
 
 import { useAgreementStore } from "@pages/auth/core/auth.store";
@@ -13,8 +15,12 @@ function SignUp() {
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
-  const agreements = useAgreementStore(state => state.agreements);
-  const setAllAgreement = useAgreementStore(state => state.setAllAgreement);
+  const { agreements, setAllAgreement } = useAgreementStore(
+    useShallow(state => ({
+      agreements: state.agreements,
+      setAllAgreement: state.setAllAgreement
+    }))
+  );
 
   const pathArray = pathname.split("/");
   const currentPage = pathArray[pathArray.length - 1];
