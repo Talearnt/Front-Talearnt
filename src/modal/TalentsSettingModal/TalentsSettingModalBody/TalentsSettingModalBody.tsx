@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@utils/classNames";
 
@@ -35,14 +36,20 @@ function TalentsSettingModalBody() {
 
   const { register, reset, watch } = useForm<{ search: string }>();
 
-  const scrollRef = useTalentsSettingModalStore(state => state.scrollRef);
-  const currentTalentsType = useTalentsSettingModalStore(
-    state => state.currentTalentsType
-  );
-  const talentsData = useTalentsSettingModalStore(state => state.talentsData);
-  const isSuccess = useTalentsSettingModalStore(state => state.isSuccess);
-  const setTalentsData = useTalentsSettingModalStore(
-    state => state.setTalentsData
+  const {
+    scrollRef,
+    currentTalentsType,
+    talentsData,
+    isSuccess,
+    setTalentsData
+  } = useTalentsSettingModalStore(
+    useShallow(state => ({
+      scrollRef: state.scrollRef,
+      currentTalentsType: state.currentTalentsType,
+      talentsData: state.talentsData,
+      isSuccess: state.isSuccess,
+      setTalentsData: state.setTalentsData
+    }))
   );
   const setToast = useToastStore(state => state.setToast);
 

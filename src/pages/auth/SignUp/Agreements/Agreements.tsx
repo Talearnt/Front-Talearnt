@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
+import { useShallow } from "zustand/shallow";
+
 import { classNames } from "@utils/classNames";
 
 import { useAgreementStore } from "@pages/auth/core/auth.store";
@@ -10,15 +12,21 @@ import { Checkbox } from "@components/Checkbox/Checkbox";
 function Agreements() {
   const navigator = useNavigate();
 
-  const agreements = useAgreementStore(state => state.agreements);
-  const isAllAgreementsAgreed = useAgreementStore(
-    state => state.isAllAgreementsAgreed
+  const {
+    agreements,
+    isAllAgreementsAgreed,
+    isRequiredAgreementsAgreed,
+    setAllAgreement,
+    setAgreement
+  } = useAgreementStore(
+    useShallow(state => ({
+      agreements: state.agreements,
+      isAllAgreementsAgreed: state.isAllAgreementsAgreed,
+      isRequiredAgreementsAgreed: state.isRequiredAgreementsAgreed,
+      setAllAgreement: state.setAllAgreement,
+      setAgreement: state.setAgreement
+    }))
   );
-  const isRequiredAgreementsAgreed = useAgreementStore(
-    state => state.isRequiredAgreementsAgreed
-  );
-  const setAgreement = useAgreementStore(state => state.setAgreement);
-  const setAllAgreement = useAgreementStore(state => state.setAllAgreement);
 
   return (
     <>
