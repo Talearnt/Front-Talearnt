@@ -1,5 +1,5 @@
 import { durationType, exchangeType } from "@pages/articles/core/articles.type";
-import { matchingArticleBodyType } from "@pages/articles/WriteArticle/core/writeArticle.type";
+import { matchingArticleBodyType } from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
 import { profileType } from "@type/user.type";
 
 export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &

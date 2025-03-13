@@ -25,7 +25,7 @@ import {
   durationOptions,
   exchangeTypeList,
   talentsOptions
-} from "@pages/articles/WriteArticle/core/writeArticle.constants";
+} from "@pages/articles/core/articles.constants";
 
 import { durationType, exchangeType } from "@pages/articles/core/articles.type";
 
@@ -67,12 +67,13 @@ function MatchingArticleList() {
       resetFilters: state.resetFilters
     }))
   );
-  const hasNewMatchingArticle = useHasNewMatchingArticleStore(
-    state => state.hasNewMatchingArticle
-  );
-  const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
-    state => state.setHasNewMatchingArticle
-  );
+  const { hasNewMatchingArticle, setHasNewMatchingArticle } =
+    useHasNewMatchingArticleStore(
+      useShallow(state => ({
+        hasNewMatchingArticle: state.hasNewMatchingArticle,
+        setHasNewMatchingArticle: state.setHasNewMatchingArticle
+      }))
+    );
   const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
   const [isFilterVisible, setIsFilterVisible] = useState(true);

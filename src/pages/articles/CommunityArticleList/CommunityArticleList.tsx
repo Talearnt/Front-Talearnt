@@ -16,7 +16,7 @@ import { DropdownLabeled } from "@components/dropdowns/DropdownLabeled/DropdownL
 import { Pagination } from "@components/Pagination/Pagination";
 import { TopButton } from "@components/TopButton/TopButton";
 
-import { postTypeList } from "@pages/articles/WriteArticle/core/writeArticle.constants";
+import { postTypeList } from "@pages/articles/core/articles.constants";
 
 import { communityArticleListFilterType } from "@pages/articles/CommunityArticleList/core/communityArticleList.type";
 
@@ -36,7 +36,6 @@ function CommunityArticleList() {
   const { postType, page, setFilter } = useCommunityArticleListFilterStore(
     useShallow(state => ({
       postType: state.postType,
-
       page: state.page,
       setFilter: state.setFilter,
       resetFilters: state.resetFilters
@@ -251,4 +250,4 @@ function CommunityArticleList() {
   );
 }
 
-export { CommunityArticleList };
+export default CommunityArticleList;

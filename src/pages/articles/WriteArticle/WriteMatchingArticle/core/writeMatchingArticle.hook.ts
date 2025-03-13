@@ -5,8 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.api";
 import {
   postMatchingArticle,
-  putMatchingArticle
-} from "@pages/articles/WriteArticle/core/writeArticle.api";
+  putEditMatchingArticle
+} from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.api";
 
 import { createQueryKey } from "@utils/createQueryKey";
 import { filteredTalents } from "@utils/filteredTalents";
@@ -25,9 +25,9 @@ import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { matchingArticleDetailType } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 import {
-  editMatchingArticleDataType,
+  editMatchingArticleBodyType,
   matchingArticleBodyType
-} from "@pages/articles/WriteArticle/core/writeArticle.type";
+} from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
 
 const detailQueryKey = (exchangePostNo: number) =>
   createQueryKey([queryKeys.MATCH, exchangePostNo]);
@@ -145,12 +145,8 @@ export const usePutEditMatchingArticle = () => {
   );
 
   return useMutation({
-    mutationFn: async (data: matchingArticleBodyType) =>
-      await putMatchingArticle({
-        exchangePostNo: (editMatchingArticle as editMatchingArticleDataType)
-          .exchangePostNo,
-        ...data
-      }),
+    mutationFn: async (data: editMatchingArticleBodyType) =>
+      await putEditMatchingArticle(data),
     onSuccess: (
       _,
       {
