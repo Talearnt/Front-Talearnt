@@ -19,7 +19,7 @@ import {
   quillIconsType,
   sizeOptions,
   updatePickerItemColors
-} from "@components/TextEditor/Toolbar/toolbar.constants";
+} from "@pages/articles/WriteArticle/components/TextEditor/Toolbar/toolbar.constants";
 
 import "./Toolbar.css";
 

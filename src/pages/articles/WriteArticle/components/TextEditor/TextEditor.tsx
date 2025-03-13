@@ -6,8 +6,9 @@ import { classNames } from "@utils/classNames";
 
 import { useToastStore } from "@common/common.store";
 
+import { Toolbar } from "@pages/articles/WriteArticle/components/TextEditor/Toolbar/Toolbar";
+
 import { ErrorIcon } from "@components/icons/ErrorIcon/ErrorIcon";
-import { Toolbar } from "@components/TextEditor/Toolbar/Toolbar";
 
 import { imageFileType } from "@pages/articles/WriteArticle/core/writeArticle.type";
 
@@ -15,7 +16,6 @@ type TextEditorProps = {
   value: string;
   onChangeHandler: (data: { value: string; pureText: string }) => void;
   onImageHandler: (data: imageFileType[]) => void;
-  editorKey?: string;
   error?: string;
 };
 
@@ -23,7 +23,6 @@ function TextEditor({
   value,
   onChangeHandler,
   onImageHandler,
-  editorKey,
   error
 }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
@@ -153,7 +152,6 @@ function TextEditor({
             placeholder={
               "내용을 20글자 이상 입력해 주세요\n\n“저는 어릴 때 일본에서 지내서 일본어를 잘 가르쳐 드릴 수 있어요!”"
             }
-            key={editorKey}
           />
           <span
             className={classNames(
