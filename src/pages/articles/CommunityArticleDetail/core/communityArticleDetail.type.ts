@@ -5,6 +5,7 @@ import { profileType } from "@type/user.type";
 export type communityArticleDetailType = Pick<profileType, "userNo"> &
   Pick<commonArticleDataType, "content"> &
   communityArticleType & {
+    communityPostNo: number;
     imageUrls: string[];
     isLike: false;
     count: number;
