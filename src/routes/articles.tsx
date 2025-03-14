@@ -70,7 +70,7 @@ const articlesRouter: RouteObject[] = [
     ),
     path: "write-article",
     children: [
-      { element: <WriteMatchingArticle />, path: "match" },
+      { element: <WriteMatchingArticle />, path: "matching" },
       { element: <WriteCommunityArticle />, path: "community" }
     ]
   }

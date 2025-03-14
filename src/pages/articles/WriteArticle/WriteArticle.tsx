@@ -21,7 +21,7 @@ import {
 } from "@pages/articles/WriteArticle/core/writeArticle.constants";
 
 const articleTypeOptions = [
-  { label: "매칭 게시물 글쓰기", value: "/write-article/match" },
+  { label: "매칭 게시물 글쓰기", value: "/write-article/matching" },
   { label: "커뮤니티 게시물 글쓰기", value: "/write-article/community" }
 ];
 
@@ -29,7 +29,7 @@ function WriteArticle() {
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
-  const { isLoading } = useGetProfile(pathname.includes("match"));
+  const { isLoading } = useGetProfile(pathname.includes("matching"));
   const matchingForm = useForm({
     resolver: yupResolver(matchingArticleSchema),
     defaultValues: {
@@ -57,7 +57,7 @@ function WriteArticle() {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
       return;
     }
 
@@ -78,7 +78,7 @@ function WriteArticle() {
         options={articleTypeOptions}
         type={"shadow"}
       />
-      {pathname.includes("match") && isLoading ? (
+      {pathname.includes("matching") && isLoading ? (
         <AnimatedLoader
           className={
             "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"

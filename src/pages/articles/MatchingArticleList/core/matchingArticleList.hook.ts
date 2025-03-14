@@ -16,7 +16,7 @@ import { queryKeys } from "@common/common.constants";
 import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
-const matchingArticleListQueryKey = createQueryKey([queryKeys.MATCH], {
+const matchingArticleListQueryKey = createQueryKey([queryKeys.MATCHING], {
   isArticleList: true
 });
 
@@ -45,7 +45,7 @@ export const useGetMatchingArticleList = () => {
     .find(([, data]) => data !== undefined) as
     | [QueryKey, customAxiosResponseType<paginationType<matchingArticleType>>]
     | undefined;
-  const queryKey = createQueryKey([queryKeys.MATCH, filter], {
+  const queryKey = createQueryKey([queryKeys.MATCHING, filter], {
     isArticleList: true
   });
 

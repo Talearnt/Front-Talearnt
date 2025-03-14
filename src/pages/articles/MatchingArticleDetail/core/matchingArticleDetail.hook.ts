@@ -43,7 +43,7 @@ export const useGetMatchingArticleDetail = () => {
       count: 0
     },
     {
-      queryKey: createQueryKey([queryKeys.MATCH, postNo]),
+      queryKey: createQueryKey([queryKeys.MATCHING, postNo]),
       queryFn: async () => await getMatchingArticleDetail(postNo),
       enabled: exchangePostNo !== undefined
     }
@@ -73,11 +73,11 @@ export const useDeleteMatchingArticle = () => {
     onSuccess: async () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCH], { isArticleList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isArticleList: true })
       });
       // 매칭 게시물 목록 프리패치
       await queryClient.prefetchQuery({
-        queryKey: createQueryKey([queryKeys.MATCH, filter], {
+        queryKey: createQueryKey([queryKeys.MATCHING, filter], {
           isArticleList: true
         }),
         queryFn: async () => await getMatchingArticleList(filter)

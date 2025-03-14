@@ -1,6 +1,6 @@
 export enum queryKeys {
   USER = "USER",
-  MATCH = "MATCH",
+  MATCHING = "MATCHING",
   COMMUNITY = "COMMUNITY"
 }
 

@@ -24,13 +24,9 @@ import { queryKeys } from "@common/common.constants";
 import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { matchingArticleDetailType } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
-import {
-  editMatchingArticleBodyType,
-  matchingArticleBodyType
-} from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
 
 const detailQueryKey = (exchangePostNo: number) =>
-  createQueryKey([queryKeys.MATCH, exchangePostNo]);
+  createQueryKey([queryKeys.MATCHING, exchangePostNo]);
 
 export const usePostMatchingArticle = () => {
   const navigator = useNavigate();
@@ -53,19 +49,18 @@ export const usePostMatchingArticle = () => {
   // 매칭 게시물 목록 초기 쿼리 키
   const queryKey = createQueryKey(
     [
-      queryKeys.MATCH,
+      queryKeys.MATCHING,
       { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
     ],
     { isArticleList: true }
   );
 
   return useMutation({
-    mutationFn: async (data: matchingArticleBodyType) =>
-      await postMatchingArticle(data),
+    mutationFn: postMatchingArticle,
     onMutate: () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCH], { isArticleList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isArticleList: true })
       });
       // 필터 초기화
       resetFilters();
@@ -137,26 +132,23 @@ export const usePutEditMatchingArticle = () => {
 
   const queryClient = useQueryClient();
 
-  const editMatchingArticle = useEditMatchingArticleDataStore(
-    state => state.editMatchingArticle
-  );
   const setEditMatchingArticle = useEditMatchingArticleDataStore(
     state => state.setEditMatchingArticle
   );
 
   return useMutation({
-    mutationFn: async (data: editMatchingArticleBodyType) =>
-      await putEditMatchingArticle(data),
+    mutationFn: putEditMatchingArticle,
     onSuccess: (
       _,
       {
+        exchangePostNo,
         title,
         content,
-        duration,
-        exchangeType,
+        imageUrls,
         giveTalents,
         receiveTalents,
-        imageUrls
+        duration,
+        exchangeType
       }
     ) => {
       // 상세페이지 들어오기 전 호출했던 목록의 쿼리키
@@ -164,7 +156,7 @@ export const usePutEditMatchingArticle = () => {
         .getQueriesData<
           customAxiosResponseType<paginationType<matchingArticleType>>
         >({
-          queryKey: createQueryKey([queryKeys.MATCH], {
+          queryKey: createQueryKey([queryKeys.MATCHING], {
             isArticleList: true
           })
         })
@@ -179,7 +171,6 @@ export const usePutEditMatchingArticle = () => {
           ({ talentName }) => talentName
         ),
         title,
-        createdAt: new Date().toString(),
         content,
         imageUrls
       };
@@ -197,7 +188,7 @@ export const usePutEditMatchingArticle = () => {
           data: {
             ...oldData.data,
             results: oldData.data.results.map(article =>
-              article.exchangePostNo === editMatchingArticle?.exchangePostNo
+              article.exchangePostNo === exchangePostNo
                 ? { ...article, ...commonMatchingArticleData }
                 : article
             )
@@ -208,33 +199,19 @@ export const usePutEditMatchingArticle = () => {
       // 게시물 상세 페이지 저장
       queryClient.setQueryData<
         customAxiosResponseType<matchingArticleDetailType>
-      >(
-        detailQueryKey(editMatchingArticle?.exchangePostNo as number),
-        oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              duration,
-              exchangeType,
-              giveTalents: filteredTalents(giveTalents).map(
-                ({ talentName }) => talentName
-              ),
-              receiveTalents: filteredTalents(receiveTalents).map(
-                ({ talentName }) => talentName
-              ),
-              title,
-              createdAt: new Date().toString(),
-              content,
-              imageUrls
-            }
-          };
+      >(detailQueryKey(exchangePostNo), oldData => {
+        if (!oldData) {
+          return oldData;
         }
-      );
+
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            ...commonMatchingArticleData
+          }
+        };
+      });
       setEditMatchingArticle(null);
       navigator(-1);
     }
