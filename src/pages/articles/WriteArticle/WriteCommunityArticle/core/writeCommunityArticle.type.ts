@@ -24,6 +24,3 @@ export type communityArticleFormDataType = Omit<
 // 수정 커뮤니티 게시글 - body
 export type editCommunityArticleBodyType = communityArticleBodyType &
   Pick<communityArticleDetailType, "communityPostNo">;
-// 수정 커뮤니티 게시글 - state
-export type editCommunityArticleDataType = communityArticleFormDataType &
-  Pick<communityArticleDetailType, "communityPostNo">;
