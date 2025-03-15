@@ -28,6 +28,3 @@ export type matchingArticleFormDataType = Omit<
 // 수정 매칭 게시글 - body
 export type editMatchingArticleBodyType = matchingArticleBodyType &
   Pick<matchingArticleDetailType, "exchangePostNo">;
-// 수정 매칭 게시글 - state
-export type editMatchingArticleDataType = matchingArticleFormDataType &
-  Pick<matchingArticleDetailType, "exchangePostNo">;
