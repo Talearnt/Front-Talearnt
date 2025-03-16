@@ -5,12 +5,12 @@ import {
   editCommunityArticleBodyType
 } from "@pages/articles/WriteArticle/WriteCommunityArticle/core/writeCommunityArticle.type";
 
-// 매칭 게시글 작성
+// 커뮤니티 게시글 작성
 export const postCommunityArticle = async (body: communityArticleBodyType) =>
   await postAPI<number>("/v1/posts/communities", body, {
     withCredentials: true
   });
-// 매칭 게시글 수정
+// 커뮤니티 게시글 수정
 export const putEditCommunityArticle = async ({
   communityPostNo,
   ...body
