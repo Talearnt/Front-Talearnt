@@ -12,3 +12,19 @@ export type communityArticleDetailType = Pick<profileType, "userNo"> &
     likeCount: number;
     commentCount: number;
   };
+
+// {
+//   "userNo": 0,
+//   "nickname": "",
+//   "profileImg": null,
+//   "communityPostNo": 0,
+//   "createdAt": "",
+//   "title": "",
+//   "content": "",
+//   "imageUrls": [],
+//   "postType": "스터디 모집 게시판",
+//   "isLike": false,
+//   "count": 0,
+//   "commentCount": 0,
+//   "likeCount": 0,
+// }
