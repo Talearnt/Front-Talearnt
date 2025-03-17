@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
-import { editMatchingArticleDataType } from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
+import { communityArticleDetailType } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.type";
+import { matchingArticleDetailType } from "@pages/articles/MatchingArticleDetail/core/matchingArticleDetail.type";
+import { communityArticleFormDataType } from "@pages/articles/WriteArticle/WriteCommunityArticle/core/writeCommunityArticle.type";
+import { matchingArticleFormDataType } from "@pages/articles/WriteArticle/WriteMatchingArticle/core/writeMatchingArticle.type";
 
 type hasNewMatchingArticleStoreType = {
   hasNewMatchingArticle: boolean;
@@ -15,9 +18,15 @@ export const useHasNewMatchingArticleStore =
   }));
 
 type editMatchingArticleDataStoreType = {
-  editMatchingArticle: editMatchingArticleDataType | null;
+  editMatchingArticle:
+    | (matchingArticleFormDataType &
+        Pick<matchingArticleDetailType, "exchangePostNo">)
+    | null;
   setEditMatchingArticle: (
-    editMatchingArticle: editMatchingArticleDataType | null
+    editMatchingArticle:
+      | (matchingArticleFormDataType &
+          Pick<matchingArticleDetailType, "exchangePostNo">)
+      | null
   ) => void;
 };
 
@@ -25,4 +34,36 @@ export const useEditMatchingArticleDataStore =
   create<editMatchingArticleDataStoreType>(set => ({
     editMatchingArticle: null,
     setEditMatchingArticle: editMatchingArticle => set({ editMatchingArticle })
+  }));
+
+type hasNewCommunityArticleStoreType = {
+  hasNewCommunityArticle: boolean;
+  setHasNewCommunityArticle: (hasNewCommunityArticle: boolean) => void;
+};
+
+export const useHasNewCommunityArticleStore =
+  create<hasNewCommunityArticleStoreType>(set => ({
+    hasNewCommunityArticle: false,
+    setHasNewCommunityArticle: hasNewCommunityArticle =>
+      set({ hasNewCommunityArticle })
+  }));
+
+type editCommunityArticleDataStoreType = {
+  editCommunityArticle:
+    | (communityArticleFormDataType &
+        Pick<communityArticleDetailType, "communityPostNo">)
+    | null;
+  setEditCommunityArticle: (
+    editCommunityArticle:
+      | (communityArticleFormDataType &
+          Pick<communityArticleDetailType, "communityPostNo">)
+      | null
+  ) => void;
+};
+
+export const useEditCommunityArticleDataStore =
+  create<editCommunityArticleDataStoreType>(set => ({
+    editCommunityArticle: null,
+    setEditCommunityArticle: editCommunityArticle =>
+      set({ editCommunityArticle })
   }));
