@@ -90,7 +90,9 @@ export default {
         new_matching_article_slide:
           "new_matching_article_slide 0.5s ease-in-out",
         new_matching_article_reveal:
-          "depth_drop 0.5s ease-out forwards, border_flash 0.5s ease-in-out 0.5s forwards"
+          "depth_drop 0.5s ease-out forwards, matching_article_border_flash 0.5s ease-in-out 0.5s forwards",
+        new_community_article_slide:
+          "new_community_article_slide 0.5s ease-out forwards, community_article_border_flash 0.5s ease-in-out 0.5s forwards"
       },
       keyframes: {
         spinner_spin: {
@@ -126,7 +128,7 @@ export default {
             transform: "scale(1)"
           }
         },
-        border_flash: {
+        matching_article_border_flash: {
           "0%": {
             borderColor: "#D0D5D8"
           },
@@ -135,6 +137,25 @@ export default {
           },
           "100%": {
             borderColor: "#D0D5D8"
+          }
+        },
+        new_community_article_slide: {
+          "0%": {
+            transform: "translateY(-60px)"
+          },
+          "100%": {
+            transform: "translateY(0)"
+          }
+        },
+        community_article_border_flash: {
+          "0%": {
+            borderColor: "transparent"
+          },
+          "50%": {
+            borderColor: "#1B76FF"
+          },
+          "100%": {
+            borderColor: "transparent"
           }
         }
       }
