@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -19,7 +19,6 @@ import { DropdownLabeled } from "@components/dropdowns/DropdownLabeled/DropdownL
 import { DropdownWithCategories } from "@components/dropdowns/DropdownWithCategories/DropdownWithCategories";
 import { MakoWithPencil } from "@components/icons/mako/MakoWithPencil";
 import { Pagination } from "@components/Pagination/Pagination";
-import { TopButton } from "@components/TopButton/TopButton";
 
 import {
   durationOptions,
@@ -76,8 +75,6 @@ function MatchingArticleList() {
     );
   const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
-  const [isFilterVisible, setIsFilterVisible] = useState(true);
-
   const hasFilter =
     giveTalents.length > 0 ||
     receiveTalents.length > 0 ||
@@ -85,28 +82,16 @@ function MatchingArticleList() {
     type !== undefined ||
     status !== undefined;
 
-  // 탑 버튼이 필터가 가려진 이후 보여야해서 추적
-  useEffect(() => {
-    if (!filterRef.current) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsFilterVisible(entry.isIntersecting);
-    });
-
-    observer.observe(filterRef.current);
-
-    return () => observer.disconnect();
-  }, []);
-  // 애니메이션 완료 후(페이지 이동/이탈) 플래그 원복
+  // 애니메이션 완료 후 플래그 제거
   useEffect(() => {
     if (!hasNewMatchingArticle) {
       return;
     }
 
+    // 다른 페이지네이션 갔다가 1페이지로 돌아왔을때 애니메이션 방지
     setTimeout(() => setHasNewMatchingArticle(false), 1000);
 
+    // 페이지 이탈 후 복귀시 애니메이션 방지
     return () => setHasNewMatchingArticle(false);
   }, [hasNewMatchingArticle, setHasNewMatchingArticle]);
 
@@ -297,8 +282,6 @@ function MatchingArticleList() {
           }}
         />
       )}
-      {/*탑 버튼*/}
-      {!isFilterVisible && <TopButton />}
     </div>
   );
 }

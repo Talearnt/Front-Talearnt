@@ -1,8 +1,14 @@
+import { RefObject } from "react";
+
 import { classNames } from "@utils/classNames";
 
 import { useMainScrollRefStore } from "@common/common.store";
 
-function TopButton() {
+function TopButton({
+  topButtonRef
+}: {
+  topButtonRef: RefObject<SVGSVGElement>;
+}) {
   const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
   const handleScroll = () => {
@@ -22,11 +28,13 @@ function TopButton() {
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
         "fixed bottom-10 right-10",
+        "hidden",
         "rounded-full fill-talearnt_Icon_03",
         "cursor-pointer",
         "hover:fill-talearnt_Icon_01"
       )}
       onClick={handleScroll}
+      ref={topButtonRef}
     >
       <rect width="60" height="60" rx="30" />
       <path

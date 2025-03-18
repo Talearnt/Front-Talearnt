@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -21,10 +21,8 @@ import { AnimatedLoader } from "@components/AnimatedLoader/AnimatedLoader";
 import { Avatar } from "@components/Avatar/Avatar";
 import { Badge } from "@components/Badge/Badge";
 import { PostFavoriteIcon } from "@components/icons/PostFavoriteIcon/PostFavoriteIcon";
-import { TopButton } from "@components/TopButton/TopButton";
 
 function MatchingArticleDetail() {
-  const nickNameRef = useRef<HTMLSpanElement>(null);
   const navigator = useNavigate();
 
   const {
@@ -68,7 +66,6 @@ function MatchingArticleDetail() {
   const [clickedIndex, setClickedIndex] = useState<number | undefined>(
     undefined
   );
-  const [isFilterVisible, setIsFilterVisible] = useState(true);
 
   const handleDelete = () =>
     setPrompt({
@@ -83,19 +80,19 @@ function MatchingArticleDetail() {
     const doc = parser.parseFromString(content, "text/html");
 
     setEditMatchingArticle({
+      exchangePostNo,
       title,
       content,
-      duration,
-      exchangeType,
+      pureText: doc.body.textContent ?? "",
+      imageFileList: [],
       giveTalents: filteredTalents(giveTalents).map(
         ({ talentCode }) => talentCode
       ),
       receiveTalents: filteredTalents(receiveTalents).map(
         ({ talentCode }) => talentCode
       ),
-      pureText: doc.body.textContent ?? "",
-      imageFileList: [],
-      exchangePostNo
+      duration,
+      exchangeType
     });
 
     navigator("/write-article");
@@ -110,19 +107,6 @@ function MatchingArticleDetail() {
       navigator("/matching");
     }
   }, [error, isError, navigator, setToast]);
-  useEffect(() => {
-    if (!nickNameRef.current) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsFilterVisible(entry.isIntersecting);
-    });
-
-    observer.observe(nickNameRef.current);
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <div className={classNames("flex flex-col gap-6", "h-full w-[848px] pt-8")}>
@@ -159,10 +143,7 @@ function MatchingArticleDetail() {
           </h1>
           <div className={"flex items-center gap-4"}>
             <Avatar imageUrl={profileImg} />
-            <span
-              className={"text-body1_18_semibold text-talearnt_Text_01"}
-              ref={nickNameRef}
-            >
+            <span className={"text-body1_18_semibold text-talearnt_Text_01"}>
               {nickname}
             </span>
             <div className={"h-5 w-px bg-talearnt_Line_01"} />
@@ -303,7 +284,6 @@ function MatchingArticleDetail() {
               onCloseHandler={() => setClickedIndex(undefined)}
             />
           )}
-          {!isFilterVisible && <TopButton />}
         </>
       )}
     </div>
