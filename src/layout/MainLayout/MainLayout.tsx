@@ -119,7 +119,11 @@ function MainLayout() {
               className={classNames("w-[100px]", "text-body2_16_semibold")}
               size={"small"}
               onClick={() =>
-                navigator(accessToken ? "write-article/match" : "sign-in")
+                navigator(
+                  accessToken
+                    ? `write-article/${pathname.includes("community") ? "community" : "matching"}`
+                    : "sign-in"
+                )
               }
             >
               {accessToken ? "글쓰기" : "로그인"}
