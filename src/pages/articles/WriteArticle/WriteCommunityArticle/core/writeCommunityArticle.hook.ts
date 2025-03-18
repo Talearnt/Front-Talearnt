@@ -118,7 +118,7 @@ export const usePutEditCommunityArticle = () => {
       { communityPostNo, postType, title, content, imageUrls }
     ) => {
       // 상세페이지 들어오기 전 호출했던 목록의 쿼리키
-      const lastQueryKey = queryClient
+      const queries = queryClient
         .getQueriesData<
           customAxiosResponseType<paginationType<communityArticleType>>
         >({
@@ -126,7 +126,7 @@ export const usePutEditCommunityArticle = () => {
             isArticleList: true
           })
         })
-        .reverse()[0][0];
+        .reverse();
       const commonCommunityArticleData = {
         title,
         content,
@@ -134,26 +134,28 @@ export const usePutEditCommunityArticle = () => {
         postType
       };
 
-      // 새롭게 작성된 게시물 저장
-      queryClient.setQueryData<
-        customAxiosResponseType<paginationType<communityArticleType>>
-      >(lastQueryKey, oldData => {
-        if (!oldData) {
-          return oldData;
-        }
-
-        return {
-          ...oldData,
-          data: {
-            ...oldData.data,
-            results: oldData.data.results.map(article =>
-              article.communityPostNo === communityPostNo
-                ? { ...article, ...commonCommunityArticleData }
-                : article
-            )
+      if (queries.length > 0) {
+        // 새롭게 작성된 게시물 저장
+        queryClient.setQueryData<
+          customAxiosResponseType<paginationType<communityArticleType>>
+        >(queries[0][0], oldData => {
+          if (!oldData) {
+            return oldData;
           }
-        };
-      });
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.map(article =>
+                article.communityPostNo === communityPostNo
+                  ? { ...article, ...commonCommunityArticleData }
+                  : article
+              )
+            }
+          };
+        });
+      }
 
       // 게시물 상세 페이지 저장
       queryClient.setQueryData<

@@ -152,7 +152,7 @@ export const usePutEditMatchingArticle = () => {
       }
     ) => {
       // 상세페이지 들어오기 전 호출했던 목록의 쿼리키
-      const lastQueryKey = queryClient
+      const queries = queryClient
         .getQueriesData<
           customAxiosResponseType<paginationType<matchingArticleType>>
         >({
@@ -160,7 +160,7 @@ export const usePutEditMatchingArticle = () => {
             isArticleList: true
           })
         })
-        .reverse()[0][0];
+        .reverse();
       const commonMatchingArticleData = {
         duration,
         exchangeType,
@@ -175,26 +175,28 @@ export const usePutEditMatchingArticle = () => {
         imageUrls
       };
 
-      // 새롭게 작성된 게시물 저장
-      queryClient.setQueryData<
-        customAxiosResponseType<paginationType<matchingArticleType>>
-      >(lastQueryKey, oldData => {
-        if (!oldData) {
-          return oldData;
-        }
-
-        return {
-          ...oldData,
-          data: {
-            ...oldData.data,
-            results: oldData.data.results.map(article =>
-              article.exchangePostNo === exchangePostNo
-                ? { ...article, ...commonMatchingArticleData }
-                : article
-            )
+      if (queries.length > 0) {
+        // 새롭게 작성된 게시물 저장
+        queryClient.setQueryData<
+          customAxiosResponseType<paginationType<matchingArticleType>>
+        >(queries[0][0], oldData => {
+          if (!oldData) {
+            return oldData;
           }
-        };
-      });
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.map(article =>
+                article.exchangePostNo === exchangePostNo
+                  ? { ...article, ...commonMatchingArticleData }
+                  : article
+              )
+            }
+          };
+        });
+      }
 
       // 게시물 상세 페이지 저장
       queryClient.setQueryData<

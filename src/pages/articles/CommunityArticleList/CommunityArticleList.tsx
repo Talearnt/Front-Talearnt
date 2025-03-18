@@ -166,8 +166,8 @@ function CommunityArticleList() {
               {
                 nickname,
                 communityPostNo,
-                title,
                 createdAt,
+                title,
                 postType,
                 count,
                 likeCount
@@ -186,6 +186,7 @@ function CommunityArticleList() {
                 onClick={() =>
                   navigator(`/community-article/${communityPostNo}`)
                 }
+                key={communityPostNo}
               >
                 <td className={"w-[776px]"}>
                   <div className={"flex items-center gap-2"}>

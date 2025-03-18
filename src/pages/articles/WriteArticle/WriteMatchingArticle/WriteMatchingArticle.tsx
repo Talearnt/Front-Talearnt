@@ -184,9 +184,11 @@ function WriteMatchingArticle() {
   useEffect(() => {
     if (editMatchingArticleData) {
       const { exchangePostNo: _, ...data } = editMatchingArticleData;
+
       reset(data);
+      void trigger();
     }
-  }, [editMatchingArticleData, reset]);
+  }, [editMatchingArticleData]);
   // 에러난 경우 매칭 게시물 목록으로 이동
   useEffect(() => {
     if (!isError) {

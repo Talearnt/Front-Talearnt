@@ -133,9 +133,11 @@ function WriteCommunityArticle() {
   useEffect(() => {
     if (editCommunityArticleData) {
       const { communityPostNo: _, ...data } = editCommunityArticleData;
+
       reset(data);
+      void trigger();
     }
-  }, [editCommunityArticleData, reset]);
+  }, [editCommunityArticleData]);
 
   return (
     <>
