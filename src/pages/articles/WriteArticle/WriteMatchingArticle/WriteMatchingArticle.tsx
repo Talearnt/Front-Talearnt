@@ -119,7 +119,7 @@ function WriteMatchingArticle() {
       void trigger(field);
     }
   };
-  const postMatchArticle = async () => {
+  const postArticle = async () => {
     setIsPostInProgress(true);
 
     // content에 있는 image의 src 목록
@@ -429,10 +429,7 @@ function WriteMatchingArticle() {
         >
           취소하기
         </Button>
-        <Button
-          onClick={handleSubmit(postMatchArticle)}
-          disabled={isPostInProgress}
-        >
+        <Button onClick={handleSubmit(postArticle)} disabled={isPostInProgress}>
           {isPostInProgress ? <Spinner /> : "등록하기"}
         </Button>
       </div>
