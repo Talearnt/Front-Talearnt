@@ -17,6 +17,7 @@ import { Toast } from "@modal/Toast/Toast";
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
+import { TopButton } from "@components/TopButton/TopButton";
 
 const linkArray = [
   {
@@ -35,6 +36,7 @@ const linkArray = [
 
 function MainLayout() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const topButtonRef = useRef<SVGSVGElement>(null);
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
@@ -53,6 +55,15 @@ function MainLayout() {
   );
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleScroll = () => {
+    if (!scrollRef.current || !topButtonRef.current) {
+      return;
+    }
+
+    topButtonRef.current.style.display =
+      scrollRef.current.scrollTop > 150 ? "block" : "none";
+  };
 
   // 메모리에 accessToken 저장
   useEffect(() => {
@@ -155,9 +166,14 @@ function MainLayout() {
           )}
         </div>
       </header>
-      <main ref={scrollRef} className={"h-[calc(100vh-90px)] overflow-y-auto"}>
+      <main
+        ref={scrollRef}
+        className={"h-[calc(100vh-90px)] overflow-y-auto"}
+        onScroll={handleScroll}
+      >
         <Outlet />
       </main>
+      <TopButton topButtonRef={topButtonRef} />
       <Toast />
       {promptData && <Prompt />}
       {isSuccess && giveTalents.length === 0 && <TalentsSettingModal />}
