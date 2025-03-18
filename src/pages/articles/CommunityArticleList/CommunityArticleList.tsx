@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import { useShallow } from "zustand/shallow";
@@ -9,12 +10,12 @@ import { useGetCommunityArticleList } from "@pages/articles/CommunityArticleList
 
 import { useMainScrollRefStore } from "@common/common.store";
 import { useCommunityArticleListFilterStore } from "@pages/articles/CommunityArticleList/core/communityArticleList.store";
+import { useHasNewCommunityArticleStore } from "@pages/articles/core/articles.store";
 
 import { AnimatedLoader } from "@components/AnimatedLoader/AnimatedLoader";
 import { Badge } from "@components/Badge/Badge";
 import { DropdownLabeled } from "@components/dropdowns/DropdownLabeled/DropdownLabeled";
 import { Pagination } from "@components/Pagination/Pagination";
-import { TopButton } from "@components/TopButton/TopButton";
 
 import { postTypeList } from "@pages/articles/core/articles.constants";
 
@@ -22,6 +23,7 @@ import { communityArticleListFilterType } from "@pages/articles/CommunityArticle
 
 function CommunityArticleList() {
   const filterRef = useRef<HTMLDivElement>(null);
+  const navigator = useNavigate();
 
   const {
     data: {
@@ -41,24 +43,27 @@ function CommunityArticleList() {
       resetFilters: state.resetFilters
     }))
   );
+  const { hasNewCommunityArticle, setHasNewCommunityArticle } =
+    useHasNewCommunityArticleStore(
+      useShallow(state => ({
+        hasNewCommunityArticle: state.hasNewCommunityArticle,
+        setHasNewCommunityArticle: state.setHasNewCommunityArticle
+      }))
+    );
   const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
-  const [isFilterVisible, setIsFilterVisible] = useState(true);
-
-  // 탑 버튼이 필터가 가려진 이후 보여야해서 추적
+  // 애니메이션 완료 후 플래그 제거
   useEffect(() => {
-    if (!filterRef.current) {
+    if (!hasNewCommunityArticle) {
       return;
     }
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsFilterVisible(entry.isIntersecting);
-    });
+    // 다른 페이지네이션 갔다가 1페이지로 돌아왔을때 애니메이션 방지
+    setTimeout(() => setHasNewCommunityArticle(false), 1000);
 
-    observer.observe(filterRef.current);
-
-    return () => observer.disconnect();
-  }, []);
+    // 페이지 이탈 후 복귀시 애니메이션 방지
+    return () => setHasNewCommunityArticle(false);
+  }, [hasNewCommunityArticle, setHasNewCommunityArticle]);
 
   return (
     <div
@@ -84,7 +89,7 @@ function CommunityArticleList() {
               "text-heading2_24_semibold text-talearnt_Primary_01"
             )}
           >
-            {totalCount.toLocaleString()}
+            {isLoading ? "-" : totalCount.toLocaleString()}
           </span>
           개의 커뮤니티 게시물이 있어요
         </span>
@@ -108,8 +113,9 @@ function CommunityArticleList() {
         <thead>
           <tr
             className={classNames(
+              "relative", // z-index 를 적용하기 위함
               "flex items-center gap-6",
-              "mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_02 px-6"
+              "z-10 mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_02 px-6"
             )}
           >
             <th
@@ -156,13 +162,30 @@ function CommunityArticleList() {
         </thead>
         <tbody>
           {results.map(
-            ({ title, nickname, createdAt, count, likeCount, postType }) => (
+            (
+              {
+                nickname,
+                communityPostNo,
+                title,
+                createdAt,
+                postType,
+                count,
+                likeCount
+              },
+              index
+            ) => (
               <tr
                 className={classNames(
                   "flex items-center gap-6",
                   "mb-2 h-[60px] px-4",
-                  "cursor-pointer"
+                  "cursor-pointer",
+                  hasNewCommunityArticle &&
+                    index === 0 &&
+                    "animate-test rounded-lg border border-transparent"
                 )}
+                onClick={() =>
+                  navigator(`/community-article/${communityPostNo}`)
+                }
               >
                 <td className={"w-[776px]"}>
                   <div className={"flex items-center gap-2"}>
@@ -244,8 +267,6 @@ function CommunityArticleList() {
           }}
         />
       )}
-      {/*탑 버튼*/}
-      {!isFilterVisible && <TopButton />}
     </div>
   );
 }
