@@ -67,14 +67,6 @@ function MatchingArticleDetail() {
     undefined
   );
 
-  const handleDelete = () =>
-    setPrompt({
-      title: "게시물 삭제",
-      content:
-        "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
-      cancelOnClickHandler: () => setPrompt(),
-      confirmOnClickHandler: () => mutate(exchangePostNo)
-    });
   const handleEdit = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
@@ -95,8 +87,16 @@ function MatchingArticleDetail() {
       exchangeType
     });
 
-    navigator("/write-article");
+    navigator("/write-article/matching");
   };
+  const handleDelete = () =>
+    setPrompt({
+      title: "게시물 삭제",
+      content:
+        "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
+      cancelOnClickHandler: () => setPrompt(),
+      confirmOnClickHandler: () => mutate(exchangePostNo)
+    });
 
   useEffect(() => {
     if (isError) {

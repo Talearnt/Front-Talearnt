@@ -7,14 +7,30 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
     matchingArticleBodyType,
     "giveTalents" | "receiveTalents" | "imageUrls"
   > & {
+    exchangePostNo: number;
+    createdAt: string;
     giveTalents: string[];
     receiveTalents: string[];
-    exchangePostNo: number;
     status: "모집중" | "모집 완료";
-    createdAt: string;
-    favoriteCount: number;
     isFavorite: boolean;
+    favoriteCount: number;
   };
+// {
+//   "nickname": "",
+//   "profileImg": null,
+//   "exchangePostNo": 0,
+//   "createdAt": "",
+//   "title": "",
+//   "content": "",
+//   "giveTalents": [],
+//   "receiveTalents": [],
+//   "duration": "기간 미정",
+//   "exchangeType": "온라인",
+//   "status": "모집중",
+//   "isFavorite": false,
+//   "favoriteCount": 0,
+// }
+
 export type matchingArticleListFilterType = {
   giveTalents: number[];
   receiveTalents: number[];

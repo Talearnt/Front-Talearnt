@@ -12,7 +12,6 @@ export type communityArticleDetailType = Pick<profileType, "userNo"> &
     likeCount: number;
     commentCount: number;
   };
-
 // {
 //   "userNo": 0,
 //   "nickname": "",
