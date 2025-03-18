@@ -12,6 +12,7 @@ import {
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
+import { useEditCommunityArticleDataStore } from "@pages/articles/core/articles.store";
 
 import { ImageCarousel } from "@modal/ImageCarousel/ImageCarousel";
 
@@ -31,18 +32,18 @@ function CommunityArticleDetail() {
   const {
     data: {
       data: {
-        communityPostNo,
         userNo,
         nickname,
         profileImg,
+        communityPostNo,
+        createdAt,
         title,
         content,
-        createdAt,
         imageUrls,
-        isLike,
         postType,
-        likeCount,
-        count
+        isLike,
+        count,
+        likeCount
       }
     },
     error,
@@ -51,6 +52,9 @@ function CommunityArticleDetail() {
   } = useGetCommunityArticleDetail();
   const { mutate } = useDeleteCommunityArticle();
 
+  const setEditCommunityArticle = useEditCommunityArticleDataStore(
+    state => state.setEditCommunityArticle
+  );
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
 
@@ -58,6 +62,21 @@ function CommunityArticleDetail() {
     undefined
   );
 
+  const handleEdit = () => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+
+    setEditCommunityArticle({
+      communityPostNo,
+      title,
+      content,
+      pureText: doc.body.textContent ?? "",
+      imageFileList: [],
+      postType
+    });
+
+    navigator("/write-article/community");
+  };
   const handleDelete = () =>
     setPrompt({
       title: "게시물 삭제",
@@ -91,6 +110,7 @@ function CommunityArticleDetail() {
                   "text-body1_18_medium text-talearnt_Text_03",
                   "hover:bg-talearnt_BG_Up_01 hover:text-talearnt_Text_02"
                 )}
+                onClick={handleEdit}
               >
                 수정
               </button>
