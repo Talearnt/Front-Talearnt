@@ -26,18 +26,18 @@ export const useGetCommunityArticleDetail = () => {
   return useQueryWithInitial(
     {
       userNo: 0,
-      content: "",
       nickname: "",
       profileImg: null,
-      title: "",
-      createdAt: "",
-      commentCount: 0,
       communityPostNo: 0,
-      count: 0,
-      isLike: false,
-      likeCount: 0,
+      createdAt: "",
+      title: "",
+      content: "",
+      imageUrls: [],
       postType: "자유 게시판",
-      imageUrls: []
+      isLike: false,
+      count: 0,
+      commentCount: 0,
+      likeCount: 0
     },
     {
       queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),

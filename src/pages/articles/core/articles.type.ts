@@ -1,8 +1,8 @@
 // 게시글 데이터
 export type commonArticleDataType = {
+  createdAt: string;
   title: string;
   content: string;
-  createdAt: string;
 };
 // 매칭 게시글 - 진행 기간
 export type durationType =

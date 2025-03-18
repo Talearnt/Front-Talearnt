@@ -10,9 +10,16 @@ export type communityArticleBodyType = Pick<
   commonArticleDataType,
   "title" | "content"
 > & {
-  postType: postType;
   imageUrls: string[];
+  postType: postType;
 };
+// {
+//   "title": "",
+//   "content": "",
+//   "imageUrls": [],
+//   "postType": "스터디 모집 게시판",
+// }
+
 // 커뮤니티 게시글 - state
 export type communityArticleFormDataType = Omit<
   communityArticleBodyType,
@@ -21,6 +28,21 @@ export type communityArticleFormDataType = Omit<
   pureText: string;
   imageFileList: imageFileType[];
 };
+// {
+//   "title": "",
+//   "content": "",
+//   "pureText": "",
+//   "imageFileList": [],
+//   "postType": "스터디 모집 게시판",
+// }
+
 // 수정 커뮤니티 게시글 - body
 export type editCommunityArticleBodyType = communityArticleBodyType &
   Pick<communityArticleDetailType, "communityPostNo">;
+// {
+//   "communityPostNo": 0,
+//   "title": "",
+//   "content": "",
+//   "imageUrls": [],
+//   "postType": "스터디 모집 게시판",
+// }

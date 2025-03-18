@@ -15,10 +15,22 @@ export type communityArticleType = Pick<
   "nickname" | "profileImg"
 > &
   Omit<commonArticleDataType, "content"> & {
-    commentCount: number;
     communityPostNo: number;
-    count: number;
-    isLike: boolean;
-    likeCount: number;
     postType: postType;
+    isLike: boolean;
+    count: number;
+    commentCount: number;
+    likeCount: number;
   };
+// {
+//   "nickname": "",
+//   "profileImg": null,
+//   "communityPostNo": 0,
+//   "createdAt": "",
+//   "title": "",
+//   "postType": "스터디 모집 게시판",
+//   "isLike": false,
+//   "count": 0,
+//   "commentCount": 0,
+//   "likeCount": 0,
+// }
