@@ -181,7 +181,7 @@ function CommunityArticleList() {
                   "cursor-pointer",
                   hasNewCommunityArticle &&
                     index === 0 &&
-                    "animate-test rounded-lg border border-transparent"
+                    "animate-new_community_article_slide rounded-lg border border-transparent"
                 )}
                 onClick={() =>
                   navigator(`/community-article/${communityPostNo}`)
