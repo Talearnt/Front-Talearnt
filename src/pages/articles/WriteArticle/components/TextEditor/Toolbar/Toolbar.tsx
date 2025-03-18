@@ -55,6 +55,27 @@ background.whitelist = backgroundColorOptions;
 Quill.register(background as unknown as string, true);
 Quill.register(color as unknown as string, true);
 Quill.register(size as unknown as string, true);
+Quill.register(
+  "modules/maxlength",
+  function (
+    quill: {
+      on: (arg0: string, arg1: () => void) => void;
+      getText: () => { length: number };
+      deleteText: (arg0: number, arg1: number) => void;
+    },
+    options: { maxLength: number }
+  ) {
+    quill.on("text-change", () => {
+      const { length } = quill.getText();
+      const { maxLength } = options;
+
+      if (length > maxLength) {
+        console.log(length, maxLength);
+        quill.deleteText(maxLength, length - maxLength);
+      }
+    });
+  }
+);
 
 function Divider() {
   return <div className={"h-6 w-[1px] bg-talearnt_Line_01"} />;
