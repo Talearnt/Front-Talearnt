@@ -32,8 +32,8 @@ export type matchingArticleFormDataType = Omit<
   matchingArticleBodyType,
   "imageUrls"
 > & {
-  imageFileList: imageFileType[];
   pureText: string;
+  imageFileList: imageFileType[];
 };
 // {
 //   "title": "",
