@@ -3,9 +3,10 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 
 import { UseFormReturn } from "react-hook-form";
 
-import { postToGetPresignedURL } from "@pages/articles/WriteArticle/core/writeArticle.api";
-
-import { extractImageSrcList } from "@pages/articles/WriteArticle/core/writeArticle.util";
+import {
+  extractImageSrcList,
+  uploadImageToPresignedURL
+} from "@pages/articles/WriteArticle/core/writeArticle.util";
 import { classNames } from "@utils/classNames";
 
 import {
@@ -77,70 +78,19 @@ function WriteCommunityArticle() {
   const postArticle = async () => {
     setIsPostInProgress(true);
 
-    // content에 있는 image의 src 목록
-    const imageSrcList = extractImageSrcList(content);
-    // 누적된 파일 중 현재 content에 있는 image의 파일만 필터
-    const files = imageFileList.filter(({ url }) => imageSrcList.includes(url));
-    // 필터링 된 파일이 0개라면 게시물 수정 시 기존에 있던 image들만 있는 경우
-    const imageUrls: string[] = files.length === 0 ? imageSrcList : [];
+    let imageUrls: string[] = [];
 
-    // 업로드 할 파일이 있는 경우에만 실행
-    if (files.length > 0) {
-      let presignedURLs: string[] = [];
-      let presignedURLIndex = 0;
+    try {
+      imageUrls = await uploadImageToPresignedURL(content, imageFileList);
+    } catch (message) {
+      setToast({
+        message: message as string,
+        type: "error"
+      });
 
-      try {
-        // 이미지 올릴 주소 요청
-        const { data } = await postToGetPresignedURL(
-          files.map(({ fileName, fileType, fileSize }) => ({
-            fileName,
-            fileSize,
-            fileType
-          }))
-        );
+      setIsPostInProgress(false);
 
-        presignedURLs = data;
-      } catch {
-        setToast({
-          message: "이미지 업로드 URL을 가져오는 데 실패했습니다.",
-          type: "error"
-        });
-        setIsPostInProgress(false);
-        return;
-      }
-
-      for (const src of imageSrcList) {
-        // src가 파일에 없다면 기존에 업로드 한 이미지
-        if (!files.some(({ url }) => url === src)) {
-          imageUrls.push(src);
-          continue;
-        }
-
-        try {
-          const presignedURL = presignedURLs[presignedURLIndex];
-          const { origin, pathname } = new URL(presignedURL);
-          // presingedURL에서 필요없는 부분 제거하고 저장
-          const url = origin + pathname;
-
-          await fetch(presignedURL, {
-            method: "PUT",
-            body: files[presignedURLIndex].file,
-            headers: new Headers({
-              "Content-Type": files[presignedURLIndex].fileType
-            })
-          });
-
-          imageUrls.push(url);
-          presignedURLIndex++;
-        } catch {
-          setToast({
-            message: "이미지 업로드 중 오류가 발생했습니다.",
-            type: "error"
-          });
-          setIsPostInProgress(false);
-          return;
-        }
-      }
+      return;
     }
 
     try {
