@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import ReactQuill from "react-quill-new";
 
+import { compressImageFile } from "@pages/articles/WriteArticle/core/writeArticle.util";
 import { classNames } from "@utils/classNames";
 
 import { useToastStore } from "@common/common.store";
@@ -15,7 +16,7 @@ import { imageFileType } from "@pages/articles/WriteArticle/core/writeArticle.ty
 type TextEditorProps = {
   value: string;
   onChangeHandler: (data: { value: string; pureText: string }) => void;
-  onImageHandler: (data: imageFileType[]) => void;
+  onImageHandler: (imageFileList: imageFileType[]) => void;
   error?: string;
 };
 
@@ -64,7 +65,7 @@ function TextEditor({
     input.setAttribute("multiple", "true");
     input.click();
 
-    input.onchange = () => {
+    input.onchange = async () => {
       if (!input.files) {
         return;
       }
@@ -80,22 +81,20 @@ function TextEditor({
       }
 
       for (const file of files) {
-        const blobUrl = URL.createObjectURL(file);
-        const range = editor.getSelection();
+        try {
+          const imageFile = await compressImageFile(file);
+          const range = editor.getSelection();
 
-        setImageFileList(prev => [
-          ...prev,
-          {
-            file,
-            fileName: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-            url: blobUrl
+          setImageFileList(prev => [...prev, imageFile]);
+
+          if (range) {
+            editor.insertEmbed(range.index, "image", imageFile.url);
           }
-        ]);
-
-        if (range) {
-          editor.insertEmbed(range.index, "image", blobUrl);
+        } catch (message) {
+          setToast({
+            message: message as string,
+            type: "error"
+          });
         }
       }
     };
@@ -133,7 +132,7 @@ function TextEditor({
       <div
         className={classNames(
           "flex flex-col",
-          "overflow-hidden rounded-xl border border-talearnt_Line_01",
+          "rounded-xl border border-talearnt_Line_01",
           (isFocused || isExpanded) && "border-talearnt_Primary_01",
           hasError && "border-talearnt_Error_01"
         )}

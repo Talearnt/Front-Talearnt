@@ -82,9 +82,9 @@ function WriteCommunityArticle() {
 
     try {
       imageUrls = await uploadImageToPresignedURL(content, imageFileList);
-    } catch (message) {
+    } catch (error) {
       setToast({
-        message: message as string,
+        message: (error as { message: string }).message,
         type: "error"
       });
 
