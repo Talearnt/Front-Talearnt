@@ -48,7 +48,7 @@ export const usePostCommunityArticle = () => {
   // 커뮤니티 게시물 목록 초기 쿼리 키
   const queryKey = createQueryKey(
     [queryKeys.COMMUNITY, { postType: undefined, page: 1 }],
-    { isArticleList: true }
+    { isList: true }
   );
 
   return useMutation({
@@ -56,7 +56,7 @@ export const usePostCommunityArticle = () => {
     onMutate: () => {
       // 모든 커뮤니티 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY], { isArticleList: true })
+        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true })
       });
       // 필터 초기화
       resetFilters();
@@ -77,19 +77,21 @@ export const usePostCommunityArticle = () => {
         customAxiosResponseType<communityArticleDetailType>
       >(detailQueryKey(data), {
         data: {
-          userNo,
-          nickname,
-          profileImg,
-          communityPostNo: data,
-          title,
-          createdAt: new Date().toString(),
-          content,
-          imageUrls,
-          postType,
-          isLike: false,
-          count: 0,
           commentCount: 0,
-          likeCount: 0
+          commentLastPage: 0,
+          communityPostNo: data,
+          count: 0,
+          content,
+          createdAt: new Date().toString(),
+          imageUrls,
+          isLike: false,
+          likeCount: 0,
+          nickname,
+          postType,
+          profileImg,
+          title,
+          updatedAt: "",
+          userNo
         },
         errorCode: null,
         errorMessage: null,
@@ -123,7 +125,7 @@ export const usePutEditCommunityArticle = () => {
           customAxiosResponseType<paginationType<communityArticleType>>
         >({
           queryKey: createQueryKey([queryKeys.COMMUNITY], {
-            isArticleList: true
+            isList: true
           })
         })
         .reverse();

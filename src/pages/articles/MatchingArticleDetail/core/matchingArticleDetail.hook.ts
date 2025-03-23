@@ -73,12 +73,12 @@ export const useDeleteMatchingArticle = () => {
     onSuccess: async () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isArticleList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true })
       });
       // 매칭 게시물 목록 프리패치
       await queryClient.prefetchQuery({
         queryKey: createQueryKey([queryKeys.MATCHING, filter], {
-          isArticleList: true
+          isList: true
         }),
         queryFn: async () => await getMatchingArticleList(filter)
       });
