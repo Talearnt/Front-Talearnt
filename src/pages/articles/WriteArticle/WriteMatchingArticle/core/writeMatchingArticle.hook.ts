@@ -52,7 +52,7 @@ export const usePostMatchingArticle = () => {
       queryKeys.MATCHING,
       { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
     ],
-    { isArticleList: true }
+    { isList: true }
   );
 
   return useMutation({
@@ -60,7 +60,7 @@ export const usePostMatchingArticle = () => {
     onMutate: () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isArticleList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true })
       });
       // 필터 초기화
       resetFilters();
@@ -157,7 +157,7 @@ export const usePutEditMatchingArticle = () => {
           customAxiosResponseType<paginationType<matchingArticleType>>
         >({
           queryKey: createQueryKey([queryKeys.MATCHING], {
-            isArticleList: true
+            isList: true
           })
         })
         .reverse();

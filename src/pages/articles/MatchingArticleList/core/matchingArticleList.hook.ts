@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { QueryKey, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { getMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.api";
@@ -17,7 +17,7 @@ import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { matchingArticleType } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
 const matchingArticleListQueryKey = createQueryKey([queryKeys.MATCHING], {
-  isArticleList: true
+  isList: true
 });
 
 export const useGetMatchingArticleList = () => {
@@ -35,39 +35,27 @@ export const useGetMatchingArticleList = () => {
     }))
   );
 
-  const previousQueryData = queryClient
-    .getQueriesData<
-      customAxiosResponseType<paginationType<matchingArticleType>>
-    >({
-      queryKey: matchingArticleListQueryKey
-    })
-    .reverse()
-    .find(([, data]) => data !== undefined) as
-    | [QueryKey, customAxiosResponseType<paginationType<matchingArticleType>>]
-    | undefined;
   const queryKey = createQueryKey([queryKeys.MATCHING, filter], {
-    isArticleList: true
+    isList: true
   });
 
   const queryResult = useQueryWithInitial(
-    previousQueryData
-      ? // 로딩하는 동안 이전 데이터 노출
-        previousQueryData[1].data
-      : {
-          results: [],
-          pagination: {
-            hasNext: false,
-            hasPrevious: false,
-            totalPages: 1,
-            currentPage: 1,
-            totalCount: 0,
-            latestCreatedAt: ""
-          }
-        },
+    {
+      results: [],
+      pagination: {
+        hasNext: false,
+        hasPrevious: false,
+        totalPages: 1,
+        currentPage: 1,
+        totalCount: 0,
+        latestCreatedAt: ""
+      }
+    },
     {
       queryKey,
       queryFn: async () => await getMatchingArticleList(filter)
-    }
+    },
+    matchingArticleListQueryKey
   );
 
   useEffect(() => {
@@ -81,7 +69,7 @@ export const useGetMatchingArticleList = () => {
         .reverse()
         .find(
           // 현재 로딩중인 쿼리와 다른 쿼리 중 값이 있는 제일 첫 캐시
-          ([queryKey]) => JSON.stringify(queryKey) !== JSON.stringify(queryKey)
+          ([key]) => JSON.stringify(key) !== JSON.stringify(queryKey)
         )?.[1];
 
       if (!previousPageData) {
@@ -89,7 +77,6 @@ export const useGetMatchingArticleList = () => {
       }
 
       const { totalCount, latestCreatedAt } = previousPageData.data.pagination;
-
       const { totalCount: newTotalCount, latestCreatedAt: newLatestCreatedAt } =
         queryResult.data.data.pagination;
 

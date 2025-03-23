@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { QueryKey, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { getCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.api";
@@ -17,7 +17,7 @@ import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { communityArticleType } from "@pages/articles/CommunityArticleList/core/communityArticleList.type";
 
 const communityArticleListQueryKey = createQueryKey([queryKeys.COMMUNITY], {
-  isArticleList: true
+  isList: true
 });
 
 export const useGetCommunityArticleList = () => {
@@ -30,39 +30,27 @@ export const useGetCommunityArticleList = () => {
     }))
   );
 
-  const previousQueryData = queryClient
-    .getQueriesData<
-      customAxiosResponseType<paginationType<communityArticleType>>
-    >({
-      queryKey: communityArticleListQueryKey
-    })
-    .reverse()
-    .find(([, data]) => data !== undefined) as
-    | [QueryKey, customAxiosResponseType<paginationType<communityArticleType>>]
-    | undefined;
   const queryKey = createQueryKey([queryKeys.COMMUNITY, filter], {
-    isArticleList: true
+    isList: true
   });
 
   const queryResult = useQueryWithInitial(
-    previousQueryData
-      ? // 로딩하는 동안 이전 데이터 노출
-        previousQueryData[1].data
-      : {
-          results: [],
-          pagination: {
-            hasNext: false,
-            hasPrevious: false,
-            totalPages: 1,
-            currentPage: 1,
-            totalCount: 0,
-            latestCreatedAt: ""
-          }
-        },
+    {
+      results: [],
+      pagination: {
+        hasNext: false,
+        hasPrevious: false,
+        totalPages: 1,
+        currentPage: 1,
+        totalCount: 0,
+        latestCreatedAt: ""
+      }
+    },
     {
       queryKey,
       queryFn: async () => await getCommunityArticleList(filter)
-    }
+    },
+    communityArticleListQueryKey
   );
 
   useEffect(() => {
@@ -76,7 +64,7 @@ export const useGetCommunityArticleList = () => {
         .reverse()
         .find(
           // 현재 로딩중인 쿼리와 다른 쿼리 중 값이 있는 제일 첫 캐시
-          ([queryKey]) => JSON.stringify(queryKey) !== JSON.stringify(queryKey)
+          ([key]) => JSON.stringify(key) !== JSON.stringify(queryKey)
         )?.[1];
 
       if (!previousPageData) {
@@ -84,7 +72,6 @@ export const useGetCommunityArticleList = () => {
       }
 
       const { totalCount, latestCreatedAt } = previousPageData.data.pagination;
-
       const { totalCount: newTotalCount, latestCreatedAt: newLatestCreatedAt } =
         queryResult.data.data.pagination;
 
