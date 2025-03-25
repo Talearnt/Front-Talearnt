@@ -31,15 +31,6 @@
         }
     }
 
-    .list-bullet {
-        @apply flex items-center;
-
-        &::before {
-            content: "";
-            @apply w-[6px] h-[6px] rounded-full bg-talearnt_Icon_01 mr-2;
-        }
-    }
-
     .scrollbar {
         &::-webkit-scrollbar {
             @apply block;
