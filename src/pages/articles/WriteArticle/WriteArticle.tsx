@@ -11,6 +11,7 @@ import { useGetProfile } from "@hook/user.hook";
 import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { AnimatedLoader } from "@components/AnimatedLoader/AnimatedLoader";
+import { Dot } from "@components/Dot/Dot";
 import { ArticleIcon } from "@components/icons/textEditor/ArticleIcon";
 import { TabSlider } from "@components/TabSlider/TabSlider";
 import { TitledBox } from "@components/TitledBox/TitledBox";
@@ -102,25 +103,37 @@ function WriteArticle() {
             }
           >
             <ul className={"space-y-4"}>
-              <li className={"list-bullet"}>
-                이미지는 최대&nbsp;
-                <b>
-                  5개까지 업로드 할 수 있으며, JPG, JPEG, PNG, JFIF, TIFF
-                  형식으로 업로드
-                </b>
-                &nbsp;할 수 있어요.
+              <li className={"flex items-center gap-2"}>
+                <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_01"} />
+                <p>
+                  이미지는 최대&nbsp;
+                  <b>
+                    5개까지 업로드 할 수 있으며, JPG, JPEG, PNG, JFIF, TIFF
+                    형식으로 업로드
+                  </b>
+                  &nbsp;할 수 있어요.
+                </p>
               </li>
-              <li className={"list-bullet"}>
-                이미지 용량이&nbsp;<b>3MB 초과 시 자동으로 압축</b>돼요.
+              <li className={"flex items-center gap-2"}>
+                <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_01"} />
+                <p>
+                  이미지 용량이&nbsp;<b>3MB 초과 시 자동으로 압축</b>돼요.
+                </p>
               </li>
-              <li className={"list-bullet"}>
-                게시글&nbsp;
-                <b>제목은 2글자 이상, 내용은 20글자 이상 필수로 입력</b>해
-                주세요.
+              <li className={"flex items-center gap-2"}>
+                <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_01"} />
+                <p>
+                  게시글&nbsp;
+                  <b>제목은 2글자 이상, 내용은 20글자 이상 필수로 입력</b>해
+                  주세요.
+                </p>
               </li>
-              <li className={"list-bullet"}>
-                글 작성과 이미지 업로드 시,&nbsp;
-                <b>타인의 지식재산권을 침해하지 않도록 유의해 주세요.</b>
+              <li className={"flex items-center gap-2"}>
+                <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_01"} />
+                <p>
+                  글 작성과 이미지 업로드 시,&nbsp;
+                  <b>타인의 지식재산권을 침해하지 않도록 유의해 주세요.</b>
+                </p>
               </li>
             </ul>
           </TitledBox>
