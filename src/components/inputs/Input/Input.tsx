@@ -28,7 +28,7 @@ type InputProps = CustomVariantProps<InputVariantsType> &
 const inputVariants = cva<InputVariantsType>(
   classNames(
     "peer/input",
-    "w-full border bg-talearnt_BG_Background ",
+    "w-full border bg-talearnt_BG_Background",
     "placeholder:text-talearnt_Text_04 focus:border-talearnt_Primary_01 focus:outline-none",
     "disabled:cursor-not-allowed disabled:bg-talearnt_BG_Up_01 disabled:text-talearnt_Text_04"
   ),
@@ -94,10 +94,16 @@ function Input({
   };
 
   useEffect(() => {
-    if (insideNodeRef.current && inputRef.current) {
+    if (!inputRef.current) {
+      return;
+    }
+
+    if (insideNodeRef.current) {
       const insideNodeWidth = insideNodeRef.current.offsetWidth;
 
-      inputRef.current.style.paddingRight = `${insideNodeWidth + 8 + (size === "small" ? 8 : 23)}px`;
+      inputRef.current.style.paddingRight = `${insideNodeWidth + 8 + (size === "large" ? 23 : 8)}px`;
+    } else {
+      inputRef.current.style.paddingRight = `${size === "large" ? 23 : 15}px`;
     }
   }, [insideNode, size]);
 
