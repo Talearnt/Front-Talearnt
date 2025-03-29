@@ -5,25 +5,28 @@ import { profileType } from "@type/user.type";
 export type communityArticleDetailType = Pick<profileType, "userNo"> &
   Pick<commonArticleDataType, "content"> &
   communityArticleType & {
+    commentLastPage: number;
     communityPostNo: number;
+    commentCount: number;
+    count: number;
     imageUrls: string[];
     isLike: false;
-    count: number;
     likeCount: number;
-    commentCount: number;
   };
 // {
-//   "userNo": 0,
-//   "nickname": "",
-//   "profileImg": null,
-//   "communityPostNo": 0,
-//   "createdAt": "",
-//   "title": "",
-//   "content": "",
-//   "imageUrls": [],
-//   "postType": "스터디 모집 게시판",
-//   "isLike": false,
-//   "count": 0,
 //   "commentCount": 0,
+//   "commentLastPage": 0,
+//   "communityPostNo": 0,
+//   "content": "",
+//   "count": 0,
+//   "createdAt: "2025-03-21T18:45:30.998488"
+//   "imageUrls": [],
+//   "isLike": false,
 //   "likeCount": 0,
+//   "nickname": "",
+//   "postType": "스터디 모집 게시판",
+//   "profileImg": null,
+//   "title": "",
+//   "updatedAt": "",
+//   "userNo": 0,
 // }

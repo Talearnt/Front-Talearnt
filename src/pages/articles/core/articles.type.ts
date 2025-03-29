@@ -1,7 +1,7 @@
 // 게시글 데이터
 import { profileType } from "@type/user.type";
 
-type baseContentType = {
+export type baseContentType = {
   content: string;
   createdAt: string;
   updatedAt: string;
