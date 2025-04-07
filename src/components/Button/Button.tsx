@@ -27,7 +27,7 @@ const buttonVariants = cva<ButtonVariantsType>(
         filled:
           "bg-talearnt_Primary_01 text-talearnt_BG_Background hover:bg-talearnt_PrimaryBG_02 disabled:bg-talearnt_BG_Up_02",
         outlined:
-          "bg-talearnt_BG_Background text-talearnt_Text_02 border border-talearnt_Icon_02",
+          "bg-talearnt_BG_Background text-talearnt_Text_02 border border-talearnt_Icon_03",
         "outlined-blue":
           "bg-talearnt_BG_Background text-talearnt_Primary_01 border border-talearnt_Primary_01 disabled:border-talearnt_Icon_02 "
       },
@@ -52,6 +52,7 @@ const buttonVariants = cva<ButtonVariantsType>(
  * @param {string | undefined} className
  * @param {"filled" | "outlined" | "outlined-blue"} buttonStyle
  * @param {React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | Iterable<React.ReactNode> | React.ReactPortal | boolean | undefined | null} children
+ * @param {"small" | "large"} size
  * @param {Omit<ButtonProps, "className" | "children" | "buttonStyle">} props
  * @constructor
  */
