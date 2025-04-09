@@ -5,6 +5,8 @@ import { classNames } from "@utils/classNames";
 import { useGetProfile } from "@hook/user.hook";
 import { useGetCommunityArticleReplyList } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
+import { useAuthStore } from "@pages/auth/core/auth.store";
+
 import { Reply } from "@pages/articles/CommunityArticleDetail/components/Reply/Reply";
 import { UserContentSection } from "@pages/articles/CommunityArticleDetail/components/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@pages/articles/CommunityArticleDetail/components/UserContentWrite/UserContentWrite";
@@ -65,6 +67,8 @@ function Comment({
     hasNextPage
   } = useGetCommunityArticleReplyList(commentNo, isOpen);
 
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   return isEdit ? (
     // TODO 댓글 수정 API 적용
     <UserContentWrite
@@ -82,10 +86,12 @@ function Comment({
       content={content}
     >
       <div className={"flex gap-4"}>
-        <ActionButton onClick={() => setIsReplyWriting(true)} withDot={false}>
-          <MessageIcon size={20} />
-          답글달기
-        </ActionButton>
+        {isLoggedIn && (
+          <ActionButton onClick={() => setIsReplyWriting(true)} withDot={false}>
+            <MessageIcon size={20} />
+            답글달기
+          </ActionButton>
+        )}
         {nickname === commentAuthorNickname && (
           <>
             <ActionButton onClick={() => setIsEdit(true)}>
