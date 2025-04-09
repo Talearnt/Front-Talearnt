@@ -16,6 +16,7 @@ import {
 import { usePromptStore, useToastStore } from "@common/common.store";
 import { useCommunityArticleCommentPageStore } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.store";
 import { useEditCommunityArticleDataStore } from "@pages/articles/core/articles.store";
+import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { Comment } from "@pages/articles/CommunityArticleDetail/components/Comment/Comment";
 import { UserContentWrite } from "@pages/articles/CommunityArticleDetail/components/UserContentWrite/UserContentWrite";
@@ -78,6 +79,7 @@ function CommunityArticleDetail() {
   );
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const [clickedIndex, setClickedIndex] = useState<number | undefined>(
     undefined
@@ -260,7 +262,9 @@ function CommunityArticleDetail() {
               </span>
             </p>
             {/*TODO 댓글 달기 API 적용*/}
-            <UserContentWrite onSubmitHandler={console.log} maxLength={300} />
+            {isLoggedIn && (
+              <UserContentWrite onSubmitHandler={console.log} maxLength={300} />
+            )}
             {commentList.map(({ commentNo, replyCount, ...comment }) => (
               <Comment
                 profileImg={comment.profileImg}

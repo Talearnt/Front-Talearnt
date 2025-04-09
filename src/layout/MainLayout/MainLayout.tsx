@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import { useShallow } from "zustand/shallow";
+
 import { getAccessTokenUseRefreshToken } from "@pages/auth/core/auth.api";
 
 import { classNames } from "@utils/classNames";
@@ -47,9 +49,14 @@ function MainLayout() {
     isSuccess
   } = useGetProfile();
 
-  const accessToken = useAuthStore(state => state.accessToken);
+  const { accessToken, setAccessToken, isLoggedIn } = useAuthStore(
+    useShallow(state => ({
+      accessToken: state.accessToken,
+      setAccessToken: state.setAccessToken,
+      isLoggedIn: state.isLoggedIn
+    }))
+  );
   const promptData = usePromptStore(state => state.promptData);
-  const setAccessToken = useAuthStore(state => state.setAccessToken);
   const setMainScrollRef = useMainScrollRefStore(
     state => state.setMainScrollRef
   );
@@ -105,7 +112,7 @@ function MainLayout() {
         <div className={"flex items-center gap-6"}>
           <div className={"flex gap-2"}>
             {linkArray.map(({ path, content }) => {
-              if (content === "회원가입" && accessToken) {
+              if (content === "회원가입" && isLoggedIn) {
                 return;
               }
 
@@ -131,16 +138,16 @@ function MainLayout() {
               size={"small"}
               onClick={() =>
                 navigator(
-                  accessToken
+                  isLoggedIn
                     ? `write-article/${pathname.includes("community") ? "community" : "matching"}`
                     : "sign-in"
                 )
               }
             >
-              {accessToken ? "글쓰기" : "로그인"}
+              {isLoggedIn ? "글쓰기" : "로그인"}
             </Button>
           </div>
-          {accessToken && (
+          {isLoggedIn && (
             <>
               <NotificationIcon />
               <div className={"flex items-center"}>
