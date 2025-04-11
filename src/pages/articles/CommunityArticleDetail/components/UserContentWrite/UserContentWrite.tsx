@@ -62,7 +62,10 @@ function UserContentWrite({
             취소
           </Button>
           <Button
-            onClick={() => onSubmitHandler(editContent)}
+            onClick={() => {
+              onSubmitHandler(editContent);
+              setEditContent("");
+            }}
             size={"small"}
             disabled={content === editContent}
           >

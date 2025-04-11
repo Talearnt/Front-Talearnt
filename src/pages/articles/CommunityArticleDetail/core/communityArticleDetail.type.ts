@@ -4,17 +4,11 @@ import { profileType } from "@type/user.type";
 
 export type communityArticleDetailType = Pick<profileType, "userNo"> &
   Pick<commonArticleDataType, "content"> &
-  communityArticleType & {
+  Omit<communityArticleType, "commentCount"> & {
     commentLastPage: number;
-    communityPostNo: number;
-    commentCount: number;
-    count: number;
     imageUrls: string[];
-    isLike: false;
-    likeCount: number;
   };
 // {
-//   "commentCount": 0,
 //   "commentLastPage": 0,
 //   "communityPostNo": 0,
 //   "content": "",
