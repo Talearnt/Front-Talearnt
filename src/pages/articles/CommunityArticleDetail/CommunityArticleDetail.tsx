@@ -10,7 +10,8 @@ import { useGetProfile } from "@hook/user.hook";
 import {
   useDeleteCommunityArticle,
   useGetCommunityArticleCommentList,
-  useGetCommunityArticleDetail
+  useGetCommunityArticleDetail,
+  usePostCommunityArticleComment
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
 import { usePromptStore, useToastStore } from "@common/common.store";
@@ -40,7 +41,6 @@ function CommunityArticleDetail() {
   const {
     data: {
       data: {
-        commentCount,
         commentLastPage,
         communityPostNo,
         content,
@@ -63,10 +63,16 @@ function CommunityArticleDetail() {
   } = useGetCommunityArticleDetail();
   const {
     data: {
-      data: { results: commentList }
-    }
+      data: {
+        results: commentList,
+        pagination: { totalCount, totalPages }
+      }
+    },
+    isLoading: commentIsLoading
   } = useGetCommunityArticleCommentList();
-  const { mutate } = useDeleteCommunityArticle();
+  const { mutate: deleteCommunityArticle } = useDeleteCommunityArticle();
+  const { mutate: postCommunityArticleComment } =
+    usePostCommunityArticleComment();
 
   const { page, setPage } = useCommunityArticleCommentPageStore(
     useShallow(state => ({
@@ -106,7 +112,7 @@ function CommunityArticleDetail() {
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
       cancelOnClickHandler: () => setPrompt(),
-      confirmOnClickHandler: () => mutate(communityPostNo)
+      confirmOnClickHandler: () => deleteCommunityArticle(communityPostNo)
     });
 
   useEffect(() => {
@@ -258,12 +264,15 @@ function CommunityArticleDetail() {
             >
               댓글
               <span className={classNames("ml-1", "text-talearnt_Primary_01")}>
-                {commentCount}
+                {commentIsLoading ? "-" : totalCount}
               </span>
             </p>
-            {/*TODO 댓글 달기 API 적용*/}
             {isLoggedIn && (
-              <UserContentWrite onSubmitHandler={console.log} maxLength={300} />
+              <UserContentWrite
+                onSubmitHandler={postCommunityArticleComment}
+                maxLength={300}
+                placeholder={"댓글을 남겨보세요! (3글자 이상 입력)"}
+              />
             )}
             {commentList.map(({ commentNo, replyCount, ...comment }) => (
               <Comment
@@ -279,7 +288,7 @@ function CommunityArticleDetail() {
             <Pagination
               className={"mt-8"}
               currentPage={page}
-              totalPages={commentLastPage}
+              totalPages={totalPages}
               handlePageChange={setPage}
             />
           </div>

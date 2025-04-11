@@ -23,14 +23,15 @@ export type communityArticleType = Pick<
     likeCount: number;
   };
 // {
-//   "nickname": "",
-//   "profileImg": null,
-//   "communityPostNo": 0,
-//   "createdAt": "",
-//   "title": "",
-//   "postType": "스터디 모집 게시판",
-//   "isLike": false,
-//   "count": 0,
 //   "commentCount": 0,
+//   "communityPostNo": 0,
+//   "count": 0,
+//   "createdAt": "",
+//   "isLike": false,
 //   "likeCount": 0,
+//   "nickname": "",
+//   "postType": "스터디 모집 게시판",
+//   "profileImg": null,
+//   "title": "",
+//   "updatedAt": ""
 // }

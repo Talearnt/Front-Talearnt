@@ -11,7 +11,8 @@ import {
   deleteCommunityArticle,
   getCommunityArticleCommentList,
   getCommunityArticleDetail,
-  getCommunityArticleReplyList
+  getCommunityArticleReplyList,
+  postCommunityArticleComment
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.api";
 import { getCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.api";
 
@@ -26,6 +27,7 @@ import { useCommunityArticleListFilterStore } from "@pages/articles/CommunityArt
 import { queryKeys } from "@common/common.constants";
 
 import { customAxiosResponseType, paginationType } from "@common/common.type";
+import { communityArticleDetailType } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.type";
 import { replyType } from "@pages/articles/core/articles.type";
 
 export const useGetCommunityArticleDetail = () => {
@@ -35,7 +37,6 @@ export const useGetCommunityArticleDetail = () => {
 
   return useQueryWithInitial(
     {
-      commentCount: 0,
       commentLastPage: 0,
       communityPostNo: 0,
       content: "",
@@ -150,5 +151,62 @@ export const useGetCommunityArticleReplyList = (
     },
     select: data => data.pages.flatMap(page => page.data.results),
     initialPageParam: undefined
+  });
+};
+
+export const usePostCommunityArticleComment = () => {
+  const { communityPostNo } = useParams();
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: {
+      data: { commentLastPage }
+    }
+  } = useGetCommunityArticleDetail();
+
+  const setPage = useCommunityArticleCommentPageStore(state => state.setPage);
+
+  const postNo = Number(communityPostNo);
+
+  return useMutation({
+    mutationFn: async (content: string) =>
+      await postCommunityArticleComment({ communityPostNo: postNo, content }),
+    onSuccess: async data => {
+      const {
+        data: {
+          pagination: { currentPage, totalPages }
+        }
+      } = data;
+
+      if (commentLastPage !== totalPages) {
+        // 커뮤니티 상세 정보에 댓글 마지막 페이지 저장
+        queryClient.setQueryData<
+          customAxiosResponseType<communityArticleDetailType>
+        >(createQueryKey([queryKeys.COMMUNITY, postNo]), oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              commentLastPage: totalPages
+            }
+          };
+        });
+      }
+
+      // 댓글 목록 저장
+      queryClient.setQueryData(
+        createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, currentPage], {
+          isList: true
+        }),
+        data
+      );
+
+      setPage(totalPages);
+    }
   });
 };

@@ -77,7 +77,6 @@ export const usePostCommunityArticle = () => {
         customAxiosResponseType<communityArticleDetailType>
       >(detailQueryKey(data), {
         data: {
-          commentCount: 0,
           commentLastPage: 0,
           communityPostNo: data,
           count: 0,
