@@ -13,7 +13,7 @@ type ReplyProps = ComponentProps<"textarea"> & {
   content?: string;
   submitButtonText?: string;
   onCancelHandler?: () => void;
-  onSubmitHandler: (content: string) => void;
+  onSubmitHandler: (content: string) => void | Promise<void>;
 };
 
 function UserContentWrite({
@@ -33,6 +33,7 @@ function UserContentWrite({
   } = useGetProfile();
 
   const [editContent, setEditContent] = useState(content ?? "");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCancel = () => {
     if (!textareaRef.current) {
@@ -62,12 +63,16 @@ function UserContentWrite({
             취소
           </Button>
           <Button
-            onClick={() => {
-              onSubmitHandler(editContent);
+            onClick={async () => {
+              setIsLoading(true);
+              await onSubmitHandler(editContent);
               setEditContent("");
+              setIsLoading(false);
             }}
             size={"small"}
-            disabled={content === editContent}
+            disabled={
+              content === editContent || editContent.length < 3 || isLoading
+            }
           >
             {submitButtonText}
           </Button>

@@ -3,7 +3,10 @@ import { ComponentProps, useState } from "react";
 import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
-import { useGetCommunityArticleReplyList } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
+import {
+  useGetCommunityArticleReplyList,
+  usePutEditCommunityArticleComment
+} from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
 import { useAuthStore } from "@pages/auth/core/auth.store";
 
@@ -66,17 +69,22 @@ function Comment({
     fetchNextPage,
     hasNextPage
   } = useGetCommunityArticleReplyList(commentNo, isOpen);
+  const { mutateAsync: editCommunityArticleComment } =
+    usePutEditCommunityArticleComment();
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   return isEdit ? (
-    // TODO 댓글 수정 API 적용
     <UserContentWrite
       content={content}
       onCancelHandler={() => setIsEdit(false)}
-      onSubmitHandler={console.log}
+      onSubmitHandler={async content => {
+        await editCommunityArticleComment({ commentNo, content });
+        setIsEdit(false);
+      }}
       submitButtonText={"수정"}
       maxLength={300}
+      placeholder={"댓글을 남겨보세요! (3글자 이상 입력)"}
     />
   ) : (
     <UserContentSection

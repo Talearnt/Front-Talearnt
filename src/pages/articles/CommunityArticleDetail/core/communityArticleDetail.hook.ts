@@ -12,7 +12,8 @@ import {
   getCommunityArticleCommentList,
   getCommunityArticleDetail,
   getCommunityArticleReplyList,
-  postCommunityArticleComment
+  postCommunityArticleComment,
+  putEditCommunityArticleComment
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.api";
 import { getCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.api";
 
@@ -28,7 +29,7 @@ import { queryKeys } from "@common/common.constants";
 
 import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { communityArticleDetailType } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.type";
-import { replyType } from "@pages/articles/core/articles.type";
+import { commentType, replyType } from "@pages/articles/core/articles.type";
 
 export const useGetCommunityArticleDetail = () => {
   const { communityPostNo } = useParams();
@@ -99,9 +100,6 @@ export const useGetCommunityArticleCommentList = () => {
   const page = useCommunityArticleCommentPageStore(state => state.page);
 
   const postNo = Number(communityPostNo);
-  const queryKey = createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
-    isList: true
-  });
 
   return useQueryWithInitial(
     {
@@ -116,12 +114,16 @@ export const useGetCommunityArticleCommentList = () => {
       }
     },
     {
-      queryKey,
+      queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
+        isList: true
+      }),
       queryFn: async () =>
         await getCommunityArticleCommentList({ communityPostNo: postNo, page }),
       enabled: communityPostNo !== undefined && page !== 0
     },
-    queryKey
+    createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
+      isList: true
+    })
   );
 };
 
@@ -172,7 +174,7 @@ export const usePostCommunityArticleComment = () => {
   return useMutation({
     mutationFn: async (content: string) =>
       await postCommunityArticleComment({ communityPostNo: postNo, content }),
-    onSuccess: async data => {
+    onSuccess: data => {
       const {
         data: {
           pagination: { currentPage, totalPages }
@@ -208,5 +210,45 @@ export const usePostCommunityArticleComment = () => {
 
       setPage(totalPages);
     }
+  });
+};
+
+export const usePutEditCommunityArticleComment = () => {
+  const { communityPostNo } = useParams();
+
+  const queryClient = useQueryClient();
+
+  const page = useCommunityArticleCommentPageStore(state => state.page);
+
+  const postNo = Number(communityPostNo);
+
+  return useMutation({
+    mutationFn: putEditCommunityArticleComment,
+    onSuccess: (_, { commentNo, content }) =>
+      // 수정된 댓글 목록 저장
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<commentType>>
+      >(
+        createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
+          isList: true
+        }),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.map(comment =>
+                comment.commentNo === commentNo
+                  ? { ...comment, content }
+                  : comment
+              )
+            }
+          };
+        }
+      )
   });
 };
