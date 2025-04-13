@@ -4,6 +4,9 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
+import { useToastStore } from "@common/common.store";
+import { useAuthStore } from "@pages/auth/core/auth.store";
+
 import { Avatar } from "@components/Avatar/Avatar";
 import { Button } from "@components/Button/Button";
 import { Textarea } from "@components/Textarea/Textarea";
@@ -32,6 +35,9 @@ function UserContentWrite({
     }
   } = useGetProfile();
 
+  const setToast = useToastStore(state => state.setToast);
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   const [editContent, setEditContent] = useState(content ?? "");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,6 +57,17 @@ function UserContentWrite({
         <Textarea
           ref={textareaRef}
           {...props}
+          onMouseDown={e => {
+            if (isLoggedIn) {
+              return;
+            }
+
+            e.preventDefault();
+            setToast({
+              message: "로그인이 필요한 서비스입니다",
+              type: "error"
+            });
+          }}
           onChange={({ target: { value } }) => setEditContent(value)}
           value={editContent}
         />
