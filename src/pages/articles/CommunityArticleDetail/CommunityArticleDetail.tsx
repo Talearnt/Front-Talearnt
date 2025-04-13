@@ -17,7 +17,6 @@ import {
 import { usePromptStore, useToastStore } from "@common/common.store";
 import { useCommunityArticleCommentPageStore } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.store";
 import { useEditCommunityArticleDataStore } from "@pages/articles/core/articles.store";
-import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { Comment } from "@pages/articles/CommunityArticleDetail/components/Comment/Comment";
 import { UserContentWrite } from "@pages/articles/CommunityArticleDetail/components/UserContentWrite/UserContentWrite";
@@ -85,7 +84,6 @@ function CommunityArticleDetail() {
   );
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const [clickedIndex, setClickedIndex] = useState<number | undefined>(
     undefined
@@ -267,13 +265,11 @@ function CommunityArticleDetail() {
                 {commentIsLoading ? "-" : totalCount}
               </span>
             </p>
-            {isLoggedIn && (
-              <UserContentWrite
-                onSubmitHandler={postCommunityArticleComment}
-                maxLength={300}
-                placeholder={"댓글을 남겨보세요! (3글자 이상 입력)"}
-              />
-            )}
+            <UserContentWrite
+              onSubmitHandler={postCommunityArticleComment}
+              maxLength={300}
+              placeholder={"댓글을 남겨보세요! (3글자 이상 입력)"}
+            />
             {commentList.map(({ commentNo, replyCount, ...comment }) => (
               <Comment
                 profileImg={comment.profileImg}
