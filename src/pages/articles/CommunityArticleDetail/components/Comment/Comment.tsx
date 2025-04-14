@@ -66,8 +66,8 @@ function Comment({
   } = useGetProfile();
   const {
     data: replyList,
-    fetchNextPage,
-    hasNextPage
+    fetchPreviousPage,
+    hasPreviousPage
   } = useGetCommunityArticleReplyList(commentNo, isOpen);
   const { mutateAsync: editCommunityArticleComment } =
     usePutEditCommunityArticleComment();
@@ -148,6 +148,18 @@ function Comment({
           </button>
           {isOpen && (
             <div className={"flex flex-col gap-4"}>
+              {hasPreviousPage && (
+                <button
+                  className={classNames(
+                    "w-fit rounded-full border border-talearnt_Icon_03 px-[11px] py-2",
+                    "text-body3_14_medium text-talearnt_Text_02",
+                    "hover:text-talearnt_Primary_01"
+                  )}
+                  onClick={() => fetchPreviousPage()}
+                >
+                  더보기
+                </button>
+              )}
               {replyList?.map(
                 ({
                   profileImg,
@@ -164,18 +176,6 @@ function Comment({
                     key={replyNo}
                   />
                 )
-              )}
-              {hasNextPage && (
-                <button
-                  className={classNames(
-                    "w-fit rounded-full border border-talearnt_Icon_03 px-[11px] py-2",
-                    "text-body3_14_medium text-talearnt_Text_02",
-                    "hover:text-talearnt_Primary_01"
-                  )}
-                  onClick={() => fetchNextPage()}
-                >
-                  더보기
-                </button>
               )}
             </div>
           )}
