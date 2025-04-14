@@ -144,13 +144,11 @@ export const useGetCommunityArticleReplyList = (
     }),
     queryFn: async ({ pageParam }) =>
       await getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
-    getNextPageParam: lastPage => {
-      const lastIndex = lastPage.data.results.length;
-
-      return lastPage.data.pagination.hasNext
-        ? lastPage.data.results[lastIndex - 1].replyNo
-        : undefined;
-    },
+    getPreviousPageParam: lastPage =>
+      lastPage.data.pagination.hasNext
+        ? lastPage.data.results[0].replyNo
+        : undefined,
+    getNextPageParam: () => undefined,
     select: data => data.pages.flatMap(page => page.data.results),
     initialPageParam: undefined
   });
