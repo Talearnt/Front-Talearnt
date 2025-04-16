@@ -5,6 +5,7 @@ import { classNames } from "@utils/classNames";
 import { useGetProfile } from "@hook/user.hook";
 import {
   useGetCommunityArticleReplyList,
+  usePostCommunityArticleReply,
   usePutEditCommunityArticleComment
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
@@ -69,6 +70,8 @@ function Comment({
     fetchPreviousPage,
     hasPreviousPage
   } = useGetCommunityArticleReplyList(commentNo, isOpen);
+  const { mutateAsync: postCommunityArticleReply } =
+    usePostCommunityArticleReply(commentNo, isOpen);
   const { mutateAsync: editCommunityArticleComment } =
     usePutEditCommunityArticleComment();
 
@@ -111,11 +114,16 @@ function Comment({
         )}
       </div>
       {isReplyWriting && (
-        //TODO 답글 달기 API 적용
         <UserContentWrite
           className={"mt-2"}
           onCancelHandler={() => setIsReplyWriting(false)}
-          onSubmitHandler={console.log}
+          onSubmitHandler={async content => {
+            await postCommunityArticleReply(content);
+
+            if (!isOpen) {
+              setIsOpen(true);
+            }
+          }}
           maxLength={300}
         />
       )}

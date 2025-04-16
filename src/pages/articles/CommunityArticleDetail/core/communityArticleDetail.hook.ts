@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
+import type { InfiniteData } from "@tanstack/query-core";
 import {
   useInfiniteQuery,
   useMutation,
@@ -13,6 +14,7 @@ import {
   getCommunityArticleDetail,
   getCommunityArticleReplyList,
   postCommunityArticleComment,
+  postCommunityArticleReply,
   putEditCommunityArticleComment
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.api";
 import { getCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.api";
@@ -31,6 +33,7 @@ import { customAxiosResponseType, paginationType } from "@common/common.type";
 import { communityArticleDetailType } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.type";
 import { commentType, replyType } from "@pages/articles/core/articles.type";
 
+// 커뮤니티 게시글 상세 정보
 export const useGetCommunityArticleDetail = () => {
   const { communityPostNo } = useParams();
 
@@ -55,12 +58,13 @@ export const useGetCommunityArticleDetail = () => {
     },
     {
       queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),
-      queryFn: async () => await getCommunityArticleDetail(postNo),
+      queryFn: () => getCommunityArticleDetail(postNo),
       enabled: communityPostNo !== undefined
     }
   );
 };
 
+// 커뮤니티 게시글 제거
 export const useDeleteCommunityArticle = () => {
   const navigator = useNavigate();
 
@@ -94,6 +98,7 @@ export const useDeleteCommunityArticle = () => {
   });
 };
 
+// 커뮤니티 게시글 댓글 리스트
 export const useGetCommunityArticleCommentList = () => {
   const { communityPostNo } = useParams();
 
@@ -117,8 +122,8 @@ export const useGetCommunityArticleCommentList = () => {
       queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
         isList: true
       }),
-      queryFn: async () =>
-        await getCommunityArticleCommentList({ communityPostNo: postNo, page }),
+      queryFn: () =>
+        getCommunityArticleCommentList({ communityPostNo: postNo, page }),
       enabled: communityPostNo !== undefined && page !== 0
     },
     createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
@@ -127,6 +132,7 @@ export const useGetCommunityArticleCommentList = () => {
   );
 };
 
+// 커뮤니티 게시글 특정 댓글의 답글 리스트
 export const useGetCommunityArticleReplyList = (
   commentNo: number,
   enabled: boolean
@@ -142,8 +148,8 @@ export const useGetCommunityArticleReplyList = (
     queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
       isList: true
     }),
-    queryFn: async ({ pageParam }) =>
-      await getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
+    queryFn: ({ pageParam }) =>
+      getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
     getPreviousPageParam: lastPage =>
       lastPage.data.pagination.hasNext
         ? lastPage.data.results[0].replyNo
@@ -154,6 +160,7 @@ export const useGetCommunityArticleReplyList = (
   });
 };
 
+// 커뮤니티 게시글 댓글 작성
 export const usePostCommunityArticleComment = () => {
   const { communityPostNo } = useParams();
 
@@ -170,8 +177,8 @@ export const usePostCommunityArticleComment = () => {
   const postNo = Number(communityPostNo);
 
   return useMutation({
-    mutationFn: async (content: string) =>
-      await postCommunityArticleComment({ communityPostNo: postNo, content }),
+    mutationFn: (content: string) =>
+      postCommunityArticleComment({ communityPostNo: postNo, content }),
     onSuccess: data => {
       const {
         data: {
@@ -211,6 +218,7 @@ export const usePostCommunityArticleComment = () => {
   });
 };
 
+// 커뮤니티 게시글 댓글 수정
 export const usePutEditCommunityArticleComment = () => {
   const { communityPostNo } = useParams();
 
@@ -248,5 +256,39 @@ export const usePutEditCommunityArticleComment = () => {
           };
         }
       )
+  });
+};
+
+// 커뮤니티 게시글 답글 작성
+export const usePostCommunityArticleReply = (
+  commentNo: number,
+  isOpen: boolean
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (content: string) =>
+      await postCommunityArticleReply({ commentNo, content }),
+    onSuccess: ({ data: reply }) => {
+      if (isOpen) {
+        queryClient.setQueryData<
+          InfiniteData<customAxiosResponseType<paginationType<replyType>>>
+        >(
+          createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
+            isList: true
+          }),
+          oldData => {
+            if (!oldData) {
+              return oldData;
+            }
+
+            const { pageParams, pages } = oldData;
+            pages[pages.length - 1].data.results.push(reply);
+
+            return { pageParams, pages };
+          }
+        );
+      }
+    }
   });
 };

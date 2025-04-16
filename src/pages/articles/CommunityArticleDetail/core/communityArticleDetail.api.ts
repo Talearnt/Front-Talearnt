@@ -57,7 +57,7 @@ export const postCommunityArticleComment = async (
 export const postCommunityArticleReply = async (
   reply: Pick<commentType, "commentNo"> & Pick<baseContentType, "content">
 ) =>
-  await postAPI<paginationType<replyType>>("/v1/communities/replies", reply, {
+  await postAPI<replyType>("/v1/communities/replies", reply, {
     withCredentials: true
   });
 // 댓글 삭제
