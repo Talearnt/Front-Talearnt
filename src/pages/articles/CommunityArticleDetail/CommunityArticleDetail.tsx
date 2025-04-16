@@ -270,16 +270,8 @@ function CommunityArticleDetail() {
               maxLength={300}
               placeholder={"댓글을 남겨보세요! (3글자 이상 입력)"}
             />
-            {commentList.map(({ commentNo, replyCount, ...comment }) => (
-              <Comment
-                profileImg={comment.profileImg}
-                createdAt={comment.createdAt}
-                nickname={comment.nickname}
-                content={comment.content}
-                replyCount={replyCount}
-                commentNo={commentNo}
-                key={commentNo}
-              />
+            {commentList.map(comment => (
+              <Comment {...comment} key={comment.commentNo} />
             ))}
             <Pagination
               className={"mt-8"}
