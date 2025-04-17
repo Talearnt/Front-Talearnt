@@ -19,28 +19,10 @@ export const deleteCommunityArticle = async (communityPostNo: number) =>
     withCredentials: true
   });
 
-// 댓글 목록 조회
-export const getCommunityArticleCommentList = async ({
-  communityPostNo,
-  page
-}: Pick<communityArticleDetailType, "communityPostNo"> & {
-  page: number;
-}) =>
-  await getAPI<paginationType<commentType>>(
-    `/v1/communities/${communityPostNo}/comments`,
-    { page }
-  );
-// 답글 목록 조회
-export const getCommunityArticleReplyList = async ({
-  commentNo,
-  lastNo
-}: Pick<commentType, "commentNo"> & {
-  lastNo?: number;
-}) =>
-  await getAPI<paginationType<replyType>>(
-    `/v1/communities/${commentNo}/replies`,
-    { lastNo }
-  );
+// ***********************
+// 댓글 관련 api
+// ***********************
+
 // 댓글 작성
 export const postCommunityArticleComment = async (
   comment: Pick<communityArticleDetailType, "communityPostNo"> &
@@ -53,23 +35,19 @@ export const postCommunityArticleComment = async (
       withCredentials: true
     }
   );
-// 답글 작성
-export const postCommunityArticleReply = async (
-  reply: Pick<commentType, "commentNo"> & Pick<baseContentType, "content">
-) =>
-  await postAPI<replyType>("/v1/communities/replies", reply, {
-    withCredentials: true
-  });
-// 댓글 삭제
-export const deleteCommunityArticleComment = async (commentNo: number) =>
-  await deleteAPI(`v1/communities/comments/${commentNo}`, {
-    withCredentials: true
-  });
-// 답글 삭제
-export const deleteCommunityArticleReply = async (replyNo: number) =>
-  await deleteAPI(`v1/communities/replies/${replyNo}`, {
-    withCredentials: true
-  });
+
+// 댓글 목록 조회
+export const getCommunityArticleCommentList = async ({
+  communityPostNo,
+  page
+}: Pick<communityArticleDetailType, "communityPostNo"> & {
+  page: number;
+}) =>
+  await getAPI<paginationType<commentType>>(
+    `/v1/communities/${communityPostNo}/comments`,
+    { page }
+  );
+
 //댓글 수정
 export const putEditCommunityArticleComment = async ({
   commentNo,
@@ -82,6 +60,37 @@ export const putEditCommunityArticleComment = async ({
       withCredentials: true
     }
   );
+
+// 댓글 삭제
+export const deleteCommunityArticleComment = async (commentNo: number) =>
+  await deleteAPI(`v1/communities/comments/${commentNo}`, {
+    withCredentials: true
+  });
+
+// ***********************
+// 답글 관련 api
+// ***********************
+
+// 답글 작성
+export const postCommunityArticleReply = async (
+  reply: Pick<commentType, "commentNo"> & Pick<baseContentType, "content">
+) =>
+  await postAPI<replyType>("/v1/communities/replies", reply, {
+    withCredentials: true
+  });
+
+// 답글 목록 조회
+export const getCommunityArticleReplyList = async ({
+  commentNo,
+  lastNo
+}: Pick<commentType, "commentNo"> & {
+  lastNo?: number;
+}) =>
+  await getAPI<paginationType<replyType>>(
+    `/v1/communities/${commentNo}/replies`,
+    { lastNo }
+  );
+
 //답글 수정
 export const putEditCommunityArticleReply = async ({
   replyNo,
@@ -94,3 +103,9 @@ export const putEditCommunityArticleReply = async ({
       withCredentials: true
     }
   );
+
+// 답글 삭제
+export const deleteCommunityArticleReply = async (replyNo: number) =>
+  await deleteAPI(`v1/communities/replies/${replyNo}`, {
+    withCredentials: true
+  });
