@@ -98,68 +98,9 @@ export const useDeleteCommunityArticle = () => {
   });
 };
 
-// 커뮤니티 게시글 댓글 리스트
-export const useGetCommunityArticleCommentList = () => {
-  const { communityPostNo } = useParams();
-
-  const page = useCommunityArticleCommentPageStore(state => state.page);
-
-  const postNo = Number(communityPostNo);
-
-  return useQueryWithInitial(
-    {
-      results: [],
-      pagination: {
-        hasNext: false,
-        hasPrevious: false,
-        totalPages: 1,
-        currentPage: 1,
-        totalCount: 0,
-        latestCreatedAt: ""
-      }
-    },
-    {
-      queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
-        isList: true
-      }),
-      queryFn: () =>
-        getCommunityArticleCommentList({ communityPostNo: postNo, page }),
-      enabled: communityPostNo !== undefined && page !== 0
-    },
-    createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
-      isList: true
-    })
-  );
-};
-
-// 커뮤니티 게시글 특정 댓글의 답글 리스트
-export const useGetCommunityArticleReplyList = (
-  commentNo: number,
-  enabled: boolean
-) => {
-  return useInfiniteQuery<
-    customAxiosResponseType<paginationType<replyType>>, // queryFn 타입
-    Error, // error 타입
-    replyType[], // select 타입
-    unknown[], // queryKey 타입
-    number | undefined // pageParam 타입
-  >({
-    enabled,
-    queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
-      isList: true
-    }),
-    queryFn: ({ pageParam }) =>
-      getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
-    getPreviousPageParam: lastPage =>
-      lastPage.data.pagination.hasNext
-        ? lastPage.data.results[0].replyNo
-        : undefined,
-    getNextPageParam: () => undefined,
-    select: data => data.pages.flatMap(page => page.data.results),
-    initialPageParam: undefined
-  });
-};
-
+// ***********************
+// 댓글 관련 hook
+// ***********************
 // 커뮤니티 게시글 댓글 작성
 export const usePostCommunityArticleComment = () => {
   const { communityPostNo } = useParams();
@@ -218,6 +159,40 @@ export const usePostCommunityArticleComment = () => {
   });
 };
 
+// 커뮤니티 게시글 댓글 리스트
+export const useGetCommunityArticleCommentList = () => {
+  const { communityPostNo } = useParams();
+
+  const page = useCommunityArticleCommentPageStore(state => state.page);
+
+  const postNo = Number(communityPostNo);
+
+  return useQueryWithInitial(
+    {
+      results: [],
+      pagination: {
+        hasNext: false,
+        hasPrevious: false,
+        totalPages: 1,
+        currentPage: 1,
+        totalCount: 0,
+        latestCreatedAt: ""
+      }
+    },
+    {
+      queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
+        isList: true
+      }),
+      queryFn: () =>
+        getCommunityArticleCommentList({ communityPostNo: postNo, page }),
+      enabled: communityPostNo !== undefined && page !== 0
+    },
+    createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
+      isList: true
+    })
+  );
+};
+
 // 커뮤니티 게시글 댓글 수정
 export const usePutEditCommunityArticleComment = () => {
   const { communityPostNo } = useParams();
@@ -259,6 +234,9 @@ export const usePutEditCommunityArticleComment = () => {
   });
 };
 
+// ***********************
+// 답글 관련 hook
+// ***********************
 // 커뮤니티 게시글 답글 작성
 export const usePostCommunityArticleReply = (
   commentNo: number,
@@ -270,6 +248,7 @@ export const usePostCommunityArticleReply = (
     mutationFn: async (content: string) =>
       await postCommunityArticleReply({ commentNo, content }),
     onSuccess: ({ data: reply }) => {
+      // 답글 이미 열린 경우
       if (isOpen) {
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
@@ -282,13 +261,53 @@ export const usePostCommunityArticleReply = (
               return oldData;
             }
 
-            const { pageParams, pages } = oldData;
-            pages[pages.length - 1].data.results.push(reply);
-
-            return { pageParams, pages };
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page, idx, array) => {
+                // 제일 처음 호출된 쿼리에 새로 달린 답글 추가
+                if (idx === array.length - 1) {
+                  return {
+                    ...page,
+                    data: {
+                      ...page.data,
+                      results: [...page.data.results, reply]
+                    }
+                  };
+                }
+                return page;
+              })
+            };
           }
         );
       }
     }
+  });
+};
+
+// 커뮤니티 게시글 특정 댓글의 답글 리스트
+export const useGetCommunityArticleReplyList = (
+  commentNo: number,
+  enabled: boolean
+) => {
+  return useInfiniteQuery<
+    customAxiosResponseType<paginationType<replyType>>, // queryFn 타입
+    Error, // error 타입
+    replyType[], // select 타입
+    unknown[], // queryKey 타입
+    number | undefined // pageParam 타입
+  >({
+    enabled,
+    queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
+      isList: true
+    }),
+    queryFn: ({ pageParam }) =>
+      getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
+    getPreviousPageParam: lastPage =>
+      lastPage.data.pagination.hasNext
+        ? lastPage.data.results[0].replyNo
+        : undefined,
+    getNextPageParam: () => undefined,
+    select: data => data.pages.flatMap(page => page.data.results),
+    initialPageParam: undefined
   });
 };
