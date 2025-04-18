@@ -15,7 +15,8 @@ import {
   getCommunityArticleReplyList,
   postCommunityArticleComment,
   postCommunityArticleReply,
-  putEditCommunityArticleComment
+  putEditCommunityArticleComment,
+  putEditCommunityArticleReply
 } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.api";
 import { getCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.api";
 
@@ -284,12 +285,12 @@ export const usePostCommunityArticleReply = (
   });
 };
 
-// 커뮤니티 게시글 특정 댓글의 답글 리스트
+// 커뮤니티 게시글 답글 리스트
 export const useGetCommunityArticleReplyList = (
   commentNo: number,
   enabled: boolean
-) => {
-  return useInfiniteQuery<
+) =>
+  useInfiniteQuery<
     customAxiosResponseType<paginationType<replyType>>, // queryFn 타입
     Error, // error 타입
     replyType[], // select 타입
@@ -309,5 +310,44 @@ export const useGetCommunityArticleReplyList = (
     getNextPageParam: () => undefined,
     select: data => data.pages.flatMap(page => page.data.results),
     initialPageParam: undefined
+  });
+
+// 커뮤니티 게시글 답글 수정
+export const usePutEditCommunityArticleReply = (
+  commentNo: number,
+  replyNo: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (content: string) =>
+      putEditCommunityArticleReply({ replyNo, content }),
+    onSuccess: (_, content) =>
+      // 수정된 답글 목록 저장
+      queryClient.setQueryData<
+        InfiniteData<customAxiosResponseType<paginationType<replyType>>>
+      >(
+        createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
+          isList: true
+        }),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map(page => ({
+              ...page,
+              data: {
+                ...page.data,
+                results: page.data.results.map(reply =>
+                  reply.replyNo === replyNo ? { ...reply, content } : reply
+                )
+              }
+            }))
+          };
+        }
+      )
   });
 };

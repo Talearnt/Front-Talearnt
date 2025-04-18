@@ -177,6 +177,8 @@ function Comment({
                   replyNo
                 }) => (
                   <Reply
+                    commentNo={commentNo}
+                    replyNo={replyNo}
                     profileImg={profileImg}
                     nickname={replyAuthorNickname}
                     content={content}
