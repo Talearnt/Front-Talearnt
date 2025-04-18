@@ -1,20 +1,24 @@
 import { useState } from "react";
 
 import { useGetProfile } from "@hook/user.hook";
+import { usePutEditCommunityArticleReply } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
 import { UserContentSection } from "@pages/articles/CommunityArticleDetail/components/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@pages/articles/CommunityArticleDetail/components/UserContentWrite/UserContentWrite";
 
 import { Dot } from "@components/Dot/Dot";
 
-import { replyType } from "@pages/articles/core/articles.type";
+import { commentType, replyType } from "@pages/articles/core/articles.type";
 
-type ReplyProps = Pick<
-  replyType,
-  "profileImg" | "nickname" | "content" | "createdAt"
->;
+type ReplyProps = Pick<commentType, "commentNo"> &
+  Pick<
+    replyType,
+    "replyNo" | "profileImg" | "nickname" | "content" | "createdAt"
+  >;
 
 function Reply({
+  commentNo,
+  replyNo,
   profileImg,
   nickname: authorNickname,
   content,
@@ -25,15 +29,19 @@ function Reply({
       data: { nickname }
     }
   } = useGetProfile();
+  const { mutateAsync: editCommunityArticleReply } =
+    usePutEditCommunityArticleReply(commentNo, replyNo);
 
   const [isEdit, setIsEdit] = useState(false);
 
   return isEdit ? (
-    // TODO 답글 수정 API 적용
     <UserContentWrite
       content={content}
       onCancelHandler={() => setIsEdit(false)}
-      onSubmitHandler={console.log}
+      onSubmitHandler={async content => {
+        await editCommunityArticleReply(content);
+        setIsEdit(false);
+      }}
       submitButtonText={"수정"}
       maxLength={300}
     />
