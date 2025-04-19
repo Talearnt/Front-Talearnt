@@ -15,6 +15,10 @@ type UserContentSectionProps = Pick<profileType, "profileImg"> & {
   createdAt: string;
   content: string;
   children?: ReactNode;
+  deletedData?: {
+    isDeleted: boolean | undefined;
+    deletedText?: string;
+  };
 };
 
 function UserContentSection({
@@ -22,7 +26,8 @@ function UserContentSection({
   createdAt,
   authorNickname,
   content,
-  children
+  children,
+  deletedData
 }: UserContentSectionProps) {
   const {
     data: {
@@ -30,7 +35,16 @@ function UserContentSection({
     }
   } = useGetProfile();
 
-  return (
+  return deletedData?.isDeleted ? (
+    <span
+      className={classNames(
+        "rounded-xl bg-talearnt_BG_Up_01 p-4",
+        "text-body2_16_medium text-talearnt_Text_03"
+      )}
+    >
+      {deletedData.deletedText ?? "작성자가 삭제한 댓글입니다."}
+    </span>
+  ) : (
     <div className={"flex gap-4"}>
       <Avatar imageUrl={profileImg} />
       <div className={classNames("flex flex-col gap-2", "w-full")}>
