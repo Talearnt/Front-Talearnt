@@ -28,11 +28,13 @@ export type commentType = Pick<
   baseContentType & {
     commentNo: number;
     replyCount: number;
+    isDeleted: boolean;
   };
 // {
 //   "content": "",
 //   "commentNo": 0,
 //   "createdAt": "",
+//   "isDeleted": false,
 //   "nickname": "",
 //   "profileImg": null,
 //   "replyCount": 0,
@@ -47,6 +49,7 @@ export type replyType = Pick<
 > &
   baseContentType & {
     replyNo: number;
+    isDeleted?: boolean;
   };
 // {
 //   "content": "",
