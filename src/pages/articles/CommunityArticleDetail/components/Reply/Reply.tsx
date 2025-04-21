@@ -1,7 +1,10 @@
 import { useState } from "react";
 
 import { useGetProfile } from "@hook/user.hook";
-import { usePutEditCommunityArticleReply } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
+import {
+  useDeleteCommunityArticleReply,
+  usePutEditCommunityArticleReply
+} from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.hook";
 
 import { UserContentSection } from "@pages/articles/CommunityArticleDetail/components/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@pages/articles/CommunityArticleDetail/components/UserContentWrite/UserContentWrite";
@@ -11,10 +14,7 @@ import { Dot } from "@components/Dot/Dot";
 import { commentType, replyType } from "@pages/articles/core/articles.type";
 
 type ReplyProps = Pick<commentType, "commentNo"> &
-  Pick<
-    replyType,
-    "replyNo" | "profileImg" | "nickname" | "content" | "createdAt"
-  >;
+  Omit<replyType, "userNo" | "updatedAt">;
 
 function Reply({
   commentNo,
@@ -22,7 +22,8 @@ function Reply({
   profileImg,
   nickname: authorNickname,
   content,
-  createdAt
+  createdAt,
+  isDeleted
 }: ReplyProps) {
   const {
     data: {
@@ -31,6 +32,7 @@ function Reply({
   } = useGetProfile();
   const { mutateAsync: editCommunityArticleReply } =
     usePutEditCommunityArticleReply(commentNo, replyNo);
+  const { mutate } = useDeleteCommunityArticleReply(commentNo, replyNo);
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -52,6 +54,10 @@ function Reply({
         authorNickname={authorNickname}
         createdAt={createdAt}
         content={content}
+        deletedData={{
+          isDeleted,
+          deletedText: "작성자가 삭제한 답글입니다."
+        }}
       >
         {nickname === authorNickname && (
           <div className={"flex items-center gap-2"}>
@@ -64,6 +70,7 @@ function Reply({
             <Dot />
             <button
               className={"text-caption2_12_semibold text-talearnt_Text_03"}
+              onClick={() => mutate()}
             >
               삭제하기
             </button>

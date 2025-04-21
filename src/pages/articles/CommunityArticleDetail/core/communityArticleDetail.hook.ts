@@ -10,6 +10,7 @@ import { useShallow } from "zustand/shallow";
 
 import {
   deleteCommunityArticle,
+  deleteCommunityArticleReply,
   getCommunityArticleCommentList,
   getCommunityArticleDetail,
   getCommunityArticleReplyList,
@@ -343,6 +344,47 @@ export const usePutEditCommunityArticleReply = (
                 ...page.data,
                 results: page.data.results.map(reply =>
                   reply.replyNo === replyNo ? { ...reply, content } : reply
+                )
+              }
+            }))
+          };
+        }
+      )
+  });
+};
+
+// 커뮤니티 게시글 답글 삭제
+export const useDeleteCommunityArticleReply = (
+  commentNo: number,
+  replyNo: number
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteCommunityArticleReply(replyNo),
+    onSuccess: () =>
+      // 삭제된 답글 목록 저장
+      queryClient.setQueryData<
+        InfiniteData<customAxiosResponseType<paginationType<replyType>>>
+      >(
+        createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
+          isList: true
+        }),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map(page => ({
+              ...page,
+              data: {
+                ...page.data,
+                results: page.data.results.map(reply =>
+                  reply.replyNo === replyNo
+                    ? { ...reply, isDeleted: true }
+                    : reply
                 )
               }
             }))
