@@ -39,13 +39,14 @@ export const postCommunityArticleComment = async (
 // 댓글 목록 조회
 export const getCommunityArticleCommentList = async ({
   communityPostNo,
-  page
+  ...data
 }: Pick<communityArticleDetailType, "communityPostNo"> & {
   page: number;
+  deletedAt: string | undefined;
 }) =>
   await getAPI<paginationType<commentType>>(
     `/v1/communities/${communityPostNo}/comments`,
-    { page }
+    data
   );
 
 //댓글 수정
@@ -53,7 +54,7 @@ export const putEditCommunityArticleComment = async ({
   commentNo,
   content
 }: Pick<commentType, "commentNo" | "content">) =>
-  await putAPI(
+  await putAPI<null>(
     `v1/communities/comments/${commentNo}`,
     { content },
     {
@@ -96,7 +97,7 @@ export const putEditCommunityArticleReply = async ({
   replyNo,
   content
 }: Pick<replyType, "replyNo" | "content">) =>
-  await putAPI(
+  await putAPI<null>(
     `v1/communities/replies/${replyNo}`,
     { content },
     {

@@ -10,3 +10,14 @@ export const useCommunityArticleCommentPageStore =
     page: 0,
     setPage: page => set({ page })
   }));
+
+type communityArticleCommentDeletedAtStoreType = {
+  deletedAt: string | undefined;
+  setDeletedAt: (deletedAt: string | undefined) => void;
+};
+
+export const useCommunityArticleCommentDeletedAtStore =
+  create<communityArticleCommentDeletedAtStoreType>(set => ({
+    deletedAt: undefined,
+    setDeletedAt: deletedAt => set({ deletedAt })
+  }));
