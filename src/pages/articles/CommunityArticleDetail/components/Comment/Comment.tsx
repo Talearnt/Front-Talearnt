@@ -4,6 +4,7 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 import {
+  useDeleteCommunityArticleComment,
   useGetCommunityArticleReplyList,
   usePostCommunityArticleReply,
   usePutEditCommunityArticleComment
@@ -21,15 +22,7 @@ import { MessageIcon } from "@components/icons/MessageIcon/MessageIcon";
 
 import { commentType } from "@pages/articles/core/articles.type";
 
-type CommentProps = Pick<
-  commentType,
-  | "profileImg"
-  | "createdAt"
-  | "content"
-  | "nickname"
-  | "replyCount"
-  | "commentNo"
->;
+type CommentProps = Omit<commentType, "updatedAt" | "userNo">;
 
 const ActionButton = ({
   children,
@@ -49,12 +42,13 @@ const ActionButton = ({
 );
 
 function Comment({
-  profileImg,
-  createdAt,
+  content,
   commentNo,
-  replyCount,
+  createdAt,
+  isDeleted,
   nickname: commentAuthorNickname,
-  content
+  profileImg,
+  replyCount
 }: CommentProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isReplyWriting, setIsReplyWriting] = useState(false);
@@ -74,6 +68,8 @@ function Comment({
     usePostCommunityArticleReply(commentNo, isOpen);
   const { mutateAsync: editCommunityArticleComment } =
     usePutEditCommunityArticleComment();
+  const { mutate: deleteCommunityArticleComment } =
+    useDeleteCommunityArticleComment();
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
@@ -95,6 +91,9 @@ function Comment({
       authorNickname={commentAuthorNickname}
       createdAt={createdAt}
       content={content}
+      deletedData={{
+        isDeleted
+      }}
     >
       <div className={"flex gap-4"}>
         {isLoggedIn && (
@@ -108,8 +107,11 @@ function Comment({
             <ActionButton onClick={() => setIsEdit(true)}>
               수정하기
             </ActionButton>
-            {/*TODO 댓글 삭제 API 적용*/}
-            <ActionButton>삭제하기</ActionButton>
+            <ActionButton
+              onClick={() => deleteCommunityArticleComment(commentNo)}
+            >
+              삭제하기
+            </ActionButton>
           </>
         )}
       </div>
@@ -168,25 +170,9 @@ function Comment({
                   더보기
                 </button>
               )}
-              {replyList?.map(
-                ({
-                  profileImg,
-                  nickname: replyAuthorNickname,
-                  createdAt,
-                  content,
-                  replyNo
-                }) => (
-                  <Reply
-                    commentNo={commentNo}
-                    replyNo={replyNo}
-                    profileImg={profileImg}
-                    nickname={replyAuthorNickname}
-                    content={content}
-                    createdAt={createdAt}
-                    key={replyNo}
-                  />
-                )
-              )}
+              {replyList?.map(reply => (
+                <Reply commentNo={commentNo} {...reply} key={reply.replyNo} />
+              ))}
             </div>
           )}
         </div>

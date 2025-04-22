@@ -6,10 +6,12 @@ import {
   useMutation,
   useQueryClient
 } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { useShallow } from "zustand/shallow";
 
 import {
   deleteCommunityArticle,
+  deleteCommunityArticleComment,
   deleteCommunityArticleReply,
   getCommunityArticleCommentList,
   getCommunityArticleDetail,
@@ -26,7 +28,10 @@ import { createQueryKey } from "@utils/createQueryKey";
 import { useQueryWithInitial } from "@hook/useQueryWithInitial";
 
 import { useToastStore } from "@common/common.store";
-import { useCommunityArticleCommentPageStore } from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.store";
+import {
+  useCommunityArticleCommentDeletedAtStore,
+  useCommunityArticleCommentPageStore
+} from "@pages/articles/CommunityArticleDetail/core/communityArticleDetail.store";
 import { useCommunityArticleListFilterStore } from "@pages/articles/CommunityArticleList/core/communityArticleList.store";
 
 import { queryKeys } from "@common/common.constants";
@@ -166,6 +171,9 @@ export const useGetCommunityArticleCommentList = () => {
   const { communityPostNo } = useParams();
 
   const page = useCommunityArticleCommentPageStore(state => state.page);
+  const deletedAt = useCommunityArticleCommentDeletedAtStore(
+    state => state.deletedAt
+  );
 
   const postNo = Number(communityPostNo);
 
@@ -186,7 +194,11 @@ export const useGetCommunityArticleCommentList = () => {
         isList: true
       }),
       queryFn: () =>
-        getCommunityArticleCommentList({ communityPostNo: postNo, page }),
+        getCommunityArticleCommentList({
+          communityPostNo: postNo,
+          page,
+          deletedAt
+        }),
       enabled: communityPostNo !== undefined && page !== 0
     },
     createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
@@ -227,6 +239,51 @@ export const usePutEditCommunityArticleComment = () => {
               results: oldData.data.results.map(comment =>
                 comment.commentNo === commentNo
                   ? { ...comment, content }
+                  : comment
+              )
+            }
+          };
+        }
+      )
+  });
+};
+
+// 커뮤니티 게시글 댓글 삭제
+export const useDeleteCommunityArticleComment = () => {
+  const { communityPostNo } = useParams();
+
+  const queryClient = useQueryClient();
+
+  const page = useCommunityArticleCommentPageStore(state => state.page);
+  const setDeletedAt = useCommunityArticleCommentDeletedAtStore(
+    state => state.setDeletedAt
+  );
+
+  const postNo = Number(communityPostNo);
+
+  return useMutation({
+    mutationFn: deleteCommunityArticleComment,
+    onMutate: () => setDeletedAt(dayjs().toISOString()),
+    onSuccess: (_, commentNo) =>
+      // 삭제된 댓글 목록 저장
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<commentType>>
+      >(
+        createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
+          isList: true
+        }),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.map(comment =>
+                comment.commentNo === commentNo
+                  ? { ...comment, isDeleted: true }
                   : comment
               )
             }

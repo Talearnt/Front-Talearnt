@@ -48,7 +48,7 @@ export const getAPI = async <T>(
   url: string,
   queryData?: Record<
     string,
-    string | number | Record<string, unknown> | unknown[] | undefined
+    string | number | Record<string, unknown> | unknown[] | undefined | null
   >,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
