@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -22,7 +22,6 @@ import { postTypeList } from "@pages/articles/core/articles.constants";
 import { communityArticleListFilterType } from "@pages/articles/CommunityArticleList/core/communityArticleList.type";
 
 function CommunityArticleList() {
-  const filterRef = useRef<HTMLDivElement>(null);
   const navigator = useNavigate();
 
   const {
@@ -75,7 +74,6 @@ function CommunityArticleList() {
     >
       {/*상단 필터*/}
       <div
-        ref={filterRef}
         className={classNames(
           "flex items-center justify-between",
           "mb-6 w-full"
