@@ -23,6 +23,8 @@ export type SliderRefType = {
   pause: () => void;
   next: () => void;
   previous: () => void;
+  getCurrentIndex: () => number;
+  getIsSliding: () => boolean;
 };
 
 const Slider = forwardRef(
@@ -120,15 +122,32 @@ const Slider = forwardRef(
       autoplayRef.current = setInterval(goToNext, autoplayTime);
     }, [autoplayTime, goToNext, stopAutoplay]);
 
+    const getCurrentIndex = useCallback(() => {
+      return infinite ? currentIndex - 1 : currentIndex;
+    }, [currentIndex, infinite]);
+
+    const getIsSliding = useCallback(() => {
+      return isSliding;
+    }, [isSliding]);
+
     useImperativeHandle(
       ref,
       () => ({
         play: startAutoplay,
         pause: stopAutoplay,
         next: goToNext,
-        previous: goToPrev
+        previous: goToPrev,
+        getCurrentIndex,
+        getIsSliding
       }),
-      [startAutoplay, stopAutoplay, goToNext, goToPrev]
+      [
+        getCurrentIndex,
+        getIsSliding,
+        goToNext,
+        goToPrev,
+        startAutoplay,
+        stopAutoplay
+      ]
     );
 
     useEffect(() => {
@@ -137,11 +156,12 @@ const Slider = forwardRef(
       }
 
       return () => stopAutoplay();
-    }, [autoplay, startAutoplay, stopAutoplay]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoplay]);
 
     return (
       <div
-        className={"overflow-hidden border border-black"}
+        className={"overflow-hidden"}
         style={{ margin: gap ? `0 -${gap / 2}px` : undefined }}
       >
         <div
