@@ -77,7 +77,7 @@ function DropdownLabeled<T = string>({
         className={classNames(
           "absolute hidden",
           "flex-col gap-2",
-          "z-10 mt-1 rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[7px] shadow-shadow_02",
+          "z-[11] mt-1 w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[7px] shadow-shadow_02",
           "peer-has-[:checked]/label:flex"
         )}
       >
