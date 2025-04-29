@@ -69,6 +69,7 @@ export default {
         body1_18_medium: ["18px", { lineHeight: "1.3", fontWeight: "500" }],
         body2_16_semibold: ["16px", { lineHeight: "1.5", fontWeight: "600" }],
         body2_16_medium: ["16px", { lineHeight: "1.5", fontWeight: "500" }],
+        body3_14_semibold: ["14px", { lineHeight: "1.3", fontWeight: "600" }],
         body3_14_medium: ["14px", { lineHeight: "1.3", fontWeight: "500" }],
         caption1_14_medium: ["14px", { lineHeight: "1.3", fontWeight: "500" }],
         caption2_12_semibold: [
