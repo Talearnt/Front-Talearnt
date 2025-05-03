@@ -4,7 +4,7 @@ import { profileType } from "@type/user.type";
 export type baseContentType = {
   content: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 };
 export type commonArticleDataType = baseContentType & {
   title: string;
