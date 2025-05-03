@@ -14,13 +14,13 @@ export type communityArticleType = Pick<
   profileType,
   "nickname" | "profileImg"
 > &
-  Omit<commonArticleDataType, "content"> & {
-    communityPostNo: number;
-    postType: postType;
-    isLike: boolean;
-    count: number;
+  commonArticleDataType & {
     commentCount: number;
+    communityPostNo: number;
+    count: number;
+    isLike: boolean;
     likeCount: number;
+    postType: postType;
   };
 // {
 //   "commentCount": 0,
