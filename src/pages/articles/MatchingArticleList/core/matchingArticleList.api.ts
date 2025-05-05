@@ -6,10 +6,11 @@ import {
   matchingArticleType
 } from "@pages/articles/MatchingArticleList/core/matchingArticleList.type";
 
-export const getMatchingArticleList = async (
-  filter: matchingArticleListFilterType
-) =>
+export const getMatchingArticleList = async ({
+  size = 12,
+  ...filter
+}: Partial<matchingArticleListFilterType> & { size?: number }) =>
   await getAPI<paginationType<matchingArticleType>>("v1/posts/exchanges", {
-    size: 12,
+    size,
     ...filter
   });
