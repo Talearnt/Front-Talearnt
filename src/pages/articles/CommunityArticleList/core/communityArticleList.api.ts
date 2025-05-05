@@ -6,10 +6,11 @@ import {
   communityArticleType
 } from "@pages/articles/CommunityArticleList/core/communityArticleList.type";
 
-export const getCommunityArticleList = async (
-  filter: communityArticleListFilterType
-) =>
+export const getCommunityArticleList = async ({
+  size = 12,
+  ...filter
+}: Partial<communityArticleListFilterType> & { size?: number }) =>
   await getAPI<paginationType<communityArticleType>>("v1/posts/communities", {
-    size: 12,
+    size,
     ...filter
   });
