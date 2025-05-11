@@ -1,42 +1,207 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { EmblaCarouselType } from "embla-carousel";
+import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel from "embla-carousel-react";
 
 import { classNames } from "@utils/classNames";
 
-import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
-import { Slider, SliderRefType } from "@components/Slider/Slider";
+import { useGetProfile } from "@hook/user.hook";
+import {
+  useGetHotCommunityArticleList,
+  useGetPersonalizedMatchingArticleList,
+  useGetRecentMatchingArticleList
+} from "@pages/MainPage/core/mainPage.hook";
 
-const bannerCount = 3;
+import { MatchingArticleCard } from "@pages/articles/MatchingArticleList/components/MatchingArticleCard/MatchingArticleCard";
+import { CommunityArticleCard } from "@pages/MainPage/components/CommunityArticleCard/CommunityArticleCard";
+import { MoreArticleButton } from "@pages/MainPage/components/MoreArticleButton/MoreArticleButton";
+
+import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 
 function MainPage() {
-  const bannerRef = useRef<SliderRefType>(null);
+  const navigator = useNavigate();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoSlidingActive, setIsAutoSlidingActive] = useState(false);
+  const [bannerCurrentIndex, setBannerCurrentIndex] = useState(1);
+  const [bannerIsAutoPlaying, setBannerIsAutoPlaying] = useState(false);
+  const [
+    prevPersonalizedMatchingBtnDisabled,
+    setPrevPersonalizedMatchingBtnDisabled
+  ] = useState(true);
+  const [
+    nextPersonalizedMatchingBtnDisabled,
+    setNextPersonalizedMatchingBtnDisabled
+  ] = useState(true);
+  const [prevMatchingBtnDisabled, setPrevMatchingBtnDisabled] = useState(true);
+  const [nextMatchingBtnDisabled, setNextMatchingBtnDisabled] = useState(true);
+  const [prevCommunityBtnDisabled, setPrevCommunityBtnDisabled] =
+    useState(true);
+  const [nextCommunityBtnDisabled, setNextCommunityBtnDisabled] =
+    useState(true);
+
+  const [emblaBannerRef, emblaBannerApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ playOnInit: false, delay: 5000 })
+  ]);
+  const [emblaPersonalizedMatchingRef, emblaPersonalizedMatchingApi] =
+    useEmblaCarousel({
+      align: "start",
+      slidesToScroll: 2
+    });
+  const [emblaMatchingRef, emblaMatchingApi] = useEmblaCarousel({
+    align: "start",
+    slidesToScroll: 2
+  });
+  const [emblaCommunityRef, emblaCommunityApi] = useEmblaCarousel({
+    align: "start",
+    slidesToScroll: 2
+  });
+
+  const {
+    data: {
+      data: { nickname }
+    }
+  } = useGetProfile();
+  const {
+    data: {
+      data: { results: personalizedMatchingArticleList }
+    },
+    isSuccess
+  } = useGetPersonalizedMatchingArticleList();
+  const {
+    data: {
+      data: { results: recentMatchingArticleList }
+    }
+  } = useGetRecentMatchingArticleList();
+  const {
+    data: {
+      data: { results: hotCommunityArticleList }
+    }
+  } = useGetHotCommunityArticleList();
+
+  const onPrevButtonClick = (
+    api: EmblaCarouselType | undefined,
+    hasAutoPlay?: boolean
+  ) => {
+    if (!api) {
+      return;
+    }
+
+    if (hasAutoPlay) {
+      api.plugins().autoplay.stop();
+    }
+
+    api.scrollPrev();
+  };
+  const onNextButtonClick = (
+    api: EmblaCarouselType | undefined,
+    hasAutoPlay?: boolean
+  ) => {
+    if (!api) {
+      return;
+    }
+
+    if (hasAutoPlay) {
+      api.plugins().autoplay.stop();
+    }
+
+    api.scrollNext();
+  };
+  const toggleAutoplay = () => {
+    if (!emblaBannerApi) {
+      return;
+    }
+
+    const {
+      autoplay: { isPlaying, play, stop }
+    } = emblaBannerApi.plugins();
+
+    return isPlaying() ? stop() : play();
+  };
+
+  useEffect(() => {
+    if (!emblaBannerApi) {
+      return;
+    }
+
+    emblaBannerApi
+      .on("autoplay:play", () => setBannerIsAutoPlaying(true))
+      .on("autoplay:stop", () => setBannerIsAutoPlaying(false))
+      .on("select", () =>
+        setBannerCurrentIndex(emblaBannerApi.selectedScrollSnap() + 1)
+      );
+  }, [emblaBannerApi]);
+  useEffect(() => {
+    if (!emblaPersonalizedMatchingApi) {
+      return;
+    }
+
+    const onSelect = () => {
+      setPrevPersonalizedMatchingBtnDisabled(
+        !emblaPersonalizedMatchingApi.canScrollPrev()
+      );
+      setNextPersonalizedMatchingBtnDisabled(
+        !emblaPersonalizedMatchingApi.canScrollNext()
+      );
+    };
+
+    onSelect();
+    emblaPersonalizedMatchingApi.on("reInit", onSelect).on("select", onSelect);
+  }, [emblaPersonalizedMatchingApi]);
+  useEffect(() => {
+    if (!emblaMatchingApi) {
+      return;
+    }
+
+    const onSelect = () => {
+      setPrevMatchingBtnDisabled(!emblaMatchingApi.canScrollPrev());
+      setNextMatchingBtnDisabled(!emblaMatchingApi.canScrollNext());
+    };
+
+    onSelect();
+    emblaMatchingApi.on("reInit", onSelect).on("select", onSelect);
+  }, [emblaMatchingApi]);
+  useEffect(() => {
+    if (!emblaCommunityApi) {
+      return;
+    }
+
+    const onSelect = () => {
+      setPrevCommunityBtnDisabled(!emblaCommunityApi.canScrollPrev());
+      setNextCommunityBtnDisabled(!emblaCommunityApi.canScrollNext());
+    };
+
+    onSelect();
+    emblaCommunityApi.on("reInit", onSelect).on("select", onSelect);
+  }, [emblaCommunityApi]);
 
   return (
     <div className={classNames("flex flex-col gap-14", "pt-10")}>
       {/* 배너 */}
       <div className={classNames("relative")}>
-        <Slider
-          ref={bannerRef}
-          infinite
-          onIndexChange={setCurrentIndex}
-          onAutoSlidingActive={setIsAutoSlidingActive}
-          gap={50}
-        >
-          {Array.from({ length: bannerCount }).map((_, index) => (
-            <div
-              className={classNames(
-                "flex items-center justify-center",
-                "h-[300px] rounded-[20px] bg-[#1B76FF]",
-                "text-heading1_30_semibold text-talearnt_On_Primary"
-              )}
-              key={`banner-${index}`}
-            >
-              배너 {index + 1}
-            </div>
-          ))}
-        </Slider>
+        <div className={"overflow-hidden"} ref={emblaBannerRef}>
+          <div className={"flex"}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                className={classNames(
+                  "flex-shrink-0 flex-grow-0 basis-full",
+                  "mr-5 min-w-0"
+                )}
+                key={`banner-${index}`}
+              >
+                <div
+                  className={classNames(
+                    "flex items-center justify-center",
+                    "h-[300px] rounded-[20px] bg-[#1B76FF]",
+                    "text-heading1_30_semibold text-talearnt_On_Primary"
+                  )}
+                >
+                  배너 {index + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         <div
           className={classNames(
             "absolute bottom-4 left-1/2 -translate-x-1/2",
@@ -44,44 +209,257 @@ function MainPage() {
           )}
         >
           <span className={"text-body3_14_semibold text-talearnt_Text_02"}>
-            {currentIndex > bannerCount
-              ? currentIndex - bannerCount
-              : currentIndex < 1
-                ? bannerCount
-                : currentIndex}
-            /{bannerCount}
+            {bannerCurrentIndex}/3
           </span>
-          <button
-            onClick={() =>
-              isAutoSlidingActive
-                ? bannerRef.current?.pause()
-                : bannerRef.current?.play()
-            }
-          >
-            {isAutoSlidingActive ? <PauseIcon /> : <StartIcon />}
+          <button onClick={toggleAutoplay}>
+            {bannerIsAutoPlaying ? <PauseIcon /> : <StartIcon />}
           </button>
         </div>
-        {bannerCount > 1 && (
-          <>
-            <CaretIcon
-              className={classNames(
-                "absolute left-[-25px] top-1/2 -translate-y-1/2",
-                "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
+        <CaretIcon
+          className={classNames(
+            "absolute left-[-25px] top-1/2 -translate-y-1/2",
+            "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
+          )}
+          onClick={() => onPrevButtonClick(emblaBannerApi, true)}
+          direction={"left"}
+          size={50}
+        />
+        <CaretIcon
+          className={classNames(
+            "absolute right-[-25px] top-1/2 -translate-y-1/2",
+            "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
+          )}
+          onClick={() => onNextButtonClick(emblaBannerApi, true)}
+          size={50}
+        />
+      </div>
+      {/* 맞춤 매칭 게시물 목록 */}
+      {isSuccess && (
+        <div className={classNames("flex flex-col gap-6")}>
+          <div className={"flex items-center justify-between"}>
+            <span
+              className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
+            >
+              <span className={"text-talearnt_Primary_01"}>{nickname}</span>님을
+              위한 맞춤 매칭
+            </span>
+            <div className={"flex gap-4"}>
+              <button
+                className={classNames(
+                  "group",
+                  "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                  "hover:shadow-shadow_02",
+                  prevPersonalizedMatchingBtnDisabled && "opacity-50"
+                )}
+                onClick={() => onPrevButtonClick(emblaPersonalizedMatchingApi)}
+                disabled={prevPersonalizedMatchingBtnDisabled}
+              >
+                <CaretIcon
+                  className={
+                    "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                  }
+                  direction={"left"}
+                  size={42}
+                />
+              </button>
+              <button
+                className={classNames(
+                  "group",
+                  "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                  "hover:shadow-shadow_02",
+                  nextPersonalizedMatchingBtnDisabled && "opacity-50"
+                )}
+                onClick={() => onNextButtonClick(emblaPersonalizedMatchingApi)}
+                disabled={nextPersonalizedMatchingBtnDisabled}
+              >
+                <CaretIcon
+                  className={
+                    "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                  }
+                  size={42}
+                />
+              </button>
+            </div>
+          </div>
+          <div className={"overflow-hidden"} ref={emblaPersonalizedMatchingRef}>
+            <div className={classNames("flex", "-ml-5")}>
+              {personalizedMatchingArticleList.map(
+                ({ exchangePostNo, ...article }, index) => (
+                  <div
+                    className={classNames(
+                      "flex-shrink-0 flex-grow-0 basis-1/4",
+                      "min-w-0 pl-5"
+                    )}
+                    key={`banner-${index}`}
+                  >
+                    <MatchingArticleCard
+                      {...article}
+                      onClickHandler={() =>
+                        navigator(`/matching-article/${exchangePostNo}`)
+                      }
+                      exchangePostNo={exchangePostNo}
+                      key={exchangePostNo}
+                    />
+                  </div>
+                )
               )}
-              onClick={bannerRef.current?.previous}
-              direction={"left"}
-              size={50}
-            />
-            <CaretIcon
+            </div>
+          </div>
+          <MoreArticleButton
+            onClick={() => navigator("matching")}
+            type={"matching"}
+          />
+        </div>
+      )}
+      {/* 신규 매칭 게시물 목록 */}
+      <div className={classNames("flex flex-col gap-6")}>
+        <div className={"flex items-center justify-between"}>
+          <span
+            className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
+          >
+            신규 매칭 게시물이 올라왔어요!
+          </span>
+          <div className={"flex gap-4"}>
+            <button
               className={classNames(
-                "absolute right-[-25px] top-1/2 -translate-y-1/2",
-                "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
+                "group",
+                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                "hover:shadow-shadow_02",
+                prevMatchingBtnDisabled && "opacity-50"
               )}
-              onClick={bannerRef.current?.next}
-              size={50}
-            />
-          </>
-        )}
+              onClick={() => onPrevButtonClick(emblaMatchingApi)}
+              disabled={prevMatchingBtnDisabled}
+            >
+              <CaretIcon
+                className={
+                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                }
+                direction={"left"}
+                size={42}
+              />
+            </button>
+            <button
+              className={classNames(
+                "group",
+                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                "hover:shadow-shadow_02",
+                nextMatchingBtnDisabled && "opacity-50"
+              )}
+              onClick={() => onNextButtonClick(emblaMatchingApi)}
+              disabled={nextMatchingBtnDisabled}
+            >
+              <CaretIcon
+                className={
+                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                }
+                size={42}
+              />
+            </button>
+          </div>
+        </div>
+        <div className={"overflow-hidden"} ref={emblaMatchingRef}>
+          <div className={classNames("flex", "-ml-5")}>
+            {recentMatchingArticleList.map(
+              ({ exchangePostNo, ...article }, index) => (
+                <div
+                  className={classNames(
+                    "flex-shrink-0 flex-grow-0 basis-1/4",
+                    "min-w-0 pl-5"
+                  )}
+                  key={`banner-${index}`}
+                >
+                  <MatchingArticleCard
+                    {...article}
+                    onClickHandler={() =>
+                      navigator(`/matching-article/${exchangePostNo}`)
+                    }
+                    exchangePostNo={exchangePostNo}
+                    key={exchangePostNo}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </div>
+        <MoreArticleButton
+          onClick={() => navigator("matching")}
+          type={"matching"}
+        />
+      </div>
+      {/* 신규 커뮤니티 게시물 목록 */}
+      <div className={classNames("flex flex-col gap-6")}>
+        <div className={"flex items-center justify-between"}>
+          <span
+            className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
+          >
+            신규 커뮤니티 게시물이 올라왔어요!
+          </span>
+          <div className={"flex gap-4"}>
+            <button
+              className={classNames(
+                "group",
+                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                "hover:shadow-shadow_02",
+                prevCommunityBtnDisabled && "opacity-50"
+              )}
+              onClick={() => onPrevButtonClick(emblaCommunityApi)}
+              disabled={prevCommunityBtnDisabled}
+            >
+              <CaretIcon
+                className={
+                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                }
+                direction={"left"}
+                size={42}
+              />
+            </button>
+            <button
+              className={classNames(
+                "group",
+                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
+                "hover:shadow-shadow_02",
+                nextCommunityBtnDisabled && "opacity-50"
+              )}
+              onClick={() => onNextButtonClick(emblaCommunityApi)}
+              disabled={nextCommunityBtnDisabled}
+            >
+              <CaretIcon
+                className={
+                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
+                }
+                size={42}
+              />
+            </button>
+          </div>
+        </div>
+        <div className={"overflow-hidden"} ref={emblaCommunityRef}>
+          <div className={classNames("flex", "-ml-5")}>
+            {hotCommunityArticleList.map(
+              ({ communityPostNo, ...article }, index) => (
+                <div
+                  className={classNames(
+                    "flex-shrink-0 flex-grow-0 basis-1/4",
+                    "min-w-0 pl-5"
+                  )}
+                  key={`banner-${index}`}
+                >
+                  <CommunityArticleCard
+                    {...article}
+                    onClickHandler={() =>
+                      navigator(`/community-article/${communityPostNo}`)
+                    }
+                    index={index}
+                    key={index}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </div>
+        <MoreArticleButton
+          onClick={() => navigator("community")}
+          type={"community"}
+        />
       </div>
     </div>
   );
@@ -109,6 +487,7 @@ function StartIcon() {
     </svg>
   );
 }
+
 function PauseIcon() {
   return (
     <svg
