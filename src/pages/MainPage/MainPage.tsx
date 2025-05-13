@@ -1,12 +1,8 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { EmblaCarouselType } from "embla-carousel";
-import Autoplay from "embla-carousel-autoplay";
-import useEmblaCarousel from "embla-carousel-react";
 
 import { classNames } from "@utils/classNames";
 
+import { useCarousel, useCarouselProps } from "@hook/useCarousel";
 import { useGetProfile } from "@hook/user.hook";
 import {
   useGetHotCommunityArticleList,
@@ -20,42 +16,26 @@ import { MoreArticleButton } from "@pages/MainPage/components/MoreArticleButton/
 
 import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
 
+const CAROUSEL_OPTIONS: useCarouselProps = {
+  carouselOptions: {
+    align: "start",
+    slidesToScroll: 2
+  },
+  trackButtonStates: true
+};
+
 function MainPage() {
   const navigator = useNavigate();
 
-  const [bannerCurrentIndex, setBannerCurrentIndex] = useState(1);
-  const [bannerIsAutoPlaying, setBannerIsAutoPlaying] = useState(false);
-  const [
-    prevPersonalizedMatchingBtnDisabled,
-    setPrevPersonalizedMatchingBtnDisabled
-  ] = useState(true);
-  const [
-    nextPersonalizedMatchingBtnDisabled,
-    setNextPersonalizedMatchingBtnDisabled
-  ] = useState(true);
-  const [prevMatchingBtnDisabled, setPrevMatchingBtnDisabled] = useState(true);
-  const [nextMatchingBtnDisabled, setNextMatchingBtnDisabled] = useState(true);
-  const [prevCommunityBtnDisabled, setPrevCommunityBtnDisabled] =
-    useState(true);
-  const [nextCommunityBtnDisabled, setNextCommunityBtnDisabled] =
-    useState(true);
-
-  const [emblaBannerRef, emblaBannerApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ playOnInit: false, delay: 5000 })
-  ]);
-  const [emblaPersonalizedMatchingRef, emblaPersonalizedMatchingApi] =
-    useEmblaCarousel({
-      align: "start",
-      slidesToScroll: 2
-    });
-  const [emblaMatchingRef, emblaMatchingApi] = useEmblaCarousel({
-    align: "start",
-    slidesToScroll: 2
+  const bannerCarousel = useCarousel({
+    autoplay: true,
+    autoplayOptions: { delay: 5000 },
+    carouselOptions: { loop: true },
+    trackIndexStates: true
   });
-  const [emblaCommunityRef, emblaCommunityApi] = useEmblaCarousel({
-    align: "start",
-    slidesToScroll: 2
-  });
+  const personalizedMatchingCarousel = useCarousel(CAROUSEL_OPTIONS);
+  const recentMatchingCarousel = useCarousel(CAROUSEL_OPTIONS);
+  const bestCommunityCarousel = useCarousel(CAROUSEL_OPTIONS);
 
   const {
     data: {
@@ -79,107 +59,11 @@ function MainPage() {
     }
   } = useGetHotCommunityArticleList();
 
-  const onPrevButtonClick = (
-    api: EmblaCarouselType | undefined,
-    hasAutoPlay?: boolean
-  ) => {
-    if (!api) {
-      return;
-    }
-
-    if (hasAutoPlay) {
-      api.plugins().autoplay.stop();
-    }
-
-    api.scrollPrev();
-  };
-  const onNextButtonClick = (
-    api: EmblaCarouselType | undefined,
-    hasAutoPlay?: boolean
-  ) => {
-    if (!api) {
-      return;
-    }
-
-    if (hasAutoPlay) {
-      api.plugins().autoplay.stop();
-    }
-
-    api.scrollNext();
-  };
-  const toggleAutoplay = () => {
-    if (!emblaBannerApi) {
-      return;
-    }
-
-    const {
-      autoplay: { isPlaying, play, stop }
-    } = emblaBannerApi.plugins();
-
-    return isPlaying() ? stop() : play();
-  };
-
-  useEffect(() => {
-    if (!emblaBannerApi) {
-      return;
-    }
-
-    emblaBannerApi
-      .on("autoplay:play", () => setBannerIsAutoPlaying(true))
-      .on("autoplay:stop", () => setBannerIsAutoPlaying(false))
-      .on("select", () =>
-        setBannerCurrentIndex(emblaBannerApi.selectedScrollSnap() + 1)
-      );
-  }, [emblaBannerApi]);
-  useEffect(() => {
-    if (!emblaPersonalizedMatchingApi) {
-      return;
-    }
-
-    const onSelect = () => {
-      setPrevPersonalizedMatchingBtnDisabled(
-        !emblaPersonalizedMatchingApi.canScrollPrev()
-      );
-      setNextPersonalizedMatchingBtnDisabled(
-        !emblaPersonalizedMatchingApi.canScrollNext()
-      );
-    };
-
-    onSelect();
-    emblaPersonalizedMatchingApi.on("reInit", onSelect).on("select", onSelect);
-  }, [emblaPersonalizedMatchingApi]);
-  useEffect(() => {
-    if (!emblaMatchingApi) {
-      return;
-    }
-
-    const onSelect = () => {
-      setPrevMatchingBtnDisabled(!emblaMatchingApi.canScrollPrev());
-      setNextMatchingBtnDisabled(!emblaMatchingApi.canScrollNext());
-    };
-
-    onSelect();
-    emblaMatchingApi.on("reInit", onSelect).on("select", onSelect);
-  }, [emblaMatchingApi]);
-  useEffect(() => {
-    if (!emblaCommunityApi) {
-      return;
-    }
-
-    const onSelect = () => {
-      setPrevCommunityBtnDisabled(!emblaCommunityApi.canScrollPrev());
-      setNextCommunityBtnDisabled(!emblaCommunityApi.canScrollNext());
-    };
-
-    onSelect();
-    emblaCommunityApi.on("reInit", onSelect).on("select", onSelect);
-  }, [emblaCommunityApi]);
-
   return (
     <div className={classNames("flex flex-col gap-14", "pt-10")}>
       {/* 배너 */}
       <div className={classNames("relative")}>
-        <div className={"overflow-hidden"} ref={emblaBannerRef}>
+        <div className={"overflow-hidden"} ref={bannerCarousel.emblaRef}>
           <div className={"flex"}>
             {Array.from({ length: 3 }).map((_, index) => (
               <div
@@ -209,10 +93,10 @@ function MainPage() {
           )}
         >
           <span className={"text-body3_14_semibold text-talearnt_Text_02"}>
-            {bannerCurrentIndex}/3
+            {bannerCarousel.currentIndex + 1}/3
           </span>
-          <button onClick={toggleAutoplay}>
-            {bannerIsAutoPlaying ? <PauseIcon /> : <StartIcon />}
+          <button onClick={bannerCarousel.toggleAutoplay}>
+            {bannerCarousel.isAutoPlaying ? <PauseIcon /> : <StartIcon />}
           </button>
         </div>
         <CaretIcon
@@ -220,7 +104,7 @@ function MainPage() {
             "absolute left-[-25px] top-1/2 -translate-y-1/2",
             "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
           )}
-          onClick={() => onPrevButtonClick(emblaBannerApi, true)}
+          onClick={bannerCarousel.scrollPrev}
           direction={"left"}
           size={50}
         />
@@ -229,7 +113,7 @@ function MainPage() {
             "absolute right-[-25px] top-1/2 -translate-y-1/2",
             "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
           )}
-          onClick={() => onNextButtonClick(emblaBannerApi, true)}
+          onClick={bannerCarousel.scrollNext}
           size={50}
         />
       </div>
@@ -249,10 +133,10 @@ function MainPage() {
                   "group",
                   "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                   "hover:shadow-shadow_02",
-                  prevPersonalizedMatchingBtnDisabled && "opacity-50"
+                  !personalizedMatchingCarousel.canScrollPrev && "opacity-50"
                 )}
-                onClick={() => onPrevButtonClick(emblaPersonalizedMatchingApi)}
-                disabled={prevPersonalizedMatchingBtnDisabled}
+                onClick={personalizedMatchingCarousel.scrollPrev}
+                disabled={!personalizedMatchingCarousel.canScrollPrev}
               >
                 <CaretIcon
                   className={
@@ -267,10 +151,10 @@ function MainPage() {
                   "group",
                   "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                   "hover:shadow-shadow_02",
-                  nextPersonalizedMatchingBtnDisabled && "opacity-50"
+                  !personalizedMatchingCarousel.canScrollNext && "opacity-50"
                 )}
-                onClick={() => onNextButtonClick(emblaPersonalizedMatchingApi)}
-                disabled={nextPersonalizedMatchingBtnDisabled}
+                onClick={personalizedMatchingCarousel.scrollNext}
+                disabled={!personalizedMatchingCarousel.canScrollNext}
               >
                 <CaretIcon
                   className={
@@ -281,7 +165,10 @@ function MainPage() {
               </button>
             </div>
           </div>
-          <div className={"overflow-hidden"} ref={emblaPersonalizedMatchingRef}>
+          <div
+            className={"overflow-hidden"}
+            ref={personalizedMatchingCarousel.emblaRef}
+          >
             <div className={classNames("flex", "-ml-5")}>
               {personalizedMatchingArticleList.map(
                 ({ exchangePostNo, ...article }, index) => (
@@ -325,10 +212,10 @@ function MainPage() {
                 "group",
                 "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                 "hover:shadow-shadow_02",
-                prevMatchingBtnDisabled && "opacity-50"
+                !recentMatchingCarousel.canScrollPrev && "opacity-50"
               )}
-              onClick={() => onPrevButtonClick(emblaMatchingApi)}
-              disabled={prevMatchingBtnDisabled}
+              onClick={recentMatchingCarousel.scrollPrev}
+              disabled={!recentMatchingCarousel.canScrollPrev}
             >
               <CaretIcon
                 className={
@@ -343,10 +230,10 @@ function MainPage() {
                 "group",
                 "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                 "hover:shadow-shadow_02",
-                nextMatchingBtnDisabled && "opacity-50"
+                !recentMatchingCarousel.canScrollNext && "opacity-50"
               )}
-              onClick={() => onNextButtonClick(emblaMatchingApi)}
-              disabled={nextMatchingBtnDisabled}
+              onClick={recentMatchingCarousel.scrollNext}
+              disabled={!recentMatchingCarousel.canScrollNext}
             >
               <CaretIcon
                 className={
@@ -357,7 +244,10 @@ function MainPage() {
             </button>
           </div>
         </div>
-        <div className={"overflow-hidden"} ref={emblaMatchingRef}>
+        <div
+          className={"overflow-hidden"}
+          ref={recentMatchingCarousel.emblaRef}
+        >
           <div className={classNames("flex", "-ml-5")}>
             {recentMatchingArticleList.map(
               ({ exchangePostNo, ...article }, index) => (
@@ -400,10 +290,10 @@ function MainPage() {
                 "group",
                 "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                 "hover:shadow-shadow_02",
-                prevCommunityBtnDisabled && "opacity-50"
+                !bestCommunityCarousel.canScrollPrev && "opacity-50"
               )}
-              onClick={() => onPrevButtonClick(emblaCommunityApi)}
-              disabled={prevCommunityBtnDisabled}
+              onClick={bestCommunityCarousel.scrollPrev}
+              disabled={!bestCommunityCarousel.canScrollPrev}
             >
               <CaretIcon
                 className={
@@ -418,10 +308,10 @@ function MainPage() {
                 "group",
                 "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
                 "hover:shadow-shadow_02",
-                nextCommunityBtnDisabled && "opacity-50"
+                !bestCommunityCarousel.canScrollNext && "opacity-50"
               )}
-              onClick={() => onNextButtonClick(emblaCommunityApi)}
-              disabled={nextCommunityBtnDisabled}
+              onClick={bestCommunityCarousel.scrollNext}
+              disabled={!bestCommunityCarousel.canScrollNext}
             >
               <CaretIcon
                 className={
@@ -432,7 +322,7 @@ function MainPage() {
             </button>
           </div>
         </div>
-        <div className={"overflow-hidden"} ref={emblaCommunityRef}>
+        <div className={"overflow-hidden"} ref={bestCommunityCarousel.emblaRef}>
           <div className={classNames("flex", "-ml-5")}>
             {hotCommunityArticleList.map(
               ({ communityPostNo, ...article }, index) => (
