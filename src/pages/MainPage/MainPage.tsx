@@ -2,27 +2,19 @@ import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@utils/classNames";
 
-import { useCarousel, useCarouselProps } from "@hook/useCarousel";
+import { useCarousel } from "@hook/useCarousel";
 import { useGetProfile } from "@hook/user.hook";
 import {
-  useGetHotCommunityArticleList,
+  useGetBestCommunityArticleList,
   useGetPersonalizedMatchingArticleList,
   useGetRecentMatchingArticleList
 } from "@pages/MainPage/core/mainPage.hook";
 
 import { MatchingArticleCard } from "@pages/articles/MatchingArticleList/components/MatchingArticleCard/MatchingArticleCard";
+import { ArticleSection } from "@pages/MainPage/components/ArticleSection/ArticleSection";
 import { CommunityArticleCard } from "@pages/MainPage/components/CommunityArticleCard/CommunityArticleCard";
-import { MoreArticleButton } from "@pages/MainPage/components/MoreArticleButton/MoreArticleButton";
 
 import { CaretIcon } from "@components/icons/caret/CaretIcon/CaretIcon";
-
-const CAROUSEL_OPTIONS: useCarouselProps = {
-  carouselOptions: {
-    align: "start",
-    slidesToScroll: 2
-  },
-  trackButtonStates: true
-};
 
 function MainPage() {
   const navigator = useNavigate();
@@ -33,9 +25,6 @@ function MainPage() {
     carouselOptions: { loop: true },
     trackIndexStates: true
   });
-  const personalizedMatchingCarousel = useCarousel(CAROUSEL_OPTIONS);
-  const recentMatchingCarousel = useCarousel(CAROUSEL_OPTIONS);
-  const bestCommunityCarousel = useCarousel(CAROUSEL_OPTIONS);
 
   const {
     data: {
@@ -55,9 +44,9 @@ function MainPage() {
   } = useGetRecentMatchingArticleList();
   const {
     data: {
-      data: { results: hotCommunityArticleList }
+      data: { results: bestCommunityArticleList }
     }
-  } = useGetHotCommunityArticleList();
+  } = useGetBestCommunityArticleList();
 
   return (
     <div className={classNames("flex flex-col gap-14", "pt-10")}>
@@ -119,238 +108,59 @@ function MainPage() {
       </div>
       {/* 맞춤 매칭 게시물 목록 */}
       {isSuccess && (
-        <div className={classNames("flex flex-col gap-6")}>
-          <div className={"flex items-center justify-between"}>
-            <span
-              className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
-            >
-              <span className={"text-talearnt_Primary_01"}>{nickname}</span>님을
+        <ArticleSection
+          title={
+            <>
+              <span className="text-talearnt_Primary_01">{nickname}</span>님을
               위한 맞춤 매칭
-            </span>
-            <div className={"flex gap-4"}>
-              <button
-                className={classNames(
-                  "group",
-                  "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                  "hover:shadow-shadow_02",
-                  !personalizedMatchingCarousel.canScrollPrev && "opacity-50"
-                )}
-                onClick={personalizedMatchingCarousel.scrollPrev}
-                disabled={!personalizedMatchingCarousel.canScrollPrev}
-              >
-                <CaretIcon
-                  className={
-                    "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                  }
-                  direction={"left"}
-                  size={42}
-                />
-              </button>
-              <button
-                className={classNames(
-                  "group",
-                  "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                  "hover:shadow-shadow_02",
-                  !personalizedMatchingCarousel.canScrollNext && "opacity-50"
-                )}
-                onClick={personalizedMatchingCarousel.scrollNext}
-                disabled={!personalizedMatchingCarousel.canScrollNext}
-              >
-                <CaretIcon
-                  className={
-                    "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                  }
-                  size={42}
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            className={"overflow-hidden"}
-            ref={personalizedMatchingCarousel.emblaRef}
-          >
-            <div className={classNames("flex", "-ml-5")}>
-              {personalizedMatchingArticleList.map(
-                ({ exchangePostNo, ...article }, index) => (
-                  <div
-                    className={classNames(
-                      "flex-shrink-0 flex-grow-0 basis-1/4",
-                      "min-w-0 pl-5"
-                    )}
-                    key={`banner-${index}`}
-                  >
-                    <MatchingArticleCard
-                      {...article}
-                      onClickHandler={() =>
-                        navigator(`/matching-article/${exchangePostNo}`)
-                      }
-                      exchangePostNo={exchangePostNo}
-                      key={exchangePostNo}
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-          <MoreArticleButton
-            onClick={() => navigator("matching")}
-            type={"matching"}
-          />
-        </div>
+            </>
+          }
+        >
+          {personalizedMatchingArticleList.map(
+            ({ exchangePostNo, ...article }) => (
+              <MatchingArticleCard
+                {...article}
+                onClickHandler={() =>
+                  navigator(`/matching-article/${exchangePostNo}`)
+                }
+                exchangePostNo={exchangePostNo}
+                key={exchangePostNo}
+              />
+            )
+          )}
+        </ArticleSection>
       )}
       {/* 신규 매칭 게시물 목록 */}
-      <div className={classNames("flex flex-col gap-6")}>
-        <div className={"flex items-center justify-between"}>
-          <span
-            className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
-          >
-            신규 매칭 게시물이 올라왔어요!
-          </span>
-          <div className={"flex gap-4"}>
-            <button
-              className={classNames(
-                "group",
-                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                "hover:shadow-shadow_02",
-                !recentMatchingCarousel.canScrollPrev && "opacity-50"
-              )}
-              onClick={recentMatchingCarousel.scrollPrev}
-              disabled={!recentMatchingCarousel.canScrollPrev}
-            >
-              <CaretIcon
-                className={
-                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                }
-                direction={"left"}
-                size={42}
-              />
-            </button>
-            <button
-              className={classNames(
-                "group",
-                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                "hover:shadow-shadow_02",
-                !recentMatchingCarousel.canScrollNext && "opacity-50"
-              )}
-              onClick={recentMatchingCarousel.scrollNext}
-              disabled={!recentMatchingCarousel.canScrollNext}
-            >
-              <CaretIcon
-                className={
-                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                }
-                size={42}
-              />
-            </button>
-          </div>
-        </div>
-        <div
-          className={"overflow-hidden"}
-          ref={recentMatchingCarousel.emblaRef}
-        >
-          <div className={classNames("flex", "-ml-5")}>
-            {recentMatchingArticleList.map(
-              ({ exchangePostNo, ...article }, index) => (
-                <div
-                  className={classNames(
-                    "flex-shrink-0 flex-grow-0 basis-1/4",
-                    "min-w-0 pl-5"
-                  )}
-                  key={`banner-${index}`}
-                >
-                  <MatchingArticleCard
-                    {...article}
-                    onClickHandler={() =>
-                      navigator(`/matching-article/${exchangePostNo}`)
-                    }
-                    exchangePostNo={exchangePostNo}
-                    key={exchangePostNo}
-                  />
-                </div>
-              )
-            )}
-          </div>
-        </div>
-        <MoreArticleButton
-          onClick={() => navigator("matching")}
-          type={"matching"}
-        />
-      </div>
+      <ArticleSection title={"신규 매칭 게시물이 올라왔어요!"}>
+        {recentMatchingArticleList.map(({ exchangePostNo, ...article }) => (
+          <MatchingArticleCard
+            {...article}
+            onClickHandler={() =>
+              navigator(`/matching-article/${exchangePostNo}`)
+            }
+            exchangePostNo={exchangePostNo}
+            key={exchangePostNo}
+          />
+        ))}
+      </ArticleSection>
       {/* 신규 커뮤니티 게시물 목록 */}
-      <div className={classNames("flex flex-col gap-6")}>
-        <div className={"flex items-center justify-between"}>
-          <span
-            className={"text-heading1_30_semibold text-talearnt_Text_Strong"}
-          >
-            신규 커뮤니티 게시물이 올라왔어요!
-          </span>
-          <div className={"flex gap-4"}>
-            <button
-              className={classNames(
-                "group",
-                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                "hover:shadow-shadow_02",
-                !bestCommunityCarousel.canScrollPrev && "opacity-50"
-              )}
-              onClick={bestCommunityCarousel.scrollPrev}
-              disabled={!bestCommunityCarousel.canScrollPrev}
-            >
-              <CaretIcon
-                className={
-                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                }
-                direction={"left"}
-                size={42}
-              />
-            </button>
-            <button
-              className={classNames(
-                "group",
-                "rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background",
-                "hover:shadow-shadow_02",
-                !bestCommunityCarousel.canScrollNext && "opacity-50"
-              )}
-              onClick={bestCommunityCarousel.scrollNext}
-              disabled={!bestCommunityCarousel.canScrollNext}
-            >
-              <CaretIcon
-                className={
-                  "group-hover:stroke-talearnt_Icon_01 group-disabled:cursor-not-allowed group-disabled:group-hover:stroke-talearnt_Icon_03"
-                }
-                size={42}
-              />
-            </button>
-          </div>
-        </div>
-        <div className={"overflow-hidden"} ref={bestCommunityCarousel.emblaRef}>
-          <div className={classNames("flex", "-ml-5")}>
-            {hotCommunityArticleList.map(
-              ({ communityPostNo, ...article }, index) => (
-                <div
-                  className={classNames(
-                    "flex-shrink-0 flex-grow-0 basis-1/4",
-                    "min-w-0 pl-5"
-                  )}
-                  key={`banner-${index}`}
-                >
-                  <CommunityArticleCard
-                    {...article}
-                    onClickHandler={() =>
-                      navigator(`/community-article/${communityPostNo}`)
-                    }
-                    index={index}
-                    key={index}
-                  />
-                </div>
-              )
-            )}
-          </div>
-        </div>
-        <MoreArticleButton
-          onClick={() => navigator("community")}
-          type={"community"}
-        />
-      </div>
+      <ArticleSection
+        title={"신규 커뮤니티 게시물이 올라왔어요!"}
+        articleType={"community"}
+      >
+        {bestCommunityArticleList.map(
+          ({ communityPostNo, ...article }, index) => (
+            <CommunityArticleCard
+              {...article}
+              onClickHandler={() =>
+                navigator(`/community-article/${communityPostNo}`)
+              }
+              index={index}
+              key={index}
+            />
+          )
+        )}
+      </ArticleSection>
     </div>
   );
 }

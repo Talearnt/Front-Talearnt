@@ -84,7 +84,7 @@ export const useGetRecentMatchingArticleList = () => {
 };
 
 // BEST 커뮤니티 게시물 목록
-export const useGetHotCommunityArticleList = () => {
+export const useGetBestCommunityArticleList = () => {
   const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.COMMUNITY], {
     isList: true
   });
