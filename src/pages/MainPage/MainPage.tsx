@@ -13,6 +13,7 @@ import { MatchingArticleCard } from "@pages/articles/MatchingArticleList/compone
 import { ArticleSection } from "@pages/MainPage/components/ArticleSection/ArticleSection";
 import { BannerCarousel } from "@pages/MainPage/components/BannerCarousel/BannerCarousel";
 import { CommunityArticleCard } from "@pages/MainPage/components/CommunityArticleCard/CommunityArticleCard";
+import { NoticeEventTabSection } from "@pages/MainPage/components/NoticeEventTabSection/NoticeEventTabSection";
 
 function MainPage() {
   const navigator = useNavigate();
@@ -99,6 +100,7 @@ function MainPage() {
         )}
       </ArticleSection>
       {/* 이벤트, 공지사항 */}
+      <NoticeEventTabSection />
     </div>
   );
 }
