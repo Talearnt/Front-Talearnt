@@ -19,7 +19,7 @@ function BannerCarousel() {
     toggleAutoplay
   } = useCarousel({
     autoplay: true,
-    autoplayOptions: { delay: 5000 },
+    autoplayOptions: { playOnInit: false, delay: 500 },
     carouselOptions: { loop: true },
     trackIndexStates: true
   });
