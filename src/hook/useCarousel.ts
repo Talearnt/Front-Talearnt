@@ -33,7 +33,9 @@ export function useCarousel({
 }: useCarouselProps): useCarouselReturnType {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(
+    !!autoplayOptions?.playOnInit
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const plugins = autoplay ? [Autoplay(autoplayOptions)] : [];
