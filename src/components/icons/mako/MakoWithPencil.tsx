@@ -1,11 +1,14 @@
-function MakoWithPencil() {
+import { CommonIconProps } from "@common/common.type";
+
+function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
   return (
     <svg
-      width="240"
-      height="240"
+      width={size}
+      height={size}
       viewBox="0 0 240 240"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       {/*배경*/}
       <rect width="240" height="240" rx="120" fill={"#E5F0FF"} />
