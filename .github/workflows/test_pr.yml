@@ -21,10 +21,10 @@ jobs:
         uses: actions/checkout@v4
 
       # Node 환경 설정 작업
-      - name: Setup Node.js 16 🚀
+      - name: Setup Node.js 20 🚀
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
 
       # Bun 설치
       - name: Install Bun 🚀
