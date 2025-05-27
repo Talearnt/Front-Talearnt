@@ -7,7 +7,6 @@ import { classNames } from "@utils/classNames";
 
 import { useGetMatchingArticleList } from "@pages/articles/MatchingArticleList/core/matchingArticleList.hook";
 
-import { useMainScrollRefStore } from "@common/common.store";
 import { useHasNewMatchingArticleStore } from "@pages/articles/core/articles.store";
 import { useMatchingArticleListFilterStore } from "@pages/articles/MatchingArticleList/core/matchingArticleList.store";
 
@@ -73,7 +72,6 @@ function MatchingArticleList() {
         setHasNewMatchingArticle: state.setHasNewMatchingArticle
       }))
     );
-  const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
   const hasFilter =
     giveTalents.length > 0 ||
@@ -269,12 +267,8 @@ function MatchingArticleList() {
           currentPage={page}
           totalPages={totalPages}
           handlePageChange={page => {
-            if (!mainScrollRef?.current) {
-              return;
-            }
-
             setFilter(prev => ({ ...prev, page }));
-            mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0 });
           }}
         />
       )}

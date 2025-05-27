@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { UIEvent, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -9,7 +9,6 @@ import { classNames } from "@utils/classNames";
 
 import { useGetProfile } from "@hook/user.hook";
 
-import { useMainScrollRefStore, usePromptStore } from "@common/common.store";
 import { useAuthStore } from "@pages/auth/core/auth.store";
 
 import { Prompt } from "@modal/Prompt/Prompt";
@@ -19,7 +18,6 @@ import { Toast } from "@modal/Toast/Toast";
 import { Button } from "@components/Button/Button";
 import { LogoIcon } from "@components/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/icons/NotificationIcon/NotificationIcon";
-import { TopButton } from "@components/TopButton/TopButton";
 
 const linkArray = [
   {
@@ -37,8 +35,6 @@ const linkArray = [
 ];
 
 function MainLayout() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const topButtonRef = useRef<SVGSVGElement>(null);
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
@@ -56,21 +52,14 @@ function MainLayout() {
       isLoggedIn: state.isLoggedIn
     }))
   );
-  const promptData = usePromptStore(state => state.promptData);
-  const setMainScrollRef = useMainScrollRefStore(
-    state => state.setMainScrollRef
-  );
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
 
-  const handleScroll = () => {
-    if (!scrollRef.current || !topButtonRef.current) {
-      return;
-    }
-
-    topButtonRef.current.style.display =
-      scrollRef.current.scrollTop > 150 ? "block" : "none";
-  };
+  const toggleTopButtonOnScroll = ({
+    currentTarget: { scrollTop }
+  }: UIEvent<HTMLDivElement>) => setIsTopButtonVisible(scrollTop > 150);
+  const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   // 메모리에 accessToken 저장
   useEffect(() => {
@@ -83,17 +72,9 @@ function MainLayout() {
         .finally(() => setIsLoading(false));
     }
   }, [accessToken, setAccessToken]);
-  // 스크롤용 ref 저장
-  useEffect(() => {
-    setMainScrollRef(scrollRef);
-  }, [setMainScrollRef]);
   // 페이지 이동 시 스크롤 초기화
   useEffect(() => {
-    if (!scrollRef.current) {
-      return;
-    }
-
-    scrollRef.current.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
   }, [pathname]);
 
   if (isLoading) {
@@ -103,12 +84,15 @@ function MainLayout() {
   return (
     <>
       <header
-        className={classNames("h-[90px] border-b border-talearnt_Line_01")}
+        className={classNames(
+          "sticky top-0",
+          "z-30 min-w-[1440px] border-b border-talearnt_Line_01 bg-talearnt_BG_Background"
+        )}
       >
         <div
           className={classNames(
             "flex items-center justify-between",
-            "mx-auto h-full w-[1440px] px-[80px]"
+            "mx-auto h-[89px] w-[1440px] px-[80px]"
           )}
         >
           <LogoIcon
@@ -181,28 +165,52 @@ function MainLayout() {
         </div>
       </header>
       <div
-        ref={scrollRef}
         className={classNames(
-          "flex flex-col",
-          "h-[calc(100vh-90px)] overflow-y-auto"
+          "grid grid-rows-[1fr_208px]",
+          "h-[calc(100vh-90px)] min-w-[1440px] overflow-y-auto"
         )}
-        onScroll={handleScroll}
+        onScroll={toggleTopButtonOnScroll}
       >
-        <main className={classNames("flex-1", "mx-auto w-[1440px] px-20")}>
+        <main className={"mx-auto w-[1440px] px-20"}>
           <Outlet />
         </main>
         <footer
           className={classNames(
-            "flex shrink-0 items-center justify-between",
-            "mt-[120px] h-[88px] border-t border-talearnt_Line_01 px-20"
+            "flex items-center justify-between",
+            "mt-[120px] w-[1440px] border-t border-talearnt_Line_01 px-20"
           )}
         >
           푸터
         </footer>
       </div>
-      <TopButton topButtonRef={topButtonRef} />
+
+      {/* 탑버튼 */}
+      {isTopButtonVisible && (
+        <svg
+          onClick={handleScroll}
+          width="60"
+          height="60"
+          viewBox="0 0 60 60"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={classNames(
+            "fixed bottom-10 right-10",
+            "rounded-full fill-talearnt_Icon_03",
+            "cursor-pointer",
+            "hover:fill-talearnt_Icon_01"
+          )}
+        >
+          <rect width="60" height="60" rx="30" />
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M30.6688 16.5518C30.4982 16.3622 30.255 16.2539 29.9999 16.2539C29.7447 16.2539 29.5016 16.3622 29.3309 16.5518L17.7635 29.4045C17.431 29.774 17.461 30.343 17.8304 30.6755C18.1999 31.0081 18.7689 30.9781 19.1014 30.6086L29.0999 19.4993V42.8469C29.0999 43.344 29.5028 43.7469 29.9999 43.7469C30.4969 43.7469 30.8999 43.344 30.8999 42.8469V19.4993L40.8983 30.6086C41.2308 30.9781 41.7999 31.0081 42.1693 30.6755C42.5388 30.343 42.5688 29.774 42.2362 29.4045L30.6688 16.5518Z"
+            fill="white"
+          />
+        </svg>
+      )}
       <Toast />
-      {promptData && <Prompt />}
+      <Prompt />
       {isSuccess && giveTalents.length === 0 && <TalentsSettingModal />}
     </>
   );
