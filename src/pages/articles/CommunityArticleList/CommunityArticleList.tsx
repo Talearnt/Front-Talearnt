@@ -8,7 +8,6 @@ import { classNames } from "@utils/classNames";
 
 import { useGetCommunityArticleList } from "@pages/articles/CommunityArticleList/core/communityArticleList.hook";
 
-import { useMainScrollRefStore } from "@common/common.store";
 import { useCommunityArticleListFilterStore } from "@pages/articles/CommunityArticleList/core/communityArticleList.store";
 import { useHasNewCommunityArticleStore } from "@pages/articles/core/articles.store";
 
@@ -49,7 +48,6 @@ function CommunityArticleList() {
         setHasNewCommunityArticle: state.setHasNewCommunityArticle
       }))
     );
-  const mainScrollRef = useMainScrollRefStore(state => state.mainScrollRef);
 
   // 애니메이션 완료 후 플래그 제거
   useEffect(() => {
@@ -257,12 +255,8 @@ function CommunityArticleList() {
           currentPage={page}
           totalPages={totalPages}
           handlePageChange={page => {
-            if (!mainScrollRef?.current) {
-              return;
-            }
-
             setFilter(prev => ({ ...prev, page }));
-            mainScrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            window.scrollTo({ top: 0 });
           }}
         />
       )}

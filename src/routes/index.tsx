@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "@layout/MainLayout/MainLayout";
@@ -12,7 +12,14 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     path: "/",
     children: [
-      { element: <MainPage />, index: true },
+      {
+        element: (
+          <Suspense>
+            <MainPage />
+          </Suspense>
+        ),
+        index: true
+      },
       ...authRouter,
       ...articlesRouter
     ]
