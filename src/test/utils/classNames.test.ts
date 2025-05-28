@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { classNames } from "@utils/classNames";
+import { classNames } from "@shared/utils/classNames";
 
 describe("classNames utility function", () => {
   test("returns the last class when duplicate classes are provided", () => {

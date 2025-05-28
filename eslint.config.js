@@ -63,40 +63,46 @@ export default [
 
             // 2. 라이브러리
             [
-              "^(?!@/|@api/|@common/|@components/|@hook/|@layout/|@modal/|@pages/|@routes/|@test/|@type/|@utils/)[@\\w]"
+              "^(?!@/|@components/|@features/|@layout/|@pages/|@routes/|@shared/|@store/|@test/)[@\\w]"
             ],
 
             // 3. api 파일
             ["^.+\\.api$"],
 
             // 4. util 함수
-            ["^@utils/.*|^.*/(util|.*.util)$"],
+            ["^@shared/utils/.*|^.*/(util|.*.util)$"],
 
             // 5. custom hook
-            ["^@hook/.*|^.*/(hook|.*.hook)$"],
+            ["^@shared/hooks/.*|^.*/(hook|.*.hook)$"],
 
             // 6. store
             ["^@store/.*|^.*/(store|.*.store)$"],
 
-            // 7. 페이지
-            ["^@pages/.*/[A-Z][^/]*$"],
+            // 7. 라우트
+            ["^@routes/"],
 
-            // 8. 모달
-            ["^@modal/.*/[A-Z][^/]*$"],
+            // 8. 페이지
+            ["^@pages/"],
 
-            // 9. 컴포넌트
+            // 9. 레이아웃
+            ["^@layout/"],
+
+            // 10. 모달
+            ["^@components/common/modal/(?!parts/).*[A-Z][^/]*$"],
+
+            // 11. 컴포넌트
             ["^@components/.*/[A-Z][^/]*$"],
 
-            // 10. json, 상수
+            // 12. json, 상수
             ["^.+\\.(json|constants)$"],
 
-            // 11. 이미지
+            // 13. 이미지
             ["^.+\\.(svg)$"],
 
-            // 12. 타입
+            // 14. 타입
             ["^.+\\.type$"],
 
-            // 13. css
+            // 15. css
             ["^.+\\.(css|scss)$"]
           ]
         }
