@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { checkObjectType } from "@utils/checkObjectType";
+import { checkObjectType } from "@shared/utils/checkObjectType";
 
 describe("checkObjectType utility function", () => {
   test("should return true for an object", () => {

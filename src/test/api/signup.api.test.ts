@@ -1,8 +1,9 @@
 import { expect, test } from "vitest";
 
-import { getRandomNickName, postSignIn } from "@pages/auth/core/auth.api";
+import { postSignIn } from "@features/auth/signIn/signIn.api";
+import { getRandomNickName } from "@features/auth/signUp/signUp.api";
 
-import { customAxiosResponseType } from "@common/common.type";
+import { customAxiosResponseType } from "@shared/type/api.type";
 
 test("should allow users to login with valid credentials", async () => {
   const { status } = await postSignIn({

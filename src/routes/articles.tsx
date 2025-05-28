@@ -1,32 +1,25 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
+import WriteArticleLayout from "@layout/WriteArticleLayout";
+
 const MatchingArticleList = lazy(
-  () => import("@pages/articles/MatchingArticleList/MatchingArticleList")
+  () => import("@pages/articles/MatchingArticleList")
 );
 const MatchingArticleDetail = lazy(
-  () => import("@pages/articles/MatchingArticleDetail/MatchingArticleDetail")
+  () => import("@pages/articles/MatchingArticleDetail")
 );
 const CommunityArticleList = lazy(
-  () => import("@pages/articles/CommunityArticleList/CommunityArticleList")
+  () => import("@pages/articles/CommunityArticleList")
 );
 const CommunityArticleDetail = lazy(
-  () => import("@pages/articles/CommunityArticleDetail/CommunityArticleDetail")
-);
-const WriteArticle = lazy(
-  () => import("@pages/articles/WriteArticle/WriteArticle")
+  () => import("@pages/articles/CommunityArticleDetail")
 );
 const WriteMatchingArticle = lazy(
-  () =>
-    import(
-      "@pages/articles/WriteArticle/WriteMatchingArticle/WriteMatchingArticle"
-    )
+  () => import("@pages/articles/WriteMatchingArticle")
 );
 const WriteCommunityArticle = lazy(
-  () =>
-    import(
-      "@pages/articles/WriteArticle/WriteCommunityArticle/WriteCommunityArticle"
-    )
+  () => import("@pages/articles/WriteCommunityArticle")
 );
 
 const articlesRouter: RouteObject[] = [
@@ -65,7 +58,7 @@ const articlesRouter: RouteObject[] = [
   {
     element: (
       <Suspense>
-        <WriteArticle />
+        <WriteArticleLayout />
       </Suspense>
     ),
     path: "write-article",

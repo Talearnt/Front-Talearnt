@@ -1,37 +1,28 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
+import FindAccountLayout from "@layout/auth/FindAccountLayout";
+import KakaoLayout from "@layout/auth/KakaoLayout";
+import SignUpLayout from "@layout/auth/SignUpLayout";
+
 // 공통
-const CompleteSignUp = lazy(
-  () => import("@pages/auth/components/CompleteSignUp/CompleteSignUp")
-);
+const CompleteSignUp = lazy(() => import("@pages/auth/CompleteSignUp"));
+
 // 계정 찾기
-const ChangePassword = lazy(
-  () => import("@pages/auth/FindAccount/ChangePassword/ChangePassword")
-);
-const FindAccount = lazy(() => import("@pages/auth/FindAccount/FindAccount"));
-const FindId = lazy(() => import("@pages/auth/FindAccount/FindId/FindId"));
-const FindPassword = lazy(
-  () => import("@pages/auth/FindAccount/FindPassword/FindPassword")
-);
+const ChangePassword = lazy(() => import("@pages/auth/ChangePassword"));
+const FindId = lazy(() => import("@pages/auth/FindId"));
+const FindPassword = lazy(() => import("@pages/auth/FindPassword"));
+
 // 카카오
-const Kakao = lazy(() => import("@pages/auth/Kakao/Kakao"));
-const KakaoExtraInfo = lazy(
-  () => import("@pages/auth/Kakao/KakaoExtraInfo/KakaoExtraInfo")
-);
-const KakaoOauth = lazy(
-  () => import("@pages/auth/Kakao/KakaoOauth/KakaoOauth")
-);
+const KakaoExtraInfo = lazy(() => import("@pages/auth/KakaoExtraInfo"));
+const KakaoOauth = lazy(() => import("@pages/auth/KakaoOauth"));
+
 // 로그인
-const SignIn = lazy(() => import("@pages/auth/SignIn/SignIn"));
+const SignIn = lazy(() => import("@pages/auth/SignIn"));
+
 // 회원가입
-const Agreements = lazy(
-  () => import("@pages/auth/SignUp/Agreements/Agreements")
-);
-const InfoFields = lazy(
-  () => import("@pages/auth/SignUp/InfoFields/InfoFields")
-);
-const SignUp = lazy(() => import("@pages/auth/SignUp/SignUp"));
+const Agreements = lazy(() => import("@pages/auth/Agreements"));
+const InfoFields = lazy(() => import("@pages/auth/InfoFields"));
 
 const authRouter: RouteObject[] = [
   {
@@ -45,7 +36,7 @@ const authRouter: RouteObject[] = [
   {
     element: (
       <Suspense>
-        <Kakao />
+        <KakaoLayout />
       </Suspense>
     ),
     path: "kakao",
@@ -58,7 +49,7 @@ const authRouter: RouteObject[] = [
   {
     element: (
       <Suspense>
-        <SignUp />
+        <SignUpLayout />
       </Suspense>
     ),
     path: "sign-up",
@@ -71,7 +62,7 @@ const authRouter: RouteObject[] = [
   {
     element: (
       <Suspense>
-        <FindAccount />
+        <FindAccountLayout />
       </Suspense>
     ),
     path: "find-account",
