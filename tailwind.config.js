@@ -42,8 +42,8 @@ export default {
         talearnt_Text_04: "#A6B0B5",
         talearnt_Text_Red: "#FF2727",
         talearnt_Icon_01: "#414A4E",
-        talearnt_Icon_02: "#C1C8CC",
-        talearnt_Icon_03: "#DEE1E3",
+        talearnt_Icon_03: "#C1C8CC",
+        talearnt_Icon_04: "#DEE1E3",
         talearnt_On_Icon: "#FFFFFF",
         talearnt_Line_01: "#D0D5D8",
         talearnt_Line_02: "#ECEEEF"
