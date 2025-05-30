@@ -18,7 +18,7 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
               className={
                 currentStep > index
                   ? "fill-talearnt_Primary_01"
-                  : "fill-talearnt_Icon_03"
+                  : "fill-talearnt_Icon_04"
               }
               width={50}
               height={50}
@@ -57,7 +57,7 @@ function Stepper({ className, currentStep, stepArray }: StepperProps) {
                   "block border-t",
                   currentStep > index + 1
                     ? "border-talearnt_Primary_01"
-                    : "border-talearnt_Icon_03"
+                    : "border-talearnt_Icon_04"
                 )}
               />
             </div>

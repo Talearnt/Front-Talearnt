@@ -145,7 +145,7 @@ function FindId() {
                 <span
                   className={classNames(
                     "flex items-center justify-center",
-                    "h-[50px] w-[160px] rounded-lg border border-talearnt_Icon_02",
+                    "h-[50px] w-[160px] rounded-lg border border-talearnt_Icon_03",
                     "text-body1_18_medium text-talearnt_Text_04"
                   )}
                 >

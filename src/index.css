@@ -37,7 +37,7 @@
         }
 
         &::-webkit-scrollbar-thumb {
-            @apply rounded-full bg-clip-padding bg-talearnt_Icon_03;
+            @apply rounded-full bg-clip-padding bg-talearnt_Icon_04;
         }
 
         &::-webkit-scrollbar-track {
