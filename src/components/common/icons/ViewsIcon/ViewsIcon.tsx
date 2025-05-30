@@ -11,7 +11,7 @@ function ViewsIcon({ className, size = 24, ...props }: CommonIconProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={classNames(
-        "fill-talearnt_Icon_03 stroke-talearnt_Icon_03",
+        "fill-talearnt_Icon_04 stroke-talearnt_Icon_04",
         className
       )}
       {...props}

@@ -166,7 +166,7 @@ function Comment({
                   )}
                   onClick={() => fetchPreviousPage()}
                 >
-                  더보기
+                  답글 더보기
                 </button>
               )}
               {replyList?.map(reply => (

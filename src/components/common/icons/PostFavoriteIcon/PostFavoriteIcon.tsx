@@ -22,7 +22,7 @@ function PostFavoriteIcon({
       className={classNames(
         "cursor-pointer",
         isFavorite ? "fill-talearnt_Primary_01" : "fill-talearnt_BG_Background",
-        isFavorite ? "stroke-talearnt_Primary_01" : "stroke-talearnt_Icon_03",
+        isFavorite ? "stroke-talearnt_Primary_01" : "stroke-talearnt_Icon_04",
         className
       )}
       {...props}

@@ -142,7 +142,7 @@ function MainLayout() {
                 <div className={"flex items-center"}>
                   <div
                     className={
-                      "h-8 w-8 rounded-full border border-talearnt_Icon_02 bg-talearnt_BG_Up_02"
+                      "h-8 w-8 rounded-full border border-talearnt_Icon_03 bg-talearnt_BG_Up_02"
                     }
                   />
                   <svg
@@ -194,7 +194,7 @@ function MainLayout() {
           xmlns="http://www.w3.org/2000/svg"
           className={classNames(
             "fixed bottom-10 right-10",
-            "rounded-full fill-talearnt_Icon_03",
+            "rounded-full fill-talearnt_Icon_04",
             "cursor-pointer",
             "hover:fill-talearnt_Icon_01"
           )}

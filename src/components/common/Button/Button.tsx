@@ -19,7 +19,7 @@ const buttonVariants = cva(
         outlined:
           "bg-talearnt_BG_Background text-talearnt_Text_02 border border-talearnt_Icon_03",
         "outlined-blue":
-          "bg-talearnt_BG_Background text-talearnt_Primary_01 border border-talearnt_Primary_01 disabled:border-talearnt_Icon_02 "
+          "bg-talearnt_BG_Background text-talearnt_Primary_01 border border-talearnt_Primary_01 disabled:border-talearnt_Icon_03"
       },
       size: {
         small: "min-w-20 h-[40px] text-body2_16_medium",

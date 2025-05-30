@@ -22,7 +22,7 @@ function ThumbsUpIcon({
       className={classNames(
         "cursor-pointer",
         isPressed ? "fill-talearnt_Primary_01" : "fill-talearnt_BG_Background",
-        isPressed ? "stroke-talearnt_Primary_01" : "stroke-talearnt_Icon_03",
+        isPressed ? "stroke-talearnt_Primary_01" : "stroke-talearnt_Icon_04",
         className
       )}
       {...props}

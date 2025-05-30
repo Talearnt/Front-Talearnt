@@ -172,7 +172,7 @@ function MatchingArticleCard({
         {/*</div>*/}
         <div className={"flex items-center gap-1"}>
           <PostFavoriteIcon
-            className={"fill-talearnt_Icon_03 stroke-talearnt_Icon_03"}
+            className={"fill-talearnt_Icon_04 stroke-talearnt_Icon_04"}
           />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {favoriteCount}
