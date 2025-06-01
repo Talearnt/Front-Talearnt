@@ -7,12 +7,13 @@ export default {
   semi: true, //문장 끝에 세미콜론을 추가할지 여부
   singleQuote: false, //문자열을 정의할 때 단일 따옴표를 사용할지 여부
   tabWidth: 2, //탭의 너비
-  trailingComma: "none", //객체나 배열의 마지막 요소 뒤에 쉼표를 추가할지 여부
+  trailingComma: "es5", //객체나 배열의 마지막 요소 뒤에 쉼표를 추가할지 여부
   useTabs: false, //공백 대신 탭을 사용할지 여부
+  endOfLine: "lf", // 줄 끝 문자 설정
   overrides: [
     {
-      files: ["*.html", "*.scss", "*.ts", "*.tsx", "*.json", "*.yml", "*.js"]
-    }
+      files: ["*.html", "*.scss", "*.ts", "*.tsx", "*.json", "*.yml", "*.js"],
+    },
   ],
-  plugins: ["prettier-plugin-tailwindcss"]
+  plugins: ["prettier-plugin-tailwindcss"],
 };
