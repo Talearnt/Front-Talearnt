@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import {
   getCheckNickName,
-  getCheckUserId
+  getCheckUserId,
 } from "@features/auth/signUp/signUp.api";
 
 export const useCheckNickname = (
@@ -14,7 +14,7 @@ export const useCheckNickname = (
     queryFn: async () =>
       await getCheckNickName(encodeURIComponent(debounceNickname as string)),
     enabled,
-    staleTime: 1000 * 60
+    staleTime: 1000 * 60,
   });
 
 export const useCheckUserId = (
@@ -25,5 +25,5 @@ export const useCheckUserId = (
     queryKey: ["userIdCheck", debounceUserId],
     queryFn: async () => await getCheckUserId(debounceUserId as string),
     enabled,
-    staleTime: 1000 * 60
+    staleTime: 1000 * 60,
   });

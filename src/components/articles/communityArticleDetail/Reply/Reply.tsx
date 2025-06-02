@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import {
   useDeleteCommunityArticleReply,
-  usePutEditCommunityArticleReply
+  usePutEditCommunityArticleReply,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -12,7 +12,7 @@ import { Dot } from "@components/common/Dot/Dot";
 
 import {
   commentType,
-  replyType
+  replyType,
 } from "@features/articles/shared/articles.type";
 
 type ReplyProps = Pick<commentType, "commentNo"> &
@@ -25,12 +25,12 @@ function Reply({
   nickname: authorNickname,
   content,
   createdAt,
-  isDeleted
+  isDeleted,
 }: ReplyProps) {
   const {
     data: {
-      data: { nickname }
-    }
+      data: { nickname },
+    },
   } = useGetProfile();
   const { mutateAsync: editCommunityArticleReply } =
     usePutEditCommunityArticleReply(commentNo, replyNo);
@@ -58,7 +58,7 @@ function Reply({
         content={content}
         deletedData={{
           isDeleted,
-          deletedText: "작성자가 삭제한 답글입니다."
+          deletedText: "작성자가 삭제한 답글입니다.",
         }}
       >
         {nickname === authorNickname && (

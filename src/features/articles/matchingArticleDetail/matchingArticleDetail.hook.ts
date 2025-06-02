@@ -5,7 +5,7 @@ import { useShallow } from "zustand/shallow";
 
 import {
   deleteMatchingArticle,
-  getMatchingArticleDetail
+  getMatchingArticleDetail,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.api";
 import { getMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.api";
 
@@ -40,12 +40,12 @@ export const useGetMatchingArticleDetail = () => {
       favoriteCount: 0,
       isFavorite: false,
       imageUrls: [],
-      count: 0
+      count: 0,
     },
     {
       queryKey: createQueryKey([queryKeys.MATCHING, postNo]),
       queryFn: async () => await getMatchingArticleDetail(postNo),
-      enabled: exchangePostNo !== undefined
+      enabled: exchangePostNo !== undefined,
     }
   );
 };
@@ -63,7 +63,7 @@ export const useDeleteMatchingArticle = () => {
       type: state.type,
       status: state.status,
       order: state.order,
-      page: state.page
+      page: state.page,
     }))
   );
   const setToast = useToastStore(state => state.setToast);
@@ -73,17 +73,17 @@ export const useDeleteMatchingArticle = () => {
     onSuccess: async () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true }),
       });
       // 매칭 게시물 목록 프리패치
       await queryClient.prefetchQuery({
         queryKey: createQueryKey([queryKeys.MATCHING, filter], {
-          isList: true
+          isList: true,
         }),
-        queryFn: async () => await getMatchingArticleList(filter)
+        queryFn: async () => await getMatchingArticleList(filter),
       });
       navigator("/matching");
       setToast({ message: "게시물이 삭제되었습니다" });
-    }
+    },
   });
 };

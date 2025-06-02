@@ -3,7 +3,7 @@ import {
   ComponentProps,
   forwardRef,
   useImperativeHandle,
-  useRef
+  useRef,
 } from "react";
 
 import { classNames } from "@shared/utils/classNames";

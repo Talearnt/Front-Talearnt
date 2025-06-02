@@ -16,7 +16,7 @@ function DropdownFixedLabel<T = string>({
   title,
   options,
   onSelectHandler,
-  selectedValueArray
+  selectedValueArray,
 }: DropdownFixedLabelProps<T>) {
   return (
     <div className={"flex flex-col"}>

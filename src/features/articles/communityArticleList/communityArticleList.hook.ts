@@ -17,7 +17,7 @@ import { communityArticleType } from "@features/articles/communityArticleList/co
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
 const communityArticleListQueryKey = createQueryKey([queryKeys.COMMUNITY], {
-  isList: true
+  isList: true,
 });
 
 export const useGetCommunityArticleList = () => {
@@ -26,12 +26,12 @@ export const useGetCommunityArticleList = () => {
   const filter = useCommunityArticleListFilterStore(
     useShallow(state => ({
       postType: state.postType,
-      page: state.page
+      page: state.page,
     }))
   );
 
   const queryKey = createQueryKey([queryKeys.COMMUNITY, filter], {
-    isList: true
+    isList: true,
   });
 
   const queryResult = useQueryWithInitial(
@@ -43,12 +43,12 @@ export const useGetCommunityArticleList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey,
-      queryFn: async () => await getCommunityArticleList(filter)
+      queryFn: async () => await getCommunityArticleList(filter),
     },
     communityArticleListQueryKey
   );
@@ -59,7 +59,7 @@ export const useGetCommunityArticleList = () => {
         .getQueriesData<
           customAxiosResponseType<paginationType<communityArticleType>>
         >({
-          queryKey: communityArticleListQueryKey
+          queryKey: communityArticleListQueryKey,
         })
         .reverse()
         .find(
@@ -83,7 +83,7 @@ export const useGetCommunityArticleList = () => {
         queryClient.removeQueries({
           queryKey: communityArticleListQueryKey,
           predicate: query =>
-            JSON.stringify(query.queryKey) !== JSON.stringify(queryKey)
+            JSON.stringify(query.queryKey) !== JSON.stringify(queryKey),
         });
       }
     }
@@ -92,7 +92,7 @@ export const useGetCommunityArticleList = () => {
     queryClient,
     queryKey,
     queryResult.data.data.pagination,
-    queryResult.isSuccess
+    queryResult.isSuccess,
   ]);
 
   return queryResult;

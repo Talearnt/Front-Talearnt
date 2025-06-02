@@ -14,7 +14,7 @@ function ModalContainer({ children, className }: ModalContainerProps) {
 
     const originalStyle = {
       overflow: document.body.style.overflow,
-      paddingRight: document.body.style.paddingRight
+      paddingRight: document.body.style.paddingRight,
     };
 
     const existingPaddingRight = parseInt(

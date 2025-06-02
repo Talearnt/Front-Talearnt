@@ -7,7 +7,7 @@ export const postKakaoSignUp = (
   body: Omit<signUpBodyType, "pw" | "checkedPw">
 ) =>
   postAPI("/v1/auth/join/kakao", body, {
-    withCredentials: true
+    withCredentials: true,
   });
 
 // 랜덤 닉네임 생성

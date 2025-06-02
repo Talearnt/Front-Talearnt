@@ -6,7 +6,7 @@ import {
   useDeleteCommunityArticleComment,
   useGetCommunityArticleReplyList,
   usePostCommunityArticleReply,
-  usePutEditCommunityArticleComment
+  usePutEditCommunityArticleComment,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -47,7 +47,7 @@ function Comment({
   isDeleted,
   nickname: commentAuthorNickname,
   profileImg,
-  replyCount
+  replyCount,
 }: CommentProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isReplyWriting, setIsReplyWriting] = useState(false);
@@ -55,13 +55,13 @@ function Comment({
 
   const {
     data: {
-      data: { nickname }
-    }
+      data: { nickname },
+    },
   } = useGetProfile();
   const {
     data: replyList,
     fetchPreviousPage,
-    hasPreviousPage
+    hasPreviousPage,
   } = useGetCommunityArticleReplyList(commentNo, isOpen);
   const { mutateAsync: postCommunityArticleReply } =
     usePostCommunityArticleReply(commentNo, isOpen);
@@ -91,7 +91,7 @@ function Comment({
       createdAt={createdAt}
       content={content}
       deletedData={{
-        isDeleted
+        isDeleted,
       }}
     >
       <div className={"flex gap-4"}>

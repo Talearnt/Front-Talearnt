@@ -14,12 +14,12 @@ const queryClient = new QueryClient({
     queries: {
       retry: 0,
       staleTime: Infinity,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
     },
     mutations: {
-      retry: 0
-    }
-  }
+      retry: 0,
+    },
+  },
 });
 const root = document.getElementById("root");
 

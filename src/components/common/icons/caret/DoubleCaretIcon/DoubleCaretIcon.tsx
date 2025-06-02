@@ -2,7 +2,7 @@ import { classNames } from "@shared/utils/classNames";
 
 import {
   CaretIconProps,
-  caretIconVariants
+  caretIconVariants,
 } from "@components/common/icons/caret/caret.type";
 
 /**

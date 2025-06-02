@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.api";
 import {
   postMatchingArticle,
-  putEditMatchingArticle
+  putEditMatchingArticle,
 } from "@features/articles/writeMatchingArticle/writeMatchingArticle.api";
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
@@ -16,7 +16,7 @@ import { useGetProfile } from "@features/user/user.hook";
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 import {
   useEditMatchingArticleDataStore,
-  useHasNewMatchingArticleStore
+  useHasNewMatchingArticleStore,
 } from "@features/articles/shared/articles.store";
 
 import { queryKeys } from "@shared/constants/queryKeys.constants";
@@ -35,8 +35,8 @@ export const usePostMatchingArticle = () => {
 
   const {
     data: {
-      data: { profileImg, nickname, userNo }
-    }
+      data: { profileImg, nickname, userNo },
+    },
   } = useGetProfile();
 
   const resetFilters = useMatchingArticleListFilterStore(
@@ -50,7 +50,7 @@ export const usePostMatchingArticle = () => {
   const queryKey = createQueryKey(
     [
       queryKeys.MATCHING,
-      { giveTalents: [], receiveTalents: [], order: "recent", page: 1 }
+      { giveTalents: [], receiveTalents: [], order: "recent", page: 1 },
     ],
     { isList: true }
   );
@@ -60,7 +60,7 @@ export const usePostMatchingArticle = () => {
     onMutate: () => {
       // 모든 매칭 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true })
+        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true }),
       });
       // 필터 초기화
       resetFilters();
@@ -74,7 +74,7 @@ export const usePostMatchingArticle = () => {
         exchangeType,
         giveTalents,
         receiveTalents,
-        imageUrls
+        imageUrls,
       }
     ) => {
       // 필터링 되지 않은 매칭 게시물 목록 프리패치
@@ -85,8 +85,8 @@ export const usePostMatchingArticle = () => {
             giveTalents: [],
             receiveTalents: [],
             order: "recent",
-            page: 1
-          })
+            page: 1,
+          }),
       });
 
       // 게시물 상세 페이지 저장
@@ -113,17 +113,17 @@ export const usePostMatchingArticle = () => {
           content,
           userNo,
           imageUrls,
-          count: 0
+          count: 0,
         },
         errorCode: null,
         errorMessage: null,
         success: true,
-        status: 200
+        status: 200,
       });
       // 애니메이션을 위한 새로운 게시물 플래그
       setHasNewMatchingArticle(true);
       navigator("/matching");
-    }
+    },
   });
 };
 
@@ -148,7 +148,7 @@ export const usePutEditMatchingArticle = () => {
         giveTalents,
         receiveTalents,
         duration,
-        exchangeType
+        exchangeType,
       }
     ) => {
       // 상세페이지 들어오기 전 호출했던 목록의 쿼리키
@@ -157,8 +157,8 @@ export const usePutEditMatchingArticle = () => {
           customAxiosResponseType<paginationType<matchingArticleType>>
         >({
           queryKey: createQueryKey([queryKeys.MATCHING], {
-            isList: true
-          })
+            isList: true,
+          }),
         })
         .reverse();
       const commonMatchingArticleData = {
@@ -172,7 +172,7 @@ export const usePutEditMatchingArticle = () => {
         ),
         title,
         content,
-        imageUrls
+        imageUrls,
       };
 
       if (queries.length > 0) {
@@ -192,8 +192,8 @@ export const usePutEditMatchingArticle = () => {
                 article.exchangePostNo === exchangePostNo
                   ? { ...article, ...commonMatchingArticleData }
                   : article
-              )
-            }
+              ),
+            },
           };
         });
       }
@@ -210,12 +210,12 @@ export const usePutEditMatchingArticle = () => {
           ...oldData,
           data: {
             ...oldData.data,
-            ...commonMatchingArticleData
-          }
+            ...commonMatchingArticleData,
+          },
         };
       });
       setEditMatchingArticle(null);
       navigator(-1);
-    }
+    },
   });
 };

@@ -2,7 +2,7 @@ import {
   QueryKey,
   useQuery,
   useQueryClient,
-  UseQueryOptions
+  UseQueryOptions,
 } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query/src/types";
 
@@ -38,7 +38,7 @@ export const useQueryWithInitial = <T>(
     listQueryKey !== undefined
       ? (queryClient
           .getQueriesData<customAxiosResponseType<T>>({
-            queryKey: listQueryKey
+            queryKey: listQueryKey,
           })
           .reverse()
           .find(([, data]) => data !== undefined) as
@@ -53,7 +53,7 @@ export const useQueryWithInitial = <T>(
           errorCode: null,
           errorMessage: null,
           success: true,
-          status: 0
+          status: 0,
         }
       : {
           data:
@@ -63,10 +63,10 @@ export const useQueryWithInitial = <T>(
           errorCode: null,
           errorMessage: null,
           success: true,
-          status: 0
+          status: 0,
         },
     ...value,
     isSuccess,
-    isLoading
+    isLoading,
   };
 };

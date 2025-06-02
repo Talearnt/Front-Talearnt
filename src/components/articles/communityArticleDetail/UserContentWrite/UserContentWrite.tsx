@@ -31,8 +31,8 @@ function UserContentWrite({
 
   const {
     data: {
-      data: { profileImg }
-    }
+      data: { profileImg },
+    },
   } = useGetProfile();
 
   const setToast = useToastStore(state => state.setToast);
@@ -65,7 +65,7 @@ function UserContentWrite({
             e.preventDefault();
             setToast({
               message: "로그인이 필요한 서비스입니다",
-              type: "error"
+              type: "error",
             });
           }}
           onChange={({ target: { value } }) => setEditContent(value)}

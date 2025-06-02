@@ -9,5 +9,5 @@ export const getMatchingArticleDetail = (exchangePostNo: number) =>
 // 매칭 게시물 삭제
 export const deleteMatchingArticle = (exchangePostNo: number) =>
   deleteAPI(`v1/posts/exchanges/${exchangePostNo}`, {
-    withCredentials: true
+    withCredentials: true,
   });

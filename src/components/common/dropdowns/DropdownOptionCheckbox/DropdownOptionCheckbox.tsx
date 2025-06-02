@@ -13,7 +13,7 @@ type DropdownOptionCheckboxProps = {
 function DropdownOptionCheckbox({
   checked,
   onChangeHandler,
-  label
+  label,
 }: DropdownOptionCheckboxProps) {
   return (
     <Checkbox

@@ -10,7 +10,7 @@ function TalentsSettingModalHeader() {
   const { currentTalentsType, isSuccess } = useTalentsSettingModalStore(
     useShallow(state => ({
       currentTalentsType: state.currentTalentsType,
-      isSuccess: state.isSuccess
+      isSuccess: state.isSuccess,
     }))
   );
 

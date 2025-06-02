@@ -6,7 +6,7 @@ const twMerge = extendTailwindMerge({
     conflictingClassGroups: {
       p: ["px", "py", "pt", "pr", "pb", "pl"],
       px: ["pl", "pr"],
-      py: ["pt", "pb"]
+      py: ["pt", "pb"],
     },
     classGroups: {
       "font-size": [
@@ -23,10 +23,10 @@ const twMerge = extendTailwindMerge({
         "text-caption1_14_medium",
         "text-caption2_12_semibold",
         "text-caption2_12_medium",
-        "text-label1_10_semibold"
-      ]
-    }
-  }
+        "text-label1_10_semibold",
+      ],
+    },
+  },
 });
 
 /**

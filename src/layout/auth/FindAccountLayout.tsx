@@ -7,12 +7,12 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 const options = [
   {
     label: "아이디 찾기",
-    value: "id"
+    value: "id",
   },
   {
     label: "비밀번호 찾기",
-    value: "pw"
-  }
+    value: "pw",
+  },
 ];
 
 function FindAccountLayout() {

@@ -2,7 +2,7 @@ import { create } from "zustand/react";
 
 import {
   agreementType,
-  kakaoAuthResponseType
+  kakaoAuthResponseType,
 } from "@features/auth/signUp/signUp.type";
 
 type agreementStoreType = {
@@ -19,26 +19,26 @@ export const useAgreementStore = create<agreementStoreType>((set, get) => ({
       agreeCodeId: 1,
       agree: false,
       required: true,
-      title: "이용약관 동의"
+      title: "이용약관 동의",
     },
     {
       agreeCodeId: 2,
       agree: false,
       required: true,
-      title: "개인정보 수집"
+      title: "개인정보 수집",
     },
     {
       agreeCodeId: 3,
       agree: false,
       required: false,
-      title: "마케팅 목적의 개인정보 수집 및 이용 동의"
+      title: "마케팅 목적의 개인정보 수집 및 이용 동의",
     },
     {
       agreeCodeId: 4,
       agree: false,
       required: false,
-      title: "광고성 정보 수신 동의"
-    }
+      title: "광고성 정보 수신 동의",
+    },
   ],
   isAllAgreementsAgreed: () => {
     const { agreements } = get();
@@ -62,11 +62,11 @@ export const useAgreementStore = create<agreementStoreType>((set, get) => ({
     set(state => {
       const updatedAgreements = state.agreements.map(item => ({
         ...item,
-        agree
+        agree,
       }));
 
       return { agreements: updatedAgreements };
-    })
+    }),
 }));
 
 type kakaoAuthResponseStoreType = {
@@ -82,6 +82,6 @@ type kakaoAuthResponseStoreType = {
 export const useKakaoAuthResponseStore = create<kakaoAuthResponseStoreType>(
   set => ({
     kakaoAuthResponse: null,
-    setResponse: response => set({ kakaoAuthResponse: response })
+    setResponse: response => set({ kakaoAuthResponse: response }),
   })
 );

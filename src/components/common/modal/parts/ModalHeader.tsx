@@ -13,7 +13,7 @@ type ModalHeaderProps = {
 function ModalHeader({
   className,
   children,
-  onCloseHandler
+  onCloseHandler,
 }: ModalHeaderProps) {
   return (
     <div

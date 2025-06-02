@@ -10,12 +10,12 @@ export const caretIconVariants = cva(
         top: "-rotate-90",
         right: "rotate-0",
         bottom: "rotate-90",
-        left: "rotate-180"
-      }
+        left: "rotate-180",
+      },
     },
     defaultVariants: {
-      direction: "right"
-    }
+      direction: "right",
+    },
   }
 );
 

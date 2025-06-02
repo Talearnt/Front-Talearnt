@@ -14,7 +14,7 @@ export const useHasNewMatchingArticleStore =
   create<hasNewMatchingArticleStoreType>(set => ({
     hasNewMatchingArticle: false,
     setHasNewMatchingArticle: hasNewMatchingArticle =>
-      set({ hasNewMatchingArticle })
+      set({ hasNewMatchingArticle }),
   }));
 
 type editMatchingArticleDataStoreType = {
@@ -33,7 +33,7 @@ type editMatchingArticleDataStoreType = {
 export const useEditMatchingArticleDataStore =
   create<editMatchingArticleDataStoreType>(set => ({
     editMatchingArticle: null,
-    setEditMatchingArticle: editMatchingArticle => set({ editMatchingArticle })
+    setEditMatchingArticle: editMatchingArticle => set({ editMatchingArticle }),
   }));
 
 type hasNewCommunityArticleStoreType = {
@@ -45,7 +45,7 @@ export const useHasNewCommunityArticleStore =
   create<hasNewCommunityArticleStoreType>(set => ({
     hasNewCommunityArticle: false,
     setHasNewCommunityArticle: hasNewCommunityArticle =>
-      set({ hasNewCommunityArticle })
+      set({ hasNewCommunityArticle }),
   }));
 
 type editCommunityArticleDataStoreType = {
@@ -65,5 +65,5 @@ export const useEditCommunityArticleDataStore =
   create<editCommunityArticleDataStoreType>(set => ({
     editCommunityArticle: null,
     setEditCommunityArticle: editCommunityArticle =>
-      set({ editCommunityArticle })
+      set({ editCommunityArticle }),
   }));

@@ -10,12 +10,12 @@ const labelTextVariants = cva(
     variants: {
       type: {
         primary: "text-talearnt_Primary_01 bg-talearnt_PrimaryBG_01",
-        error: "text-talearnt_Error_01 bg-talearnt_ErrorBG_01"
-      }
+        error: "text-talearnt_Error_01 bg-talearnt_ErrorBG_01",
+      },
     },
     defaultVariants: {
-      type: "primary"
-    }
+      type: "primary",
+    },
   }
 );
 

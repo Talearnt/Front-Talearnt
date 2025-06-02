@@ -9,11 +9,11 @@ const vitestConfig: ViteUserConfig = {
     environment: "jsdom",
     setupFiles: ["./src/test/polyfill.ts", "./src/test/setup.ts"],
     reporters: ["junit", "default"],
-    outputFile: "test-results.xml"
-  }
+    outputFile: "test-results.xml",
+  },
 };
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  ...vitestConfig
+  ...vitestConfig,
 });

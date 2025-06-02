@@ -43,12 +43,12 @@ function KakaoOauth() {
           setPrompt({
             title: "가입된 회원 정보",
             content:
-              "이미 가입된 계정이 있습니다. 기존 아이디로 로그인 해주세요."
+              "이미 가입된 계정이 있습니다. 기존 아이디로 로그인 해주세요.",
           });
         } else {
           setPrompt({
             title: "카카오 연동 실패",
-            content: "카카오로부터 연동이 실패하였습니다."
+            content: "카카오로부터 연동이 실패하였습니다.",
           });
         }
 

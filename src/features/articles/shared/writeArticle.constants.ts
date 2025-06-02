@@ -3,7 +3,7 @@ import { array, mixed, number, object, string } from "yup";
 import {
   durationList,
   exchangeTypeList,
-  postTypeList
+  postTypeList,
 } from "@features/articles/shared/articles.constants";
 
 export const matchingArticleSchema = object({
@@ -39,7 +39,7 @@ export const matchingArticleSchema = object({
           return context.createError({
             message: contentHasImage
               ? "내용을 2글자 이상 입력해 주세요" // 이미지가 있을 경우
-              : "내용을 20글자 이상 입력해 주세요" // 이미지가 없을 경우
+              : "내용을 20글자 이상 입력해 주세요", // 이미지가 없을 경우
           });
         }
 
@@ -53,10 +53,10 @@ export const matchingArticleSchema = object({
         fileName: string().required(),
         fileType: string().required(),
         fileSize: number().required(),
-        url: string().required()
+        url: string().required(),
       }).required()
     )
-    .required()
+    .required(),
 }).required();
 
 export const communityArticleSchema = object({
@@ -83,7 +83,7 @@ export const communityArticleSchema = object({
           return context.createError({
             message: contentHasImage
               ? "내용을 2글자 이상 입력해 주세요" // 이미지가 있을 경우
-              : "내용을 20글자 이상 입력해 주세요" // 이미지가 없을 경우
+              : "내용을 20글자 이상 입력해 주세요", // 이미지가 없을 경우
           });
         }
 
@@ -97,8 +97,8 @@ export const communityArticleSchema = object({
         fileName: string().required(),
         fileType: string().required(),
         fileSize: number().required(),
-        url: string().required()
+        url: string().required(),
       }).required()
     )
-    .required()
+    .required(),
 }).required();

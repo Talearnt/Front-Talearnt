@@ -11,7 +11,7 @@ function Prompt() {
   const { promptData, setPrompt } = usePromptStore(
     useShallow(state => ({
       promptData: state.promptData,
-      setPrompt: state.setPrompt
+      setPrompt: state.setPrompt,
     }))
   );
 

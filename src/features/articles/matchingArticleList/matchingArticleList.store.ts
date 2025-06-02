@@ -29,6 +29,6 @@ export const useMatchingArticleListFilterStore =
         duration: undefined,
         type: undefined,
         status: undefined,
-        page: 1
-      })
+        page: 1,
+      }),
   }));

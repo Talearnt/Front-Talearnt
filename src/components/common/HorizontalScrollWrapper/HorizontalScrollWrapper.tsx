@@ -9,7 +9,7 @@ type HorizontalScrollWrapperProps = {
 
 function HorizontalScrollWrapper({
   className,
-  children
+  children,
 }: HorizontalScrollWrapperProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 

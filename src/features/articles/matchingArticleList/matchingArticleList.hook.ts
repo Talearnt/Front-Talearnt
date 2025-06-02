@@ -17,7 +17,7 @@ import { matchingArticleType } from "@features/articles/matchingArticleList/matc
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
 const matchingArticleListQueryKey = createQueryKey([queryKeys.MATCHING], {
-  isList: true
+  isList: true,
 });
 
 export const useGetMatchingArticleList = () => {
@@ -31,12 +31,12 @@ export const useGetMatchingArticleList = () => {
       type: state.type,
       status: state.status,
       order: state.order,
-      page: state.page
+      page: state.page,
     }))
   );
 
   const queryKey = createQueryKey([queryKeys.MATCHING, filter], {
-    isList: true
+    isList: true,
   });
 
   const queryResult = useQueryWithInitial(
@@ -48,12 +48,12 @@ export const useGetMatchingArticleList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey,
-      queryFn: async () => await getMatchingArticleList(filter)
+      queryFn: async () => await getMatchingArticleList(filter),
     },
     matchingArticleListQueryKey
   );
@@ -64,7 +64,7 @@ export const useGetMatchingArticleList = () => {
         .getQueriesData<
           customAxiosResponseType<paginationType<matchingArticleType>>
         >({
-          queryKey: matchingArticleListQueryKey
+          queryKey: matchingArticleListQueryKey,
         })
         .reverse()
         .find(
@@ -88,7 +88,7 @@ export const useGetMatchingArticleList = () => {
         queryClient.removeQueries({
           queryKey: matchingArticleListQueryKey,
           predicate: query =>
-            JSON.stringify(query.queryKey) !== JSON.stringify(queryKey)
+            JSON.stringify(query.queryKey) !== JSON.stringify(queryKey),
         });
       }
     }
@@ -97,7 +97,7 @@ export const useGetMatchingArticleList = () => {
     queryClient,
     queryKey,
     queryResult.data.data.pagination,
-    queryResult.isSuccess
+    queryResult.isSuccess,
   ]);
 
   return queryResult;

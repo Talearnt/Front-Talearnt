@@ -16,5 +16,5 @@ type promptStoreType = {
 
 export const usePromptStore = create<promptStoreType>(set => ({
   promptData: undefined,
-  setPrompt: prompt => set({ promptData: prompt })
+  setPrompt: prompt => set({ promptData: prompt }),
 }));

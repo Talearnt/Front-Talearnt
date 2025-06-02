@@ -2,7 +2,7 @@ import { matchingArticleDetailType } from "@features/articles/matchingArticleDet
 import {
   commonArticleDataType,
   durationType,
-  exchangeType
+  exchangeType,
 } from "@features/articles/shared/articles.type";
 import { imageFileType } from "@features/articles/shared/writeArticle.type";
 

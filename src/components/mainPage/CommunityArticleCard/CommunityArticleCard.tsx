@@ -23,7 +23,7 @@ function CommunityArticleCard({
   postType,
   profileImg,
   title,
-  updatedAt
+  updatedAt,
 }: Omit<communityArticleType, "communityPostNo"> & {
   onClickHandler?: () => void;
   index: number;

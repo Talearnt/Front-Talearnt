@@ -27,12 +27,12 @@ function UserContentSection({
   authorNickname,
   content,
   children,
-  deletedData
+  deletedData,
 }: UserContentSectionProps) {
   const {
     data: {
-      data: { nickname }
-    }
+      data: { nickname },
+    },
   } = useGetProfile();
 
   return deletedData?.isDeleted ? (

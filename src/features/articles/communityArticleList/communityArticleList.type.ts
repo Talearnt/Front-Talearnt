@@ -1,6 +1,6 @@
 import {
   commonArticleDataType,
-  postType
+  postType,
 } from "@features/articles/shared/articles.type";
 import { profileType } from "@features/user/user.type";
 

@@ -19,7 +19,7 @@ function Pagination({
   className,
   currentPage,
   totalPages,
-  handlePageChange
+  handlePageChange,
 }: PaginationProps) {
   const currentPageRange = Math.ceil(currentPage / 5);
   const lastPageRange = Math.ceil(totalPages / 5);
@@ -54,7 +54,7 @@ function Pagination({
       />
       {Array.from(
         {
-          length: numberOfPages
+          length: numberOfPages,
         },
         () => Math.ceil(currentPage / 5)
       ).map((pageRange, i) => {

@@ -5,13 +5,13 @@ import { UseFormReturn } from "react-hook-form";
 
 import {
   extractImageSrcList,
-  uploadImageToPresignedURL
+  uploadImageToPresignedURL,
 } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
 
 import {
   usePostMatchingArticle,
-  usePutEditMatchingArticle
+  usePutEditMatchingArticle,
 } from "@features/articles/writeMatchingArticle/writeMatchingArticle.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -32,7 +32,7 @@ import { Spinner } from "@components/common/Spinner/Spinner";
 import {
   durationOptions,
   exchangeTypeList,
-  talentsOptions
+  talentsOptions,
 } from "@features/articles/shared/articles.constants";
 import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList.constants";
 
@@ -50,9 +50,9 @@ function WriteMatchingArticle() {
 
   const {
     data: {
-      data: { giveTalents: giveTalentCodeList }
+      data: { giveTalents: giveTalentCodeList },
     },
-    isError
+    isError,
   } = useGetProfile();
   const {
     formState: { errors },
@@ -60,7 +60,7 @@ function WriteMatchingArticle() {
     watch,
     setValue,
     trigger,
-    reset
+    reset,
   } = (context as { matchingForm: UseFormReturn<formType> }).matchingForm;
 
   const { mutateAsync: postMatchingArticle } = usePostMatchingArticle();
@@ -82,7 +82,7 @@ function WriteMatchingArticle() {
     exchangeType,
     title,
     content,
-    imageFileList
+    imageFileList,
   ] = watch([
     "giveTalents",
     "receiveTalents",
@@ -90,7 +90,7 @@ function WriteMatchingArticle() {
     "exchangeType",
     "title",
     "content",
-    "imageFileList"
+    "imageFileList",
   ]);
   const giveTalentsOptions = useMemo(
     () =>
@@ -130,7 +130,7 @@ function WriteMatchingArticle() {
     } catch (error) {
       setToast({
         message: (error as { message: string }).message,
-        type: "error"
+        type: "error",
       });
 
       setIsPostInProgress(false);
@@ -157,7 +157,7 @@ function WriteMatchingArticle() {
           giveTalents,
           receiveTalents,
           imageUrls,
-          exchangePostNo: editMatchingArticleData.exchangePostNo
+          exchangePostNo: editMatchingArticleData.exchangePostNo,
         });
       } else {
         await postMatchingArticle({
@@ -167,13 +167,13 @@ function WriteMatchingArticle() {
           duration: duration as durationType,
           giveTalents,
           receiveTalents,
-          imageUrls
+          imageUrls,
         });
       }
     } catch {
       setToast({
         message: "게시글 업로드 중 오류가 발생했습니다.",
-        type: "error"
+        type: "error",
       });
     } finally {
       setIsPostInProgress(false);
@@ -204,7 +204,7 @@ function WriteMatchingArticle() {
           잠시 후 다시 시도해 주세요.
         </>
       ),
-      confirmOnClickHandler: () => navigator("/matching")
+      confirmOnClickHandler: () => navigator("/matching"),
     });
   }, [isError, navigator, setPrompt]);
 
@@ -238,7 +238,7 @@ function WriteMatchingArticle() {
                     if (giveTalents.length >= 5) {
                       setToast({
                         message: "키워드는 5개까지만 설정 가능해요",
-                        type: "error"
+                        type: "error",
                       });
 
                       return;
@@ -268,7 +268,7 @@ function WriteMatchingArticle() {
                     if (receiveTalents.length >= 5) {
                       setToast({
                         message: "키워드는 5개까지만 설정 가능해요",
-                        type: "error"
+                        type: "error",
                       });
 
                       return;
@@ -276,7 +276,7 @@ function WriteMatchingArticle() {
 
                     handleDataChange("receiveTalents", [
                       ...receiveTalents,
-                      value
+                      value,
                     ]);
 
                     return;
@@ -374,7 +374,7 @@ function WriteMatchingArticle() {
               content:
                 "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
               cancelOnClickHandler: () => setPrompt(),
-              confirmOnClickHandler: () => navigator(-1)
+              confirmOnClickHandler: () => navigator(-1),
             })
           }
           disabled={isPostInProgress}

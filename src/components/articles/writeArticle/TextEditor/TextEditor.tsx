@@ -23,7 +23,7 @@ function TextEditor({
   value,
   onChangeHandler,
   onImageHandler,
-  error
+  error,
 }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
 
@@ -49,7 +49,7 @@ function TextEditor({
     if (imageCount >= 5) {
       setToast({
         message: "이미지 개수는 최대 5개까지 허용됩니다.",
-        type: "error"
+        type: "error",
       });
 
       return;
@@ -74,7 +74,7 @@ function TextEditor({
       if (imageCount + files.length > 5) {
         setToast({
           message: "이미지 개수는 최대 5개까지 허용됩니다.",
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -92,7 +92,7 @@ function TextEditor({
         } catch (message) {
           setToast({
             message: message as string,
-            type: "error"
+            type: "error",
           });
         }
       }
@@ -104,10 +104,10 @@ function TextEditor({
       toolbar: {
         container: "#toolbar",
         handlers: {
-          image: handleImageUpload
-        }
+          image: handleImageUpload,
+        },
       },
-      maxlength: { maxLength: 1000 }
+      maxlength: { maxLength: 1000 },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

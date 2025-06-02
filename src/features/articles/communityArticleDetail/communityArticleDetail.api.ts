@@ -4,7 +4,7 @@ import { communityArticleDetailType } from "@features/articles/communityArticleD
 import {
   baseContentType,
   commentType,
-  replyType
+  replyType,
 } from "@features/articles/shared/articles.type";
 import { paginationType } from "@shared/type/api.type";
 
@@ -14,7 +14,7 @@ export const getCommunityArticleDetail = (communityPostNo: number) =>
 // 커뮤니티 게시물 삭제
 export const deleteCommunityArticle = (communityPostNo: number) =>
   deleteAPI(`v1/posts/communities/${communityPostNo}`, {
-    withCredentials: true
+    withCredentials: true,
   });
 
 // ***********************
@@ -27,7 +27,7 @@ export const postCommunityArticleComment = (
     Pick<baseContentType, "content">
 ) =>
   postAPI<paginationType<commentType>>("/v1/communities/comments", comment, {
-    withCredentials: true
+    withCredentials: true,
   });
 
 // 댓글 목록 조회
@@ -46,20 +46,20 @@ export const getCommunityArticleCommentList = ({
 //댓글 수정
 export const putEditCommunityArticleComment = ({
   commentNo,
-  content
+  content,
 }: Pick<commentType, "commentNo" | "content">) =>
   putAPI<null>(
     `v1/communities/comments/${commentNo}`,
     { content },
     {
-      withCredentials: true
+      withCredentials: true,
     }
   );
 
 // 댓글 삭제
 export const deleteCommunityArticleComment = (commentNo: number) =>
   deleteAPI(`v1/communities/comments/${commentNo}`, {
-    withCredentials: true
+    withCredentials: true,
   });
 
 // ***********************
@@ -71,35 +71,35 @@ export const postCommunityArticleReply = (
   reply: Pick<commentType, "commentNo"> & Pick<baseContentType, "content">
 ) =>
   postAPI<replyType>("/v1/communities/replies", reply, {
-    withCredentials: true
+    withCredentials: true,
   });
 
 // 답글 목록 조회
 export const getCommunityArticleReplyList = ({
   commentNo,
-  lastNo
+  lastNo,
 }: Pick<commentType, "commentNo"> & {
   lastNo?: number;
 }) =>
   getAPI<paginationType<replyType>>(`/v1/communities/${commentNo}/replies`, {
-    lastNo
+    lastNo,
   });
 
 //답글 수정
 export const putEditCommunityArticleReply = ({
   replyNo,
-  content
+  content,
 }: Pick<replyType, "replyNo" | "content">) =>
   putAPI<null>(
     `v1/communities/replies/${replyNo}`,
     { content },
     {
-      withCredentials: true
+      withCredentials: true,
     }
   );
 
 // 답글 삭제
 export const deleteCommunityArticleReply = (replyNo: number) =>
   deleteAPI(`v1/communities/replies/${replyNo}`, {
-    withCredentials: true
+    withCredentials: true,
   });

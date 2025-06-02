@@ -31,7 +31,7 @@ const authRouter: RouteObject[] = [
         <SignIn />
       </Suspense>
     ),
-    path: "sign-in"
+    path: "sign-in",
   },
   {
     element: (
@@ -43,8 +43,8 @@ const authRouter: RouteObject[] = [
     children: [
       { element: <KakaoOauth />, path: "oauth" },
       { element: <KakaoExtraInfo />, path: "info-fields" },
-      { element: <CompleteSignUp />, path: "complete" }
-    ]
+      { element: <CompleteSignUp />, path: "complete" },
+    ],
   },
   {
     element: (
@@ -56,8 +56,8 @@ const authRouter: RouteObject[] = [
     children: [
       { element: <Agreements />, path: "agreements" },
       { element: <InfoFields />, path: "info-fields" },
-      { element: <CompleteSignUp />, path: "complete" }
-    ]
+      { element: <CompleteSignUp />, path: "complete" },
+    ],
   },
   {
     element: (
@@ -69,9 +69,9 @@ const authRouter: RouteObject[] = [
     children: [
       { element: <FindId />, path: "id" },
       { element: <FindPassword />, path: "pw" },
-      { element: <ChangePassword />, path: "change" }
-    ]
-  }
+      { element: <ChangePassword />, path: "change" },
+    ],
+  },
 ];
 
 export default authRouter;

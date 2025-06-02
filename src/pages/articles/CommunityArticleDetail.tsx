@@ -10,7 +10,7 @@ import {
   useDeleteCommunityArticle,
   useGetCommunityArticleCommentList,
   useGetCommunityArticleDetail,
-  usePostCommunityArticleComment
+  usePostCommunityArticleComment,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -34,8 +34,8 @@ function CommunityArticleDetail() {
 
   const {
     data: {
-      data: { userNo: profileUserNo }
-    }
+      data: { userNo: profileUserNo },
+    },
   } = useGetProfile();
   const {
     data: {
@@ -52,22 +52,22 @@ function CommunityArticleDetail() {
         postType,
         profileImg,
         title,
-        userNo
-      }
+        userNo,
+      },
     },
     error,
     isError,
     isLoading,
-    isSuccess
+    isSuccess,
   } = useGetCommunityArticleDetail();
   const {
     data: {
       data: {
         results: commentList,
-        pagination: { totalCount, totalPages }
-      }
+        pagination: { totalCount, totalPages },
+      },
     },
-    isLoading: commentIsLoading
+    isLoading: commentIsLoading,
   } = useGetCommunityArticleCommentList();
   const { mutate: deleteCommunityArticle } = useDeleteCommunityArticle();
   const { mutate: postCommunityArticleComment } =
@@ -76,7 +76,7 @@ function CommunityArticleDetail() {
   const { page, setPage } = useCommunityArticleCommentPageStore(
     useShallow(state => ({
       page: state.page,
-      setPage: state.setPage
+      setPage: state.setPage,
     }))
   );
   const setEditCommunityArticle = useEditCommunityArticleDataStore(
@@ -99,7 +99,7 @@ function CommunityArticleDetail() {
       content,
       pureText: doc.body.textContent ?? "",
       imageFileList: [],
-      postType
+      postType,
     });
 
     navigator("/write-article/community");
@@ -110,7 +110,7 @@ function CommunityArticleDetail() {
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
       cancelOnClickHandler: () => setPrompt(),
-      confirmOnClickHandler: () => deleteCommunityArticle(communityPostNo)
+      confirmOnClickHandler: () => deleteCommunityArticle(communityPostNo),
     });
 
   useEffect(() => {

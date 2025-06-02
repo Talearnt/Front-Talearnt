@@ -7,7 +7,7 @@ import { object, string } from "yup";
 
 import {
   getRandomNickName,
-  postKakaoSignUp
+  postKakaoSignUp,
 } from "@features/auth/signUp/signUp.api";
 
 import { checkObjectType } from "@shared/utils/checkObjectType";
@@ -18,7 +18,7 @@ import { useDebounce } from "@shared/hooks/useDebounce";
 
 import {
   useAgreementStore,
-  useKakaoAuthResponseStore
+  useKakaoAuthResponseStore,
 } from "@features/auth/signUp/signUp.store";
 import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";
@@ -34,7 +34,7 @@ import { nicknameRegex } from "@features/auth/shared/authRegex.constants";
 import { genderOptions } from "@features/auth/signUp/signUp.constants";
 
 const kakaoExtraInfoSchema = object({
-  nickname: string().matches(nicknameRegex, "match")
+  nickname: string().matches(nicknameRegex, "match"),
 }).required();
 
 function KakaoExtraInfo() {
@@ -46,10 +46,10 @@ function KakaoExtraInfo() {
     register,
     setError,
     setValue,
-    watch
+    watch,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(kakaoExtraInfoSchema)
+    resolver: yupResolver(kakaoExtraInfoSchema),
   });
   const agreementsForm = useForm();
 
@@ -80,7 +80,7 @@ function KakaoExtraInfo() {
     data?.data !== false; // 닉네임 중복인 경우
 
   const handleAllCheckboxChange = ({
-    target
+    target,
   }: ChangeEvent<HTMLInputElement>) => {
     const isChecked = target.checked;
 
@@ -101,15 +101,15 @@ function KakaoExtraInfo() {
         nickname,
         agreeReqDTOS: agreementsList.map(({ agreeCodeId }, index) => ({
           agreeCodeId,
-          agree: agreements[index]
-        }))
+          agree: agreements[index],
+        })),
       });
 
       navigator("/kakao/complete");
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
         setToast({
-          message: e.errorMessage as string
+          message: e.errorMessage as string,
         });
         return;
       }
@@ -117,7 +117,7 @@ function KakaoExtraInfo() {
       setPrompt({
         title: "서버 오류",
         content:
-          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요."
+          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요.",
       });
     }
   };
@@ -220,8 +220,8 @@ function KakaoExtraInfo() {
           )}
           formData={{
             ...agreementsForm.register("all", {
-              onChange: handleAllCheckboxChange
-            })
+              onChange: handleAllCheckboxChange,
+            }),
           }}
         >
           <span className={"w-full text-body1_18_semibold"}>
@@ -235,7 +235,7 @@ function KakaoExtraInfo() {
               "h-[72px] border-b border-b-talearnt_Line_01"
             )}
             formData={{
-              ...agreementsForm.register(agreeCodeId.toString())
+              ...agreementsForm.register(agreeCodeId.toString()),
             }}
             key={agreeCodeId}
           >

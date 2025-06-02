@@ -55,6 +55,6 @@ export function useVerificationCodeTimer(initialSecond = 180) {
     isFinished,
     isRunning,
     startTimer,
-    stopTimer
+    stopTimer,
   };
 }

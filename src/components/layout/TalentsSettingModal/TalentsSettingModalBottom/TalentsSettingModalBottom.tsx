@@ -22,7 +22,7 @@ function TalentsSettingModalBottom() {
     isSuccess,
     isLoading,
     setCurrentTalentsType,
-    setStatus
+    setStatus,
   } = useTalentsSettingModalStore(
     useShallow(state => ({
       scrollRef: state.scrollRef,
@@ -31,7 +31,7 @@ function TalentsSettingModalBottom() {
       isSuccess: state.isSuccess,
       isLoading: state.isLoading,
       setCurrentTalentsType: state.setCurrentTalentsType,
-      setStatus: state.setStatus
+      setStatus: state.setStatus,
     }))
   );
   const setToast = useToastStore(state => state.setToast);
@@ -70,14 +70,14 @@ function TalentsSettingModalBottom() {
       if (checkObjectType(e) && "errorCode" in e) {
         setToast({
           message: e.errorMessage as string,
-          type: "error"
+          type: "error",
         });
         return;
       }
 
       setToast({
         message: "예기치 못한 오류가 발생했습니다.",
-        type: "error"
+        type: "error",
       });
     }
   };

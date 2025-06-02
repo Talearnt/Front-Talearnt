@@ -7,11 +7,11 @@ import { object, ref as yupRef, string } from "yup";
 
 import {
   postConfirmVerificationCode,
-  postSendVerificationCode
+  postSendVerificationCode,
 } from "@features/auth/shared/verificationCode.api";
 import {
   getRandomNickName,
-  postSignUp
+  postSignUp,
 } from "@features/auth/signUp/signUp.api";
 
 import { checkObjectType } from "@shared/utils/checkObjectType";
@@ -19,7 +19,7 @@ import { classNames } from "@shared/utils/classNames";
 
 import {
   useCheckNickname,
-  useCheckUserId
+  useCheckUserId,
 } from "@features/auth/signUp/signUp.hook";
 import { useDebounce } from "@shared/hooks/useDebounce";
 
@@ -38,7 +38,7 @@ import {
   nameRegex,
   nicknameRegex,
   pwRegex,
-  userIdRegex
+  userIdRegex,
 } from "@features/auth/shared/authRegex.constants";
 import { genderOptions } from "@features/auth/signUp/signUp.constants";
 
@@ -56,7 +56,10 @@ const infoFieldsSchema = object({
     pwRegex,
     "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
   ),
-  checkedPw: string().oneOf([yupRef("pw"), ""], "비밀번호가 일치하지 않습니다.")
+  checkedPw: string().oneOf(
+    [yupRef("pw"), ""],
+    "비밀번호가 일치하지 않습니다."
+  ),
 }).required();
 
 function InfoFields() {
@@ -69,11 +72,11 @@ function InfoFields() {
     setError,
     setValue,
     trigger,
-    watch
+    watch,
   } = useForm({
     defaultValues: { gender: "남자" },
     mode: "onChange",
-    resolver: yupResolver(infoFieldsSchema)
+    resolver: yupResolver(infoFieldsSchema),
   });
 
   const debounceNickname = useDebounce(watch("nickname"));
@@ -96,7 +99,7 @@ function InfoFields() {
 
   const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
-    isCodeVerified: false
+    isCodeVerified: false,
   });
 
   const [nickname, name, gender, userId, pw, checkedPw] = watch([
@@ -105,7 +108,7 @@ function InfoFields() {
     "gender",
     "userId",
     "pw",
-    "checkedPw"
+    "checkedPw",
   ]);
   const doneButtonDisable =
     !nickname || // 닉네임 없는 경우
@@ -134,15 +137,15 @@ function InfoFields() {
         phone: verification.phone,
         agreeReqDTOS: agreements.map(({ agreeCodeId, agree }) => ({
           agreeCodeId,
-          agree
-        }))
+          agree,
+        })),
       });
 
       navigator("/sign-up/complete");
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
         setToast({
-          message: e.errorMessage as string
+          message: e.errorMessage as string,
         });
         return;
       }
@@ -150,7 +153,7 @@ function InfoFields() {
       setPrompt({
         title: "서버 오류",
         content:
-          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요."
+          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요.",
       });
     }
   };
@@ -283,8 +286,8 @@ function InfoFields() {
               error={errors.pw?.message}
               formData={{
                 ...register("pw", {
-                  onChange: () => trigger("checkedPw")
-                })
+                  onChange: () => trigger("checkedPw"),
+                }),
               }}
               label={"비밀번호"}
               placeholder={
@@ -320,7 +323,7 @@ function InfoFields() {
                   await postConfirmVerificationCode({
                     type: "signUp",
                     phone,
-                    code: verificationCode
+                    code: verificationCode,
                   });
                   return true;
                 } catch (e) {

@@ -31,8 +31,8 @@ function DropdownWithCategories<T = string>({
   selectedValue,
   maximumConfig: { count, errorText } = {
     count: 20,
-    errorText: "키워드는 20개까지만 설정 가능해요"
-  }
+    errorText: "키워드는 20개까지만 설정 가능해요",
+  },
 }: DropdownSearchableProps<T>) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -176,7 +176,7 @@ function DropdownWithCategories<T = string>({
 
                     setSelectedValueList(prev => [
                       ...prev,
-                      { label: option, value }
+                      { label: option, value },
                     ]);
                   }}
                   pressed={isSelected}

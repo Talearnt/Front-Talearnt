@@ -2,7 +2,7 @@ import { getAPI } from "@shared/utils/apiMethods";
 
 import {
   matchingArticleListFilterType,
-  matchingArticleType
+  matchingArticleType,
 } from "@features/articles/matchingArticleList/matchingArticleList.type";
 import { paginationType } from "@shared/type/api.type";
 
@@ -12,5 +12,5 @@ export const getMatchingArticleList = ({
 }: Partial<matchingArticleListFilterType> & { size?: number }) =>
   getAPI<paginationType<matchingArticleType>>("v1/posts/exchanges", {
     size,
-    ...filter
+    ...filter,
   });

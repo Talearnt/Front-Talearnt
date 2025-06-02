@@ -20,7 +20,7 @@ import { signInBodyType } from "@features/auth/signIn/signIn.type";
 const signInSchema = object({
   userId: string().required("이메일을 입력해 주세요"),
   pw: string().required("비밀번호를 입력해 주세요"),
-  autoLogin: boolean().required()
+  autoLogin: boolean().required(),
 }).required();
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
@@ -36,9 +36,9 @@ function SignIn() {
     register,
     setError,
     trigger,
-    watch
+    watch,
   } = useForm({
-    resolver: yupResolver(signInSchema)
+    resolver: yupResolver(signInSchema),
   });
 
   const setAccessToken = useAuthStore(state => state.setAccessToken);
@@ -59,7 +59,7 @@ function SignIn() {
       }
 
       setError("pw", {
-        message: "예기치 못한 오류가 발생했습니다."
+        message: "예기치 못한 오류가 발생했습니다.",
       });
     }
   };
@@ -79,8 +79,8 @@ function SignIn() {
           error={errors.userId?.message}
           formData={{
             ...register("userId", {
-              onChange: () => !!pw && trigger("pw")
-            })
+              onChange: () => !!pw && trigger("pw"),
+            }),
           }}
           id={"id-input"}
           label={"아이디"}
@@ -91,8 +91,8 @@ function SignIn() {
           error={errors.pw?.message}
           formData={{
             ...register("pw", {
-              onChange: () => !!userId && trigger("userId")
-            })
+              onChange: () => !!userId && trigger("userId"),
+            }),
           }}
           id={"pw-input"}
           label={"비밀번호"}

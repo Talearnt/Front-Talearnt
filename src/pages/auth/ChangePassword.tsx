@@ -23,7 +23,10 @@ const changePasswordSchema = object({
     pwRegex,
     "영문, 숫자, 특수 문자를 포함한 8자 이상의 비밀번호를 입력해 주세요."
   ),
-  checkedPw: string().oneOf([yupRef("pw"), ""], "비밀번호가 일치하지 않습니다.")
+  checkedPw: string().oneOf(
+    [yupRef("pw"), ""],
+    "비밀번호가 일치하지 않습니다."
+  ),
 }).required();
 
 function ChangePassword() {
@@ -35,10 +38,10 @@ function ChangePassword() {
     register,
     setError,
     trigger,
-    watch
+    watch,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(changePasswordSchema)
+    resolver: yupResolver(changePasswordSchema),
   });
 
   const [canProceed, setCanProceed] = useState(false);
@@ -60,7 +63,7 @@ function ChangePassword() {
         checkedPw,
         no,
         pw,
-        uuid
+        uuid,
       });
 
       setCanProceed(true);
@@ -69,7 +72,7 @@ function ChangePassword() {
         message:
           checkObjectType(e) && "errorCode" in e
             ? (e.errorMessage as string)
-            : "예기치 못한 오류가 발생했습니다."
+            : "예기치 못한 오류가 발생했습니다.",
       });
     } finally {
       setIsLoading(false);
@@ -128,8 +131,8 @@ function ChangePassword() {
               error={errors.pw?.message}
               formData={{
                 ...register("pw", {
-                  onChange: () => trigger("checkedPw")
-                })
+                  onChange: () => trigger("checkedPw"),
+                }),
               }}
               label={"새 비밀번호"}
               placeholder={

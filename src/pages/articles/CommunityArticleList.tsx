@@ -27,10 +27,10 @@ function CommunityArticleList() {
     data: {
       data: {
         results,
-        pagination: { totalPages, totalCount }
-      }
+        pagination: { totalPages, totalCount },
+      },
     },
-    isLoading
+    isLoading,
   } = useGetCommunityArticleList();
 
   const { postType, page, setFilter } = useCommunityArticleListFilterStore(
@@ -38,14 +38,14 @@ function CommunityArticleList() {
       postType: state.postType,
       page: state.page,
       setFilter: state.setFilter,
-      resetFilters: state.resetFilters
+      resetFilters: state.resetFilters,
     }))
   );
   const { hasNewCommunityArticle, setHasNewCommunityArticle } =
     useHasNewCommunityArticleStore(
       useShallow(state => ({
         hasNewCommunityArticle: state.hasNewCommunityArticle,
-        setHasNewCommunityArticle: state.setHasNewCommunityArticle
+        setHasNewCommunityArticle: state.setHasNewCommunityArticle,
       }))
     );
 
@@ -92,12 +92,12 @@ function CommunityArticleList() {
         <DropdownLabeled<communityArticleListFilterType["postType"] | "">
           options={[
             { label: "전체", value: "" },
-            ...postTypeList.map(item => ({ label: item, value: item }))
+            ...postTypeList.map(item => ({ label: item, value: item })),
           ]}
           onSelectHandler={({ value }) =>
             setFilter(prev => ({
               ...prev,
-              postType: value === "" ? undefined : value
+              postType: value === "" ? undefined : value,
             }))
           }
           selectedValue={postType}
@@ -166,7 +166,7 @@ function CommunityArticleList() {
                 title,
                 postType,
                 count,
-                likeCount
+                likeCount,
               },
               index
             ) => (
