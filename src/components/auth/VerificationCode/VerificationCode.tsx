@@ -26,7 +26,7 @@ type sendCodeDataType = {
 type VerificationCodeProps = {
   confirmCodeHandler: ({
     phone,
-    verificationCode
+    verificationCode,
   }: {
     phone: string;
     verificationCode: string;
@@ -35,7 +35,7 @@ type VerificationCodeProps = {
   sendCodeHandler: (phone: string) => Promise<void>;
   verificationState: [
     verificationStateType,
-    Dispatch<SetStateAction<verificationStateType>>
+    Dispatch<SetStateAction<verificationStateType>>,
   ];
 };
 
@@ -47,7 +47,7 @@ const verificationCodeSchema = object({
   verificationCode: string().matches(
     /^[0-9]*$/,
     "올바른 인증번호 형식이 아닙니다. 숫자만 입력해 주세요."
-  )
+  ),
 }).required();
 
 const isDateOver10MinutesOld = (date?: Date) =>
@@ -57,7 +57,7 @@ function VerificationCode({
   confirmCodeHandler,
   isSendButtonDisabled,
   sendCodeHandler,
-  verificationState
+  verificationState,
 }: VerificationCodeProps) {
   const {
     clearErrors,
@@ -66,10 +66,10 @@ function VerificationCode({
     setError,
     setFocus,
     setValue,
-    watch
+    watch,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(verificationCodeSchema)
+    resolver: yupResolver(verificationCodeSchema),
   });
 
   const { isFinished, isRunning, time, startTimer, stopTimer } =
@@ -89,7 +89,7 @@ function VerificationCode({
       if (data === null) {
         return {
           sendCount: 0,
-          sendTime: undefined
+          sendTime: undefined,
         };
       }
 
@@ -98,13 +98,13 @@ function VerificationCode({
       if (isDateOver10MinutesOld(sendTime)) {
         return {
           sendCount: 0,
-          sendTime: undefined
+          sendTime: undefined,
         };
       }
 
       return {
         sendCount,
-        sendTime
+        sendTime,
       };
     }
   );
@@ -129,12 +129,12 @@ function VerificationCode({
       setPrompt({
         title: "1분 내에  인증번호 5회 초과",
         content:
-          "1분 내에 5회 연속 인증에 실패하였습니다. 10분 후 다시 시도해 주세요."
+          "1분 내에 5회 연속 인증에 실패하였습니다. 10분 후 다시 시도해 주세요.",
       });
 
       saveSendCodeData({
         sendCount: sendCount + 1,
-        sendTime: new Date()
+        sendTime: new Date(),
       });
       return;
     }
@@ -144,7 +144,7 @@ function VerificationCode({
       if (sendTime === undefined || isDateOver10MinutesOld(sendTime)) {
         saveSendCodeData({
           sendCount: 1,
-          sendTime: new Date()
+          sendTime: new Date(),
         });
       } else {
         saveSendCodeData({ sendCount: sendCount + 1, sendTime });
@@ -156,7 +156,7 @@ function VerificationCode({
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
         setError("phone", {
-          message: e.errorMessage as string
+          message: e.errorMessage as string,
         });
         return;
       }
@@ -164,7 +164,7 @@ function VerificationCode({
       setPrompt({
         title: "서버 오류",
         content:
-          "알 수 없는 이유로 인증번호 요청에 실패하였습니다.\n다시 시도해 주세요."
+          "알 수 없는 이유로 인증번호 요청에 실패하였습니다.\n다시 시도해 주세요.",
       });
     } finally {
       setIsLoading(undefined);
@@ -197,7 +197,7 @@ function VerificationCode({
 
     // 그 외 다양한 경우
     setError("verificationCode", {
-      message: data
+      message: data,
     });
     setIsLoading(undefined);
   };
@@ -210,7 +210,7 @@ function VerificationCode({
       // 타이머 초과된 경우 에러 표시
       setError("verificationCode", {
         message:
-          "인증번호 입력 시간이 초과되었습니다. 인증번호를 재요청해 주세요"
+          "인증번호 입력 시간이 초과되었습니다. 인증번호를 재요청해 주세요",
       });
     }
   }, [clearErrors, isFinished, setError]);
@@ -225,7 +225,7 @@ function VerificationCode({
       // 5회 연속 실패한 경우
       stopTimer();
       setError("verificationCode", {
-        message: "5회 연속 인증에  실패하였습니다. 인증번호를 재요청해 주세요."
+        message: "5회 연속 인증에  실패하였습니다. 인증번호를 재요청해 주세요.",
       });
       setValue("verificationCode", "");
       return;
@@ -234,7 +234,7 @@ function VerificationCode({
     if (verificationAttempts > 0) {
       // 실패한 횟수 보여주기
       setError("verificationCode", {
-        message: `인증번호가 일치하지 않습니다(${verificationAttempts % 5}/5)`
+        message: `인증번호가 일치하지 않습니다(${verificationAttempts % 5}/5)`,
       });
       return;
     }

@@ -25,7 +25,7 @@ function MatchingArticleCard({
   receiveTalents,
   createdAt,
   favoriteCount,
-  onClickHandler
+  onClickHandler,
 }: matchingArticleType & { className?: string; onClickHandler?: () => void }) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ function MatchingArticleCard({
         });
       },
       {
-        threshold: 0.1
+        threshold: 0.1,
       }
     );
 

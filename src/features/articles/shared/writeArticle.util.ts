@@ -19,7 +19,7 @@ export const compressImageFile = (file: File): Promise<imageFileType> =>
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
-        url: fileUrl
+        url: fileUrl,
       });
     }
 
@@ -83,7 +83,7 @@ export const compressImageFile = (file: File): Promise<imageFileType> =>
               }
 
               const newFile = new File([newImageBlob], name, {
-                type
+                type,
               });
 
               if (newFile.size <= MAX_FILE_SIZE) {
@@ -95,7 +95,7 @@ export const compressImageFile = (file: File): Promise<imageFileType> =>
                   fileName: newFile.name,
                   fileType: newFile.type,
                   fileSize: newFile.size,
-                  url: fileUrl
+                  url: fileUrl,
                 });
               } else if (quality > 0.1) {
                 // 파일 크기가 3MB 초과면 품질을 낮추고 다시 시도
@@ -156,7 +156,7 @@ export const uploadImageToPresignedURL = async (
       filteredImageFileList.map(({ fileName, fileType, fileSize }) => ({
         fileName,
         fileSize,
-        fileType
+        fileType,
       }))
     );
 
@@ -181,8 +181,8 @@ export const uploadImageToPresignedURL = async (
         method: "PUT",
         body: filteredImageFileList[presignedURLIndex].file,
         headers: new Headers({
-          "Content-Type": filteredImageFileList[presignedURLIndex].fileType
-        })
+          "Content-Type": filteredImageFileList[presignedURLIndex].fileType,
+        }),
       });
 
       const { origin, pathname } = new URL(presignedURL);

@@ -21,12 +21,12 @@ const tabSliderVariants = cva(
           "px-[15px] py-[7px] rounded-full border border-transparent",
           "text-body1_18_medium text-talearnt_Text_04",
           "has-[:checked]:text-talearnt_Primary_01 has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-shadow_02"
-        )
-      }
+        ),
+      },
     },
     defaultVariants: {
-      type: "default"
-    }
+      type: "default",
+    },
   }
 );
 
@@ -41,7 +41,7 @@ type TabSliderProps = VariantProps<typeof tabSliderVariants> & {
 const defaultStyle = ({
   disabled,
   index,
-  maxLength
+  maxLength,
 }: {
   disabled?: boolean;
   index: number;
@@ -60,7 +60,7 @@ function TabSlider({
   disabled,
   onClickHandler,
   options,
-  type
+  type,
 }: TabSliderProps) {
   return (
     <div

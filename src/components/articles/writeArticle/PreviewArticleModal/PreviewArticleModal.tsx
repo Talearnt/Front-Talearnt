@@ -48,8 +48,8 @@ function PreviewArticleModal({
 
   const {
     data: {
-      data: { nickname, profileImg }
-    }
+      data: { nickname, profileImg },
+    },
   } = useGetProfile();
 
   return (

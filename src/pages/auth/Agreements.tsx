@@ -17,14 +17,14 @@ function Agreements() {
     isAllAgreementsAgreed,
     isRequiredAgreementsAgreed,
     setAllAgreement,
-    setAgreement
+    setAgreement,
   } = useAgreementStore(
     useShallow(state => ({
       agreements: state.agreements,
       isAllAgreementsAgreed: state.isAllAgreementsAgreed,
       isRequiredAgreementsAgreed: state.isRequiredAgreementsAgreed,
       setAllAgreement: state.setAllAgreement,
-      setAgreement: state.setAgreement
+      setAgreement: state.setAgreement,
     }))
   );
 

@@ -8,7 +8,7 @@ import { filteredTalents } from "@shared/utils/filteredTalents";
 
 import {
   useDeleteMatchingArticle,
-  useGetMatchingArticleDetail
+  useGetMatchingArticleDetail,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -28,8 +28,8 @@ function MatchingArticleDetail() {
 
   const {
     data: {
-      data: { userNo: profileUserNo }
-    }
+      data: { userNo: profileUserNo },
+    },
   } = useGetProfile();
   const {
     data: {
@@ -49,12 +49,12 @@ function MatchingArticleDetail() {
         favoriteCount,
         isFavorite,
         imageUrls,
-        count
-      }
+        count,
+      },
     },
     error,
     isError,
-    isLoading
+    isLoading,
   } = useGetMatchingArticleDetail();
   const { mutate } = useDeleteMatchingArticle();
 
@@ -85,7 +85,7 @@ function MatchingArticleDetail() {
         ({ talentCode }) => talentCode
       ),
       duration,
-      exchangeType
+      exchangeType,
     });
 
     navigator("/write-article/matching");
@@ -96,7 +96,7 @@ function MatchingArticleDetail() {
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
       cancelOnClickHandler: () => setPrompt(),
-      confirmOnClickHandler: () => mutate(exchangePostNo)
+      confirmOnClickHandler: () => mutate(exchangePostNo),
     });
 
   useEffect(() => {

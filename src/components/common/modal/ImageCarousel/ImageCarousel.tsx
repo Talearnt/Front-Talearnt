@@ -17,7 +17,7 @@ function ImageCarousel({
   title,
   imageUrls,
   clickedIndex,
-  onCloseHandler
+  onCloseHandler,
 }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(clickedIndex);
 

@@ -9,7 +9,7 @@ test("should allow users to login with valid credentials", async () => {
   const { status } = await postSignIn({
     userId: "test@test.com",
     pw: "test",
-    autoLogin: false
+    autoLogin: false,
   });
 
   expect(status).toBe(200);
@@ -20,7 +20,7 @@ test("should not allow users to login with invalid credentials", async () => {
     await postSignIn({
       userId: "invalid_user",
       pw: "invalid_password",
-      autoLogin: false
+      autoLogin: false,
     });
   } catch (e) {
     const { status } = e as customAxiosResponseType<null>;

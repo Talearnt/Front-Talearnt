@@ -11,7 +11,7 @@ type tabType = "event" | "notice";
 
 const tabs: { id: tabType; label: string }[] = [
   { id: "event", label: "이벤트" },
-  { id: "notice", label: "공지사항" }
+  { id: "notice", label: "공지사항" },
 ];
 
 function NoticeEventTabSection() {

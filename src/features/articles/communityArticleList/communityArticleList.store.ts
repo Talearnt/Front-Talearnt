@@ -19,6 +19,6 @@ export const useCommunityArticleListFilterStore =
     resetFilters: () =>
       set({
         postType: undefined,
-        page: 1
-      })
+        page: 1,
+      }),
   }));

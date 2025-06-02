@@ -8,7 +8,7 @@ import { object, string } from "yup";
 
 import {
   postConfirmVerificationCode,
-  postSendVerificationCode
+  postSendVerificationCode,
 } from "@features/auth/shared/verificationCode.api";
 
 import { checkObjectType } from "@shared/utils/checkObjectType";
@@ -28,28 +28,28 @@ const findIdSchema = object({
   name: string().matches(
     nameRegex,
     "이름은 최소 2글자에서 최대 5글자까지, 한글만 입력 가능합니다."
-  )
+  ),
 }).required();
 
 function FindId() {
   const navigator = useNavigate();
   const idData = useRef<findIdResponseType>({
     userId: "",
-    createdAt: ""
+    createdAt: "",
   });
 
   const {
     formState: { errors },
     register,
-    watch
+    watch,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(findIdSchema)
+    resolver: yupResolver(findIdSchema),
   });
 
   const [canProceed, setCanProceed] = useState(false);
   const [verification, setVerification] = useState<verificationStateType>({
-    isCodeVerified: false
+    isCodeVerified: false,
   });
 
   const [name] = watch(["name"]);
@@ -57,7 +57,7 @@ function FindId() {
 
   const handleConfirmCode = async ({
     phone,
-    verificationCode
+    verificationCode,
   }: {
     phone: string;
     verificationCode: string;
@@ -66,7 +66,7 @@ function FindId() {
       const { data } = await postConfirmVerificationCode({
         type: "findId",
         phone,
-        code: verificationCode
+        code: verificationCode,
       });
 
       idData.current = data as findIdResponseType;

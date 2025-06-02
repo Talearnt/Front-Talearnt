@@ -21,7 +21,7 @@ function DropdownLabeled<T = string>({
   label,
   options,
   onSelectHandler,
-  selectedValue
+  selectedValue,
 }: DropdownSearchableProps<T>) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -90,7 +90,7 @@ function DropdownLabeled<T = string>({
               onChangeHandler={({ target }) =>
                 onSelectHandler({
                   checked: target.checked,
-                  value
+                  value,
                 })
               }
               label={label}
@@ -107,7 +107,7 @@ function DropdownLabeled<T = string>({
 
                 onSelectHandler({
                   checked: true,
-                  value
+                  value,
                 });
                 checkboxRef.current.checked = false;
               }}

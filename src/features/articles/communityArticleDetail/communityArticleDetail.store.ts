@@ -8,7 +8,7 @@ type communityArticleCommentPageStoreType = {
 export const useCommunityArticleCommentPageStore =
   create<communityArticleCommentPageStoreType>(set => ({
     page: 0,
-    setPage: page => set({ page })
+    setPage: page => set({ page }),
   }));
 
 type communityArticleCommentDeletedAtStoreType = {
@@ -19,5 +19,5 @@ type communityArticleCommentDeletedAtStoreType = {
 export const useCommunityArticleCommentDeletedAtStore =
   create<communityArticleCommentDeletedAtStoreType>(set => ({
     deletedAt: undefined,
-    setDeletedAt: deletedAt => set({ deletedAt })
+    setDeletedAt: deletedAt => set({ deletedAt }),
   }));

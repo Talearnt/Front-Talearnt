@@ -19,12 +19,12 @@ const inputVariants = cva(
     variants: {
       size: {
         small: "h-[50px] pl-[15px] rounded-lg text-body2_16_medium",
-        large: "h-[60px] pl-[23px] rounded-xl text-heading4_20_semibold"
-      }
+        large: "h-[60px] pl-[23px] rounded-xl text-heading4_20_semibold",
+      },
     },
     defaultVariants: {
-      size: "small"
-    }
+      size: "small",
+    },
   }
 );
 

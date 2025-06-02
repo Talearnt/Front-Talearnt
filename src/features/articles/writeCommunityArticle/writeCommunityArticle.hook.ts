@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 import {
   postCommunityArticle,
-  putEditCommunityArticle
+  putEditCommunityArticle,
 } from "@features/articles/writeCommunityArticle/writeCommunityArticle.api";
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
@@ -15,7 +15,7 @@ import { useGetProfile } from "@features/user/user.hook";
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 import {
   useEditCommunityArticleDataStore,
-  useHasNewCommunityArticleStore
+  useHasNewCommunityArticleStore,
 } from "@features/articles/shared/articles.store";
 
 import { queryKeys } from "@shared/constants/queryKeys.constants";
@@ -34,8 +34,8 @@ export const usePostCommunityArticle = () => {
 
   const {
     data: {
-      data: { profileImg, nickname, userNo }
-    }
+      data: { profileImg, nickname, userNo },
+    },
   } = useGetProfile();
 
   const resetFilters = useCommunityArticleListFilterStore(
@@ -56,7 +56,7 @@ export const usePostCommunityArticle = () => {
     onMutate: () => {
       // 모든 커뮤니티 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true })
+        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true }),
       });
       // 필터 초기화
       resetFilters();
@@ -68,8 +68,8 @@ export const usePostCommunityArticle = () => {
         queryFn: async () =>
           await getCommunityArticleList({
             postType: undefined,
-            page: 1
-          })
+            page: 1,
+          }),
       });
 
       // 게시물 상세 페이지 저장
@@ -90,16 +90,16 @@ export const usePostCommunityArticle = () => {
           profileImg,
           title,
           updatedAt: "",
-          userNo
+          userNo,
         },
         errorCode: null,
         errorMessage: null,
         success: true,
-        status: 200
+        status: 200,
       });
       setHasNewCommunityArticle(true);
       navigator("/community");
-    }
+    },
   });
 };
 
@@ -124,15 +124,15 @@ export const usePutEditCommunityArticle = () => {
           customAxiosResponseType<paginationType<communityArticleType>>
         >({
           queryKey: createQueryKey([queryKeys.COMMUNITY], {
-            isList: true
-          })
+            isList: true,
+          }),
         })
         .reverse();
       const commonCommunityArticleData = {
         title,
         content,
         imageUrls,
-        postType
+        postType,
       };
 
       if (queries.length > 0) {
@@ -152,8 +152,8 @@ export const usePutEditCommunityArticle = () => {
                 article.communityPostNo === communityPostNo
                   ? { ...article, ...commonCommunityArticleData }
                   : article
-              )
-            }
+              ),
+            },
           };
         });
       }
@@ -170,12 +170,12 @@ export const usePutEditCommunityArticle = () => {
           ...oldData,
           data: {
             ...oldData.data,
-            ...commonCommunityArticleData
-          }
+            ...commonCommunityArticleData,
+          },
         };
       });
       setEditCommunityArticle(null);
       navigator(-1);
-    }
+    },
   });
 };

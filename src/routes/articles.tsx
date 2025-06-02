@@ -29,7 +29,7 @@ const articlesRouter: RouteObject[] = [
         <MatchingArticleList />
       </Suspense>
     ),
-    path: "matching"
+    path: "matching",
   },
   {
     element: (
@@ -37,7 +37,7 @@ const articlesRouter: RouteObject[] = [
         <MatchingArticleDetail />
       </Suspense>
     ),
-    path: "matching-article/:exchangePostNo"
+    path: "matching-article/:exchangePostNo",
   },
   {
     element: (
@@ -45,7 +45,7 @@ const articlesRouter: RouteObject[] = [
         <CommunityArticleList />
       </Suspense>
     ),
-    path: "community"
+    path: "community",
   },
   {
     element: (
@@ -53,7 +53,7 @@ const articlesRouter: RouteObject[] = [
         <CommunityArticleDetail />
       </Suspense>
     ),
-    path: "community-article/:communityPostNo"
+    path: "community-article/:communityPostNo",
   },
   {
     element: (
@@ -64,9 +64,9 @@ const articlesRouter: RouteObject[] = [
     path: "write-article",
     children: [
       { element: <WriteMatchingArticle />, path: "matching" },
-      { element: <WriteCommunityArticle />, path: "community" }
-    ]
-  }
+      { element: <WriteCommunityArticle />, path: "community" },
+    ],
+  },
 ];
 
 export default articlesRouter;

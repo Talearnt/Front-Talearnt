@@ -19,12 +19,12 @@ const router = createBrowserRouter([
             <MainPage />
           </Suspense>
         ),
-        index: true
+        index: true,
       },
       ...authRouter,
-      ...articlesRouter
-    ]
-  }
+      ...articlesRouter,
+    ],
+  },
 ]);
 
 export default router;

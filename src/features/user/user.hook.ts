@@ -17,14 +17,14 @@ export const useGetProfile = (enabled = true) => {
       nickname: "",
       profileImg: null,
       receiveTalents: [],
-      userNo: 0
+      userNo: 0,
     },
     {
       queryKey: createQueryKey([queryKeys.USER, "profile"], {
-        isLoggedIn: true
+        isLoggedIn: true,
       }),
       queryFn: async () => await getProfile(),
-      enabled: enabled && isLoggedIn
+      enabled: enabled && isLoggedIn,
     }
   );
 };

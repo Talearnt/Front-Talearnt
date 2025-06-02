@@ -5,7 +5,7 @@ export default {
     "rotate-0",
     "rotate-180",
     "-rotate-90",
-    "box-content"
+    "box-content",
   ],
   theme: {
     extend: {
@@ -46,24 +46,24 @@ export default {
         talearnt_Icon_04: "#DEE1E3",
         talearnt_On_Icon: "#FFFFFF",
         talearnt_Line_01: "#D0D5D8",
-        talearnt_Line_02: "#ECEEEF"
+        talearnt_Line_02: "#ECEEEF",
       },
       fontSize: {
         heading1_30_semibold: [
           "30px",
-          { lineHeight: "1.3", fontWeight: "600" }
+          { lineHeight: "1.3", fontWeight: "600" },
         ],
         heading2_24_semibold: [
           "24px",
-          { lineHeight: "1.3", fontWeight: "600" }
+          { lineHeight: "1.3", fontWeight: "600" },
         ],
         heading3_22_semibold: [
           "22px",
-          { lineHeight: "1.3", fontWeight: "600" }
+          { lineHeight: "1.3", fontWeight: "600" },
         ],
         heading4_20_semibold: [
           "20px",
-          { lineHeight: "1.3", fontWeight: "600" }
+          { lineHeight: "1.3", fontWeight: "600" },
         ],
         body1_18_semibold: ["18px", { lineHeight: "1.3", fontWeight: "600" }],
         body1_18_medium: ["18px", { lineHeight: "1.3", fontWeight: "500" }],
@@ -74,14 +74,14 @@ export default {
         caption1_14_medium: ["14px", { lineHeight: "1.3", fontWeight: "500" }],
         caption2_12_semibold: [
           "12px",
-          { lineHeight: "1.3", fontWeight: "600" }
+          { lineHeight: "1.3", fontWeight: "600" },
         ],
         caption2_12_medium: ["12px", { lineHeight: "1.3", fontWeight: "500" }],
-        label1_10_semibold: ["10px", { lineHeight: "1.3", fontWeight: "600" }]
+        label1_10_semibold: ["10px", { lineHeight: "1.3", fontWeight: "600" }],
       },
       boxShadow: {
         shadow_02: "0 0 20px 0 rgba(0, 0, 0, 0.08)",
-        shadow_03: "0 0 24px 0 rgba(0, 0, 0, 0.12)"
+        shadow_03: "0 0 24px 0 rgba(0, 0, 0, 0.12)",
       },
       animation: {
         spinner_spin: "spinner_spin 0.8s linear infinite",
@@ -93,74 +93,74 @@ export default {
         new_matching_article_reveal:
           "depth_drop 0.5s ease-out forwards, matching_article_border_flash 0.5s ease-in-out 0.5s forwards",
         new_community_article_slide:
-          "new_community_article_slide 0.5s ease-out forwards, community_article_border_flash 0.5s ease-in-out 0.5s forwards"
+          "new_community_article_slide 0.5s ease-out forwards, community_article_border_flash 0.5s ease-in-out 0.5s forwards",
       },
       keyframes: {
         spinner_spin: {
           from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(-360deg)" }
+          to: { transform: "rotate(-360deg)" },
         },
         fade_in: {
           "0%": { opacity: "0" },
-          "100%": { opacity: "1" }
+          "100%": { opacity: "1" },
         },
         fade_out: {
           "0%": { opacity: "1" },
-          "100%": { opacity: "0" }
+          "100%": { opacity: "0" },
         },
         mako_sad: {
           "0%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(15px)" },
-          "100%": { transform: "translateY(30px)" }
+          "100%": { transform: "translateY(30px)" },
         },
         new_matching_article_slide: {
           "0%": {
-            transform: "translateX(-325px)"
+            transform: "translateX(-325px)",
           },
           "100%": {
-            transform: "translateX(0)"
-          }
+            transform: "translateX(0)",
+          },
         },
         depth_drop: {
           "0%": {
-            transform: "scale(2)"
+            transform: "scale(2)",
           },
           "100%": {
-            transform: "scale(1)"
-          }
+            transform: "scale(1)",
+          },
         },
         matching_article_border_flash: {
           "0%": {
-            borderColor: "#D0D5D8"
+            borderColor: "#D0D5D8",
           },
           "50%": {
-            borderColor: "#1B76FF"
+            borderColor: "#1B76FF",
           },
           "100%": {
-            borderColor: "#D0D5D8"
-          }
+            borderColor: "#D0D5D8",
+          },
         },
         new_community_article_slide: {
           "0%": {
-            transform: "translateY(-60px)"
+            transform: "translateY(-60px)",
           },
           "100%": {
-            transform: "translateY(0)"
-          }
+            transform: "translateY(0)",
+          },
         },
         community_article_border_flash: {
           "0%": {
-            borderColor: "transparent"
+            borderColor: "transparent",
           },
           "50%": {
-            borderColor: "#1B76FF"
+            borderColor: "#1B76FF",
           },
           "100%": {
-            borderColor: "transparent"
-          }
-        }
-      }
-    }
+            borderColor: "transparent",
+          },
+        },
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };

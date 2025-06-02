@@ -4,7 +4,7 @@ import { create } from "zustand/react";
 
 import {
   talentsDataType,
-  talentsType
+  talentsType,
 } from "@features/talentsSettingModal/talentsSettingModal.type";
 
 type talentsSettingModalStoreType = {
@@ -29,7 +29,7 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
     setCurrentTalentsType: type => set(() => ({ currentTalentsType: type })),
     talentsData: {
       giveTalents: [],
-      receiveTalents: []
+      receiveTalents: [],
     },
     setTalentsData: ({ type, talentCode }) =>
       set(({ currentTalentsType, talentsData }) => {
@@ -39,9 +39,9 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
               ...talentsData,
               [currentTalentsType]: [
                 ...talentsData[currentTalentsType],
-                talentCode
-              ]
-            }
+                talentCode,
+              ],
+            },
           };
         } else {
           return {
@@ -49,8 +49,8 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
               ...talentsData,
               [currentTalentsType]: talentsData[currentTalentsType].filter(
                 selectedCode => talentCode !== selectedCode
-              )
-            }
+              ),
+            },
           };
         }
       }),
@@ -59,9 +59,9 @@ export const useTalentsSettingModalStore = create<talentsSettingModalStoreType>(
       set(() => ({
         status,
         isLoading: status === "loading",
-        isSuccess: status === "success"
+        isSuccess: status === "success",
       })),
     isLoading: false,
-    isSuccess: false
+    isSuccess: false,
   })
 );

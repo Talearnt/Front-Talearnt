@@ -21,16 +21,16 @@ import { Toast } from "@components/layout/Toast/Toast";
 const linkArray = [
   {
     path: "matching",
-    content: "매칭"
+    content: "매칭",
   },
   {
     path: "community",
-    content: "커뮤니티"
+    content: "커뮤니티",
   },
   {
     path: "sign-up/agreements",
-    content: "회원가입"
-  }
+    content: "회원가입",
+  },
 ];
 
 function MainLayout() {
@@ -39,16 +39,16 @@ function MainLayout() {
 
   const {
     data: {
-      data: { giveTalents }
+      data: { giveTalents },
     },
-    isSuccess
+    isSuccess,
   } = useGetProfile();
 
   const { accessToken, setAccessToken, isLoggedIn } = useAuthStore(
     useShallow(state => ({
       accessToken: state.accessToken,
       setAccessToken: state.setAccessToken,
-      isLoggedIn: state.isLoggedIn
+      isLoggedIn: state.isLoggedIn,
     }))
   );
 
@@ -56,7 +56,7 @@ function MainLayout() {
   const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
 
   const toggleTopButtonOnScroll = ({
-    currentTarget: { scrollTop }
+    currentTarget: { scrollTop },
   }: UIEvent<HTMLDivElement>) => setIsTopButtonVisible(scrollTop > 150);
   const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 

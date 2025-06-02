@@ -4,7 +4,7 @@ import { useAuthStore } from "@store/user.store";
 
 import {
   customAxiosResponseType,
-  responseDataType
+  responseDataType,
 } from "@shared/type/api.type";
 
 import { checkObjectType } from "./checkObjectType";
@@ -14,8 +14,8 @@ const baseURL = "https://api.talearnt.net/";
 const instance = Axios.create({
   baseURL,
   headers: {
-    Accept: "application/json"
-  }
+    Accept: "application/json",
+  },
 });
 
 instance.interceptors.request.use(

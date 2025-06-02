@@ -41,14 +41,14 @@ function TalentsSettingModalBody() {
     currentTalentsType,
     talentsData,
     isSuccess,
-    setTalentsData
+    setTalentsData,
   } = useTalentsSettingModalStore(
     useShallow(state => ({
       scrollRef: state.scrollRef,
       currentTalentsType: state.currentTalentsType,
       talentsData: state.talentsData,
       isSuccess: state.isSuccess,
-      setTalentsData: state.setTalentsData
+      setTalentsData: state.setTalentsData,
     }))
   );
   const setToast = useToastStore(state => state.setToast);
@@ -87,7 +87,7 @@ function TalentsSettingModalBody() {
 
     setToast({
       message: "재능 키워드는 5개까지만 선택 가능해요",
-      type: "error"
+      type: "error",
     });
 
     return true;
@@ -95,7 +95,7 @@ function TalentsSettingModalBody() {
   // 키보드로 재능을 선택
   const handleKeyDown = ({
     key,
-    nativeEvent
+    nativeEvent,
   }: React.KeyboardEvent<HTMLInputElement>) => {
     if (nativeEvent.isComposing || !search) {
       // 아직 글자가 조합중인 상태라면 return (한글 이슈)
@@ -111,7 +111,7 @@ function TalentsSettingModalBody() {
 
       setTalentsData({
         type: "add",
-        talentCode
+        talentCode,
       });
       reset();
 
@@ -152,7 +152,7 @@ function TalentsSettingModalBody() {
           if (!entry.isIntersecting) {
             selectedTalentRef.current.scrollIntoView({
               block:
-                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined
+                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined,
             });
           }
         });
@@ -160,7 +160,7 @@ function TalentsSettingModalBody() {
       {
         root: null,
         rootMargin: "0px",
-        threshold: 1
+        threshold: 1,
       }
     );
 
@@ -249,7 +249,7 @@ function TalentsSettingModalBody() {
                     title={categoryName}
                     options={talents.map(({ talentCode, talentName }) => ({
                       label: talentName,
-                      value: talentCode
+                      value: talentCode,
                     }))}
                     onSelectHandler={({ checked, value }) => {
                       if (checked) {
@@ -260,7 +260,7 @@ function TalentsSettingModalBody() {
 
                       setTalentsData({
                         type: checked ? "add" : "remove",
-                        talentCode: value
+                        talentCode: value,
                       });
                     }}
                     selectedValueArray={talentsData[currentTalentsType]}
@@ -286,7 +286,7 @@ function TalentsSettingModalBody() {
 
                     setTalentsData({
                       type: "add",
-                      talentCode
+                      talentCode,
                     });
                     reset();
                   }}
@@ -310,7 +310,7 @@ function TalentsSettingModalBody() {
                   onCloseHandler={() =>
                     setTalentsData({
                       type: "remove",
-                      talentCode
+                      talentCode,
                     })
                   }
                   type={"keyword"}

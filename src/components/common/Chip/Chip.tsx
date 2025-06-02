@@ -17,12 +17,12 @@ const chipVariants = cva(
           "gap-1",
           "rounded-md px-2 py-[6px] bg-talearnt_BG_Up_02 border-none cursor-default",
           "text-body3_14_medium text-talearnt_Text_02"
-        )
-      }
+        ),
+      },
     },
     defaultVariants: {
-      type: "default-small"
-    }
+      type: "default-small",
+    },
   }
 );
 
@@ -38,7 +38,7 @@ function Chip({
   onClickHandler,
   onCloseHandler,
   pressed,
-  type
+  type,
 }: ChipProps) {
   return (
     <div

@@ -3,96 +3,96 @@
 @import "tailwindcss/utilities";
 
 @layer base {
-    * {
-        letter-spacing: -0.02em;
-        font-family: 'Pretendard', sans-serif;
-        ::-webkit-scrollbar {
-            display: none;
-        }
+  * {
+    letter-spacing: -0.02em;
+    font-family: "Pretendard", sans-serif;
+    ::-webkit-scrollbar {
+      display: none;
     }
+  }
 
-    main > * {
-        margin: 0 auto;
-    }
+  main > * {
+    margin: 0 auto;
+  }
 }
 
 @layer components {
-    .separator {
-        @apply flex basis-full items-center text-talearnt_Text_04 text-sm;
+  .separator {
+    @apply flex basis-full items-center text-sm text-talearnt_Text_04;
 
-        &::before {
-            content: "";
-            @apply flex-grow bg-talearnt_Line_01 h-px mr-6;
-        }
-
-        &::after {
-            content: "";
-            @apply flex-grow bg-talearnt_Line_01 h-px ml-6;
-        }
+    &::before {
+      content: "";
+      @apply mr-6 h-px flex-grow bg-talearnt_Line_01;
     }
 
-    .scrollbar {
-        &::-webkit-scrollbar {
-            @apply block;
-        }
+    &::after {
+      content: "";
+      @apply ml-6 h-px flex-grow bg-talearnt_Line_01;
+    }
+  }
 
-        &::-webkit-scrollbar-thumb {
-            @apply rounded-full bg-clip-padding bg-talearnt_Icon_04;
-        }
-
-        &::-webkit-scrollbar-track {
-            @apply bg-transparent;
-        }
+  .scrollbar {
+    &::-webkit-scrollbar {
+      @apply block;
     }
 
-    .scrollbar-w10-5 {
-        &::-webkit-scrollbar {
-            @apply w-[20px];
-        }
-
-        &::-webkit-scrollbar-thumb {
-            border: 5px solid transparent;
-        }
+    &::-webkit-scrollbar-thumb {
+      @apply rounded-full bg-talearnt_Icon_04 bg-clip-padding;
     }
 
-    .scrollbar-w10-8 {
-        &::-webkit-scrollbar {
-            @apply w-[26px];
-        }
+    &::-webkit-scrollbar-track {
+      @apply bg-transparent;
+    }
+  }
 
-        &::-webkit-scrollbar-thumb {
-            border: 8px solid transparent;
-        }
+  .scrollbar-w10-5 {
+    &::-webkit-scrollbar {
+      @apply w-[20px];
     }
 
-    .scrollbar-w12-10 {
-        &::-webkit-scrollbar {
-            @apply w-8;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            border: 10px solid transparent;
-        }
+    &::-webkit-scrollbar-thumb {
+      border: 5px solid transparent;
     }
+  }
+
+  .scrollbar-w10-8 {
+    &::-webkit-scrollbar {
+      @apply w-[26px];
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 8px solid transparent;
+    }
+  }
+
+  .scrollbar-w12-10 {
+    &::-webkit-scrollbar {
+      @apply w-8;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border: 10px solid transparent;
+    }
+  }
 }
 
 .ql-align-center {
-    text-align: center;
+  text-align: center;
 }
 
 .ql-align-right {
-    text-align: right;
+  text-align: right;
 }
 
 .slide-talents {
-    transition: transform 2s linear;
+  transition: transform 2s linear;
 }
 
 .slide-talents:hover {
-    transform: translateX(var(--dynamic-translate-x));
+  transform: translateX(var(--dynamic-translate-x));
 }
 
 .horizontal > * {
-    flex-shrink: 0;
-    user-select: none;
+  flex-shrink: 0;
+  user-select: none;
 }

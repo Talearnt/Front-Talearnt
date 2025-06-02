@@ -17,7 +17,7 @@ function NoticeCard({
   title,
   content,
   createdAt,
-  pageType = "main"
+  pageType = "main",
 }: NoticeCardProps) {
   return (
     <div

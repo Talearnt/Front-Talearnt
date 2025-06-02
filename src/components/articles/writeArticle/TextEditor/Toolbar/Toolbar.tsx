@@ -18,7 +18,7 @@ import {
   iconsOptions,
   quillIconsType,
   sizeOptions,
-  updatePickerItemColors
+  updatePickerItemColors,
 } from "@components/articles/writeArticle/TextEditor/Toolbar/toolbar.constants";
 
 import "./Toolbar.css";

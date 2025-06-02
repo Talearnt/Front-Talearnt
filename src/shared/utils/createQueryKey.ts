@@ -4,5 +4,5 @@ export const createQueryKey = (
 ) => [
   isLoggedIn ? "AFTER_LOGIN" : "BEFORE_LOGIN",
   ...(isList ? ["LIST"] : []),
-  ...key
+  ...key,
 ];

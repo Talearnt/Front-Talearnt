@@ -1,7 +1,7 @@
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import {
   commonArticleDataType,
-  postType
+  postType,
 } from "@features/articles/shared/articles.type";
 import { imageFileType } from "@features/articles/shared/writeArticle.type";
 

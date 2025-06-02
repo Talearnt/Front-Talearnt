@@ -26,13 +26,13 @@ export const useToastStore = create<toastStoreType>(set => ({
         set(({ toastList }) => ({
           toastList: toastList.map(toast =>
             toast.id === id ? { ...toast, isRemoving: true } : toast
-          )
+          ),
         }));
 
         setTimeout(() => {
           // 0.5초 후 토스트 제거
           set(state => ({
-            toastList: state.toastList.slice(0, -1)
+            toastList: state.toastList.slice(0, -1),
           }));
         }, 500);
       }, 1500);
@@ -41,8 +41,8 @@ export const useToastStore = create<toastStoreType>(set => ({
       return {
         toastList: [
           { id, isRemoving: false, message, type: type ?? "success" },
-          ...toastList
-        ]
+          ...toastList,
+        ],
       };
-    })
+    }),
 }));

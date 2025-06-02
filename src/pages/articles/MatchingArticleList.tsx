@@ -21,12 +21,12 @@ import { Pagination } from "@components/common/Pagination/Pagination";
 import {
   durationOptions,
   exchangeTypeList,
-  talentsOptions
+  talentsOptions,
 } from "@features/articles/shared/articles.constants";
 
 import {
   durationType,
-  exchangeType
+  exchangeType,
 } from "@features/articles/shared/articles.type";
 
 function MatchingArticleList() {
@@ -37,11 +37,11 @@ function MatchingArticleList() {
     data: {
       data: {
         results,
-        pagination: { totalPages }
-      }
+        pagination: { totalPages },
+      },
     },
     isLoading,
-    isSuccess
+    isSuccess,
   } = useGetMatchingArticleList();
 
   const {
@@ -53,7 +53,7 @@ function MatchingArticleList() {
     order,
     page,
     setFilter,
-    resetFilters
+    resetFilters,
   } = useMatchingArticleListFilterStore(
     useShallow(state => ({
       giveTalents: state.giveTalents,
@@ -64,14 +64,14 @@ function MatchingArticleList() {
       order: state.order,
       page: state.page,
       setFilter: state.setFilter,
-      resetFilters: state.resetFilters
+      resetFilters: state.resetFilters,
     }))
   );
   const { hasNewMatchingArticle, setHasNewMatchingArticle } =
     useHasNewMatchingArticleStore(
       useShallow(state => ({
         hasNewMatchingArticle: state.hasNewMatchingArticle,
-        setHasNewMatchingArticle: state.setHasNewMatchingArticle
+        setHasNewMatchingArticle: state.setHasNewMatchingArticle,
       }))
     );
 
@@ -122,7 +122,7 @@ function MatchingArticleList() {
           onSelectHandler={({ value }) =>
             setFilter(prev => ({
               ...prev,
-              duration: value === "" ? undefined : value
+              duration: value === "" ? undefined : value,
             }))
           }
           selectedValue={duration}
@@ -131,12 +131,12 @@ function MatchingArticleList() {
         <DropdownLabeled<exchangeType | "">
           options={[
             { label: "전체", value: "" },
-            ...exchangeTypeList.map(item => ({ label: item, value: item }))
+            ...exchangeTypeList.map(item => ({ label: item, value: item })),
           ]}
           onSelectHandler={({ value }) =>
             setFilter(prev => ({
               ...prev,
-              type: value === "" ? undefined : value
+              type: value === "" ? undefined : value,
             }))
           }
           selectedValue={type}
@@ -155,7 +155,7 @@ function MatchingArticleList() {
             onChange={({ target }) =>
               setFilter(prev => ({
                 ...prev,
-                status: target.checked ? "모집중" : undefined
+                status: target.checked ? "모집중" : undefined,
               }))
             }
             checked={status === "모집중"}
@@ -174,7 +174,7 @@ function MatchingArticleList() {
         <DropdownLabeled<"recent" | "popular">
           options={[
             { label: "최신순", value: "recent" },
-            { label: "인기순", value: "popular" }
+            { label: "인기순", value: "popular" },
           ]}
           onSelectHandler={({ value }) =>
             setFilter(prev => ({ ...prev, order: value }))

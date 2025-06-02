@@ -4,7 +4,7 @@ import type { InfiniteData } from "@tanstack/query-core";
 import {
   useInfiniteQuery,
   useMutation,
-  useQueryClient
+  useQueryClient,
 } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useShallow } from "zustand/shallow";
@@ -19,7 +19,7 @@ import {
   postCommunityArticleComment,
   postCommunityArticleReply,
   putEditCommunityArticleComment,
-  putEditCommunityArticleReply
+  putEditCommunityArticleReply,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.api";
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 
@@ -29,7 +29,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import {
   useCommunityArticleCommentDeletedAtStore,
-  useCommunityArticleCommentPageStore
+  useCommunityArticleCommentPageStore,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.store";
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 import { useToastStore } from "@store/toast.store";
@@ -39,7 +39,7 @@ import { queryKeys } from "@shared/constants/queryKeys.constants";
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import {
   commentType,
-  replyType
+  replyType,
 } from "@features/articles/shared/articles.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
@@ -64,12 +64,12 @@ export const useGetCommunityArticleDetail = () => {
       profileImg: null,
       title: "",
       updatedAt: "",
-      userNo: 0
+      userNo: 0,
     },
     {
       queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),
       queryFn: () => getCommunityArticleDetail(postNo),
-      enabled: communityPostNo !== undefined
+      enabled: communityPostNo !== undefined,
     }
   );
 };
@@ -83,7 +83,7 @@ export const useDeleteCommunityArticle = () => {
   const filter = useCommunityArticleListFilterStore(
     useShallow(state => ({
       postType: state.postType,
-      page: state.page
+      page: state.page,
     }))
   );
   const setToast = useToastStore(state => state.setToast);
@@ -93,18 +93,18 @@ export const useDeleteCommunityArticle = () => {
     onSuccess: async () => {
       // 모든 커뮤니티 게시물 목록 캐시 제거
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true })
+        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true }),
       });
       // 커뮤니티 게시물 목록 프리패치
       await queryClient.prefetchQuery({
         queryKey: createQueryKey([queryKeys.COMMUNITY, filter], {
-          isList: true
+          isList: true,
         }),
-        queryFn: async () => await getCommunityArticleList(filter)
+        queryFn: async () => await getCommunityArticleList(filter),
       });
       navigator("/community");
       setToast({ message: "게시물이 삭제되었습니다" });
-    }
+    },
   });
 };
 
@@ -119,8 +119,8 @@ export const usePostCommunityArticleComment = () => {
 
   const {
     data: {
-      data: { commentLastPage }
-    }
+      data: { commentLastPage },
+    },
   } = useGetCommunityArticleDetail();
 
   const setPage = useCommunityArticleCommentPageStore(state => state.setPage);
@@ -133,8 +133,8 @@ export const usePostCommunityArticleComment = () => {
     onSuccess: data => {
       const {
         data: {
-          pagination: { currentPage, totalPages }
-        }
+          pagination: { currentPage, totalPages },
+        },
       } = data;
 
       if (commentLastPage !== totalPages) {
@@ -150,8 +150,8 @@ export const usePostCommunityArticleComment = () => {
             ...oldData,
             data: {
               ...oldData.data,
-              commentLastPage: totalPages
-            }
+              commentLastPage: totalPages,
+            },
           };
         });
       }
@@ -159,13 +159,13 @@ export const usePostCommunityArticleComment = () => {
       // 댓글 목록 저장
       queryClient.setQueryData(
         createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, currentPage], {
-          isList: true
+          isList: true,
         }),
         data
       );
 
       setPage(totalPages);
-    }
+    },
   });
 };
 
@@ -189,23 +189,23 @@ export const useGetCommunityArticleCommentList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
-        isList: true
+        isList: true,
       }),
       queryFn: () =>
         getCommunityArticleCommentList({
           communityPostNo: postNo,
           page,
-          deletedAt
+          deletedAt,
         }),
-      enabled: communityPostNo !== undefined && page !== 0
+      enabled: communityPostNo !== undefined && page !== 0,
     },
     createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo], {
-      isList: true
+      isList: true,
     })
   );
 };
@@ -228,7 +228,7 @@ export const usePutEditCommunityArticleComment = () => {
         customAxiosResponseType<paginationType<commentType>>
       >(
         createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
-          isList: true
+          isList: true,
         }),
         oldData => {
           if (!oldData) {
@@ -243,11 +243,11 @@ export const usePutEditCommunityArticleComment = () => {
                 comment.commentNo === commentNo
                   ? { ...comment, content }
                   : comment
-              )
-            }
+              ),
+            },
           };
         }
-      )
+      ),
   });
 };
 
@@ -273,7 +273,7 @@ export const useDeleteCommunityArticleComment = () => {
         customAxiosResponseType<paginationType<commentType>>
       >(
         createQueryKey([queryKeys.COMMUNITY_COMMENT, postNo, page], {
-          isList: true
+          isList: true,
         }),
         oldData => {
           if (!oldData) {
@@ -288,11 +288,11 @@ export const useDeleteCommunityArticleComment = () => {
                 comment.commentNo === commentNo
                   ? { ...comment, isDeleted: true }
                   : comment
-              )
-            }
+              ),
+            },
           };
         }
-      )
+      ),
   });
 };
 
@@ -316,7 +316,7 @@ export const usePostCommunityArticleReply = (
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
         >(
           createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
-            isList: true
+            isList: true,
           }),
           oldData => {
             if (!oldData) {
@@ -332,17 +332,17 @@ export const usePostCommunityArticleReply = (
                     ...page,
                     data: {
                       ...page.data,
-                      results: [...page.data.results, reply]
-                    }
+                      results: [...page.data.results, reply],
+                    },
                   };
                 }
                 return page;
-              })
+              }),
             };
           }
         );
       }
-    }
+    },
   });
 };
 
@@ -360,7 +360,7 @@ export const useGetCommunityArticleReplyList = (
   >({
     enabled,
     queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
-      isList: true
+      isList: true,
     }),
     queryFn: ({ pageParam }) =>
       getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
@@ -370,7 +370,7 @@ export const useGetCommunityArticleReplyList = (
         : undefined,
     getNextPageParam: () => undefined,
     select: data => data.pages.flatMap(page => page.data.results),
-    initialPageParam: undefined
+    initialPageParam: undefined,
   });
 
 // 커뮤니티 게시글 답글 수정
@@ -389,7 +389,7 @@ export const usePutEditCommunityArticleReply = (
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
       >(
         createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
-          isList: true
+          isList: true,
         }),
         oldData => {
           if (!oldData) {
@@ -404,12 +404,12 @@ export const usePutEditCommunityArticleReply = (
                 ...page.data,
                 results: page.data.results.map(reply =>
                   reply.replyNo === replyNo ? { ...reply, content } : reply
-                )
-              }
-            }))
+                ),
+              },
+            })),
           };
         }
-      )
+      ),
   });
 };
 
@@ -428,7 +428,7 @@ export const useDeleteCommunityArticleReply = (
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
       >(
         createQueryKey([queryKeys.COMMUNITY_REPLY, commentNo], {
-          isList: true
+          isList: true,
         }),
         oldData => {
           if (!oldData) {
@@ -445,11 +445,11 @@ export const useDeleteCommunityArticleReply = (
                   reply.replyNo === replyNo
                     ? { ...reply, isDeleted: true }
                     : reply
-                )
-              }
-            }))
+                ),
+              },
+            })),
           };
         }
-      )
+      ),
   });
 };

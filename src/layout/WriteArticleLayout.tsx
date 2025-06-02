@@ -18,12 +18,12 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 
 import {
   communityArticleSchema,
-  matchingArticleSchema
+  matchingArticleSchema,
 } from "@features/articles/shared/writeArticle.constants";
 
 const articleTypeOptions = [
   { label: "매칭 게시물 글쓰기", value: "/write-article/matching" },
-  { label: "커뮤니티 게시물 글쓰기", value: "/write-article/community" }
+  { label: "커뮤니티 게시물 글쓰기", value: "/write-article/community" },
 ];
 
 function WriteArticleLayout() {
@@ -41,8 +41,8 @@ function WriteArticleLayout() {
       title: "",
       content: "",
       pureText: "",
-      imageFileList: []
-    }
+      imageFileList: [],
+    },
   });
   const communityForm = useForm({
     resolver: yupResolver(communityArticleSchema),
@@ -51,8 +51,8 @@ function WriteArticleLayout() {
       title: "",
       content: "",
       pureText: "",
-      imageFileList: []
-    }
+      imageFileList: [],
+    },
   });
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);

@@ -16,16 +16,16 @@ const MAIN_ARTICLES_LIST_SIZE = 10;
 export const useGetPersonalizedMatchingArticleList = () => {
   const {
     data: {
-      data: { giveTalents, receiveTalents }
+      data: { giveTalents, receiveTalents },
     },
-    isSuccess
+    isSuccess,
   } = useGetProfile();
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.MATCHING], {
     isLoggedIn: true,
-    isList: true
+    isList: true,
   });
 
   return useQueryWithInitial(
@@ -37,8 +37,8 @@ export const useGetPersonalizedMatchingArticleList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey,
@@ -47,9 +47,9 @@ export const useGetPersonalizedMatchingArticleList = () => {
           giveTalents,
           receiveTalents,
           order: "recent",
-          size: MAIN_ARTICLES_LIST_SIZE
+          size: MAIN_ARTICLES_LIST_SIZE,
         }),
-      enabled: isLoggedIn && isSuccess
+      enabled: isLoggedIn && isSuccess,
     }
   );
 };
@@ -57,7 +57,7 @@ export const useGetPersonalizedMatchingArticleList = () => {
 // 신규 매칭 게시물 목록
 export const useGetRecentMatchingArticleList = () => {
   const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.MATCHING], {
-    isList: true
+    isList: true,
   });
 
   return useQueryWithInitial(
@@ -69,16 +69,16 @@ export const useGetRecentMatchingArticleList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey,
       queryFn: async () =>
         await getMatchingArticleList({
           order: "recent",
-          size: MAIN_ARTICLES_LIST_SIZE
-        })
+          size: MAIN_ARTICLES_LIST_SIZE,
+        }),
     }
   );
 };
@@ -86,7 +86,7 @@ export const useGetRecentMatchingArticleList = () => {
 // BEST 커뮤니티 게시물 목록
 export const useGetBestCommunityArticleList = () => {
   const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.COMMUNITY], {
-    isList: true
+    isList: true,
   });
 
   return useQueryWithInitial(
@@ -98,16 +98,16 @@ export const useGetBestCommunityArticleList = () => {
         totalPages: 1,
         currentPage: 1,
         totalCount: 0,
-        latestCreatedAt: ""
-      }
+        latestCreatedAt: "",
+      },
     },
     {
       queryKey,
       queryFn: async () =>
         await getCommunityArticleList({
           order: "hot",
-          size: MAIN_ARTICLES_LIST_SIZE
-        })
+          size: MAIN_ARTICLES_LIST_SIZE,
+        }),
     }
   );
 };

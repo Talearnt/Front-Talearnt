@@ -29,7 +29,7 @@ export function useCarousel({
   autoplayOptions,
   carouselOptions,
   trackButtonStates,
-  trackIndexStates
+  trackIndexStates,
 }: useCarouselProps): useCarouselReturnType {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -70,7 +70,7 @@ export function useCarousel({
     }
 
     const {
-      autoplay: { isPlaying, play, stop }
+      autoplay: { isPlaying, play, stop },
     } = emblaApi.plugins();
 
     return isPlaying() ? stop() : play();
@@ -110,6 +110,6 @@ export function useCarousel({
     isAutoPlaying,
     scrollPrev,
     scrollNext,
-    toggleAutoplay
+    toggleAutoplay,
   };
 }

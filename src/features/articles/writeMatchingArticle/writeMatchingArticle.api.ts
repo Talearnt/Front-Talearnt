@@ -2,7 +2,7 @@ import { postAPI, putAPI } from "@shared/utils/apiMethods";
 
 import {
   editMatchingArticleBodyType,
-  matchingArticleBodyType
+  matchingArticleBodyType,
 } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 
 // 매칭 게시글 작성
@@ -14,5 +14,5 @@ export const putEditMatchingArticle = ({
   ...body
 }: editMatchingArticleBodyType) =>
   putAPI(`/v1/posts/exchanges/${exchangePostNo}`, body, {
-    withCredentials: true
+    withCredentials: true,
   });

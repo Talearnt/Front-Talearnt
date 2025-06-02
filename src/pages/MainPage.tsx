@@ -5,7 +5,7 @@ import { classNames } from "@shared/utils/classNames";
 import {
   useGetBestCommunityArticleList,
   useGetPersonalizedMatchingArticleList,
-  useGetRecentMatchingArticleList
+  useGetRecentMatchingArticleList,
 } from "@features/mainPage/mainPage.hook";
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -20,24 +20,24 @@ function MainPage() {
 
   const {
     data: {
-      data: { nickname }
-    }
+      data: { nickname },
+    },
   } = useGetProfile();
   const {
     data: {
-      data: { results: personalizedMatchingArticleList }
+      data: { results: personalizedMatchingArticleList },
     },
-    isSuccess
+    isSuccess,
   } = useGetPersonalizedMatchingArticleList();
   const {
     data: {
-      data: { results: recentMatchingArticleList }
-    }
+      data: { results: recentMatchingArticleList },
+    },
   } = useGetRecentMatchingArticleList();
   const {
     data: {
-      data: { results: bestCommunityArticleList }
-    }
+      data: { results: bestCommunityArticleList },
+    },
   } = useGetBestCommunityArticleList();
 
   return (

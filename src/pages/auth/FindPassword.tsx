@@ -22,7 +22,7 @@ const findIdSchema = object({
     /^[0-9]*$/,
     "올바른 전화번호 형식이 아닙니다. 숫자만 입력해 주세요."
   ),
-  userId: string().matches(userIdRegex, "올바른 이메일 형식으로 입력해 주세요")
+  userId: string().matches(userIdRegex, "올바른 이메일 형식으로 입력해 주세요"),
 }).required();
 
 function FindPassword() {
@@ -32,10 +32,10 @@ function FindPassword() {
     formState: { errors },
     register,
     setError,
-    watch
+    watch,
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(findIdSchema)
+    resolver: yupResolver(findIdSchema),
   });
 
   const [canProceed, setCanProceed] = useState(false);
@@ -54,7 +54,7 @@ function FindPassword() {
       setIsLoading(true);
       const { data } = await postFindPwEmail({
         phone,
-        userId
+        userId,
       });
 
       sentDateRef.current = data.sentDate;
@@ -65,7 +65,7 @@ function FindPassword() {
         message:
           checkObjectType(e) && "errorCode" in e
             ? (e.errorMessage as string)
-            : "예기치 못한 오류가 발생했습니다."
+            : "예기치 못한 오류가 발생했습니다.",
       });
     } finally {
       setIsLoading(false);

@@ -21,7 +21,7 @@ interface ArticleSectionProps {
 export function ArticleSection({
   children,
   title,
-  articleType = "matching"
+  articleType = "matching",
 }: ArticleSectionProps) {
   const navigator = useNavigate();
 
@@ -29,9 +29,9 @@ export function ArticleSection({
     useCarousel({
       carouselOptions: {
         align: "start",
-        slidesToScroll: 2
+        slidesToScroll: 2,
       },
-      trackButtonStates: true
+      trackButtonStates: true,
     });
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);

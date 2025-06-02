@@ -16,12 +16,12 @@ function BannerCarousel() {
     isAutoPlaying,
     scrollPrev,
     scrollNext,
-    toggleAutoplay
+    toggleAutoplay,
   } = useCarousel({
     autoplay: true,
     autoplayOptions: { playOnInit: false, delay: 500 },
     carouselOptions: { loop: true },
-    trackIndexStates: true
+    trackIndexStates: true,
   });
 
   return (

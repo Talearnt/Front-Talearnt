@@ -14,11 +14,11 @@ export const handlers = [
         return HttpResponse.json(
           {
             data: {
-              accessToken: "valid_token"
+              accessToken: "valid_token",
             },
             errorCode: null,
             errorMessage: null,
-            success: true
+            success: true,
           },
           { status: 200 }
         );
@@ -30,7 +30,7 @@ export const handlers = [
           data: null,
           errorCode: "USER_NOT_FOUND",
           errorMessage: "Invalid credentials",
-          success: false
+          success: false,
         },
         { status: 404 }
       );
@@ -47,10 +47,10 @@ export const handlers = [
           data: randomNickName,
           success: true,
           errorCode: null,
-          errorMessage: null
+          errorMessage: null,
         },
         { status: 200 }
       );
     }
-  )
+  ),
 ];

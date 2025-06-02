@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 
 import { useForm } from "react-hook-form";
@@ -43,7 +43,7 @@ function DropdownSearchable<T = string>({
   options,
   onSelectHandler,
   placeholder,
-  selectedValue
+  selectedValue,
 }: DropdownSearchableProps<T>) {
   // 현재 눌린 키보드의 방향
   const arrowDirectionRef = useRef<"ArrowUp" | "ArrowDown">("ArrowUp");
@@ -65,7 +65,7 @@ function DropdownSearchable<T = string>({
 
   const [isOpen, selectedCategoryIndex] = watch([
     "checkbox",
-    "selectedCategoryIndex"
+    "selectedCategoryIndex",
   ]);
   const hasSubOption = useMemo(
     () => Array.isArray(options[0]?.value),
@@ -110,7 +110,7 @@ function DropdownSearchable<T = string>({
   // 키보드로 재능을 선택
   const handleKeyDown = ({
     key,
-    nativeEvent
+    nativeEvent,
   }: React.KeyboardEvent<HTMLInputElement>) => {
     if (nativeEvent.isComposing || !search) {
       // 아직 글자가 조합중인 상태라면 return (한글 이슈)
@@ -120,7 +120,7 @@ function DropdownSearchable<T = string>({
     if (key === "Enter") {
       onSelectHandler({
         checked: true,
-        ...searchedOptionsList[selectedOptionIndex]
+        ...searchedOptionsList[selectedOptionIndex],
       });
 
       return;
@@ -160,7 +160,7 @@ function DropdownSearchable<T = string>({
           if (!entry.isIntersecting) {
             selectedTalentRef.current.scrollIntoView({
               block:
-                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined
+                arrowDirectionRef.current === "ArrowDown" ? "end" : undefined,
             });
           }
         });
@@ -168,7 +168,7 @@ function DropdownSearchable<T = string>({
       {
         root: null,
         rootMargin: "0px",
-        threshold: 1
+        threshold: 1,
       }
     );
 
@@ -232,7 +232,7 @@ function DropdownSearchable<T = string>({
 
                 onSelectHandler({
                   checked: false,
-                  value
+                  value,
                 });
               }}
               type={"keyword"}
@@ -309,7 +309,7 @@ function DropdownSearchable<T = string>({
                     onChangeHandler={({ target }) => {
                       onSelectHandler({
                         checked: target.checked,
-                        value: value as T
+                        value: value as T,
                       });
                     }}
                     label={label}
@@ -321,7 +321,7 @@ function DropdownSearchable<T = string>({
                     onClick={() => {
                       onSelectHandler({
                         checked: true,
-                        value: value as T
+                        value: value as T,
                       });
 
                       setValue("checkbox", false);
@@ -349,7 +349,7 @@ function DropdownSearchable<T = string>({
                         onChangeHandler={({ target }) => {
                           onSelectHandler({
                             checked: target.checked,
-                            value
+                            value,
                           });
                         }}
                         label={label}
@@ -361,7 +361,7 @@ function DropdownSearchable<T = string>({
                         onClick={() => {
                           onSelectHandler({
                             checked: true,
-                            value
+                            value,
                           });
                         }}
                         label={label}
@@ -394,7 +394,7 @@ function DropdownSearchable<T = string>({
                   onClick={() => {
                     onSelectHandler({
                       checked: true,
-                      value
+                      value,
                     });
 
                     if (!isMultiple) {

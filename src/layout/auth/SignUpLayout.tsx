@@ -18,7 +18,7 @@ function SignUpLayout() {
   const { agreements, setAllAgreement } = useAgreementStore(
     useShallow(state => ({
       agreements: state.agreements,
-      setAllAgreement: state.setAllAgreement
+      setAllAgreement: state.setAllAgreement,
     }))
   );
 

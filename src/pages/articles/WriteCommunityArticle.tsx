@@ -5,13 +5,13 @@ import { UseFormReturn } from "react-hook-form";
 
 import {
   extractImageSrcList,
-  uploadImageToPresignedURL
+  uploadImageToPresignedURL,
 } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
 
 import {
   usePostCommunityArticle,
-  usePutEditCommunityArticle
+  usePutEditCommunityArticle,
 } from "@features/articles/writeCommunityArticle/writeCommunityArticle.hook";
 
 import { useEditCommunityArticleDataStore } from "@features/articles/shared/articles.store";
@@ -41,7 +41,7 @@ function WriteCommunityArticle() {
     watch,
     setValue,
     trigger,
-    reset
+    reset,
   } = (
     context as { communityForm: UseFormReturn<communityArticleFormDataType> }
   ).communityForm;
@@ -62,7 +62,7 @@ function WriteCommunityArticle() {
     "title",
     "content",
     "imageFileList",
-    "postType"
+    "postType",
   ]);
 
   const handleDataChange = (
@@ -85,7 +85,7 @@ function WriteCommunityArticle() {
     } catch (error) {
       setToast({
         message: (error as { message: string }).message,
-        type: "error"
+        type: "error",
       });
 
       setIsPostInProgress(false);
@@ -109,20 +109,20 @@ function WriteCommunityArticle() {
           postType,
           title,
           content: newContent,
-          imageUrls
+          imageUrls,
         });
       } else {
         await postCommunityArticle({
           postType,
           title,
           content: newContent,
-          imageUrls
+          imageUrls,
         });
       }
     } catch {
       setToast({
         message: "게시글 업로드 중 오류가 발생했습니다.",
-        type: "error"
+        type: "error",
       });
     } finally {
       setIsPostInProgress(false);
@@ -213,7 +213,7 @@ function WriteCommunityArticle() {
               content:
                 "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
               cancelOnClickHandler: () => setPrompt(),
-              confirmOnClickHandler: () => navigator(-1)
+              confirmOnClickHandler: () => navigator(-1),
             })
           }
           disabled={isPostInProgress}

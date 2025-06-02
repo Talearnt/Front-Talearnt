@@ -1,6 +1,6 @@
 import {
   durationType,
-  exchangeType
+  exchangeType,
 } from "@features/articles/shared/articles.type";
 import { matchingArticleBodyType } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 import { profileType } from "@features/user/user.type";
