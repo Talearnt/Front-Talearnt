@@ -3,7 +3,7 @@ import { classNames } from "@shared/utils/classNames";
 import {
   CaretIconProps,
   caretIconVariants,
-} from "@components/common/icons/caret/caret.type";
+} from "@components/common/icons/icon.type";
 
 /**
  * 꼬리 없는 화살표 두개 아이콘
