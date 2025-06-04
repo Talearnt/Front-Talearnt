@@ -1,6 +1,9 @@
 export default {
   content: ["./src/**/*.tsx"],
   safelist: [
+    {
+      pattern: /(fill|stroke)-talearnt_.+/,
+    },
     "rotate-90",
     "rotate-0",
     "rotate-180",
