@@ -1,8 +1,16 @@
 import { classNames } from "@shared/utils/classNames";
 
-import { CommonIconProps } from "@components/common/icons/icon.type";
+import {
+  styledIconVariants,
+  StyledIconVariantsProps,
+} from "@components/common/icons/icon.type";
 
-function ViewsIcon({ className, size = 24, ...props }: CommonIconProps) {
+function ViewsIcon({
+  className,
+  size = 24,
+  iconType,
+  ...props
+}: StyledIconVariantsProps) {
   return (
     <svg
       width={size}
@@ -10,10 +18,7 @@ function ViewsIcon({ className, size = 24, ...props }: CommonIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={classNames(
-        "fill-talearnt_Icon_04 stroke-talearnt_Icon_04",
-        className
-      )}
+      className={classNames(styledIconVariants({ iconType }), className)}
       {...props}
     >
       <path
@@ -22,8 +27,8 @@ function ViewsIcon({ className, size = 24, ...props }: CommonIconProps) {
       />
       <path
         d="M14.5032 12.1771C14.5032 13.5206 13.3839 14.6098 12.0032 14.6098C10.6225 14.6098 9.50317 13.5206 9.50317 12.1771C9.50317 10.8336 10.6225 9.74445 12.0032 9.74445C13.3839 9.74445 14.5032 10.8336 14.5032 12.1771Z"
-        fill="white"
-        stroke="white"
+        fill={iconType === "outlined" ? "#C1C8CC" : "white"}
+        stroke={iconType === "outlined" ? "#C1C8CC" : "white"}
         strokeWidth="1.4"
       />
     </svg>
