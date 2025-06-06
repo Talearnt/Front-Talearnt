@@ -3,9 +3,9 @@ import dayjs from "dayjs";
 import { classNames } from "@shared/utils/classNames";
 
 import { Badge } from "@components/common/Badge/Badge";
-import { ChatIcon } from "@components/common/icons/ChatIcon/ChatIcon";
-import { ThumbsUpIcon } from "@components/common/icons/ThumbsUpIcon/ThumbsUpIcon";
-import { ViewsIcon } from "@components/common/icons/ViewsIcon/ViewsIcon";
+import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
+import { ThumbsUpIcon } from "@components/common/icons/styled/ThumbsUpIcon";
+import { ViewsIcon } from "@components/common/icons/styled/ViewsIcon";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
@@ -47,7 +47,10 @@ function CommunityArticleCard({
             {dayjs(updatedAt ?? createdAt).format("YYYY-MM-DD")}
           </span>
         </div>
-        <ThumbsUpIcon className={"ml-auto"} isPressed={isLike} size={28} />
+        <ThumbsUpIcon
+          iconType={isLike ? "filled-blue" : "outlined"}
+          size={28}
+        />
       </div>
       <div className={"flex flex-col gap-2"}>
         <div className={"flex gap-1"}>
@@ -78,10 +81,7 @@ function CommunityArticleCard({
         )}
       >
         <div className={"flex items-center gap-1"}>
-          <ThumbsUpIcon
-            className={"fill-talearnt_Icon_04 stroke-talearnt_Icon_04"}
-            size={24}
-          />
+          <ThumbsUpIcon iconType={"filled-gray"} />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {likeCount}
           </span>

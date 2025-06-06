@@ -25,7 +25,7 @@ import { Comment } from "@components/articles/communityArticleDetail/Comment/Com
 import { UserContentWrite } from "@components/articles/communityArticleDetail/UserContentWrite/UserContentWrite";
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { Badge } from "@components/common/Badge/Badge";
-import { ThumbsUpIcon } from "@components/common/icons/ThumbsUpIcon/ThumbsUpIcon";
+import { ThumbsUpIcon } from "@components/common/icons/styled/ThumbsUpIcon";
 import { Pagination } from "@components/common/Pagination/Pagination";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
@@ -184,7 +184,10 @@ function CommunityArticleDetail() {
                 "hover:bg-talearnt_BG_Up_01"
               )}
             >
-              <ThumbsUpIcon isPressed={isLike} />
+              <ThumbsUpIcon
+                iconType={isLike ? "filled-blue" : "outlined"}
+                size={34}
+              />
             </div>
           </div>
           {/*TODO 매칭/커뮤니티 상세, 게시물 작성 미리보기 컴포넌트 통합*/}

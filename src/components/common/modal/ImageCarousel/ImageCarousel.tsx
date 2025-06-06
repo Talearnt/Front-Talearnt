@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { CircleCaretIcon } from "@components/common/icons/caret/CircleCaretIcon/CircleCaretIcon";
+import { CircleCaretIcon } from "@components/common/icons/caret/CircleCaretIcon";
 import { CloseIcon } from "@components/common/icons/CloseIcon/CloseIcon";
 import { ModalContainer } from "@components/common/modal/parts/ModalContainer";
 

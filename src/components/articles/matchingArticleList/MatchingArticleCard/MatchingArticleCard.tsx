@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { classNames } from "@shared/utils/classNames";
 
 import { Badge } from "@components/common/Badge/Badge";
-import { PostFavoriteIcon } from "@components/common/icons/PostFavoriteIcon/PostFavoriteIcon";
+import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
@@ -89,9 +89,9 @@ function MatchingArticleCard({
         >
           {nickname}
         </span>
-        <PostFavoriteIcon
+        <HeartIcon
           className={"ml-auto"}
-          isFavorite={isFavorite}
+          iconType={isFavorite ? "filled-blue" : "outlined"}
           size={28}
         />
       </div>
@@ -171,9 +171,7 @@ function MatchingArticleCard({
         {/*  </span>*/}
         {/*</div>*/}
         <div className={"flex items-center gap-1"}>
-          <PostFavoriteIcon
-            className={"fill-talearnt_Icon_04 stroke-talearnt_Icon_04"}
-          />
+          <HeartIcon iconType={"filled-gray"} />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {favoriteCount}
           </span>

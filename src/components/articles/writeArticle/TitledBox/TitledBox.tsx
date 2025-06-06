@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
 type TitledBoxProps = {
   canOpen?: boolean;

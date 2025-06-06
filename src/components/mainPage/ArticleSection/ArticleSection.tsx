@@ -8,7 +8,7 @@ import { useCarousel } from "@shared/hooks/useCarousel";
 import { useAuthStore } from "@store/user.store";
 
 import { Button } from "@components/common/Button/Button";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 import { MakoWithPencil } from "@components/common/icons/mako/MakoWithPencil";
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 
