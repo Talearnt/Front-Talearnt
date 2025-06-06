@@ -20,7 +20,7 @@ import { ImageCarousel } from "@components/common/modal/ImageCarousel/ImageCarou
 
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { Badge } from "@components/common/Badge/Badge";
-import { PostFavoriteIcon } from "@components/common/icons/PostFavoriteIcon/PostFavoriteIcon";
+import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
 function MatchingArticleDetail() {
@@ -163,7 +163,10 @@ function MatchingArticleDetail() {
                 "hover:bg-talearnt_BG_Up_01"
               )}
             >
-              <PostFavoriteIcon isFavorite={isFavorite} size={32} />
+              <HeartIcon
+                iconType={isFavorite ? "filled-blue" : "outlined"}
+                size={32}
+              />
             </div>
           </div>
           <div className={"grid grid-cols-2 gap-6"}>

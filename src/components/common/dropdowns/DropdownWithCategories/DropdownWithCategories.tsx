@@ -9,7 +9,7 @@ import { useToastStore } from "@store/toast.store";
 import { Button } from "@components/common/Button/Button";
 import { Chip } from "@components/common/Chip/Chip";
 import { HorizontalScrollWrapper } from "@components/common/HorizontalScrollWrapper/HorizontalScrollWrapper";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 

@@ -2,7 +2,7 @@ import { classNames } from "@shared/utils/classNames";
 
 import { useCarousel } from "@shared/hooks/useCarousel";
 
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
 const caretIconClass = classNames(
   "absolute top-1/2 -translate-y-1/2",

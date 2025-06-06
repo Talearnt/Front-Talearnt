@@ -16,7 +16,7 @@ import { Chip } from "@components/common/Chip/Chip";
 import { DropdownOptionCheckbox } from "@components/common/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
 import { DropdownOptionItem } from "@components/common/dropdowns/DropdownOptionItem/DropdownOptionItem";
 import { EmptySearchOption } from "@components/common/EmptySearchOption/EmptySearchOption";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 import { ErrorIcon } from "@components/common/icons/ErrorIcon/ErrorIcon";
 import { AutoResizeInput } from "@components/common/inputs/AutoResizeInput/AutoResizeInput";
 

@@ -1,7 +1,7 @@
 import { classNames } from "@shared/utils/classNames";
 
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
-import { DoubleCaretIcon } from "@components/common/icons/caret/DoubleCaretIcon/DoubleCaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
+import { DoubleCaretIcon } from "@components/common/icons/caret/DoubleCaretIcon";
 
 type PaginationProps = {
   className?: string;

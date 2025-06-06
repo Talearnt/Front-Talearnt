@@ -13,7 +13,7 @@ import { useAuthStore } from "@store/user.store";
 
 import { Button } from "@components/common/Button/Button";
 import { LogoIcon } from "@components/common/icons/LogoIcon/LogoIcon";
-import { NotificationIcon } from "@components/common/icons/NotificationIcon/NotificationIcon";
+import { NotificationIcon } from "@components/common/icons/styled/NotificationIcon";
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
@@ -138,7 +138,7 @@ function MainLayout() {
             </div>
             {isLoggedIn && (
               <>
-                <NotificationIcon />
+                <NotificationIcon className={"stroke-talearnt_Icon_01"} />
                 <div className={"flex items-center"}>
                   <div
                     className={

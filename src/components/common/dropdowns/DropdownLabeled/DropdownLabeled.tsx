@@ -6,7 +6,7 @@ import { useOutsideClick } from "@components/common/dropdowns/dropdown.hook";
 
 import { DropdownOptionCheckbox } from "@components/common/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
 import { DropdownOptionItem } from "@components/common/dropdowns/DropdownOptionItem/DropdownOptionItem";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 

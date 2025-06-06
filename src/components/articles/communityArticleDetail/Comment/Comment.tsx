@@ -16,8 +16,8 @@ import { Reply } from "@components/articles/communityArticleDetail/Reply/Reply";
 import { UserContentSection } from "@components/articles/communityArticleDetail/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@components/articles/communityArticleDetail/UserContentWrite/UserContentWrite";
 import { Dot } from "@components/common/Dot/Dot";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
-import { MessageIcon } from "@components/common/icons/MessageIcon/MessageIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
+import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
 
 import { commentType } from "@features/articles/shared/articles.type";
 
@@ -97,7 +97,7 @@ function Comment({
       <div className={"flex gap-4"}>
         {isLoggedIn && (
           <ActionButton onClick={() => setIsReplyWriting(true)} withDot={false}>
-            <MessageIcon size={20} />
+            <ChatIcon size={20} />
             답글달기
           </ActionButton>
         )}

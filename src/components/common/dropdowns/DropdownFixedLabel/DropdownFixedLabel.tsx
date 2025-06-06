@@ -1,7 +1,7 @@
 import { classNames } from "@shared/utils/classNames";
 
 import { DropdownOptionCheckbox } from "@components/common/dropdowns/DropdownOptionCheckbox/DropdownOptionCheckbox";
-import { CaretIcon } from "@components/common/icons/caret/CaretIcon/CaretIcon";
+import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 
