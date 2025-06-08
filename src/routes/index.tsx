@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import articlesRouter from "@routes/articles";
 import authRouter from "@routes/auth";
+import userRouter from "@routes/user";
 
 import MainLayout from "@layout/MainLayout";
 
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       },
       ...authRouter,
       ...articlesRouter,
+      ...userRouter,
     ],
   },
 ]);
