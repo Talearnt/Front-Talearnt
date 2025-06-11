@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 import { classNames } from "@shared/utils/classNames";
 
@@ -15,7 +15,7 @@ const sideBarArray = [
     category: "마이페이지",
     items: [
       {
-        path: "/profile",
+        path: "",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <AccountIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -157,9 +157,7 @@ const sideBarArray = [
 
 function UserLayout() {
   return (
-    <div
-      className={classNames("grid grid-cols-[273px_1fr] gap-[52px]", "pt-8")}
-    >
+    <div className={classNames("grid grid-cols-[277px_1fr] gap-12", "pt-8")}>
       <div className={"flex flex-col gap-6"}>
         {sideBarArray.map(({ category, items }) => (
           <div className={"flex flex-col gap-3"} key={category}>
@@ -177,7 +175,8 @@ function UserLayout() {
                     classNames(
                       "flex items-center gap-3",
                       "rounded-lg px-4 py-[15px]",
-                      isActive && "bg-talearnt_PrimaryBG_01"
+                      "hover:bg-talearnt_BG_Up_01",
+                      isActive && "!bg-talearnt_PrimaryBG_01"
                     )
                   }
                   to={path}
@@ -190,6 +189,7 @@ function UserLayout() {
           </div>
         ))}
       </div>
+      <Outlet />
     </div>
   );
 }

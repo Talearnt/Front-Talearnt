@@ -1,7 +1,9 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
 import UserLayout from "@layout/UserLayout";
+
+const Profile = lazy(() => import("@pages/user/Profile"));
 
 const userRouter: RouteObject[] = [
   {
@@ -11,6 +13,12 @@ const userRouter: RouteObject[] = [
       </Suspense>
     ),
     path: "user",
+    children: [
+      {
+        element: <Profile />,
+        index: true,
+      },
+    ],
   },
 ];
 
