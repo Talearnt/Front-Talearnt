@@ -192,6 +192,7 @@ function CommunityArticleList() {
                     >
                       {title}
                     </span>
+                    {/* TODO New 배지 추가 */}
                   </div>
                 </td>
                 <td
@@ -208,7 +209,9 @@ function CommunityArticleList() {
                     "text-center text-body2_16_medium text-talearnt_Text_03"
                   )}
                 >
-                  {dayjs(createdAt).format("YYYY-MM-DD")}
+                  {dayjs(createdAt).isSame(dayjs(), "day")
+                    ? dayjs(createdAt).format("HH:mm")
+                    : dayjs(createdAt).format("YYYY-MM-DD")}
                 </td>
                 <td
                   className={classNames(

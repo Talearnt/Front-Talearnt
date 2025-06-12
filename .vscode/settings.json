@@ -24,5 +24,6 @@
   "emmet.includeLanguages": {
     "typescript": "html",
     "typescriptreact": "html"
-  }
+  },
+  "cSpell.words": ["talearnt"]
 }

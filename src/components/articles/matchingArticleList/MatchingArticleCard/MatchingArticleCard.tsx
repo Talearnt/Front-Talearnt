@@ -70,6 +70,7 @@ function MatchingArticleCard({
   return (
     <div
       className={classNames(
+        "group/card",
         "flex flex-col",
         "cursor-pointer rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]",
         "hover:border-talearnt_Primary_01",
@@ -127,9 +128,12 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {giveTalents.map(talentName => (
               <Badge
-                className={"rounded-md"}
+                className={classNames(
+                  "rounded-md",
+                  "group-hover/card:bg-talearnt_PrimaryBG_01 group-hover/card:text-talearnt_Primary_01"
+                )}
                 label={talentName}
-                type={isHover ? "primary" : "keyword"}
+                type={"keyword"}
                 key={`${exchangePostNo}st-card-giveTalent-${talentName}`}
               />
             ))}
@@ -145,9 +149,12 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {receiveTalents.map(talentName => (
               <Badge
-                className={"rounded-md"}
+                className={classNames(
+                  "rounded-md",
+                  "group-hover/card:bg-talearnt_PrimaryBG_01 group-hover/card:text-talearnt_Primary_01"
+                )}
                 label={talentName}
-                type={isHover ? "primary" : "keyword"}
+                type={"keyword"}
                 key={`${exchangePostNo}st-card-receiveTalent-${talentName}`}
               />
             ))}
