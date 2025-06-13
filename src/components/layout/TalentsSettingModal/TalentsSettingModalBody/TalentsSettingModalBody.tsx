@@ -22,7 +22,7 @@ import { Input } from "@components/common/inputs/Input/Input";
 import { ModalBody } from "@components/common/modal/parts/ModalBody";
 
 import { CURRENT_TALENTS_TYPE_NAME } from "@features/talentsSettingModal/talentsSettingModal.constants";
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList.constants";
+import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList";
 
 import { talentsType } from "@features/talentsSettingModal/talentsSettingModal.type";
 

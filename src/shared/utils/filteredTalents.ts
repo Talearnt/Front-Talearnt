@@ -1,4 +1,4 @@
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList.constants";
+import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList";
 
 export const filteredTalents = (talentCodes: (string | number)[]) => {
   if (talentCodes.length === 0) {

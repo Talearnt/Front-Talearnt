@@ -6,7 +6,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 export const useGetProfile = (enabled = true) => {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
