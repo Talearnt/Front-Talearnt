@@ -34,7 +34,7 @@ import {
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 import { useToastStore } from "@store/toast.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import {

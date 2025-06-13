@@ -11,7 +11,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";

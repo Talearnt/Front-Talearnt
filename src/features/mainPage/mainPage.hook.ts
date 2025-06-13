@@ -8,7 +8,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 const MAIN_ARTICLES_LIST_SIZE = 10;
 

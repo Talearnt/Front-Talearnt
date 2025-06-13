@@ -16,7 +16,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 import { useToastStore } from "@store/toast.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 export const useGetMatchingArticleDetail = () => {
   const { exchangePostNo } = useParams();

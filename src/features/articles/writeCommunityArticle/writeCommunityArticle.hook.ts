@@ -18,7 +18,7 @@ import {
   useHasNewCommunityArticleStore,
 } from "@features/articles/shared/articles.store";
 
-import { queryKeys } from "@shared/constants/queryKeys.constants";
+import { queryKeys } from "@shared/constants/queryKeys";
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";

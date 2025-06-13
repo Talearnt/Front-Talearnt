@@ -94,7 +94,7 @@ export default [
             ["^@components/.*/[A-Z][^/]*$"],
 
             // 12. json, 상수
-            ["^.+\\.(json|constants)$"],
+            ["^@shared/constants/.*|^.+\\.(json|constants)$"],
 
             // 13. 이미지
             ["^.+\\.(svg)$"],
