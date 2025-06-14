@@ -1,5 +1,4 @@
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList.constants";
-
+import { dropdownOptionType } from "@/components/common/dropdowns/dropdown.type";
 import {
   durationType,
   exchangeType,
@@ -23,16 +22,25 @@ export const durationList: durationType[] = [
   "3개월",
   "3개월 이상",
 ];
-export const durationOptions = durationList.map(item => ({
-  label: item,
-  value: item,
-}));
-export const talentsOptions = CATEGORIZED_TALENTS_LIST.map(
-  ({ categoryName, talents }) => ({
-    label: categoryName,
-    value: talents.map(({ talentCode, talentName }) => ({
-      label: talentName,
-      value: talentCode,
-    })),
-  })
-);
+export const durationOptions: dropdownOptionType<durationType>[] = [
+  {
+    label: "기간 미정",
+    value: "기간 미정",
+  },
+  {
+    label: "1개월",
+    value: "1개월",
+  },
+  {
+    label: "2개월",
+    value: "2개월",
+  },
+  {
+    label: "3개월",
+    value: "3개월",
+  },
+  {
+    label: "3개월 이상",
+    value: "3개월 이상",
+  },
+];

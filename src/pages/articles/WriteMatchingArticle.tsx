@@ -32,9 +32,9 @@ import { Spinner } from "@components/common/Spinner/Spinner";
 import {
   durationOptions,
   exchangeTypeList,
-  talentsOptions,
 } from "@features/articles/shared/articles.constants";
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList.constants";
+import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList";
+import { talentsOptions } from "@shared/constants/talentsOptions";
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 import { durationType } from "@features/articles/shared/articles.type";

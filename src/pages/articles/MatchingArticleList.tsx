@@ -21,8 +21,8 @@ import { Pagination } from "@components/common/Pagination/Pagination";
 import {
   durationOptions,
   exchangeTypeList,
-  talentsOptions,
 } from "@features/articles/shared/articles.constants";
+import { talentsOptions } from "@shared/constants/talentsOptions";
 
 import {
   durationType,
