@@ -1,4 +1,4 @@
-import { dropdownOptionType } from "@/components/common/dropdowns/dropdown.type";
+import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 import {
   durationType,
   exchangeType,
