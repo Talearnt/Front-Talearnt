@@ -1,4 +1,4 @@
-import { dropdownOptionType } from "@/components/common/dropdowns/dropdown.type";
+import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 
 export const talentsOptions: dropdownOptionType<
   dropdownOptionType<number>[]
