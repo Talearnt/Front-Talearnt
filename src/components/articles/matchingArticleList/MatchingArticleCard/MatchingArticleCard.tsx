@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import dayjs from "dayjs";
 
@@ -29,8 +29,6 @@ function MatchingArticleCard({
 }: matchingArticleType & { className?: string; onClickHandler?: () => void }) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
-
-  const [isHover, setIsHover] = useState(false);
 
   useEffect(() => {
     if (!giveTalentsRef.current || !receiveTalentsRef.current) {
@@ -77,8 +75,6 @@ function MatchingArticleCard({
         className
       )}
       onClick={onClickHandler}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
     >
       <div className={classNames("flex items-center", "mb-6")}>
         <Avatar imageUrl={profileImg} size={40} />
