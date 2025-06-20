@@ -11,7 +11,7 @@ function ProfileView({
   nickname,
   giveTalents,
   receiveTalents,
-}: Omit<profileType, "userNo">) {
+}: Omit<profileType, "userId" | "userNo">) {
   const giveTalentsList = filteredTalents(giveTalents);
   const receiveTalentsList = filteredTalents(receiveTalents);
 

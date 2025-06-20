@@ -22,6 +22,10 @@ import { AutoResizeInput } from "@components/common/inputs/AutoResizeInput/AutoR
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 type DropdownSearchableProps<T> = {
   error?: string;
   isMultiple?: boolean;
@@ -94,7 +98,10 @@ function DropdownSearchable<T = string>({
     }
 
     // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
-    const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
+    const searchRegex = new RegExp(
+      escapeRegExp(search.replace(/\s+/g, "")),
+      "i"
+    );
 
     return finalOptions.filter(
       ({ label, value }) =>

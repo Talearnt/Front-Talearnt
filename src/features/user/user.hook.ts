@@ -17,6 +17,7 @@ export const useGetProfile = (enabled = true) => {
       nickname: "",
       profileImg: null,
       receiveTalents: [],
+      userId: "",
       userNo: 0,
     },
     {
