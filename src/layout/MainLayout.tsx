@@ -17,6 +17,7 @@ import { NotificationIcon } from "@components/common/icons/styled/NotificationIc
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
+import { Avatar } from "@components/shared/Avatar/Avatar";
 
 const linkArray = [
   {
@@ -39,7 +40,7 @@ function MainLayout() {
 
   const {
     data: {
-      data: { giveTalents },
+      data: { giveTalents, profileImg },
     },
     isSuccess,
   } = useGetProfile();
@@ -140,11 +141,7 @@ function MainLayout() {
               <>
                 <NotificationIcon className={"stroke-talearnt_Icon_01"} />
                 <div className={"flex items-center"}>
-                  <div
-                    className={
-                      "h-8 w-8 rounded-full border border-talearnt_Icon_03 bg-talearnt_BG_Up_02"
-                    }
-                  />
+                  <Avatar imageUrl={profileImg} size={32} />
                   <svg
                     width="16"
                     height="16"

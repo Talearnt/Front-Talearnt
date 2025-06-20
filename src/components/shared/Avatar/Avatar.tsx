@@ -18,7 +18,7 @@ function Avatar({ imageUrl, size = 50 }: AvatarProps) {
     <div>
       {imageUrl && (
         <img
-          className={"aspect-square rounded-full"}
+          className={"aspect-square rounded-full object-cover"}
           src={imageUrl}
           alt={"아바타 이미지"}
           width={size}

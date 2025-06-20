@@ -103,7 +103,10 @@ export const postAPI = async <T>(
 
 export const putAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  body?: Record<
+    string,
+    string | number | null | Record<string, unknown> | unknown[]
+  >,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.put<responseDataType<T>>(

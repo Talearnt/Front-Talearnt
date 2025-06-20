@@ -15,7 +15,7 @@ import { profileType } from "@features/user/user.type";
 function Profile() {
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [editProfileData, setEditProfileData] = useState<
-    Omit<profileType, "userNo">
+    Omit<profileType, "userNo" | "userId">
   >({
     nickname: "",
     profileImg: "",
@@ -91,6 +91,7 @@ function Profile() {
               nickname={editProfileData.nickname}
               giveTalents={editProfileData.giveTalents}
               receiveTalents={editProfileData.receiveTalents}
+              currentNickname={nickname}
               setEditProfileData={setEditProfileData}
               setIsEditProfile={setIsEditProfile}
             />
