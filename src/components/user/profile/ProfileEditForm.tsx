@@ -1,20 +1,36 @@
-import { Dispatch, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
+import { compressImageFile } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
+
+import { useCheckNickname } from "@features/auth/signUp/signUp.hook";
+import { usePutProfile } from "@features/user/profile/profile.hook";
+import { useDebounce } from "@shared/hooks/useDebounce";
 
 import { useToastStore } from "@store/toast.store";
 
 import { Button } from "@components/common/Button/Button";
 import { DropdownSearchable } from "@components/common/dropdowns/DropdownSearchable/DropdownSearchable";
 import { Input } from "@components/common/inputs/Input/Input";
+import { LabelText } from "@components/common/LabelText/LabelText";
+import { Spinner } from "@components/common/Spinner/Spinner";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { talentsOptions } from "@shared/constants/talentsOptions";
 
 import { profileType } from "@features/user/user.type";
 
-type ProfileEditFormProps = Omit<profileType, "userNo"> & {
-  setEditProfileData: Dispatch<SetStateAction<Omit<profileType, "userNo">>>;
+type ProfileEditFormProps = Omit<profileType, "userId" | "userNo"> & {
+  currentNickname: string;
+  setEditProfileData: Dispatch<
+    SetStateAction<Omit<profileType, "userId" | "userNo">>
+  >;
   setIsEditProfile: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -23,10 +39,94 @@ function ProfileEditForm({
   nickname,
   giveTalents,
   receiveTalents,
+  currentNickname,
   setEditProfileData,
   setIsEditProfile,
 }: ProfileEditFormProps) {
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const setToast = useToastStore(state => state.setToast);
+
+  const { mutateAsync } = usePutProfile();
+  const debounceNickname = useDebounce(nickname, {
+    returnUndefinedBeforeDebounce: true,
+  });
+  const { data, error, isLoading, isError } = useCheckNickname(
+    debounceNickname,
+    !!debounceNickname &&
+      debounceNickname !== currentNickname &&
+      debounceNickname === nickname
+  );
+
+  const isNicknameEmpty = nickname.length === 0;
+  const isNicknameValid = data?.data || isError || isNicknameEmpty;
+
+  const handleImageChange = async ({
+    target: { files },
+  }: ChangeEvent<HTMLInputElement>) => {
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const { file, url } = await compressImageFile(files[0]);
+
+    setImageFile(file);
+    setEditProfileData(prev => ({
+      ...prev,
+      profileImg: url,
+    }));
+  };
+  const handleNicknameChange = ({
+    target: { value },
+  }: ChangeEvent<HTMLInputElement>) => {
+    setEditProfileData(prev => ({
+      ...prev,
+      nickname: value,
+    }));
+  };
+  const handleDropdownSelect =
+    (type: "giveTalents" | "receiveTalents") =>
+    ({ checked, value }: { checked: boolean; value: number }) => {
+      if (
+        checked &&
+        (type === "giveTalents" ? giveTalents : receiveTalents).length >= 5
+      ) {
+        setToast({
+          message: "키워드는 5개까지만 설정 가능해요",
+          type: "error",
+        });
+        return;
+      }
+
+      setEditProfileData(prev => ({
+        ...prev,
+        [type]: checked
+          ? [...prev[type], value]
+          : prev[type].filter(selectedValue => selectedValue !== value),
+      }));
+    };
+  const handleEditProfile = async () => {
+    await mutateAsync({
+      file: imageFile,
+      nickname,
+      giveTalents,
+      receiveTalents,
+    });
+
+    setIsEditProfile(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      setEditProfileData({
+        nickname: "",
+        profileImg: "",
+        giveTalents: [],
+        receiveTalents: [],
+      });
+      setImageFile(null);
+    };
+  }, [setEditProfileData]);
 
   return (
     <>
@@ -58,22 +158,59 @@ function ProfileEditForm({
             strokeLinejoin="round"
           />
         </svg>
-        <input type="file" className={"hidden"} />
+        <input
+          className={"hidden"}
+          onChange={handleImageChange}
+          accept="image/jpeg, image/png, image/jfif, image/tiff, image/gif, image/webp"
+          type="file"
+        />
       </label>
       <div className={"flex flex-col gap-[14px]"}>
-        <div className={"flex flex-col gap-2"}>
-          <span className={"text-body2_16_medium text-talearnt_Text_01"}>
+        <div className={"flex flex-col"}>
+          <span
+            className={classNames(
+              "mb-2",
+              "text-body2_16_medium text-talearnt_Text_01"
+            )}
+          >
             닉네임
           </span>
           <Input
             value={nickname}
-            onChange={({ target: { value } }) =>
-              setEditProfileData(prev => ({
-                ...prev,
-                nickname: value,
-              }))
+            onChange={handleNicknameChange}
+            error={
+              data?.data === true
+                ? "이미 등록된 닉네임입니다"
+                : isNicknameEmpty
+                  ? "닉네임을 입력해 주세요"
+                  : (error?.errorMessage ?? undefined)
+            }
+            insideNode={
+              isLoading ? (
+                <Spinner />
+              ) : isNicknameValid ? (
+                <LabelText type={"error"}>사용불가</LabelText>
+              ) : data?.data === false ? (
+                <LabelText>사용가능</LabelText>
+              ) : undefined
             }
           />
+          {!isNicknameValid && (
+            <>
+              <p
+                className={classNames(
+                  "mt-1",
+                  "text-caption1_14_medium text-talearnt_Text_03"
+                )}
+              >
+                * 2~12자 이내로 입력해 주세요
+              </p>
+              <p className={"text-caption1_14_medium text-talearnt_Primary_01"}>
+                * 한글, 영문, 숫자는 자유롭게 입력 가능하며, 특수문자는 #만 입력
+                가능해요
+              </p>
+            </>
+          )}
         </div>
         <div className={"flex flex-col gap-2"}>
           <span className={"text-body2_16_medium text-talearnt_Text_01"}>
@@ -81,24 +218,7 @@ function ProfileEditForm({
           </span>
           <DropdownSearchable<number>
             options={talentsOptions}
-            onSelectHandler={({ checked, value }) => {
-              if (checked && giveTalents.length >= 5) {
-                setToast({
-                  message: "키워드는 5개까지만 설정 가능해요",
-                  type: "error",
-                });
-                return;
-              }
-
-              setEditProfileData(prev => ({
-                ...prev,
-                giveTalents: checked
-                  ? [...prev.giveTalents, value]
-                  : prev.giveTalents.filter(
-                      selectedValue => selectedValue !== value
-                    ),
-              }));
-            }}
+            onSelectHandler={handleDropdownSelect("giveTalents")}
             placeholder={"받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"}
             selectedValue={giveTalents}
           />
@@ -109,24 +229,7 @@ function ProfileEditForm({
           </span>
           <DropdownSearchable<number>
             options={talentsOptions}
-            onSelectHandler={({ checked, value }) => {
-              if (checked && receiveTalents.length >= 5) {
-                setToast({
-                  message: "키워드는 5개까지만 설정 가능해요",
-                  type: "error",
-                });
-                return;
-              }
-
-              setEditProfileData(prev => ({
-                ...prev,
-                receiveTalents: checked
-                  ? [...prev.receiveTalents, value]
-                  : prev.receiveTalents.filter(
-                      selectedValue => selectedValue !== value
-                    ),
-              }));
-            }}
+            onSelectHandler={handleDropdownSelect("receiveTalents")}
             placeholder={"받고 싶은 재능을 선택해 주세요 (최대 5개 선택 가능)"}
             selectedValue={receiveTalents}
           />
@@ -139,7 +242,9 @@ function ProfileEditForm({
         >
           취소하기
         </Button>
-        <Button>수정하기</Button>
+        <Button onClick={handleEditProfile} disabled={isNicknameValid}>
+          수정하기
+        </Button>
       </div>
     </>
   );
