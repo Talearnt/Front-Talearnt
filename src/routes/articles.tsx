@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
+import PrivateRoute from "@routes/PrivateRoute";
+
 import WriteArticleLayout from "@layout/WriteArticleLayout";
 
 const MatchingArticleList = lazy(
@@ -57,9 +59,11 @@ const articlesRouter: RouteObject[] = [
   },
   {
     element: (
-      <Suspense>
-        <WriteArticleLayout />
-      </Suspense>
+      <PrivateRoute>
+        <Suspense>
+          <WriteArticleLayout />
+        </Suspense>
+      </PrivateRoute>
     ),
     path: "write-article",
     children: [
