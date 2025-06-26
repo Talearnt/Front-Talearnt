@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 
-import "./index.css";
-
 import router from "@routes/index";
+
+import "./index.css";
 
 const mode = import.meta.env.MODE;
 const queryClient = new QueryClient({

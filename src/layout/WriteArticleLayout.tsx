@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,8 +6,6 @@ import { useForm } from "react-hook-form";
 import { classNames } from "@shared/utils/classNames";
 
 import { useGetProfile } from "@features/user/user.hook";
-
-import { useAuthStore } from "@store/user.store";
 
 import { TitledBox } from "@components/articles/writeArticle/TitledBox/TitledBox";
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
@@ -54,16 +51,6 @@ function WriteArticleLayout() {
       imageFileList: [],
     },
   });
-
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      return;
-    }
-
-    navigator("/sign-in");
-  }, [isLoggedIn, navigator]);
 
   return (
     <div
