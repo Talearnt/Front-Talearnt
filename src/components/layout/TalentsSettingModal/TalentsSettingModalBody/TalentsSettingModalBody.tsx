@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@shared/utils/classNames";
-import { filteredTalents } from "@shared/utils/filteredTalents";
+import { findTalentList } from "@shared/utils/findTalent";
 
 import { useDebounce } from "@shared/hooks/useDebounce";
 
@@ -22,7 +22,10 @@ import { Input } from "@components/common/inputs/Input/Input";
 import { ModalBody } from "@components/common/modal/parts/ModalBody";
 
 import { CURRENT_TALENTS_TYPE_NAME } from "@features/talentsSettingModal/talentsSettingModal.constants";
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList";
+import {
+  CATEGORIZED_TALENTS_DROPDOWN_OPTIONS,
+  TALENTS_LIST,
+} from "@shared/constants/talentsList";
 
 import { talentsType } from "@features/talentsSettingModal/talentsSettingModal.type";
 
@@ -58,9 +61,9 @@ function TalentsSettingModalBody() {
 
   // 검색한 값
   const search = useDebounce(watch("search"));
-  const currentTalentsList = filteredTalents(talentsData[currentTalentsType]);
-  const giveTalentsList = filteredTalents(talentsData.giveTalents);
-  const receiveTalentsList = filteredTalents(talentsData.receiveTalents);
+  const currentTalentsList = findTalentList(talentsData[currentTalentsType]);
+  const giveTalentsList = findTalentList(talentsData.giveTalents);
+  const receiveTalentsList = findTalentList(talentsData.receiveTalents);
   // 검색한 재능 키워드 목록
   const searchedTalentsList = useMemo(() => {
     if (!search) {
@@ -70,12 +73,10 @@ function TalentsSettingModalBody() {
     // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
     const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
 
-    return CATEGORIZED_TALENTS_LIST.flatMap(({ talents }) =>
-      talents.filter(
-        ({ talentCode, talentName }) =>
-          searchRegex.test(talentName.replace(/\s+/g, "")) &&
-          !talentsData[currentTalentsType].some(code => code === talentCode)
-      )
+    return TALENTS_LIST.filter(
+      ({ talentCode, talentName }) =>
+        searchRegex.test(talentName.replace(/\s+/g, "")) &&
+        !talentsData[currentTalentsType].some(code => code === talentCode)
     );
   }, [currentTalentsType, search, talentsData]);
 
@@ -96,7 +97,7 @@ function TalentsSettingModalBody() {
   const handleKeyDown = ({
     key,
     nativeEvent,
-  }: React.KeyboardEvent<HTMLInputElement>) => {
+  }: KeyboardEvent<HTMLInputElement>) => {
     if (nativeEvent.isComposing || !search) {
       // 아직 글자가 조합중인 상태라면 return (한글 이슈)
       return;
@@ -243,14 +244,11 @@ function TalentsSettingModalBody() {
           >
             {!search ? (
               // 검색을 하지 않은 경우
-              CATEGORIZED_TALENTS_LIST.map(
-                ({ categoryCode, categoryName, talents }) => (
+              CATEGORIZED_TALENTS_DROPDOWN_OPTIONS.map(
+                ({ categoryCode, categoryName, options }) => (
                   <DropdownFixedLabel<number>
                     title={categoryName}
-                    options={talents.map(({ talentCode, talentName }) => ({
-                      label: talentName,
-                      value: talentCode,
-                    }))}
+                    options={options}
                     onSelectHandler={({ checked, value }) => {
                       if (checked) {
                         if (isTalentsExceedingLimit()) {

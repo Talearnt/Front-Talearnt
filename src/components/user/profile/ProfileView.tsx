@@ -1,4 +1,4 @@
-import { filteredTalents } from "@shared/utils/filteredTalents";
+import { findTalentList } from "@shared/utils/findTalent";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { Avatar } from "@components/shared/Avatar/Avatar";
@@ -12,8 +12,8 @@ function ProfileView({
   giveTalents,
   receiveTalents,
 }: Omit<profileType, "userId" | "userNo">) {
-  const giveTalentsList = filteredTalents(giveTalents);
-  const receiveTalentsList = filteredTalents(receiveTalents);
+  const giveTalentsList = findTalentList(giveTalents);
+  const receiveTalentsList = findTalentList(receiveTalents);
 
   return (
     <>
