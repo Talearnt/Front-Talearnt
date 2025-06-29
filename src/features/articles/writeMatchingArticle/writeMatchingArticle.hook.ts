@@ -9,7 +9,7 @@ import {
 } from "@features/articles/writeMatchingArticle/writeMatchingArticle.api";
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
-import { filteredTalents } from "@shared/utils/filteredTalents";
+import { findTalentList } from "@shared/utils/findTalent";
 
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -98,10 +98,10 @@ export const usePostMatchingArticle = () => {
           nickname,
           duration,
           exchangeType,
-          giveTalents: filteredTalents(giveTalents).map(
+          giveTalents: findTalentList(giveTalents).map(
             ({ talentName }) => talentName
           ),
-          receiveTalents: filteredTalents(receiveTalents).map(
+          receiveTalents: findTalentList(receiveTalents).map(
             ({ talentName }) => talentName
           ),
           exchangePostNo: data,
@@ -164,10 +164,10 @@ export const usePutEditMatchingArticle = () => {
       const commonMatchingArticleData = {
         duration,
         exchangeType,
-        giveTalents: filteredTalents(giveTalents).map(
+        giveTalents: findTalentList(giveTalents).map(
           ({ talentName }) => talentName
         ),
-        receiveTalents: filteredTalents(receiveTalents).map(
+        receiveTalents: findTalentList(receiveTalents).map(
           ({ talentName }) => talentName
         ),
         title,

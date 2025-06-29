@@ -33,7 +33,7 @@ import {
   durationOptions,
   exchangeTypeList,
 } from "@features/articles/shared/articles.constants";
-import { CATEGORIZED_TALENTS_LIST } from "@shared/constants/talentsList";
+import { TALENTS_LIST } from "@shared/constants/talentsList";
 import { talentsOptions } from "@shared/constants/talentsOptions";
 
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
@@ -92,20 +92,15 @@ function WriteMatchingArticle() {
     "content",
     "imageFileList",
   ]);
-  const giveTalentsOptions = useMemo(
-    () =>
-      CATEGORIZED_TALENTS_LIST.reduce<dropdownOptionType<number>[]>(
-        (acc, category) => {
-          category.talents.forEach(({ talentCode, talentName }) => {
-            if (giveTalentCodeList.includes(talentCode)) {
-              acc.push({ label: talentName, value: talentCode });
-            }
-          });
 
-          return acc;
-        },
-        []
-      ),
+  const giveTalentsOptions: dropdownOptionType<number>[] = useMemo(
+    () =>
+      TALENTS_LIST.filter(({ talentCode }) =>
+        giveTalentCodeList.includes(talentCode)
+      ).map(({ talentCode, talentName }) => ({
+        label: talentName,
+        value: talentCode,
+      })),
     [giveTalentCodeList]
   );
 

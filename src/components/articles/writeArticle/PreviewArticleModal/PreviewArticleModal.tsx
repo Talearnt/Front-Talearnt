@@ -3,7 +3,7 @@ import { useRef } from "react";
 import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
-import { filteredTalents } from "@shared/utils/filteredTalents";
+import { findTalentList } from "@shared/utils/findTalent";
 
 import { useGetProfile } from "@features/user/user.hook";
 
@@ -101,7 +101,7 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {filteredTalents(
+                      {findTalentList(
                         (data as matchingArticlePreviewProps).giveTalents
                       ).map(({ talentCode, talentName }) => (
                         <Badge
@@ -120,7 +120,7 @@ function PreviewArticleModal({
                       주고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
-                      {filteredTalents(
+                      {findTalentList(
                         (data as matchingArticlePreviewProps).receiveTalents
                       ).map(({ talentCode, talentName }) => (
                         <Badge

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
-import { filteredTalents } from "@shared/utils/filteredTalents";
+import { findTalentList } from "@shared/utils/findTalent";
 
 import {
   useDeleteMatchingArticle,
@@ -78,10 +78,10 @@ function MatchingArticleDetail() {
       content,
       pureText: doc.body.textContent ?? "",
       imageFileList: [],
-      giveTalents: filteredTalents(giveTalents).map(
+      giveTalents: findTalentList(giveTalents).map(
         ({ talentCode }) => talentCode
       ),
-      receiveTalents: filteredTalents(receiveTalents).map(
+      receiveTalents: findTalentList(receiveTalents).map(
         ({ talentCode }) => talentCode
       ),
       duration,
