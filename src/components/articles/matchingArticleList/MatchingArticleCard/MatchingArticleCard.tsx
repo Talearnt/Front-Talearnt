@@ -1,8 +1,12 @@
 import { useEffect, useRef } from "react";
 
 import dayjs from "dayjs";
+import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@shared/utils/classNames";
+import { findTalentList } from "@shared/utils/findTalent";
+
+import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
@@ -29,6 +33,19 @@ function MatchingArticleCard({
 }: matchingArticleType & { className?: string; onClickHandler?: () => void }) {
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
+
+  const {
+    giveTalents: filteredGiveTalents,
+    receiveTalents: filteredReceiveTalents,
+  } = useMatchingArticleListFilterStore(
+    useShallow(state => ({
+      giveTalents: state.giveTalents,
+      receiveTalents: state.receiveTalents,
+    }))
+  );
+
+  const giveTalentsList = findTalentList(giveTalents);
+  const receiveTalentsList = findTalentList(receiveTalents);
 
   useEffect(() => {
     if (!giveTalentsRef.current || !receiveTalentsRef.current) {
@@ -122,11 +139,12 @@ function MatchingArticleCard({
             주고 싶은 재능
           </span>
           <div className={"flex gap-2"}>
-            {giveTalents.map(talentName => (
+            {giveTalentsList.map(({ talentCode, talentName }) => (
               <Badge
                 className={classNames(
                   "rounded-md",
-                  "group-hover/card:bg-talearnt_PrimaryBG_01 group-hover/card:text-talearnt_Primary_01"
+                  filteredGiveTalents.includes(talentCode) &&
+                    "bg-talearnt_PrimaryBG_01 !text-talearnt_Primary_01"
                 )}
                 label={talentName}
                 type={"keyword"}
@@ -143,11 +161,12 @@ function MatchingArticleCard({
             받고 싶은 재능
           </span>
           <div className={"flex gap-2"}>
-            {receiveTalents.map(talentName => (
+            {receiveTalentsList.map(({ talentCode, talentName }) => (
               <Badge
                 className={classNames(
                   "rounded-md",
-                  "group-hover/card:bg-talearnt_PrimaryBG_01 group-hover/card:text-talearnt_Primary_01"
+                  filteredReceiveTalents.includes(talentCode) &&
+                    "bg-talearnt_PrimaryBG_01 !text-talearnt_Primary_01"
                 )}
                 label={talentName}
                 type={"keyword"}
