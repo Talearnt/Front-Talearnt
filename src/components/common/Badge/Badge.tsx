@@ -1,24 +1,28 @@
 import { cva, VariantProps } from "class-variance-authority";
 
-const badgeVariants = cva("rounded-full whitespace-nowrap", {
+const badgeVariants = cva("whitespace-nowrap", {
   variants: {
-    type: {
-      default: "bg-talearnt_BG_Up_01 text-talearnt_Text_02",
-      disabled: "bg-talearnt_BG_Up_01 text-talearnt_Text_04",
-      error: "bg-talearnt_BG_Badge_01 text-talearnt_Text_Red",
-      primary: "bg-talearnt_PrimaryBG_04 text-talearnt_Primary_01",
-      keyword: "rounded-md bg-talearnt_BG_Up_02 text-talearnt_Text_02",
-      "keyword-blue":
-        "rounded-md bg-talearnt_PrimaryBG_01 text-talearnt_Primary_01",
+    color: {
+      skyblue: "bg-talearnt_PrimaryBG_04 text-talearnt_Primary_01",
+      blue: "bg-talearnt_PrimaryBG_01 text-talearnt_Primary_01",
+      lightgray: "bg-talearnt_BG_Up_01 text-talearnt_Text_04",
+      gray: "bg-talearnt_BG_Up_01 text-talearnt_Text_02",
+      darkgray: "bg-talearnt_BG_Up_02 text-talearnt_Text_02",
+      red: "bg-talearnt_BG_Badge_01 text-talearnt_Text_Red",
     },
     size: {
       small: "px-2 py-1 text-caption2_12_semibold",
       medium: "px-2 py-[6px] text-body3_14_medium",
     },
+    rounded: {
+      full: "rounded-full",
+      md: "rounded-md",
+    },
   },
   defaultVariants: {
-    type: "primary",
+    color: "skyblue",
     size: "small",
+    rounded: "full",
   },
 });
 
@@ -27,9 +31,9 @@ type BadgeProps = VariantProps<typeof badgeVariants> & {
   label: string;
 };
 
-function Badge({ className, label, type, size }: BadgeProps) {
+function Badge({ className, label, ...props }: BadgeProps) {
   return (
-    <span className={badgeVariants({ type, size, className })}>{label}</span>
+    <span className={badgeVariants({ className, ...props })}>{label}</span>
   );
 }
 
