@@ -29,7 +29,7 @@ function NoticeCard({
       <div className={"flex gap-1"}>
         <Badge label={noticeType} />
         {dayjs(createdAt).isAfter(dayjs().subtract(1, "week")) && (
-          <Badge label={"New"} type={"error"} />
+          <Badge label={"New"} color={"red"} />
         )}
       </div>
       <h2

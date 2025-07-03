@@ -54,7 +54,7 @@ function CommunityArticleCard({
       </div>
       <div className={"flex flex-col gap-2"}>
         <div className={"flex gap-1"}>
-          <Badge label={`Best ${index + 1}`} type={"error"} />
+          <Badge label={`Best ${index + 1}`} color={"red"} />
           <Badge label={postType} />
         </div>
         <h2

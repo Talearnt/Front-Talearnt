@@ -192,7 +192,9 @@ function CommunityArticleList() {
                     >
                       {title}
                     </span>
-                    {/* TODO New 배지 추가 */}
+                    {dayjs(createdAt).isAfter(dayjs().subtract(1, "week")) && (
+                      <Badge label={"New"} color={"red"} size={"medium"} />
+                    )}
                   </div>
                 </td>
                 <td
