@@ -200,7 +200,8 @@ function TalentsSettingModalBody() {
                   ).map(({ talentCode, talentName }) => (
                     <Badge
                       label={talentName}
-                      type={"keyword"}
+                      color={"darkgray"}
+                      rounded={"md"}
                       size={"medium"}
                       key={`${key}-${talentCode}`}
                     />

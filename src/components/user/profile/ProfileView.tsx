@@ -46,7 +46,8 @@ function ProfileView({
           {giveTalentsList.map(({ talentCode, talentName }) => (
             <Badge
               label={talentName}
-              type={"keyword"}
+              color={"blue"}
+              rounded={"md"}
               size={"medium"}
               key={talentCode}
             />
@@ -62,7 +63,8 @@ function ProfileView({
           {receiveTalentsList.map(({ talentCode, talentName }) => (
             <Badge
               label={talentName}
-              type={"keyword"}
+              color={"darkgray"}
+              rounded={"md"}
               size={"medium"}
               key={talentCode}
             />

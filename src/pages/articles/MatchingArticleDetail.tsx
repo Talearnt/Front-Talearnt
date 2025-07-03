@@ -153,8 +153,8 @@ function MatchingArticleDetail() {
             </span>
             <Badge
               label={status}
+              color={status === "모집중" ? "skyblue" : "lightgray"}
               size={"medium"}
-              type={status === "모집중" ? "primary" : "disabled"}
             />
             <div
               className={classNames(
@@ -178,7 +178,8 @@ function MatchingArticleDetail() {
                 {giveTalents.map(talentName => (
                   <Badge
                     label={talentName}
-                    type={"keyword"}
+                    color={"darkgray"}
+                    rounded={"md"}
                     size={"medium"}
                     key={`preview-giveTalent-${talentName}`}
                   />
@@ -193,7 +194,8 @@ function MatchingArticleDetail() {
                 {receiveTalents.map(talentName => (
                   <Badge
                     label={talentName}
-                    type={"keyword"}
+                    color={"darkgray"}
+                    rounded={"md"}
                     size={"medium"}
                     key={`preview-receiveTalent-${talentName}`}
                   />

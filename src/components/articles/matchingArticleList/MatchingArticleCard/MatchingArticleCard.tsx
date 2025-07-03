@@ -111,8 +111,8 @@ function MatchingArticleCard({
       </div>
       <div className={classNames("flex gap-1", "mb-2")}>
         <Badge label={status} />
-        <Badge label={exchangeType} type={"default"} />
-        <Badge label={duration} type={"default"} />
+        <Badge label={exchangeType} color={"gray"} />
+        <Badge label={duration} color={"gray"} />
       </div>
       <h2
         className={classNames(
@@ -141,13 +141,11 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {giveTalentsList.map(({ talentCode, talentName }) => (
               <Badge
-                className={classNames(
-                  "rounded-md",
-                  filteredGiveTalents.includes(talentCode) &&
-                    "bg-talearnt_PrimaryBG_01 !text-talearnt_Primary_01"
-                )}
                 label={talentName}
-                type={"keyword"}
+                color={
+                  filteredGiveTalents.includes(talentCode) ? "blue" : "darkgray"
+                }
+                rounded={"md"}
                 key={`${exchangePostNo}st-card-giveTalent-${talentName}`}
               />
             ))}
@@ -163,13 +161,13 @@ function MatchingArticleCard({
           <div className={"flex gap-2"}>
             {receiveTalentsList.map(({ talentCode, talentName }) => (
               <Badge
-                className={classNames(
-                  "rounded-md",
-                  filteredReceiveTalents.includes(talentCode) &&
-                    "bg-talearnt_PrimaryBG_01 !text-talearnt_Primary_01"
-                )}
                 label={talentName}
-                type={"keyword"}
+                color={
+                  filteredReceiveTalents.includes(talentCode)
+                    ? "blue"
+                    : "darkgray"
+                }
+                rounded={"md"}
                 key={`${exchangePostNo}st-card-receiveTalent-${talentName}`}
               />
             ))}

@@ -106,7 +106,8 @@ function PreviewArticleModal({
                       ).map(({ talentCode, talentName }) => (
                         <Badge
                           label={talentName}
-                          type={"keyword"}
+                          color={"darkgray"}
+                          rounded={"md"}
                           size={"medium"}
                           key={`preview-giveTalent-${talentCode}`}
                         />
@@ -117,7 +118,7 @@ function PreviewArticleModal({
                     <label
                       className={"text-body2_16_semibold text-talearnt_Text_03"}
                     >
-                      주고 싶은 나의 재능
+                      받고 싶은 나의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
                       {findTalentList(
@@ -125,7 +126,8 @@ function PreviewArticleModal({
                       ).map(({ talentCode, talentName }) => (
                         <Badge
                           label={talentName}
-                          type={"keyword"}
+                          color={"darkgray"}
+                          rounded={"md"}
                           size={"medium"}
                           key={`preview-receiveTalent-${talentCode}`}
                         />
