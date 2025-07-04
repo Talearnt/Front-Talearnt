@@ -34,17 +34,6 @@ function MatchingArticleList() {
   const navigator = useNavigate();
 
   const {
-    data: {
-      data: {
-        results,
-        pagination: { totalPages },
-      },
-    },
-    isLoading,
-    isSuccess,
-  } = useGetMatchingArticleList();
-
-  const {
     giveTalents,
     receiveTalents,
     duration,
@@ -74,6 +63,17 @@ function MatchingArticleList() {
         setHasNewMatchingArticle: state.setHasNewMatchingArticle,
       }))
     );
+
+  const {
+    data: {
+      data: {
+        results,
+        pagination: { totalPages },
+      },
+    },
+    isLoading,
+    isSuccess,
+  } = useGetMatchingArticleList();
 
   const hasFilter =
     giveTalents.length > 0 ||

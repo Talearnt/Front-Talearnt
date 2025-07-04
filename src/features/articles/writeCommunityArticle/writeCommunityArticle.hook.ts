@@ -32,18 +32,18 @@ export const usePostCommunityArticle = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    data: {
-      data: { profileImg, nickname, userNo },
-    },
-  } = useGetProfile();
-
   const resetFilters = useCommunityArticleListFilterStore(
     state => state.resetFilters
   );
   const setHasNewCommunityArticle = useHasNewCommunityArticleStore(
     state => state.setHasNewCommunityArticle
   );
+
+  const {
+    data: {
+      data: { profileImg, nickname, userNo },
+    },
+  } = useGetProfile();
 
   // 커뮤니티 게시물 목록 초기 쿼리 키
   const queryKey = createQueryKey(

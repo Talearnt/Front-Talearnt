@@ -33,6 +33,9 @@ function ChangePassword() {
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const [canProceed, setCanProceed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     formState: { errors },
     register,
@@ -43,9 +46,6 @@ function ChangePassword() {
     mode: "onChange",
     resolver: yupResolver(changePasswordSchema),
   });
-
-  const [canProceed, setCanProceed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [pw, checkedPw] = watch(["pw", "checkedPw"]);
   const doneButtonDisable = !pw || !checkedPw || Object.keys(errors).length > 0;

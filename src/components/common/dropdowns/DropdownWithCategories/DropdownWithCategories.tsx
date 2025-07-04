@@ -37,14 +37,14 @@ function DropdownWithCategories<T = string>({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
 
-  useOutsideClick(wrapperRef, checkboxRef);
-
-  const setToast = useToastStore(state => state.setToast);
-
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedValueList, setSelectedValueList] = useState<
     dropdownOptionType<T>[]
   >([]);
+
+  const setToast = useToastStore(state => state.setToast);
+
+  useOutsideClick(wrapperRef, checkboxRef);
 
   useEffect(() => {
     if (selectedValue.length === 0) {

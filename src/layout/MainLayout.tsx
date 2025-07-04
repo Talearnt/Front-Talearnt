@@ -38,12 +38,8 @@ function MainLayout() {
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
-  const {
-    data: {
-      data: { giveTalents, profileImg },
-    },
-    isSuccess,
-  } = useGetProfile();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
 
   const { accessToken, setAccessToken, isLoggedIn } = useAuthStore(
     useShallow(state => ({
@@ -53,8 +49,12 @@ function MainLayout() {
     }))
   );
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
+  const {
+    data: {
+      data: { giveTalents, profileImg },
+    },
+    isSuccess,
+  } = useGetProfile();
 
   const toggleTopButtonOnScroll = ({
     currentTarget: { scrollTop },

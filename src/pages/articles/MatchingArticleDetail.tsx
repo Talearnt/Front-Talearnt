@@ -26,6 +26,16 @@ import { Avatar } from "@components/shared/Avatar/Avatar";
 function MatchingArticleDetail() {
   const navigator = useNavigate();
 
+  const [clickedIndex, setClickedIndex] = useState<number | undefined>(
+    undefined
+  );
+
+  const setEditMatchingArticle = useEditMatchingArticleDataStore(
+    state => state.setEditMatchingArticle
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
   const {
     data: {
       data: { userNo: profileUserNo },
@@ -57,16 +67,6 @@ function MatchingArticleDetail() {
     isLoading,
   } = useGetMatchingArticleDetail();
   const { mutate } = useDeleteMatchingArticle();
-
-  const setEditMatchingArticle = useEditMatchingArticleDataStore(
-    state => state.setEditMatchingArticle
-  );
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [clickedIndex, setClickedIndex] = useState<number | undefined>(
-    undefined
-  );
 
   const handleEdit = () => {
     const parser = new DOMParser();

@@ -35,6 +35,18 @@ function WriteCommunityArticle() {
   const navigator = useNavigate();
   const context = useOutletContext();
 
+  const [isOpenPreview, setIsOpenPreview] = useState(false);
+  const [isPostInProgress, setIsPostInProgress] = useState(false);
+
+  const editCommunityArticleData = useEditCommunityArticleDataStore(
+    state => state.editCommunityArticle
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
+  const { mutateAsync: postCommunityArticle } = usePostCommunityArticle();
+  const { mutateAsync: editCommunityArticle } = usePutEditCommunityArticle();
+
   const {
     formState: { errors },
     handleSubmit,
@@ -45,19 +57,6 @@ function WriteCommunityArticle() {
   } = (
     context as { communityForm: UseFormReturn<communityArticleFormDataType> }
   ).communityForm;
-
-  const { mutateAsync: postCommunityArticle } = usePostCommunityArticle();
-  const { mutateAsync: editCommunityArticle } = usePutEditCommunityArticle();
-
-  const editCommunityArticleData = useEditCommunityArticleDataStore(
-    state => state.editCommunityArticle
-  );
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [isOpenPreview, setIsOpenPreview] = useState(false);
-  const [isPostInProgress, setIsPostInProgress] = useState(false);
-
   const [title, content, imageFileList, postType] = watch([
     "title",
     "content",

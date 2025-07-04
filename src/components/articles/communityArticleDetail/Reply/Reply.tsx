@@ -27,6 +27,8 @@ function Reply({
   createdAt,
   isDeleted,
 }: ReplyProps) {
+  const [isEdit, setIsEdit] = useState(false);
+
   const {
     data: {
       data: { nickname },
@@ -35,8 +37,6 @@ function Reply({
   const { mutateAsync: editCommunityArticleReply } =
     usePutEditCommunityArticleReply(commentNo, replyNo);
   const { mutate } = useDeleteCommunityArticleReply(commentNo, replyNo);
-
-  const [isEdit, setIsEdit] = useState(false);
 
   return isEdit ? (
     <UserContentWrite

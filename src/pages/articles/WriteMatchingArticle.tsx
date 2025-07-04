@@ -48,12 +48,24 @@ function WriteMatchingArticle() {
   const navigator = useNavigate();
   const context = useOutletContext();
 
+  const [isOpenPreview, setIsOpenPreview] = useState(false);
+  const [isPostInProgress, setIsPostInProgress] = useState(false);
+
+  const editMatchingArticleData = useEditMatchingArticleDataStore(
+    state => state.editMatchingArticle
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
   const {
     data: {
       data: { giveTalents: giveTalentCodeList },
     },
     isError,
   } = useGetProfile();
+  const { mutateAsync: postMatchingArticle } = usePostMatchingArticle();
+  const { mutateAsync: editMatchingArticle } = usePutEditMatchingArticle();
+
   const {
     formState: { errors },
     handleSubmit,
@@ -62,19 +74,6 @@ function WriteMatchingArticle() {
     trigger,
     reset,
   } = (context as { matchingForm: UseFormReturn<formType> }).matchingForm;
-
-  const { mutateAsync: postMatchingArticle } = usePostMatchingArticle();
-  const { mutateAsync: editMatchingArticle } = usePutEditMatchingArticle();
-
-  const editMatchingArticleData = useEditMatchingArticleDataStore(
-    state => state.editMatchingArticle
-  );
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [isOpenPreview, setIsOpenPreview] = useState(false);
-  const [isPostInProgress, setIsPostInProgress] = useState(false);
-
   const [
     giveTalents,
     receiveTalents,

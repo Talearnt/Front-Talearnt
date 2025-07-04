@@ -25,6 +25,8 @@ export function ArticleSection({
 }: ArticleSectionProps) {
   const navigator = useNavigate();
 
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   const { emblaRef, canScrollPrev, canScrollNext, scrollPrev, scrollNext } =
     useCarousel({
       carouselOptions: {
@@ -33,8 +35,6 @@ export function ArticleSection({
       },
       trackButtonStates: true,
     });
-
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const hasChildren = children.length > 0;
   const type = articleType === "community" ? "커뮤니티" : "매칭";

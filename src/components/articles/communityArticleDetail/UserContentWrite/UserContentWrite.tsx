@@ -29,17 +29,17 @@ function UserContentWrite({
 }: ReplyProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const [editContent, setEditContent] = useState(content ?? "");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setToast = useToastStore(state => state.setToast);
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   const {
     data: {
       data: { profileImg },
     },
   } = useGetProfile();
-
-  const setToast = useToastStore(state => state.setToast);
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-
-  const [editContent, setEditContent] = useState(content ?? "");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleCancel = () => {
     if (!textareaRef.current) {

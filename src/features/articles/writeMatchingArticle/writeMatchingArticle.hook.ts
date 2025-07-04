@@ -33,18 +33,18 @@ export const usePostMatchingArticle = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    data: {
-      data: { profileImg, nickname, userNo },
-    },
-  } = useGetProfile();
-
   const resetFilters = useMatchingArticleListFilterStore(
     state => state.resetFilters
   );
   const setHasNewMatchingArticle = useHasNewMatchingArticleStore(
     state => state.setHasNewMatchingArticle
   );
+
+  const {
+    data: {
+      data: { profileImg, nickname, userNo },
+    },
+  } = useGetProfile();
 
   // 매칭 게시물 목록 초기 쿼리 키
   const queryKey = createQueryKey(

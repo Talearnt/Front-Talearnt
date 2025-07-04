@@ -27,11 +27,11 @@ function TextEditor({
 }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
 
-  const setToast = useToastStore(state => state.setToast);
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [imageFileList, setImageFileList] = useState<imageFileType[]>([]);
+
+  const setToast = useToastStore(state => state.setToast);
 
   const hasError = !!error;
 

@@ -58,14 +58,14 @@ function DropdownSearchable<T = string>({
   const scrollRefArray = useRef<(HTMLDivElement | null)[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  // 현재 선택된 재능의 index
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+
   const { register, setValue, watch } = useForm<{
     checkbox: boolean;
     search: string;
     selectedCategoryIndex?: number;
   }>();
-
-  // 현재 선택된 재능의 index
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 
   const [isOpen, selectedCategoryIndex] = watch([
     "checkbox",

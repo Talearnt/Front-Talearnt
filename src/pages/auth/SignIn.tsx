@@ -30,6 +30,8 @@ const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST
 function SignIn() {
   const navigator = useNavigate();
 
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
+
   const {
     formState: { errors },
     handleSubmit,
@@ -40,8 +42,6 @@ function SignIn() {
   } = useForm({
     resolver: yupResolver(signInSchema),
   });
-
-  const setAccessToken = useAuthStore(state => state.setAccessToken);
 
   const [userId, pw] = watch(["userId", "pw"]);
 
