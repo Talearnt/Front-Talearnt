@@ -32,6 +32,22 @@ import { Avatar } from "@components/shared/Avatar/Avatar";
 function CommunityArticleDetail() {
   const navigator = useNavigate();
 
+  const [clickedIndex, setClickedIndex] = useState<number | undefined>(
+    undefined
+  );
+
+  const { page, setPage } = useCommunityArticleCommentPageStore(
+    useShallow(state => ({
+      page: state.page,
+      setPage: state.setPage,
+    }))
+  );
+  const setEditCommunityArticle = useEditCommunityArticleDataStore(
+    state => state.setEditCommunityArticle
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
   const {
     data: {
       data: { userNo: profileUserNo },
@@ -72,22 +88,6 @@ function CommunityArticleDetail() {
   const { mutate: deleteCommunityArticle } = useDeleteCommunityArticle();
   const { mutate: postCommunityArticleComment } =
     usePostCommunityArticleComment();
-
-  const { page, setPage } = useCommunityArticleCommentPageStore(
-    useShallow(state => ({
-      page: state.page,
-      setPage: state.setPage,
-    }))
-  );
-  const setEditCommunityArticle = useEditCommunityArticleDataStore(
-    state => state.setEditCommunityArticle
-  );
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [clickedIndex, setClickedIndex] = useState<number | undefined>(
-    undefined
-  );
 
   const handleEdit = () => {
     const parser = new DOMParser();

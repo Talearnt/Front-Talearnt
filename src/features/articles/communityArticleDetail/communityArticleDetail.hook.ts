@@ -117,13 +117,13 @@ export const usePostCommunityArticleComment = () => {
 
   const queryClient = useQueryClient();
 
+  const setPage = useCommunityArticleCommentPageStore(state => state.setPage);
+
   const {
     data: {
       data: { commentLastPage },
     },
   } = useGetCommunityArticleDetail();
-
-  const setPage = useCommunityArticleCommentPageStore(state => state.setPage);
 
   const postNo = Number(communityPostNo);
 

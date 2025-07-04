@@ -59,25 +59,6 @@ function VerificationCode({
   sendCodeHandler,
   verificationState,
 }: VerificationCodeProps) {
-  const {
-    clearErrors,
-    formState: { errors },
-    register,
-    setError,
-    setFocus,
-    setValue,
-    watch,
-  } = useForm({
-    mode: "onChange",
-    resolver: yupResolver(verificationCodeSchema),
-  });
-
-  const { isFinished, isRunning, time, startTimer, stopTimer } =
-    useVerificationCodeTimer();
-
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [{ isCodeVerified }, setVerification] = verificationState;
   const [isLoading, setIsLoading] = useState<
     undefined | "phone" | "verificationCode"
   >();
@@ -108,6 +89,25 @@ function VerificationCode({
       };
     }
   );
+
+  const [{ isCodeVerified }, setVerification] = verificationState;
+
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
+  const {
+    clearErrors,
+    formState: { errors },
+    register,
+    setError,
+    setFocus,
+    setValue,
+    watch,
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(verificationCodeSchema),
+  });
+  const { isFinished, isRunning, time, startTimer, stopTimer } =
+    useVerificationCodeTimer();
 
   const [phone, verificationCode] = watch(["phone", "verificationCode"]);
   const hasPhoneNumber = !!phone && phone.length === 11;

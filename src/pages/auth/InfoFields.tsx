@@ -66,6 +66,15 @@ function InfoFields() {
   const nickNameRef = useRef<string>("");
   const navigator = useNavigate();
 
+  const [canProceed, setCanProceed] = useState(true);
+  const [verification, setVerification] = useState<verificationStateType>({
+    isCodeVerified: false,
+  });
+
+  const agreements = useAgreementStore(state => state.agreements);
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
   const {
     formState: { errors },
     register,
@@ -92,16 +101,6 @@ function InfoFields() {
     debounceUserId,
     !!debounceUserId && !errors.userId && debounceUserId === watch("userId")
   );
-
-  const agreements = useAgreementStore(state => state.agreements);
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
-
-  const [canProceed, setCanProceed] = useState(true);
-  const [verification, setVerification] = useState<verificationStateType>({
-    isCodeVerified: false,
-  });
-
   const [nickname, name, gender, userId, pw, checkedPw] = watch([
     "nickname",
     "name",

@@ -28,15 +28,15 @@ function HorizontalScrollWrapper({
     setScrollLeft(0);
   };
   const onMouseMove = (e: MouseEvent) => {
-    if (!isDragging) {
+    if (!isDragging || !scrollRef.current) {
       return;
     }
 
     e.preventDefault();
 
-    const x = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+    const x = e.pageX - scrollRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;
-    scrollRef.current!.scrollLeft = scrollLeft - walk;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (

@@ -23,16 +23,6 @@ import { communityArticleListFilterType } from "@features/articles/communityArti
 function CommunityArticleList() {
   const navigator = useNavigate();
 
-  const {
-    data: {
-      data: {
-        results,
-        pagination: { totalPages, totalCount },
-      },
-    },
-    isLoading,
-  } = useGetCommunityArticleList();
-
   const { postType, page, setFilter } = useCommunityArticleListFilterStore(
     useShallow(state => ({
       postType: state.postType,
@@ -48,6 +38,16 @@ function CommunityArticleList() {
         setHasNewCommunityArticle: state.setHasNewCommunityArticle,
       }))
     );
+
+  const {
+    data: {
+      data: {
+        results,
+        pagination: { totalPages, totalCount },
+      },
+    },
+    isLoading,
+  } = useGetCommunityArticleList();
 
   // 애니메이션 완료 후 플래그 제거
   useEffect(() => {

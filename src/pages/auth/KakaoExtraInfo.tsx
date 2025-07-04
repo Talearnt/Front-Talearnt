@@ -41,6 +41,13 @@ function KakaoExtraInfo() {
   const navigator = useNavigate();
   const nickNameRef = useRef<string>("");
 
+  const agreementsList = useAgreementStore(state => state.agreements);
+  const kakaoAuthResponse = useKakaoAuthResponseStore(
+    state => state.kakaoAuthResponse
+  );
+  const setToast = useToastStore(state => state.setToast);
+  const setPrompt = usePromptStore(state => state.setPrompt);
+
   const {
     formState: { errors },
     register,
@@ -52,7 +59,6 @@ function KakaoExtraInfo() {
     resolver: yupResolver(kakaoExtraInfoSchema),
   });
   const agreementsForm = useForm();
-
   const debounceNickname = useDebounce(watch("nickname"));
   const { data, isLoading } = useCheckNickname(
     debounceNickname,
@@ -61,13 +67,6 @@ function KakaoExtraInfo() {
       debounceNickname === watch("nickname") &&
       !errors.nickname
   );
-
-  const agreementsList = useAgreementStore(state => state.agreements);
-  const kakaoAuthResponse = useKakaoAuthResponseStore(
-    state => state.kakaoAuthResponse
-  );
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const agreements = agreementsForm.watch(
     agreementsList.map(({ agreeCodeId }) => agreeCodeId.toString())

@@ -38,6 +38,11 @@ function FindId() {
     createdAt: "",
   });
 
+  const [canProceed, setCanProceed] = useState(false);
+  const [verification, setVerification] = useState<verificationStateType>({
+    isCodeVerified: false,
+  });
+
   const {
     formState: { errors },
     register,
@@ -45,11 +50,6 @@ function FindId() {
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(findIdSchema),
-  });
-
-  const [canProceed, setCanProceed] = useState(false);
-  const [verification, setVerification] = useState<verificationStateType>({
-    isCodeVerified: false,
   });
 
   const [name] = watch(["name"]);

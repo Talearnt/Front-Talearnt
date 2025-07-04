@@ -14,14 +14,14 @@ const MAIN_ARTICLES_LIST_SIZE = 10;
 
 // 맞춤 매칭 게시물 목록
 export const useGetPersonalizedMatchingArticleList = () => {
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   const {
     data: {
       data: { giveTalents, receiveTalents },
     },
     isSuccess,
   } = useGetProfile();
-
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.MATCHING], {
     isLoggedIn: true,

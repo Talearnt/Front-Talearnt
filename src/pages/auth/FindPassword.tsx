@@ -28,6 +28,9 @@ const findIdSchema = object({
 function FindPassword() {
   const sentDateRef = useRef<string>("");
 
+  const [canProceed, setCanProceed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     formState: { errors },
     register,
@@ -37,9 +40,6 @@ function FindPassword() {
     mode: "onChange",
     resolver: yupResolver(findIdSchema),
   });
-
-  const [canProceed, setCanProceed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [phone, userId] = watch(["phone", "userId"]);
   const buttonDisable =

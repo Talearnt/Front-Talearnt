@@ -37,7 +37,8 @@ function TalentsSettingModalBody() {
   // 현재 선택된 재능
   const selectedTalentRef = useRef<HTMLButtonElement>(null);
 
-  const { register, reset, watch } = useForm<{ search: string }>();
+  // 현재 선택된 재능의 index
+  const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
 
   const {
     scrollRef,
@@ -56,8 +57,7 @@ function TalentsSettingModalBody() {
   );
   const setToast = useToastStore(state => state.setToast);
 
-  // 현재 선택된 재능의 index
-  const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
+  const { register, reset, watch } = useForm<{ search: string }>();
 
   // 검색한 값
   const search = useDebounce(watch("search"));

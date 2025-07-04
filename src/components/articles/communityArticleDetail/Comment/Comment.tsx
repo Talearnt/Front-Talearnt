@@ -53,6 +53,8 @@ function Comment({
   const [isReplyWriting, setIsReplyWriting] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
   const {
     data: {
       data: { nickname },
@@ -69,8 +71,6 @@ function Comment({
     usePutEditCommunityArticleComment();
   const { mutate: deleteCommunityArticleComment } =
     useDeleteCommunityArticleComment();
-
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   return isEdit ? (
     <UserContentWrite
