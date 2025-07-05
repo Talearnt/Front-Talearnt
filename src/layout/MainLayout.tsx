@@ -1,4 +1,4 @@
-import { UIEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -17,7 +17,7 @@ import { NotificationIcon } from "@components/common/icons/styled/NotificationIc
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
-import { Avatar } from "@components/shared/Avatar/Avatar";
+import { AvatarDropdown } from "@components/user/profile/AvatarDropdown";
 
 const linkArray = [
   {
@@ -56,9 +56,6 @@ function MainLayout() {
     isSuccess,
   } = useGetProfile();
 
-  const toggleTopButtonOnScroll = ({
-    currentTarget: { scrollTop },
-  }: UIEvent<HTMLDivElement>) => setIsTopButtonVisible(scrollTop > 150);
   const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   // 메모리에 accessToken 저장
@@ -76,6 +73,15 @@ function MainLayout() {
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [pathname]);
+  // 탑버튼 표시 여부
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      setIsTopButtonVisible(window.scrollY > 150);
+    };
+
+    window.addEventListener("scroll", handleWindowScroll);
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
 
   if (isLoading) {
     return null;
@@ -139,33 +145,15 @@ function MainLayout() {
             </div>
             {isLoggedIn && (
               <>
-                <NotificationIcon className={"stroke-talearnt_Icon_01"} />
-                <div className={"flex items-center"}>
-                  <Avatar imageUrl={profileImg} size={32} />
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.60482 5.69531H11.3952C11.5153 5.69582 11.6326 5.73193 11.7322 5.79908C11.8318 5.86623 11.9092 5.96141 11.9547 6.07258C12.0002 6.18374 12.0118 6.30591 11.9878 6.42362C11.9639 6.54134 11.9056 6.64932 11.8203 6.73391L8.43123 10.123C8.37477 10.1799 8.30759 10.2251 8.23358 10.256C8.15957 10.2868 8.08018 10.3027 8 10.3027C7.91982 10.3027 7.84043 10.2868 7.76642 10.256C7.69241 10.2251 7.62523 10.1799 7.56877 10.123L4.17966 6.73391C4.09438 6.64932 4.03609 6.54134 4.01217 6.42362C3.98824 6.30591 3.99977 6.18374 4.04527 6.07258C4.09078 5.96141 4.16823 5.86623 4.26783 5.79908C4.36743 5.73193 4.4847 5.69582 4.60482 5.69531Z"
-                      fill="#414A4E"
-                    />
-                  </svg>
-                </div>
+                <NotificationIcon className={"stroke-talearnt_Icon_01 p-1"} />
+                <AvatarDropdown profileImg={profileImg} />
               </>
             )}
           </div>
         </div>
       </header>
       <div
-        className={classNames(
-          "grid grid-rows-[1fr_208px]",
-          "h-[calc(100vh-90px)] min-w-[1440px] overflow-y-auto"
-        )}
-        onScroll={toggleTopButtonOnScroll}
+        className={classNames("grid grid-rows-[1fr_208px]", "min-w-[1440px]")}
       >
         <main className={"mx-auto w-[1440px] px-20"}>
           <Outlet />
