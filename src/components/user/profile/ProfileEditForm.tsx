@@ -242,7 +242,14 @@ function ProfileEditForm({
         >
           취소하기
         </Button>
-        <Button onClick={handleEditProfile} disabled={isNicknameValid}>
+        <Button
+          onClick={handleEditProfile}
+          disabled={
+            isNicknameValid ||
+            giveTalents.length === 0 ||
+            receiveTalents.length === 0
+          }
+        >
           수정하기
         </Button>
       </div>
