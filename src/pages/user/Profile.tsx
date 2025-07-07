@@ -87,11 +87,13 @@ function Profile() {
         >
           {isEditProfile ? (
             <ProfileEditForm
-              profileImg={editProfileData.profileImg}
-              nickname={editProfileData.nickname}
-              giveTalents={editProfileData.giveTalents}
-              receiveTalents={editProfileData.receiveTalents}
-              currentNickname={nickname}
+              originalProfileData={{
+                profileImg,
+                nickname,
+                giveTalents,
+                receiveTalents,
+              }}
+              editProfileData={editProfileData}
               setEditProfileData={setEditProfileData}
               setIsEditProfile={setIsEditProfile}
             />
