@@ -16,29 +16,29 @@ export const usePutProfile = () => {
   return useMutation({
     mutationFn: async ({
       file,
+      profileImg,
       ...data
-    }: Omit<profileType, "profileImg" | "userId" | "userNo"> & {
+    }: Omit<profileType, "userId" | "userNo"> & {
+      profileImg: string | null;
       file: File | null;
     }) => {
-      let profileImg = null;
-
-      if (file) {
-        const { data: presigned } = await postToGetPresignedURL([
-          { fileName: file.name, fileType: file.type, fileSize: file.size },
-        ]);
-
-        await fetch(presigned[0], {
-          method: "PUT",
-          body: file,
-          headers: new Headers({ "Content-Type": file.type }),
-        });
-
-        const { origin, pathname } = new URL(presigned[0]);
-
-        profileImg = origin + pathname;
+      if (!file) {
+        return await putProfile({ ...data, profileImg });
       }
 
-      return await putProfile({ ...data, profileImg });
+      const { data: presigned } = await postToGetPresignedURL([
+        { fileName: file.name, fileType: file.type, fileSize: file.size },
+      ]);
+
+      await fetch(presigned[0], {
+        method: "PUT",
+        body: file,
+        headers: new Headers({ "Content-Type": file.type }),
+      });
+
+      const { origin, pathname } = new URL(presigned[0]);
+
+      return await putProfile({ ...data, profileImg: origin + pathname });
     },
     onSuccess: async data => {
       await queryClient.invalidateQueries({
