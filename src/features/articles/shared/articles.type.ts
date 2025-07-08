@@ -1,5 +1,5 @@
 // 게시글 데이터
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 export type baseContentType = {
   content: string;

@@ -1,5 +1,5 @@
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 export type matchingArticleDetailType = Pick<profileType, "userNo"> &
   matchingArticleType & {

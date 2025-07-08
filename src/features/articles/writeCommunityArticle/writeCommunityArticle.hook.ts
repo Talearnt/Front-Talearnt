@@ -10,7 +10,7 @@ import {
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 import {

@@ -12,7 +12,7 @@ import {
   useGetCommunityArticleDetail,
   usePostCommunityArticleComment,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useCommunityArticleCommentPageStore } from "@features/articles/communityArticleDetail/communityArticleDetail.store";
 import { useEditCommunityArticleDataStore } from "@features/articles/shared/articles.store";

@@ -4,7 +4,7 @@ import {
   useDeleteCommunityArticleReply,
   usePutEditCommunityArticleReply,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { UserContentSection } from "@components/articles/communityArticleDetail/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@components/articles/communityArticleDetail/UserContentWrite/UserContentWrite";

@@ -1,5 +1,5 @@
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 export type communityArticleDetailType = Pick<profileType, "userNo"> &
   Omit<communityArticleType, "commentCount"> & {

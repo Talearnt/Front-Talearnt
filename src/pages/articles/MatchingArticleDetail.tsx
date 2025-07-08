@@ -10,7 +10,7 @@ import {
   useDeleteMatchingArticle,
   useGetMatchingArticleDetail,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.hook";
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useEditMatchingArticleDataStore } from "@features/articles/shared/articles.store";
 import { usePromptStore } from "@store/prompt.store";

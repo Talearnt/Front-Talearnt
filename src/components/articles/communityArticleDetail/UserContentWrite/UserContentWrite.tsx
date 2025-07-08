@@ -2,7 +2,7 @@ import { ComponentProps, useRef, useState } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useToastStore } from "@store/toast.store";
 import { useAuthStore } from "@store/user.store";

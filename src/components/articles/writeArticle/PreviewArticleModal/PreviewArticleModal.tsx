@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { classNames } from "@shared/utils/classNames";
 import { findTalentList } from "@shared/utils/findTalent";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { Button } from "@components/common/Button/Button";

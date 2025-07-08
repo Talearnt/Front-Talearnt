@@ -7,7 +7,7 @@ import { getAccessTokenUseRefreshToken } from "@features/user/user.api";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useAuthStore } from "@store/user.store";
 

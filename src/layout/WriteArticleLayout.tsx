@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { TitledBox } from "@components/articles/writeArticle/TitledBox/TitledBox";
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
