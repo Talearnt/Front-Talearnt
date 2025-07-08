@@ -4,7 +4,7 @@ import { Badge } from "@components/common/Badge/Badge";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 import { AvatarDecoration } from "@components/user/profile/AvatarDecoration";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 function ProfileView({
   profileImg,

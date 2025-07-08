@@ -7,7 +7,7 @@ import {
   useGetPersonalizedMatchingArticleList,
   useGetRecentMatchingArticleList,
 } from "@features/mainPage/mainPage.hook";
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { MatchingArticleCard } from "@components/articles/matchingArticleList/MatchingArticleCard/MatchingArticleCard";
 import { ArticleSection } from "@components/mainPage/ArticleSection/ArticleSection";

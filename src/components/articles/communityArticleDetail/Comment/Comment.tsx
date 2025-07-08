@@ -8,7 +8,7 @@ import {
   usePostCommunityArticleReply,
   usePutEditCommunityArticleComment,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useAuthStore } from "@store/user.store";
 

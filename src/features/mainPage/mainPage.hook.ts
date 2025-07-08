@@ -3,7 +3,7 @@ import { getMatchingArticleList } from "@features/articles/matchingArticleList/m
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";

@@ -2,7 +2,7 @@ import {
   commonArticleDataType,
   postType,
 } from "@features/articles/shared/articles.type";
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 // 커뮤니티 목록 필터
 export type communityArticleListFilterType = {

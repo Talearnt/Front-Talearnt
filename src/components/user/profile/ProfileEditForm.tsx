@@ -25,7 +25,7 @@ import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { talentsOptions } from "@shared/constants/talentsOptions";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 type profileFormDataType = Omit<profileType, "userId" | "userNo">;
 type ProfileEditFormProps = {

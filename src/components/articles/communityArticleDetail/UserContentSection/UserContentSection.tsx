@@ -4,11 +4,11 @@ import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 type UserContentSectionProps = Pick<profileType, "profileImg"> & {
   authorNickname: string;

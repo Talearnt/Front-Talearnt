@@ -11,7 +11,7 @@ import {
 import { createQueryKey } from "@shared/utils/createQueryKey";
 import { findTalentList } from "@shared/utils/findTalent";
 
-import { useGetProfile } from "@features/user/user.hook";
+import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 import {

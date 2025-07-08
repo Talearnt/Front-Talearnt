@@ -7,7 +7,7 @@ import { useOutsideClick } from "@components/common/dropdowns/dropdown.hook";
 
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
   const wrapperRef = useRef<HTMLDivElement>(null);
