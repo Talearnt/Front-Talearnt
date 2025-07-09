@@ -1,13 +1,44 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { postToGetPresignedURL } from "@features/articles/shared/writeArticle.api";
-import { putProfile } from "@features/user/profile/profile.api";
+import {
+  getActivityCounts,
+  getProfile,
+  putProfile,
+} from "@features/user/profile/profile.api";
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
 
+import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
+
+import { useAuthStore } from "@store/user.store";
+
 import { queryKeys } from "@shared/constants/queryKeys";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
+
+// 프로필 조회
+export const useGetProfile = (enabled = true) => {
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
+  return useQueryWithInitial(
+    {
+      giveTalents: [],
+      nickname: "",
+      profileImg: null,
+      receiveTalents: [],
+      userId: "",
+      userNo: 0,
+    },
+    {
+      queryKey: createQueryKey([queryKeys.USER, "profile"], {
+        isLoggedIn: true,
+      }),
+      queryFn: async () => await getProfile(),
+      enabled: enabled && isLoggedIn,
+    }
+  );
+};
 
 // 프로필 수정
 export const usePutProfile = () => {
@@ -66,4 +97,24 @@ export const usePutProfile = () => {
       );
     },
   });
+};
+
+// 활동 counts 조회
+export const useGetActivityCounts = (enabled = true) => {
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+
+  return useQueryWithInitial(
+    {
+      favoritePostCount: 0,
+      myPostCount: 0,
+      myCommentCount: 0,
+    },
+    {
+      queryKey: createQueryKey([queryKeys.USER, "activity-counts"], {
+        isLoggedIn: true,
+      }),
+      queryFn: getActivityCounts,
+      enabled: enabled && isLoggedIn,
+    }
+  );
 };
