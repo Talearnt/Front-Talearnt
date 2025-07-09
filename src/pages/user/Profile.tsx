@@ -2,7 +2,10 @@ import { useState } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetProfile } from "@features/user/user.hook";
+import {
+  useGetActivityCounts,
+  useGetProfile,
+} from "@features/user/profile/profile.hook";
 
 import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
@@ -10,7 +13,7 @@ import { NoteIcon } from "@components/common/icons/styled/NoteIcon";
 import { ProfileEditForm } from "@components/user/profile/ProfileEditForm";
 import { ProfileView } from "@components/user/profile/ProfileView";
 
-import { profileType } from "@features/user/user.type";
+import { profileType } from "@features/user/profile/profile.type";
 
 function Profile() {
   const [isEditProfile, setIsEditProfile] = useState(false);
@@ -28,22 +31,27 @@ function Profile() {
       data: { nickname, profileImg, giveTalents, receiveTalents },
     },
   } = useGetProfile();
+  const {
+    data: {
+      data: { favoritePostCount, myPostCount, myCommentCount },
+    },
+  } = useGetActivityCounts();
 
   const profileButtons = [
     {
       label: "찜 목록",
       icon: <HeartIcon iconType="filled-blue" size={24} />,
-      count: 0,
+      count: favoritePostCount,
     },
     {
       label: "작성한 게시물",
       icon: <NoteIcon iconType="filled-blue" size={24} />,
-      count: 0,
+      count: myPostCount,
     },
     {
       label: "작성한 댓글",
       icon: <ChatIcon iconType="filled-blue" size={24} />,
-      count: 0,
+      count: myCommentCount,
     },
   ];
 
@@ -113,7 +121,7 @@ function Profile() {
             "text-heading3_22_semibold leading-[40px] text-talearnt_Text_01"
           }
         >
-          내 프로필
+          내 활동
         </span>
         <div className={"grid grid-cols-3 gap-5"}>
           {profileButtons.map(({ label, icon, count }) => (
