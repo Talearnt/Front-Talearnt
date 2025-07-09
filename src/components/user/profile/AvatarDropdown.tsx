@@ -9,6 +9,12 @@ import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { profileType } from "@features/user/profile/profile.type";
 
+const menuItems = [
+  { label: "마이페이지", value: "/user" },
+  { label: "찜 목록", value: "/user/likes" },
+  { label: "로그아웃", value: "/logout" },
+];
+
 function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -52,11 +58,7 @@ function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
           "peer-has-[:checked]/label:flex"
         )}
       >
-        {[
-          { label: "마이페이지", value: "/user" },
-          { label: "찜 목록", value: "/user/likes" },
-          { label: "로그아웃", value: "/logout" },
-        ].map(({ label, value }) => (
+        {menuItems.map(({ label, value }) => (
           <NavLink
             className={classNames(
               "rounded-lg bg-talearnt_BG_Background p-2",
