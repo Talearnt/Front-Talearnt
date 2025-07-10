@@ -11,7 +11,7 @@ test("should allow users to login with valid credentials", async () => {
     autoLogin: false
   });
 
-  expect(status).toBe(undefined);
+  expect(status).toBe(200);
 });
 
 test("should not allow users to login with invalid credentials", async () => {
