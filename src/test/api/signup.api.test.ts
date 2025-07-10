@@ -7,7 +7,7 @@ import { customAxiosResponseType } from "@common/common.type";
 test("should allow users to login with valid credentials", async () => {
   const { status } = await postSignIn({
     userId: "test@test.com",
-    pw: "!1q2w3e4r",
+    pw: "test",
     autoLogin: false
   });
 
