@@ -20,3 +20,10 @@ export type paginationType<T> = {
     latestCreatedAt: string;
   };
 };
+
+export type paginationRequestType = { page: number; size?: number };
+
+export type pageStoreType = {
+  page: number;
+  setPage: (page: number) => void;
+};
