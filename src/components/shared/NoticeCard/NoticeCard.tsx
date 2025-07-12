@@ -4,13 +4,9 @@ import { classNames } from "@shared/utils/classNames";
 
 import { Badge } from "@components/common/Badge/Badge";
 
-type NoticeCardProps = {
-  noticeType: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  pageType?: "main" | "notice";
-};
+import { noticeType } from "@features/notice/notice.type";
+
+type NoticeCardProps = noticeType & { pageType?: "main" | "notice" };
 
 function NoticeCard({
   noticeType,
@@ -23,7 +19,7 @@ function NoticeCard({
     <div
       className={classNames(
         "flex flex-col gap-2",
-        "rounded-2xl border border-talearnt_Line_01 p-[23px]"
+        "rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]"
       )}
     >
       <div className={"flex gap-1"}>

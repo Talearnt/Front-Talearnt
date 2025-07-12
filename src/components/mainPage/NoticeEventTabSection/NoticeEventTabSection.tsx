@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@shared/utils/classNames";
 
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
+
+import { eventType } from "@features/event/event.type";
+import { noticeType } from "@features/notice/notice.type";
 
 type tabType = "event" | "notice";
 
@@ -14,9 +16,13 @@ const tabs: { id: tabType; label: string }[] = [
   { id: "notice", label: "공지사항" },
 ];
 
-function NoticeEventTabSection() {
-  const navigator = useNavigate();
-
+function NoticeEventTabSection({
+  noticeList,
+  eventList,
+}: {
+  noticeList: noticeType[];
+  eventList: eventType[];
+}) {
   const [selectedTab, setSelectedTab] = useState<tabType>("event");
 
   return (
@@ -63,8 +69,7 @@ function NoticeEventTabSection() {
           ))}
           <MoveButton
             className={"mr-0 rounded-none"}
-            // TODO 이벤트/공지사항 주소 연결
-            onClick={() => navigator("/")}
+            to={`/notice-event/${selectedTab}`}
             text={"전체 보기"}
           />
         </div>
@@ -76,31 +81,13 @@ function NoticeEventTabSection() {
               "grid-cols-[repeat(4,214px)] grid-rows-[214px]"
           )}
         >
-          {selectedTab === "event" && (
-            <>
-              <EventBanner
-                bannerUrl={"https://picsum.photos/200/300"}
-                to={""}
-                startDate={"2025.02.18"}
-              />
-              <EventBanner
-                bannerUrl={"https://picsum.photos/200/300"}
-                to={""}
-                startDate={"2025.02.18"}
-                endDate={"2025.02.25"}
-              />
-            </>
-          )}
+          {selectedTab === "event" &&
+            eventList.map(event => (
+              <EventBanner {...event} key={event.eventNo} />
+            ))}
           {selectedTab === "notice" &&
-            Array.from({ length: 4 }).map(() => (
-              <NoticeCard
-                noticeType={"공지"}
-                title={"[6월 댓글을 달아라!] 이벤트 당첨자 발표"}
-                content={
-                  "안녕하세요. 탤런트 이벤트 담당자입니다. 6월 댓글을 달아라에 선정된 분들은 총 2명으로 잭재기님,"
-                }
-                createdAt={"2025.07.01"}
-              />
+            noticeList.map(notice => (
+              <NoticeCard {...notice} key={notice.noticeNo} />
             ))}
         </div>
       </div>

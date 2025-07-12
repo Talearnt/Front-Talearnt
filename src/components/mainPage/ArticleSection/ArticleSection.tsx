@@ -99,8 +99,8 @@ export function ArticleSection({
             </div>
           </div>
           <MoveButton
-            onClick={() => navigator(articleType)}
             text={`${articleType === "community" ? "커뮤니티" : "매칭"} 게시물 더 보기`}
+            to={articleType}
           />
         </>
       ) : (

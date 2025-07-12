@@ -1,14 +1,15 @@
 import { ComponentProps } from "react";
+import { NavLink } from "react-router-dom";
 
 import { classNames } from "@shared/utils/classNames";
 
 import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
-type MoveButtonProps = ComponentProps<"button"> & { text: string };
+type MoveButtonProps = ComponentProps<typeof NavLink> & { text: string };
 
 function MoveButton({ className, text, ...props }: MoveButtonProps) {
   return (
-    <button
+    <NavLink
       className={classNames(
         "flex items-center gap-4",
         "mx-auto h-[50px] w-fit rounded-full bg-talearnt_BG_Up_01 px-4",
@@ -25,7 +26,7 @@ function MoveButton({ className, text, ...props }: MoveButtonProps) {
         }
         size={30}
       />
-    </button>
+    </NavLink>
   );
 }
 
