@@ -118,7 +118,7 @@ export const userSidebarArray = [
     category: "기타",
     items: [
       {
-        path: "/events",
+        path: "/notice-event/event",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <SettingIcon iconType={isActive ? "filled-blue" : "outlined"} />
