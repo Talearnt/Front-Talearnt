@@ -63,7 +63,7 @@ function MainPage() {
       {/* 배너 */}
       <BannerCarousel />
       {/* 맞춤 매칭 게시물 목록 */}
-      {isSuccess && (
+      {isSuccess && personalizedMatchingArticleList.length > 0 && (
         <ArticleSection
           title={
             <>
