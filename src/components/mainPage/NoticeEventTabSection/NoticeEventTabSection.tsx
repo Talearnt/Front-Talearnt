@@ -55,6 +55,7 @@ function NoticeEventTabSection({
                   "border-talearnt_Primary_01 bg-talearnt_Primary_01 text-talearnt_On_Primary",
                 !!index && "ml-4"
               )}
+              key={id}
             >
               <input
                 className={"hidden"}
