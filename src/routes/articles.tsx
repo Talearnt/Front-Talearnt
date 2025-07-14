@@ -60,9 +60,7 @@ const articlesRouter: RouteObject[] = [
   {
     element: (
       <PrivateRoute>
-        <Suspense>
-          <WriteArticleLayout />
-        </Suspense>
+        <WriteArticleLayout />
       </PrivateRoute>
     ),
     path: "write-article",

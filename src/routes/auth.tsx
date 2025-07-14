@@ -34,11 +34,7 @@ const authRouter: RouteObject[] = [
     path: "sign-in",
   },
   {
-    element: (
-      <Suspense>
-        <KakaoLayout />
-      </Suspense>
-    ),
+    element: <KakaoLayout />,
     path: "kakao",
     children: [
       { element: <KakaoOauth />, path: "oauth" },
@@ -47,11 +43,7 @@ const authRouter: RouteObject[] = [
     ],
   },
   {
-    element: (
-      <Suspense>
-        <SignUpLayout />
-      </Suspense>
-    ),
+    element: <SignUpLayout />,
     path: "sign-up",
     children: [
       { element: <Agreements />, path: "agreements" },
@@ -60,11 +52,7 @@ const authRouter: RouteObject[] = [
     ],
   },
   {
-    element: (
-      <Suspense>
-        <FindAccountLayout />
-      </Suspense>
-    ),
+    element: <FindAccountLayout />,
     path: "find-account",
     children: [
       { element: <FindId />, path: "id" },
