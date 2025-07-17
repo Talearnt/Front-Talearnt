@@ -6,21 +6,34 @@ import PrivateRoute from "@routes/PrivateRoute";
 import UserLayout from "@layout/UserLayout";
 
 const Profile = lazy(() => import("@pages/user/Profile"));
+const FavoriteMatchingArticleList = lazy(
+  () => import("@pages/user/FavoriteMatchingArticleList")
+);
 
 const userRouter: RouteObject[] = [
   {
     element: (
       <PrivateRoute>
-        <Suspense>
-          <UserLayout />
-        </Suspense>
+        <UserLayout />
       </PrivateRoute>
     ),
     path: "user",
     children: [
       {
-        element: <Profile />,
+        element: (
+          <Suspense>
+            <Profile />
+          </Suspense>
+        ),
         index: true,
+      },
+      {
+        element: (
+          <Suspense>
+            <FavoriteMatchingArticleList />
+          </Suspense>
+        ),
+        path: "favorites",
       },
     ],
   },
