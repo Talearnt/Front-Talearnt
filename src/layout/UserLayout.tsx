@@ -28,6 +28,7 @@ function UserLayout() {
                       isActive && "!bg-talearnt_PrimaryBG_01"
                     )
                   }
+                  end
                   to={path}
                   key={path}
                 >

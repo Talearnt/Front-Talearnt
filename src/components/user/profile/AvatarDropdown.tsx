@@ -11,7 +11,7 @@ import { profileType } from "@features/user/profile/profile.type";
 
 const menuItems = [
   { label: "마이페이지", value: "/user" },
-  { label: "찜 목록", value: "/user/likes" },
+  { label: "찜 목록", value: "/user/favorites" },
   { label: "로그아웃", value: "/logout" },
 ];
 

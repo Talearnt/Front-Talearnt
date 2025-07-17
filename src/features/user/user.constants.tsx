@@ -31,7 +31,7 @@ export const userSidebarArray = [
     category: "내 활동",
     items: [
       {
-        path: "/likes",
+        path: "favorites",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <HeartIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -46,7 +46,7 @@ export const userSidebarArray = [
         ),
       },
       {
-        path: "/posts",
+        path: "posts",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <NoteIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -61,7 +61,7 @@ export const userSidebarArray = [
         ),
       },
       {
-        path: "/comments",
+        path: "comments",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <ChatIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -81,7 +81,7 @@ export const userSidebarArray = [
     category: "설정",
     items: [
       {
-        path: "/account",
+        path: "account",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <SettingIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -96,7 +96,7 @@ export const userSidebarArray = [
         ),
       },
       {
-        path: "/notification",
+        path: "notification",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <NotificationIcon
@@ -118,7 +118,7 @@ export const userSidebarArray = [
     category: "기타",
     items: [
       {
-        path: "/notice-event/event",
+        path: "notice-event/event",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <SettingIcon iconType={isActive ? "filled-blue" : "outlined"} />
@@ -133,7 +133,7 @@ export const userSidebarArray = [
         ),
       },
       {
-        path: "/support",
+        path: "support",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <HeadsetIcon iconType={isActive ? "filled-blue" : "outlined"} />
