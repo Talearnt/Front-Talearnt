@@ -254,17 +254,15 @@ function CommunityArticleList() {
         </div>
       )}
       {/*페이지네이션*/}
-      {results.length > 0 && (
-        <Pagination
-          className={"mt-14"}
-          currentPage={page}
-          totalPages={totalPages}
-          handlePageChange={page => {
-            setFilter(prev => ({ ...prev, page }));
-            window.scrollTo({ top: 0 });
-          }}
-        />
-      )}
+      <Pagination
+        className={"mt-14"}
+        currentPage={page}
+        totalPages={totalPages}
+        handlePageChange={page => {
+          setFilter(prev => ({ ...prev, page }));
+          window.scrollTo({ top: 0 });
+        }}
+      />
     </div>
   );
 }
