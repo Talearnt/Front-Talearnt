@@ -4,6 +4,7 @@ import {
 } from "@features/articles/shared/articles.type";
 import { matchingArticleBodyType } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 import { profileType } from "@features/user/profile/profile.type";
+import { paginationRequestType } from "@shared/type/api.type";
 
 export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
   Omit<
@@ -34,12 +35,11 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
 //   "favoriteCount": 0,
 // }
 
-export type matchingArticleListFilterType = {
+export type matchingArticleListFilterType = paginationRequestType & {
   giveTalents: number[];
   receiveTalents: number[];
   duration?: durationType;
   type?: exchangeType;
   status?: "모집중" | "모집_완료";
   order: "recent" | "popular";
-  page: number;
 };
