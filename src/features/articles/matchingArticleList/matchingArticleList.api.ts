@@ -9,7 +9,7 @@ import { paginationType } from "@shared/type/api.type";
 export const getMatchingArticleList = ({
   size = 12,
   ...filter
-}: Partial<matchingArticleListFilterType> & { size?: number }) =>
+}: Partial<matchingArticleListFilterType>) =>
   getAPI<paginationType<matchingArticleType>>("v1/posts/exchanges", {
     size,
     ...filter,
