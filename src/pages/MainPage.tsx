@@ -11,11 +11,11 @@ import {
 import { useGetNoticeList } from "@features/notice/notice.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
-import { MatchingArticleCard } from "@components/articles/matchingArticleList/MatchingArticleCard/MatchingArticleCard";
 import { ArticleSection } from "@components/mainPage/ArticleSection/ArticleSection";
 import { BannerCarousel } from "@components/mainPage/BannerCarousel/BannerCarousel";
-import { CommunityArticleCard } from "@components/mainPage/CommunityArticleCard/CommunityArticleCard";
 import { NoticeEventTabSection } from "@components/mainPage/NoticeEventTabSection/NoticeEventTabSection";
+import { CommunityArticleCard } from "@components/shared/CommunityArticleCard/CommunityArticleCard";
+import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
 function MainPage() {
   const navigator = useNavigate();

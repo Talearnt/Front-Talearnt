@@ -10,13 +10,13 @@ import { useGetMatchingArticleList } from "@features/articles/matchingArticleLis
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 import { useHasNewMatchingArticleStore } from "@features/articles/shared/articles.store";
 
-import { MatchingArticleCard } from "@components/articles/matchingArticleList/MatchingArticleCard/MatchingArticleCard";
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { Button } from "@components/common/Button/Button";
 import { DropdownLabeled } from "@components/common/dropdowns/DropdownLabeled/DropdownLabeled";
 import { DropdownWithCategories } from "@components/common/dropdowns/DropdownWithCategories/DropdownWithCategories";
 import { MakoWithPencil } from "@components/common/icons/mako/MakoWithPencil";
 import { Pagination } from "@components/common/Pagination/Pagination";
+import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
 import {
   durationOptions,
