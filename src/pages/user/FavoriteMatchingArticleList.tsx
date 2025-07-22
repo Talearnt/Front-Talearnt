@@ -4,15 +4,15 @@ import { useGetFavoriteMatchingArticleList } from "@features/user/favoriteMatchi
 
 import { useFavoriteMatchingArticlePageStore } from "@features/user/favoriteMatchingArticleList/favoriteMatchingArticleList.store";
 
-import { MatchingArticleCard } from "@components/articles/matchingArticleList/MatchingArticleCard/MatchingArticleCard";
 import { Pagination } from "@components/common/Pagination/Pagination";
+import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
 function FavoriteMatchingArticleList() {
   const {
     data: {
       data: {
         results,
-        pagination: { totalPages },
+        pagination: { totalCount, totalPages },
       },
     },
   } = useGetFavoriteMatchingArticleList();
@@ -31,7 +31,7 @@ function FavoriteMatchingArticleList() {
             "text-heading2_24_semibold text-talearnt_Primary_01"
           )}
         >
-          9
+          {totalCount}
         </span>
         <span className={"text-heading3_22_semibold text-talearnt_Text_02"}>
           개의 매칭 게시물을 찜했어요
