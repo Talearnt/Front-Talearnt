@@ -7,9 +7,8 @@ import { useCarousel } from "@shared/hooks/useCarousel";
 
 import { useAuthStore } from "@store/user.store";
 
-import { Button } from "@components/common/Button/Button";
+import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
-import { MakoWithPencil } from "@components/common/icons/mako/MakoWithPencil";
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 
 interface ArticleSectionProps {
@@ -104,33 +103,15 @@ export function ArticleSection({
           />
         </>
       ) : (
-        <div className={classNames("flex flex-col items-center", "py-10")}>
-          <span
-            className={classNames(
-              "mb-1",
-              "text-heading2_24_semibold text-talearnt_Text_01"
-            )}
-          >
-            첫 {type} 게시물을 작성해 보세요!
-          </span>
-          <span
-            className={classNames(
-              "mb-6",
-              "text-body2_16_medium text-talearnt_Text_02"
-            )}
-          >
-            탤런트가 여러분의 게시물을 기다리고 있어요
-          </span>
-          <MakoWithPencil className={"mb-6"} size={200} />
-          <Button
-            className={"w-[400px]"}
-            onClick={() =>
-              navigator(isLoggedIn ? "write-article/matching" : "sign-in")
-            }
-          >
-            게시물 작성하기
-          </Button>
-        </div>
+        <EmptyState
+          title={`첫 ${type} 게시물을 작성해 보세요!`}
+          description={"탤런트가 여러분의 게시물을 기다리고 있어요"}
+          iconSize={200}
+          buttonText={"게시물 작성하기"}
+          buttonOnClick={() =>
+            navigator(isLoggedIn ? "write-article/matching" : "sign-in")
+          }
+        />
       )}
     </div>
   );

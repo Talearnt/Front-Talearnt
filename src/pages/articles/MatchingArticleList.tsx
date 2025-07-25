@@ -11,10 +11,9 @@ import { useMatchingArticleListFilterStore } from "@features/articles/matchingAr
 import { useHasNewMatchingArticleStore } from "@features/articles/shared/articles.store";
 
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
-import { Button } from "@components/common/Button/Button";
 import { DropdownLabeled } from "@components/common/dropdowns/DropdownLabeled/DropdownLabeled";
 import { DropdownWithCategories } from "@components/common/dropdowns/DropdownWithCategories/DropdownWithCategories";
-import { MakoWithPencil } from "@components/common/icons/mako/MakoWithPencil";
+import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { Pagination } from "@components/common/Pagination/Pagination";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
@@ -210,39 +209,22 @@ function MatchingArticleList() {
             ))
           : isSuccess && (
               // 목록이 없고 API 호출 성공한 경우
-              <>
-                <h1
-                  className={classNames(
-                    "mb-2",
-                    "text-heading1_30_semibold text-talearnt_Text_Strong"
-                  )}
-                >
-                  {hasFilter
-                    ? "해당 게시글이 없어요..."
-                    : "첫 게시글을 작성해 보세요!"}
-                </h1>
-                <span
-                  className={classNames(
-                    "mb-6",
-                    "text-body2_16_medium text-talearnt_Text_02"
-                  )}
-                >
-                  {hasFilter
-                    ? "필터를 초기화하거나 직접 게시글을 작성해 보세요"
-                    : "마꼬가 여러분의 게시글을 기다리고 있어요"}
-                </span>
-                <MakoWithPencil />
-                <div className={classNames("flex gap-4", "mt-14")}>
-                  {hasFilter && (
-                    <Button buttonStyle={"outlined"} onClick={resetFilters}>
-                      필터 초기화하기
-                    </Button>
-                  )}
-                  <Button onClick={() => navigator("/write-article")}>
-                    게시글 작성하기
-                  </Button>
-                </div>
-              </>
+              <EmptyState
+                title={
+                  hasFilter
+                    ? "해당 게시물이 없어요..."
+                    : "첫 게시물을 작성해 보세요!!"
+                }
+                description={
+                  hasFilter
+                    ? "필터를 초기화하거나 직접 게시물을 작성해 보세요"
+                    : "탤런트가 여러분의 게시물을 기다리고 있어요"
+                }
+                buttonText={"게시물 작성하기"}
+                buttonOnClick={() => navigator("/write-article")}
+                subButtonText={hasFilter ? "필터 초기화하기" : undefined}
+                subButtonOnClick={hasFilter ? resetFilters : undefined}
+              />
             )}
       </div>
       {/*로딩중 상태*/}
