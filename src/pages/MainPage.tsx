@@ -11,6 +11,7 @@ import {
 import { useGetNoticeList } from "@features/notice/notice.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
+import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { ArticleSection } from "@components/mainPage/ArticleSection/ArticleSection";
 import { BannerCarousel } from "@components/mainPage/BannerCarousel/BannerCarousel";
 import { NoticeEventTabSection } from "@components/mainPage/NoticeEventTabSection/NoticeEventTabSection";
@@ -62,18 +63,44 @@ function MainPage() {
     <div className={classNames("flex flex-col gap-14", "pt-10")}>
       {/* 배너 */}
       <BannerCarousel />
-      {/* 맞춤 매칭 게시물 목록 */}
-      {isSuccess && personalizedMatchingArticleList.length > 0 && (
-        <ArticleSection
-          title={
-            <>
-              <span className="text-talearnt_Primary_01">{nickname}</span>님을
-              위한 맞춤 매칭
-            </>
-          }
-        >
-          {personalizedMatchingArticleList.map(
-            ({ exchangePostNo, ...article }) => (
+      {personalizedMatchingArticleList.length === 0 &&
+      recentMatchingArticleList.length === 0 &&
+      bestCommunityArticleList.length === 0 ? (
+        <EmptyState
+          title={"첫 글을 기다리고 있어요!"}
+          description={"매칭이나 커뮤니티에서 당신의 첫 글을 남겨보세요"}
+          buttonText={"게시물 작성하기"}
+          buttonOnClick={() => navigator("/write-article/matching")}
+        />
+      ) : (
+        <>
+          {/* 맞춤 매칭 게시물 목록 */}
+          {isSuccess && personalizedMatchingArticleList.length > 0 && (
+            <ArticleSection
+              title={
+                <>
+                  <span className="text-talearnt_Primary_01">{nickname}</span>
+                  님을 위한 맞춤 매칭
+                </>
+              }
+            >
+              {personalizedMatchingArticleList.map(
+                ({ exchangePostNo, ...article }) => (
+                  <MatchingArticleCard
+                    {...article}
+                    onClickHandler={() =>
+                      navigator(`/matching-article/${exchangePostNo}`)
+                    }
+                    exchangePostNo={exchangePostNo}
+                    key={exchangePostNo}
+                  />
+                )
+              )}
+            </ArticleSection>
+          )}
+          {/* 신규 매칭 게시물 목록 */}
+          <ArticleSection title={"신규 매칭 게시물이 올라왔어요!"}>
+            {recentMatchingArticleList.map(({ exchangePostNo, ...article }) => (
               <MatchingArticleCard
                 {...article}
                 onClickHandler={() =>
@@ -82,41 +109,28 @@ function MainPage() {
                 exchangePostNo={exchangePostNo}
                 key={exchangePostNo}
               />
-            )
-          )}
-        </ArticleSection>
+            ))}
+          </ArticleSection>
+          {/* BEST 커뮤니티 게시물 목록 */}
+          <ArticleSection
+            title={"BEST 커뮤니티 게시물이 올라왔어요!"}
+            articleType={"community"}
+          >
+            {bestCommunityArticleList.map(
+              ({ communityPostNo, ...article }, index) => (
+                <CommunityArticleCard
+                  {...article}
+                  onClickHandler={() =>
+                    navigator(`/community-article/${communityPostNo}`)
+                  }
+                  index={index}
+                  key={index}
+                />
+              )
+            )}
+          </ArticleSection>
+        </>
       )}
-      {/* 신규 매칭 게시물 목록 */}
-      <ArticleSection title={"신규 매칭 게시물이 올라왔어요!"}>
-        {recentMatchingArticleList.map(({ exchangePostNo, ...article }) => (
-          <MatchingArticleCard
-            {...article}
-            onClickHandler={() =>
-              navigator(`/matching-article/${exchangePostNo}`)
-            }
-            exchangePostNo={exchangePostNo}
-            key={exchangePostNo}
-          />
-        ))}
-      </ArticleSection>
-      {/* 신규 커뮤니티 게시물 목록 */}
-      <ArticleSection
-        title={"신규 커뮤니티 게시물이 올라왔어요!"}
-        articleType={"community"}
-      >
-        {bestCommunityArticleList.map(
-          ({ communityPostNo, ...article }, index) => (
-            <CommunityArticleCard
-              {...article}
-              onClickHandler={() =>
-                navigator(`/community-article/${communityPostNo}`)
-              }
-              index={index}
-              key={index}
-            />
-          )
-        )}
-      </ArticleSection>
       {/* 이벤트, 공지사항 */}
       <NoticeEventTabSection noticeList={noticeList} eventList={eventList} />
     </div>
