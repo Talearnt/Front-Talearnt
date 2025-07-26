@@ -18,7 +18,7 @@ const tabSliderVariants = cva(
           "has-[:checked]:z-10 has-[:checked]:shadow-talearnt_Primary_01"
         ),
         shadow: classNames(
-          "px-[15px] py-[7px] rounded-full border border-transparent",
+          "px-[15px] py-[7px] rounded-xl border border-transparent",
           "text-body1_18_medium",
           "has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-shadow_02"
         ),

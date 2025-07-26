@@ -26,7 +26,7 @@ function CommunityArticleCard({
   updatedAt,
 }: Omit<communityArticleType, "communityPostNo"> & {
   onClickHandler?: () => void;
-  index: number;
+  index?: number;
 }) {
   return (
     <div
@@ -48,13 +48,16 @@ function CommunityArticleCard({
           </span>
         </div>
         <ThumbsUpIcon
+          className={"ml-auto"}
           iconType={isLike ? "filled-blue" : "outlined"}
           size={28}
         />
       </div>
       <div className={"flex flex-col gap-2"}>
         <div className={"flex gap-1"}>
-          <Badge label={`Best ${index + 1}`} color={"red"} />
+          {index !== undefined && (
+            <Badge label={`Best ${index + 1}`} color={"red"} />
+          )}
           <Badge label={postType} />
         </div>
         <h2
@@ -87,13 +90,13 @@ function CommunityArticleCard({
           </span>
         </div>
         <div className={classNames("flex items-center gap-1", "ml-2")}>
-          <ChatIcon />
+          <ChatIcon iconType={"filled-gray"} />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {commentCount}
           </span>
         </div>
         <div className={classNames("flex items-center gap-1", "ml-auto")}>
-          <ViewsIcon />
+          <ViewsIcon iconType={"filled-gray"} />
           <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
             {count}
           </span>
