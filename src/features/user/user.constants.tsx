@@ -46,7 +46,7 @@ export const userSidebarArray = [
         ),
       },
       {
-        path: "posts",
+        path: "written-articles",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
             <NoteIcon iconType={isActive ? "filled-blue" : "outlined"} />

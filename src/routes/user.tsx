@@ -9,6 +9,7 @@ const Profile = lazy(() => import("@pages/user/Profile"));
 const FavoriteMatchingArticleList = lazy(
   () => import("@pages/user/FavoriteMatchingArticleList")
 );
+const WrittenArticleList = lazy(() => import("@pages/user/WrittenArticleList"));
 
 const userRouter: RouteObject[] = [
   {
@@ -34,6 +35,14 @@ const userRouter: RouteObject[] = [
           </Suspense>
         ),
         path: "favorites",
+      },
+      {
+        element: (
+          <Suspense>
+            <WrittenArticleList />
+          </Suspense>
+        ),
+        path: "written-articles",
       },
     ],
   },

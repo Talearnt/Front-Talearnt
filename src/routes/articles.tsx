@@ -65,8 +65,22 @@ const articlesRouter: RouteObject[] = [
     ),
     path: "write-article",
     children: [
-      { element: <WriteMatchingArticle />, path: "matching" },
-      { element: <WriteCommunityArticle />, path: "community" },
+      {
+        element: (
+          <Suspense>
+            <WriteMatchingArticle />
+          </Suspense>
+        ),
+        path: "matching",
+      },
+      {
+        element: (
+          <Suspense>
+            <WriteCommunityArticle />
+          </Suspense>
+        ),
+        path: "community",
+      },
     ],
   },
 ];

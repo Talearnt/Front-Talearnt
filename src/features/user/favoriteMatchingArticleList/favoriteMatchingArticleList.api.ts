@@ -6,7 +6,7 @@ import { paginationRequestType, paginationType } from "@shared/type/api.type";
 // 찜 매칭 게시물 목록 조회
 export const getFavoriteMatchingArticleList = (data: paginationRequestType) =>
   getAPI<paginationType<matchingArticleType>>(
-    "/v1/posts/exchanges/favorites",
+    "/v1/users/exchanges/favorites",
     data,
     { withCredentials: true }
   );
