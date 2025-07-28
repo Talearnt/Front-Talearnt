@@ -15,7 +15,7 @@ import {
 import { queryKeys } from "@shared/constants/queryKeys";
 
 // 작성한 커뮤니티 게시글 목록 조회
-export const useGetWrittenCommunityArticleList = () => {
+export const useGetWrittenCommunityArticleList = (enabled: boolean) => {
   const page = useWrittenCommunityArticlePageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -35,13 +35,14 @@ export const useGetWrittenCommunityArticleList = () => {
         isList: true,
       }),
       queryFn: () => getWrittenCommunityArticleList({ page }),
+      enabled,
     },
     createQueryKey([queryKeys.WRITTEN_COMMUNITY], { isList: true })
   );
 };
 
 // 작성한 매칭 게시글 목록 조회
-export const useGetWrittenMatchingArticleList = () => {
+export const useGetWrittenMatchingArticleList = (enabled: boolean) => {
   const page = useWrittenMatchingArticlePageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -61,6 +62,7 @@ export const useGetWrittenMatchingArticleList = () => {
         isList: true,
       }),
       queryFn: () => getWrittenMatchingArticleList({ page }),
+      enabled,
     },
     createQueryKey([queryKeys.WRITTEN_MATCHING], { isList: true })
   );
