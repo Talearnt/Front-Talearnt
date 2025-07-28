@@ -5,12 +5,25 @@ import { matchingArticleType } from "@features/articles/matchingArticleList/matc
 import { paginationRequestType, paginationType } from "@shared/type/api.type";
 
 // 작성한 매칭 게시글 목록 조회
-export const getWrittenMatchingArticleList = (data: paginationRequestType) =>
-  getAPI<paginationType<matchingArticleType>>("/v1/posts/exchanges/mine", data);
+export const getWrittenMatchingArticleList = ({
+  page,
+}: paginationRequestType) =>
+  getAPI<paginationType<matchingArticleType>>(
+    "/v1/users/exchanges",
+    { page, size: 9 },
+    {
+      withCredentials: true,
+    }
+  );
 
 // 작성한 커뮤니티 게시글 목록 조회
-export const getWrittenCommunityArticleList = (data: paginationRequestType) =>
+export const getWrittenCommunityArticleList = ({
+  page,
+}: paginationRequestType) =>
   getAPI<paginationType<communityArticleType>>(
-    "/v1/posts/communities/mine",
-    data
+    "/v1/users/communities",
+    { page, size: 9 },
+    {
+      withCredentials: true,
+    }
   );
