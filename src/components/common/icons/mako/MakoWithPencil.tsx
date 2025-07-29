@@ -10,8 +10,8 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clip-path="url(#clip0_9951_169040)">
-        <g clip-path="url(#clip1_9951_169040)">
+      <g clipPath="url(#clip0_9951_169040)">
+        <g clipPath="url(#clip1_9951_169040)">
           {/*배경*/}
           <rect width="240" height="240" rx="120" fill={"#E5F0FF"} />
           {/*몸*/}
@@ -46,8 +46,8 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
           />
           {/*연필 잡은 팔*/}
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M71.4394 215.15C71.2539 213.359 71.1286 211.548 71.0656 209.721C70.5808 195.65 73.8527 182.32 79.9803 170.699C78.9516 170.866 77.9041 170.968 76.8377 171.005C74.9009 171.072 72.991 170.914 71.1778 170.545C70.5332 170.43 69.8552 170.35 69.1635 170.373C64.3908 170.538 60.6328 174.527 60.7971 179.294C60.8262 180.138 61.0097 180.941 61.2784 181.707L61.245 181.743C65.6021 192.431 69.0324 203.6 71.4394 215.15Z"
             fill={"#FFFFFF"}
           />
@@ -55,7 +55,7 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
           <path
             d="M129.077 168.826C136.727 170.43 141.628 177.932 140.023 185.582C138.419 193.232 130.918 198.133 123.268 196.529C115.618 194.925 110.716 187.423 112.32 179.773C113.925 172.123 121.427 167.222 129.077 168.826Z"
             stroke={"#C1C8CC"}
-            stroke-width="2.4"
+            strokeWidth="2.4"
           />
           {/*오른쪽 안경 테*/}
           <circle
@@ -64,22 +64,22 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
             r="14.4868"
             transform="rotate(11.8434 172.836 182.502)"
             stroke={"#C1C8CC"}
-            stroke-width="2.4"
+            strokeWidth="2.4"
           />
           {/*가운데 안경 테*/}
           <path
             d="M139.974 180.897C143.443 179.981 149.564 178.622 158.592 181.034"
             stroke={"#C1C8CC"}
-            stroke-width="2.4"
+            strokeWidth="2.4"
           />
           {/*연필*/}
           <path
             d="M79.8754 191.412L75.0277 161.688C74.9772 161.378 74.8544 161.084 74.6693 160.831L70.4134 154.999C69.4743 153.712 67.4811 153.986 66.9241 155.479L64.5211 161.918C64.4076 162.223 64.3699 162.55 64.4111 162.872L68.2297 192.692C68.6957 195.893 71.6803 198.202 74.8962 197.849C78.112 197.495 80.3413 194.614 79.8754 191.412Z"
             fill={"#4C94FF"}
             stroke={"#4C94FF"}
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           {/*연필 잡은 손*/}
           <ellipse cx="67" cy="177" rx="4.5" ry="6" fill={"#FFFFFF"} />
