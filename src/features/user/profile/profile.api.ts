@@ -1,6 +1,9 @@
 import { getAPI, putAPI } from "@shared/utils/apiMethods";
 
-import { activityCountsType, profileType } from "./profile.type";
+import {
+  activityCountsType,
+  profileType,
+} from "@features/user/profile/profile.type";
 
 // 프로필 조회
 export const getProfile = () =>
