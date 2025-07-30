@@ -1,13 +1,13 @@
 import Axios, { AxiosError, AxiosRequestConfig } from "axios";
 
+import { checkObjectType } from "@shared/utils/checkObjectType";
+
 import { useAuthStore } from "@store/user.store";
 
 import {
   customAxiosResponseType,
   responseDataType,
 } from "@shared/type/api.type";
-
-import { checkObjectType } from "./checkObjectType";
 
 const baseURL = "https://api.talearnt.net/";
 
