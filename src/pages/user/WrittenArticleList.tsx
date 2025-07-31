@@ -21,6 +21,9 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { CommunityArticleCard } from "@components/shared/CommunityArticleCard/CommunityArticleCard";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
+import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
+import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
+
 const tabOptions = [
   { label: "매칭", value: "matching" },
   { label: "커뮤니티", value: "community" },
@@ -60,8 +63,13 @@ function WrittenArticleList() {
       writtenMatchingArticlePageStore.setPage(1);
     }
   };
+  const handleEmptyStateButtonClick = () => navigator(`/write-article/${tab}`);
+  const handlePageChange = (page: number) => {
+    currentPageStore.setPage(page);
+    window.scrollTo({ top: 0 });
+  };
 
-  const currentData =
+  const { results, pagination } =
     tab === "matching"
       ? writtenMatchingArticleList
       : writtenCommunityArticleList;
@@ -79,10 +87,7 @@ function WrittenArticleList() {
         onClickHandler={handleTabChange}
         type={"shadow"}
       />
-      {(tab === "matching"
-        ? writtenMatchingArticleList.results
-        : writtenCommunityArticleList.results
-      ).length === 0 ? (
+      {results.length === 0 ? (
         <div
           className={classNames(
             "grid place-items-center",
@@ -97,7 +102,7 @@ function WrittenArticleList() {
                 : "관심 있는 이야기를 남겨보세요!"
             }
             buttonText={"게시물 작성하기"}
-            buttonOnClick={() => navigator(`/write-article/${tab}`)}
+            buttonOnClick={handleEmptyStateButtonClick}
           />
         </div>
       ) : (
@@ -112,47 +117,40 @@ function WrittenArticleList() {
                 "text-heading2_24_semibold text-talearnt_Primary_01"
               )}
             >
-              {currentData.pagination.totalCount}
+              {pagination.totalCount}
             </span>
             <span className={"text-heading3_22_semibold text-talearnt_Text_02"}>
               개의 {currentTabLabel} 게시물을 작성했어요
             </span>
           </div>
           <div className={"grid grid-cols-[repeat(3,305px)] gap-5"}>
-            {tab === "matching" &&
-              writtenMatchingArticleList.results.map(
-                ({ exchangePostNo, ...article }) => (
-                  <MatchingArticleCard
-                    {...article}
-                    exchangePostNo={exchangePostNo}
-                    onClickHandler={() =>
-                      navigator(`/matching-article/${exchangePostNo}`)
-                    }
-                    key={exchangePostNo}
-                  />
-                )
-              )}
-            {tab === "community" &&
-              writtenCommunityArticleList.results.map(
-                ({ communityPostNo, ...article }) => (
-                  <CommunityArticleCard
-                    {...article}
-                    onClickHandler={() =>
-                      navigator(`/community-article/${communityPostNo}`)
-                    }
-                    key={communityPostNo}
-                  />
-                )
-              )}
+            {results.map(article => {
+              const isMatching = tab === "matching";
+              const postNo = isMatching
+                ? (article as matchingArticleType).exchangePostNo
+                : (article as communityArticleType).communityPostNo;
+
+              return isMatching ? (
+                <MatchingArticleCard
+                  {...(article as matchingArticleType)}
+                  exchangePostNo={postNo}
+                  onClickHandler={() => navigator(`/${tab}-article/${postNo}`)}
+                  key={postNo}
+                />
+              ) : (
+                <CommunityArticleCard
+                  {...(article as communityArticleType)}
+                  onClickHandler={() => navigator(`/${tab}-article/${postNo}`)}
+                  key={postNo}
+                />
+              );
+            })}
           </div>
           <Pagination
             className={"mt-14"}
             currentPage={currentPageStore.page}
-            totalPages={currentData.pagination.totalPages}
-            handlePageChange={page => {
-              currentPageStore.setPage(page);
-              window.scrollTo({ top: 0 });
-            }}
+            totalPages={pagination.totalPages}
+            handlePageChange={handlePageChange}
           />
         </>
       )}
