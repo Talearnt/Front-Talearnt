@@ -10,6 +10,9 @@ const FavoriteMatchingArticleList = lazy(
   () => import("@pages/user/FavoriteMatchingArticleList")
 );
 const WrittenArticleList = lazy(() => import("@pages/user/WrittenArticleList"));
+const WrittenCommentAndReplyList = lazy(
+  () => import("@pages/user/WrittenCommentAndReplyList")
+);
 
 const userRouter: RouteObject[] = [
   {
@@ -42,7 +45,15 @@ const userRouter: RouteObject[] = [
             <WrittenArticleList />
           </Suspense>
         ),
-        path: "written-articles",
+        path: "articles",
+      },
+      {
+        element: (
+          <Suspense>
+            <WrittenCommentAndReplyList />
+          </Suspense>
+        ),
+        path: "comments",
       },
     ],
   },
