@@ -37,27 +37,90 @@ const authRouter: RouteObject[] = [
     element: <KakaoLayout />,
     path: "kakao",
     children: [
-      { element: <KakaoOauth />, path: "oauth" },
-      { element: <KakaoExtraInfo />, path: "info-fields" },
-      { element: <CompleteSignUp />, path: "complete" },
+      {
+        element: (
+          <Suspense>
+            <KakaoOauth />
+          </Suspense>
+        ),
+        path: "oauth",
+      },
+      {
+        element: (
+          <Suspense>
+            <KakaoExtraInfo />
+          </Suspense>
+        ),
+        path: "info-fields",
+      },
+      {
+        element: (
+          <Suspense>
+            <CompleteSignUp />
+          </Suspense>
+        ),
+        path: "complete",
+      },
     ],
   },
   {
     element: <SignUpLayout />,
     path: "sign-up",
     children: [
-      { element: <Agreements />, path: "agreements" },
-      { element: <InfoFields />, path: "info-fields" },
-      { element: <CompleteSignUp />, path: "complete" },
+      {
+        element: (
+          <Suspense>
+            <Agreements />
+          </Suspense>
+        ),
+        path: "agreements",
+      },
+      {
+        element: (
+          <Suspense>
+            <InfoFields />
+          </Suspense>
+        ),
+        path: "info-fields",
+      },
+      {
+        element: (
+          <Suspense>
+            <CompleteSignUp />
+          </Suspense>
+        ),
+        path: "complete",
+      },
     ],
   },
   {
     element: <FindAccountLayout />,
     path: "find-account",
     children: [
-      { element: <FindId />, path: "id" },
-      { element: <FindPassword />, path: "pw" },
-      { element: <ChangePassword />, path: "change" },
+      {
+        element: (
+          <Suspense>
+            <FindId />
+          </Suspense>
+        ),
+        path: "id",
+      },
+      {
+        element: (
+          <Suspense>
+            <FindPassword />
+          </Suspense>
+        ),
+        path: "pw",
+      },
+      {
+        element: (
+          <Suspense>
+            <ChangePassword />
+          </Suspense>
+        ),
+        path: "change",
+      },
     ],
   },
 ];

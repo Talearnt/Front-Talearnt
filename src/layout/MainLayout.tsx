@@ -7,6 +7,7 @@ import { getAccessTokenUseRefreshToken } from "@features/user/user.api";
 
 import { classNames } from "@shared/utils/classNames";
 
+import { useNotificationPermission } from "@features/notifications/notifications.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useAuthStore } from "@store/user.store";
@@ -17,6 +18,7 @@ import { NotificationIcon } from "@components/common/icons/styled/NotificationIc
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
+import { NotificationDebugPanel } from "@components/notifications/NotificationDebugPanel/NotificationDebugPanel";
 import { AvatarDropdown } from "@components/user/profile/AvatarDropdown";
 
 const linkArray = [
@@ -56,6 +58,9 @@ function MainLayout() {
     isSuccess,
   } = useGetProfile();
 
+  // 실시간 알림 기능
+  const { hasPermission, requestPermission } = useNotificationPermission();
+
   const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   // 메모리에 accessToken 저장
@@ -82,6 +87,13 @@ function MainLayout() {
     window.addEventListener("scroll", handleWindowScroll);
     return () => window.removeEventListener("scroll", handleWindowScroll);
   }, []);
+
+  // 브라우저 알림 권한 요청 (로그인 후 한 번만)
+  useEffect(() => {
+    if (isLoggedIn && !hasPermission) {
+      void requestPermission();
+    }
+  }, [isLoggedIn, hasPermission, requestPermission]);
 
   if (isLoading) {
     return null;
@@ -145,7 +157,9 @@ function MainLayout() {
             </div>
             {isLoggedIn && (
               <>
-                <NotificationIcon className={"stroke-talearnt_Icon_01 p-1"} />
+                <NotificationIcon
+                  className={"cursor-pointer stroke-talearnt_Icon_01 p-1"}
+                />
                 <AvatarDropdown profileImg={profileImg} />
               </>
             )}
@@ -195,6 +209,7 @@ function MainLayout() {
       )}
       <Toast />
       <Prompt />
+      <NotificationDebugPanel />
       {isSuccess && giveTalents.length === 0 && <TalentsSettingModal />}
     </>
   );

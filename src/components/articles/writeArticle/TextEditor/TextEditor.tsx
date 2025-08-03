@@ -1,9 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-import ReactQuill from "react-quill-new";
+import type ReactQuillType from "react-quill-new";
 
 import { compressImageFile } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
+import QuillManager from "@shared/utils/QuillManager";
 
 import { useToastStore } from "@store/toast.store";
 
@@ -19,13 +28,16 @@ type TextEditorProps = {
   error?: string;
 };
 
+// React Quill을 동적으로 임포트
+const ReactQuill = lazy(() => import("react-quill-new"));
+
 function TextEditor({
   value,
   onChangeHandler,
   onImageHandler,
   error,
 }: TextEditorProps) {
-  const quillRef = useRef<ReactQuill>(null);
+  const quillRef = useRef<ReactQuillType>(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -35,7 +47,7 @@ function TextEditor({
 
   const hasError = !!error;
 
-  const handleImageUpload = () => {
+  const handleImageUpload = useCallback(() => {
     if (!quillRef.current) {
       return;
     }
@@ -97,21 +109,39 @@ function TextEditor({
         }
       }
     };
-  };
+  }, [setToast]);
 
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: "#toolbar",
-        handlers: {
-          image: handleImageUpload,
-        },
-      },
-      maxlength: { maxLength: 1000 },
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  // 핸들러 ref로 최신 함수 참조 유지
+  const handleImageUploadRef = useRef(handleImageUpload);
+  handleImageUploadRef.current = handleImageUpload;
+
+  // QuillManager 초기화 상태
+  const [isQuillReady, setIsQuillReady] = useState(false);
+
+  // QuillManager 초기화
+  useEffect(() => {
+    const initializeQuill = async () => {
+      try {
+        const quillManager = QuillManager.getInstance();
+        await quillManager.initialize();
+        setIsQuillReady(true);
+      } catch (error) {
+        console.error("Failed to initialize Quill:", error);
+      }
+    };
+
+    void initializeQuill();
+  }, []);
+
+  // modules는 초기화 완료 후에만 생성
+  const modules = useMemo(() => {
+    if (!isQuillReady) return {};
+
+    const quillManager = QuillManager.getInstance();
+    return quillManager.getEditorModules(() => {
+      handleImageUploadRef.current();
+    });
+  }, [isQuillReady]); // QuillManager 초기화 완료 후 생성
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -139,19 +169,31 @@ function TextEditor({
       >
         <Toolbar />
         <div className={classNames("flex flex-col", "p-6 pb-[23px]")}>
-          <ReactQuill
-            ref={quillRef}
-            modules={modules}
-            value={value}
-            onChange={(value, _1, _2, editor) =>
-              onChangeHandler({ value, pureText: editor.getText() })
-            }
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder={
-              "내용을 20글자 이상 입력해 주세요\n\n“저는 어릴 때 일본에서 지내서 일본어를 잘 가르쳐 드릴 수 있어요!”"
-            }
-          />
+          {isQuillReady ? (
+            <Suspense
+              fallback={
+                <div className="h-32 animate-pulse rounded bg-gray-50" />
+              }
+            >
+              <ReactQuill
+                ref={quillRef}
+                modules={modules}
+                value={value}
+                onChange={(value, _1, _2, editor) =>
+                  onChangeHandler({ value, pureText: editor.getText() })
+                }
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                placeholder={
+                  '내용을 20글자 이상 입력해 주세요\n\n"저는 어릴 때 일본에서 지내서 일본어를 잘 가르쳐 드릴 수 있어요!"'
+                }
+              />
+            </Suspense>
+          ) : (
+            <div className="flex h-32 animate-pulse items-center justify-center rounded bg-gray-50">
+              <span className="text-talearnt_Text_04">에디터 로딩중...</span>
+            </div>
+          )}
           <span
             className={classNames(
               "ml-auto",
