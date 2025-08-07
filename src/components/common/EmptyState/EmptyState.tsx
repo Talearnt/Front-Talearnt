@@ -1,6 +1,7 @@
 import { classNames } from "@shared/utils/classNames";
 
 import { Button } from "@components/common/Button/Button";
+import { Mako } from "@components/common/icons/mako/Mako";
 import { MakoWithHeart } from "@components/common/icons/mako/MakoWithHeart";
 import { MakoWithPencil } from "@components/common/icons/mako/MakoWithPencil";
 
@@ -8,12 +9,14 @@ type EmptyStateProps = {
   className?: string;
   title: string;
   description: string;
-  icon?: "makoWithPencil" | "makoWithHeart";
+  icon?: "makoWithPencil" | "makoWithHeart" | "mako";
   iconSize?: 240 | 200;
-  buttonText: string;
-  buttonOnClick: () => void;
-  subButtonText?: string;
-  subButtonOnClick?: () => void;
+  buttonData?: {
+    buttonText: string;
+    buttonOnClick: () => void;
+    subButtonText?: string;
+    subButtonOnClick?: () => void;
+  };
 };
 
 function EmptyState({
@@ -22,10 +25,7 @@ function EmptyState({
   description,
   icon = "makoWithPencil",
   iconSize = 240,
-  buttonText,
-  buttonOnClick,
-  subButtonText,
-  subButtonOnClick,
+  buttonData,
 }: EmptyStateProps) {
   return (
     <div
@@ -46,33 +46,36 @@ function EmptyState({
       <p
         className={classNames(
           "mb-6",
-          "text-body2_16_medium text-talearnt_Text_02"
+          "whitespace-pre-line text-center text-body2_16_medium text-talearnt_Text_02"
         )}
       >
         {description}
       </p>
       {icon === "makoWithPencil" && <MakoWithPencil size={iconSize} />}
       {icon === "makoWithHeart" && <MakoWithHeart size={iconSize} />}
-      <div
-        className={classNames(
-          "flex gap-4",
-          "w-[400px]",
-          iconSize === 240 ? "mt-14" : "mt-6"
-        )}
-      >
-        {subButtonText && subButtonOnClick && (
-          <Button
-            className={"w-full"}
-            onClick={subButtonOnClick}
-            buttonStyle={"outlined"}
-          >
-            {subButtonText}
+      {icon === "mako" && <Mako size={iconSize} />}
+      {buttonData && (
+        <div
+          className={classNames(
+            "flex gap-4",
+            "w-[400px]",
+            iconSize === 240 ? "mt-14" : "mt-6"
+          )}
+        >
+          {buttonData.subButtonText && buttonData.subButtonOnClick && (
+            <Button
+              className={"w-full"}
+              onClick={buttonData.subButtonOnClick}
+              buttonStyle={"outlined"}
+            >
+              {buttonData.subButtonText}
+            </Button>
+          )}
+          <Button className={"w-full"} onClick={buttonData.buttonOnClick}>
+            {buttonData.buttonText}
           </Button>
-        )}
-        <Button className={"w-full"} onClick={buttonOnClick}>
-          {buttonText}
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
