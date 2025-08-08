@@ -69,8 +69,10 @@ function MainPage() {
         <EmptyState
           title={"첫 글을 기다리고 있어요!"}
           description={"매칭이나 커뮤니티에서 당신의 첫 글을 남겨보세요"}
-          buttonText={"게시물 작성하기"}
-          buttonOnClick={() => navigator("/write-article/matching")}
+          buttonData={{
+            buttonText: "게시물 작성하기",
+            buttonOnClick: () => navigator("/write-article/matching"),
+          }}
         />
       ) : (
         <>

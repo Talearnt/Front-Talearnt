@@ -1,6 +1,6 @@
 import { CommonIconProps } from "@components/common/icons/icon.type";
 
-function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
+function Mako({ size = 240, ...props }: CommonIconProps) {
   return (
     <svg
       width={size}
@@ -10,7 +10,7 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clip-path="url(#clip0_9964_128965)">
+      <g clipPath="url(#clip0_9964_128965)">
         {/*배경*/}
         <rect width="240" height="240" rx="120" fill="#E5F0FF" />
         {/*몸*/}
@@ -45,8 +45,8 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
         />
         {/*팔*/}
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M71.4394 215.15C71.2539 213.359 71.1286 211.548 71.0656 209.721C70.5808 195.65 73.8527 182.32 79.9803 170.699C78.9516 170.866 77.9041 170.968 76.8377 171.005C74.9009 171.072 72.991 170.914 71.1778 170.545C70.5332 170.43 69.8552 170.35 69.1635 170.373C64.3908 170.538 60.6328 174.527 60.7971 179.294C60.8262 180.138 61.0097 180.941 61.2784 181.707L61.245 181.743C65.6021 192.431 69.0324 203.6 71.4394 215.15Z"
           fill="#FFFFFF"
         />
@@ -54,7 +54,7 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
         <path
           d="M129.085 168.826C136.735 170.43 141.636 177.932 140.031 185.582C138.427 193.232 130.925 198.133 123.276 196.529C115.626 194.925 110.724 187.423 112.328 179.773C113.932 172.123 121.435 167.222 129.085 168.826Z"
           stroke="#C1C8CC"
-          stroke-width="2.4"
+          strokeWidth="2.4"
         />
         {/*오른쪽 안경 테*/}
         <circle
@@ -63,13 +63,13 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
           r="14.4868"
           transform="rotate(11.8434 172.836 182.502)"
           stroke="#C1C8CC"
-          stroke-width="2.4"
+          strokeWidth="2.4"
         />
         {/*가운데 안경 테*/}
         <path
           d="M139.974 180.897C143.443 179.981 149.564 178.622 158.592 181.034"
           stroke="#C1C8CC"
-          stroke-width="2.4"
+          strokeWidth="2.4"
         />
         {/*손*/}
         <ellipse cx="67" cy="177" rx="4.5" ry="6" fill="#FFFFFF" />
@@ -83,4 +83,4 @@ function MakoWithPencil({ size = 240, ...props }: CommonIconProps) {
   );
 }
 
-export { MakoWithPencil };
+export { Mako };

@@ -97,8 +97,10 @@ function WrittenCommentAndReplyList() {
             description={
               "공감하거나 나누고 싶은 생각이 있다면, 댓글로 시작해보세요!"
             }
-            buttonText={`${currentTabLabel} 작성하기`}
-            buttonOnClick={handleEmptyStateButtonClick}
+            buttonData={{
+              buttonText: `${currentTabLabel} 작성하기`,
+              buttonOnClick: handleEmptyStateButtonClick,
+            }}
           />
         </div>
       ) : (

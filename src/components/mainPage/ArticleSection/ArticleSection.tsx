@@ -107,10 +107,11 @@ export function ArticleSection({
           title={`첫 ${type} 게시물을 작성해 보세요!`}
           description={"탤런트가 여러분의 게시물을 기다리고 있어요"}
           iconSize={200}
-          buttonText={"게시물 작성하기"}
-          buttonOnClick={() =>
-            navigator(isLoggedIn ? "write-article/matching" : "sign-in")
-          }
+          buttonData={{
+            buttonText: "게시물 작성하기",
+            buttonOnClick: () =>
+              navigator(isLoggedIn ? "write-article/matching" : "sign-in"),
+          }}
         />
       )}
     </div>
