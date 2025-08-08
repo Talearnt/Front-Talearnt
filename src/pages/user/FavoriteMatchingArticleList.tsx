@@ -36,8 +36,10 @@ function FavoriteMatchingArticleList() {
         <EmptyState
           title={"아직 찜한 게시물이 없어요"}
           description={"마음에 드는 게시물을 찜해보세요!"}
-          buttonText={"게시물 찜하러 가기"}
-          buttonOnClick={() => navigator("/matching")}
+          buttonData={{
+            buttonText: "게시물 찜하러 가기",
+            buttonOnClick: () => navigator("/matching"),
+          }}
         />
       ) : (
         <>

@@ -220,10 +220,12 @@ function MatchingArticleList() {
                     ? "필터를 초기화하거나 직접 게시물을 작성해 보세요"
                     : "탤런트가 여러분의 게시물을 기다리고 있어요"
                 }
-                buttonText={"게시물 작성하기"}
-                buttonOnClick={() => navigator("/write-article")}
-                subButtonText={hasFilter ? "필터 초기화하기" : undefined}
-                subButtonOnClick={hasFilter ? resetFilters : undefined}
+                buttonData={{
+                  buttonText: "게시물 작성하기",
+                  buttonOnClick: () => navigator("/write-article"),
+                  subButtonText: hasFilter ? "필터 초기화하기" : undefined,
+                  subButtonOnClick: hasFilter ? resetFilters : undefined,
+                }}
               />
             )}
       </div>

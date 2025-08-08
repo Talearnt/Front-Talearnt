@@ -101,8 +101,10 @@ function WrittenArticleList() {
                 ? "당신의 재능을 공유해보세요!"
                 : "관심 있는 이야기를 남겨보세요!"
             }
-            buttonText={"게시물 작성하기"}
-            buttonOnClick={handleEmptyStateButtonClick}
+            buttonData={{
+              buttonText: "게시물 작성하기",
+              buttonOnClick: handleEmptyStateButtonClick,
+            }}
           />
         </div>
       ) : (
