@@ -8,7 +8,6 @@ import router from "@routes/index";
 
 import "./index.css";
 
-const mode = import.meta.env.MODE;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -27,7 +26,9 @@ if (root) {
   createRoot(root).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      {mode === "dev-local" && <ReactQueryDevtools initialIsOpen={false} />}
+      {import.meta.env.MODE === "dev-local" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   );
 }

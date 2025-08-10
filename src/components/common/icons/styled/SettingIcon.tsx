@@ -29,8 +29,7 @@ function SettingIcon({
       <path
         d="M15.25 12C15.25 13.7949 13.7949 15.25 12 15.25C10.205 15.25 8.75 13.7949 8.75 12C8.75 10.2051 10.205 8.75 12 8.75C13.7949 8.75 15.25 10.2051 15.25 12Z"
         strokeWidth="1.4"
-        fill={"white"}
-        stroke={iconType === "outlined" ? "#C1C8CC" : "white"}
+        fill={iconType === "outlined" ? "none" : "white"}
       />
     </svg>
   );

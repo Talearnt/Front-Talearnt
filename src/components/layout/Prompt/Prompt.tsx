@@ -26,6 +26,7 @@ function Prompt() {
           "flex flex-col",
           "mt-[120px] h-fit w-[440px] rounded-xl bg-talearnt_BG_Background p-6 shadow-shadow_03"
         )}
+        onMouseDown={e => e.stopPropagation()}
       >
         <h1 className={"text-body2_16_semibold"}>{promptData.title}</h1>
         <p
