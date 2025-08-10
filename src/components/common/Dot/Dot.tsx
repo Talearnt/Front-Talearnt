@@ -2,7 +2,7 @@ import { classNames } from "@shared/utils/classNames";
 
 function Dot({ className }: { className?: string }) {
   return (
-    <span
+    <div
       className={classNames(
         "h-1 w-1 rounded-full bg-talearnt_Text_03",
         className

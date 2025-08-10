@@ -46,32 +46,29 @@
   }
 
   .scrollbar-w10-5 {
-    &::-webkit-scrollbar {
-      @apply w-[20px];
-    }
+    padding-right: 5px;
+    margin-right: 5px;
 
-    &::-webkit-scrollbar-thumb {
-      border: 5px solid transparent;
+    &::-webkit-scrollbar {
+      width: 10px;
     }
   }
 
   .scrollbar-w10-8 {
-    &::-webkit-scrollbar {
-      @apply w-[26px];
-    }
+    padding-right: 8px;
+    margin-right: 8px;
 
-    &::-webkit-scrollbar-thumb {
-      border: 8px solid transparent;
+    &::-webkit-scrollbar {
+      width: 10px;
     }
   }
 
   .scrollbar-w12-10 {
-    &::-webkit-scrollbar {
-      @apply w-8;
-    }
+    padding-right: 10px;
+    margin-right: 10px;
 
-    &::-webkit-scrollbar-thumb {
-      border: 10px solid transparent;
+    &::-webkit-scrollbar {
+      width: 12px;
     }
   }
 }
