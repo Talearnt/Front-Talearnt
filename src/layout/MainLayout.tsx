@@ -7,13 +7,16 @@ import { getAccessTokenUseRefreshToken } from "@features/user/user.api";
 
 import { classNames } from "@shared/utils/classNames";
 
+import { useRealtimeNotifications } from "@features/notifications/notifications.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
+import { useNotificationStore } from "@features/notifications/notifications.store";
 import { useAuthStore } from "@store/user.store";
 
 import { Button } from "@components/common/Button/Button";
 import { LogoIcon } from "@components/common/icons/LogoIcon/LogoIcon";
 import { NotificationIcon } from "@components/common/icons/styled/NotificationIcon";
+import { Notifications } from "@components/layout/Notifications/Notifications";
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
@@ -40,6 +43,7 @@ function MainLayout() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const { accessToken, setAccessToken, isLoggedIn } = useAuthStore(
     useShallow(state => ({
@@ -48,6 +52,7 @@ function MainLayout() {
       isLoggedIn: state.isLoggedIn,
     }))
   );
+  const getUnreadCount = useNotificationStore(state => state.getUnreadCount);
 
   const {
     data: {
@@ -55,6 +60,10 @@ function MainLayout() {
     },
     isSuccess,
   } = useGetProfile();
+  // 실시간 알림 기능: 레이아웃에서 항상 마운트
+  useRealtimeNotifications();
+
+  const unreadCount = getUnreadCount();
 
   const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -145,7 +154,31 @@ function MainLayout() {
             </div>
             {isLoggedIn && (
               <>
-                <NotificationIcon className={"stroke-talearnt_Icon_01 p-1"} />
+                <div className={classNames("relative", "flex")}>
+                  <button
+                    className={"p-1"}
+                    onClick={() => setIsNotificationsOpen(prev => !prev)}
+                  >
+                    <NotificationIcon className={"stroke-talearnt_Icon_01"} />
+                  </button>
+                  {unreadCount > 0 && (
+                    <span
+                      className={classNames(
+                        "absolute right-[1px] top-[1px]",
+                        "grid place-items-center",
+                        "h-[13px] min-w-[13px] rounded-full bg-talearnt_Error_03 px-1",
+                        "text-label1_10_semibold text-talearnt_On_Primary"
+                      )}
+                    >
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                  {isNotificationsOpen && (
+                    <Notifications
+                      onClose={() => setIsNotificationsOpen(false)}
+                    />
+                  )}
+                </div>
                 <AvatarDropdown profileImg={profileImg} />
               </>
             )}
