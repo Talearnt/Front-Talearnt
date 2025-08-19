@@ -71,9 +71,9 @@ function UserContentSection({
           </time>
           <time
             className={"text-caption1_14_medium text-talearnt_Text_03"}
-            dateTime={dayjs(createdAt).format("HH:MM")}
+            dateTime={dayjs(createdAt).format("HH:mm")}
           >
-            {dayjs(createdAt).format("HH:MM")}
+            {dayjs(createdAt).format("HH:mm")}
           </time>
         </div>
         <p className={"text-body2_16_medium text-talearnt_Text_02"}>
