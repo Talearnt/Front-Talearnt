@@ -56,7 +56,7 @@ function WriteArticleLayout() {
     <div
       className={classNames(
         "relative flex flex-col gap-6",
-        "h-full w-[848px] pt-8"
+        "h-full min-h-[1200px] w-[848px] pt-8"
       )}
     >
       <TabSlider
