@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
+import { useGetEventList } from "@features/event/event.hook";
+import { useGetNoticeList } from "@features/notice/notice.hook";
+
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
-
-import { eventType } from "@features/event/event.type";
-import { noticeType } from "@features/notice/notice.type";
 
 type tabType = "event" | "notice";
 
@@ -16,14 +16,21 @@ const tabs: { id: tabType; label: string }[] = [
   { id: "notice", label: "공지사항" },
 ];
 
-function NoticeEventTabSection({
-  noticeList,
-  eventList,
-}: {
-  noticeList: noticeType[];
-  eventList: eventType[];
-}) {
+function NoticeEventTabSection() {
   const [selectedTab, setSelectedTab] = useState<tabType>("event");
+
+  // 공지사항 목록
+  const {
+    data: {
+      data: { results: noticeList },
+    },
+  } = useGetNoticeList({ enabled: selectedTab === "notice", size: 4 });
+  // 이벤트 목록
+  const {
+    data: {
+      data: { results: eventList },
+    },
+  } = useGetEventList({ enabled: selectedTab === "event", size: 2 });
 
   return (
     <div

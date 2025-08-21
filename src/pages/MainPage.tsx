@@ -2,13 +2,11 @@ import { useNavigate } from "react-router-dom";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetEventList } from "@features/event/event.hook";
 import {
   useGetBestCommunityArticleList,
   useGetPersonalizedMatchingArticleList,
   useGetRecentMatchingArticleList,
 } from "@features/mainPage/mainPage.hook";
-import { useGetNoticeList } from "@features/notice/notice.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { EmptyState } from "@components/common/EmptyState/EmptyState";
@@ -46,18 +44,6 @@ function MainPage() {
       data: { results: bestCommunityArticleList },
     },
   } = useGetBestCommunityArticleList();
-  // 공지사항 목록
-  const {
-    data: {
-      data: { results: noticeList },
-    },
-  } = useGetNoticeList(4);
-  // 이벤트 목록
-  const {
-    data: {
-      data: { results: eventList },
-    },
-  } = useGetEventList(2);
 
   return (
     <div className={classNames("flex flex-col gap-14", "pt-10")}>
@@ -134,7 +120,7 @@ function MainPage() {
         </>
       )}
       {/* 이벤트, 공지사항 */}
-      <NoticeEventTabSection noticeList={noticeList} eventList={eventList} />
+      <NoticeEventTabSection />
     </div>
   );
 }

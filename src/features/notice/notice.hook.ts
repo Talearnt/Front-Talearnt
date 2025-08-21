@@ -8,7 +8,15 @@ import { useNoticePageStore } from "@features/notice/notice.store";
 
 import { queryKeys } from "@shared/constants/queryKeys";
 
-export const useGetNoticeList = (size?: number) => {
+type useGetNoticeListProps = {
+  enabled?: boolean;
+  size?: number;
+};
+
+export const useGetNoticeList = ({
+  enabled = true,
+  size,
+}: useGetNoticeListProps) => {
   const page = useNoticePageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -26,6 +34,7 @@ export const useGetNoticeList = (size?: number) => {
     {
       queryKey: createQueryKey([queryKeys.NOTICE, page], { isList: true }),
       queryFn: () => getNoticeList({ page, size }),
+      enabled,
     },
     createQueryKey([queryKeys.NOTICE], { isList: true })
   );
