@@ -8,7 +8,15 @@ import { useEventPageStore } from "@features/event/event.store";
 
 import { queryKeys } from "@shared/constants/queryKeys";
 
-export const useGetEventList = (size?: number) => {
+type useGetEventListProps = {
+  enabled?: boolean;
+  size?: number;
+};
+
+export const useGetEventList = ({
+  enabled = true,
+  size,
+}: useGetEventListProps) => {
   const page = useEventPageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -26,6 +34,7 @@ export const useGetEventList = (size?: number) => {
     {
       queryKey: createQueryKey([queryKeys.EVENT, page], { isList: true }),
       queryFn: () => getEventList({ page, size }),
+      enabled,
     },
     createQueryKey([queryKeys.EVENT], { isList: true })
   );
