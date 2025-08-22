@@ -130,6 +130,7 @@ function VerificationCode({
         title: "1분 내에  인증번호 5회 초과",
         content:
           "1분 내에 5회 연속 인증에 실패하였습니다. 10분 후 다시 시도해 주세요.",
+        onlyConfirm: true,
       });
 
       saveSendCodeData({
@@ -165,6 +166,7 @@ function VerificationCode({
         title: "서버 오류",
         content:
           "알 수 없는 이유로 인증번호 요청에 실패하였습니다.\n다시 시도해 주세요.",
+        onlyConfirm: true,
       });
     } finally {
       setIsLoading(undefined);

@@ -211,7 +211,6 @@ function WriteCommunityArticle() {
               title: "게시물 작성 취소",
               content:
                 "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
-              cancelOnClickHandler: () => setPrompt(),
               confirmOnClickHandler: () => navigator(-1),
             })
           }

@@ -117,6 +117,7 @@ function KakaoExtraInfo() {
         title: "서버 오류",
         content:
           "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요.",
+        onlyConfirm: true,
       });
     }
   };

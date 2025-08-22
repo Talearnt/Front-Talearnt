@@ -191,7 +191,6 @@ function Notifications({ onClose }: NotificationsProps) {
                           type: "success",
                         });
                       },
-                      cancelOnClickHandler: () => setPrompt(),
                     })
               }
               key={label}

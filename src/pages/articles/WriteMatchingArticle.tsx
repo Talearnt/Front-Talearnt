@@ -182,7 +182,7 @@ function WriteMatchingArticle() {
       reset(data);
       void trigger();
     }
-  }, [editMatchingArticleData]);
+  }, [editMatchingArticleData, reset, trigger]);
   // 에러난 경우 매칭 게시물 목록으로 이동
   useEffect(() => {
     if (!isError) {
@@ -199,6 +199,7 @@ function WriteMatchingArticle() {
         </>
       ),
       confirmOnClickHandler: () => navigator("/matching"),
+      onlyConfirm: true,
     });
   }, [isError, navigator, setPrompt]);
 
@@ -367,7 +368,6 @@ function WriteMatchingArticle() {
               title: "게시물 작성 취소",
               content:
                 "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
-              cancelOnClickHandler: () => setPrompt(),
               confirmOnClickHandler: () => navigator(-1),
             })
           }
