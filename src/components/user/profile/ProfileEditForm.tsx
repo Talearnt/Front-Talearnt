@@ -127,7 +127,6 @@ function ProfileEditForm({
       title: "수정 취소",
       content: "정말 취소하시겠어요? 취소하면 변경한 내용이 모두 사라져요.",
       confirmOnClickHandler: () => setIsEditProfile(false),
-      cancelOnClickHandler: () => setPrompt(),
     });
   };
   const handleEditProfile = async () => {

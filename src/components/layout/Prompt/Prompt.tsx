@@ -38,11 +38,14 @@ function Prompt() {
           {promptData.content}
         </p>
         <div className={classNames("flex justify-end gap-4", "mt-4")}>
-          {promptData.cancelOnClickHandler && (
+          {!promptData.onlyConfirm && (
             <Button
               buttonStyle={"outlined-blue"}
               size={"small"}
-              onClick={promptData.cancelOnClickHandler}
+              onClick={() => {
+                promptData.cancelOnClickHandler?.();
+                setPrompt();
+              }}
             >
               취소
             </Button>
@@ -50,10 +53,7 @@ function Prompt() {
           <Button
             size={"small"}
             onClick={() => {
-              if (promptData.confirmOnClickHandler) {
-                promptData.confirmOnClickHandler();
-              }
-
+              promptData.confirmOnClickHandler?.();
               setPrompt();
             }}
           >

@@ -7,6 +7,7 @@ type promptType = {
   content: ReactNode;
   confirmOnClickHandler?: () => void;
   cancelOnClickHandler?: () => void;
+  onlyConfirm?: boolean;
 };
 
 type promptStoreType = {
