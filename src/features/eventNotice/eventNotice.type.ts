@@ -5,3 +5,11 @@ export type eventType = {
   endDate: string;
   isActive: boolean;
 };
+
+export type noticeType = {
+  noticeNo: number;
+  title: string;
+  noticeType: string;
+  content: string;
+  createdAt: string;
+};
