@@ -2,22 +2,22 @@ import { useState } from "react";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { useGetEventList } from "@features/event/event.hook";
-import { useGetNoticeList } from "@features/notice/notice.hook";
+import {
+  useGetEventList,
+  useGetNoticeList,
+} from "@features/eventNotice/eventNotice.hook";
 
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
 
-type tabType = "event" | "notice";
-
-const tabs: { id: tabType; label: string }[] = [
-  { id: "event", label: "이벤트" },
-  { id: "notice", label: "공지사항" },
-];
+import {
+  eventNoticeTabOptions,
+  eventNoticeTabType,
+} from "@features/eventNotice/eventNotice.constants";
 
 function NoticeEventTabSection() {
-  const [selectedTab, setSelectedTab] = useState<tabType>("event");
+  const [selectedTab, setSelectedTab] = useState<eventNoticeTabType>("event");
 
   // 공지사항 목록
   const {
@@ -51,25 +51,25 @@ function NoticeEventTabSection() {
       </span>
       <div className={classNames("flex flex-col gap-6", "w-[904px]")}>
         <div className={"flex"}>
-          {tabs.map(({ id, label }, index) => (
+          {eventNoticeTabOptions.map(({ label, value }, index) => (
             <label
               className={classNames(
                 "flex items-center",
                 "h-[50px] rounded-full border border-talearnt_Line_01 bg-talearnt_BG_Background px-[23px]",
                 "text-body1_18_medium text-talearnt_Text_02",
                 "cursor-pointer",
-                selectedTab === id &&
+                selectedTab === value &&
                   "border-talearnt_Primary_01 bg-talearnt_Primary_01 text-talearnt_On_Primary",
                 !!index && "ml-4"
               )}
-              key={id}
+              key={value}
             >
               <input
                 className={"hidden"}
-                checked={selectedTab === id}
-                onChange={() => setSelectedTab(id)}
+                checked={selectedTab === value}
+                onChange={() => setSelectedTab(value)}
                 name={"tab"}
-                value={id}
+                value={value}
                 type={"radio"}
               />
               {label}
@@ -77,7 +77,7 @@ function NoticeEventTabSection() {
           ))}
           <MoveButton
             className={"mr-0 rounded-none"}
-            to={`/notice-event/${selectedTab}`}
+            to={`/event-notice/${selectedTab}`}
             text={"전체 보기"}
           />
         </div>
