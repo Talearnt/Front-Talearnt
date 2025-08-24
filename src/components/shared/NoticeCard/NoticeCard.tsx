@@ -1,26 +1,30 @@
+import { useNavigate } from "react-router-dom";
+
 import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
 
 import { Badge } from "@components/common/Badge/Badge";
 
-import { noticeType } from "@features/notice/notice.type";
-
-type NoticeCardProps = noticeType & { pageType?: "main" | "notice" };
+import { noticeType } from "@features/eventNotice/eventNotice.type";
 
 function NoticeCard({
   noticeType,
   title,
   content,
   createdAt,
-  pageType = "main",
-}: NoticeCardProps) {
+  noticeNo,
+}: noticeType) {
+  const navigator = useNavigate();
+
   return (
     <div
       className={classNames(
         "flex flex-col gap-2",
-        "rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]"
+        "rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]",
+        "cursor-pointer"
       )}
+      onClick={() => navigator(`/event-notice/notice/${noticeNo}`)}
     >
       <div className={"flex gap-1"}>
         <Badge label={noticeType} />
@@ -29,20 +33,16 @@ function NoticeCard({
         )}
       </div>
       <h2
-        className={classNames(
-          "text-heading4_20_semibold text-talearnt_Text_Strong",
-          pageType === "main" && "line-clamp-2 h-[52px]",
-          pageType === "notice" && "line-clamp-1"
-        )}
+        className={
+          "line-clamp-1 text-heading4_20_semibold text-talearnt_Text_Strong"
+        }
       >
         {title}
       </h2>
       <p
         className={classNames(
           "mb-3",
-          "text-body3_14_medium text-talearnt_Text_03",
-          pageType === "main" && "line-clamp-2 h-[36.4px]",
-          pageType === "notice" && "line-clamp-1"
+          "line-clamp-1 text-body3_14_medium text-talearnt_Text_03"
         )}
       >
         {content}

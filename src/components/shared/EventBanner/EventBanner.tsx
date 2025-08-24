@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
 
-import { eventType } from "@features/event/event.type";
+import { eventType } from "@features/eventNotice/eventNotice.type";
 
 function EventBanner({
   eventNo,
@@ -17,7 +17,7 @@ function EventBanner({
     <div className={"flex flex-col gap-2"}>
       <Link
         className={"h-full w-full overflow-hidden rounded-xl"}
-        to={`/notice-event/event/${eventNo}`}
+        to={`/event-notice/event/${eventNo}`}
       >
         <img className={"h-full w-full"} src={bannerUrl} alt={"이벤트 배너"} />
       </Link>
