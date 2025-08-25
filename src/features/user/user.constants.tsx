@@ -118,21 +118,6 @@ export const userSidebarArray = [
     category: "기타",
     items: [
       {
-        path: "notice-event/event",
-        content: ({ isActive }: { isActive: boolean }) => (
-          <>
-            <SettingIcon iconType={isActive ? "filled-blue" : "outlined"} />
-            <span
-              className={`text-body1_18_semibold ${
-                isActive ? "text-talearnt_Primary_01" : "text-talearnt_Text_02"
-              }`}
-            >
-              이벤트/공지사항
-            </span>
-          </>
-        ),
-      },
-      {
         path: "support",
         content: ({ isActive }: { isActive: boolean }) => (
           <>
