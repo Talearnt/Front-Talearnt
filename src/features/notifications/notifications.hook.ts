@@ -38,14 +38,14 @@ const WEBSOCKET_ENDPOINT = "https://api.talearnt.net/ws";
 export const useRealtimeNotifications = () => {
   const { pathname } = useLocation();
   const queryClient = useQueryClient();
+  const subscriptionIdRef = useRef<string | null>(null);
+  const isSyncingRef = useRef<boolean>(true);
+  const bufferRef = useRef<notificationType[]>([]);
+  const pathnameRef = useRef<string>(pathname);
 
   const { isLoggedIn } = useAuthStore();
   const { addNotification, setLoading, setNotifications, reset } =
     useNotificationStore();
-
-  const subscriptionIdRef = useRef<string | null>(null);
-  const isSyncingRef = useRef<boolean>(true);
-  const bufferRef = useRef<notificationType[]>([]);
 
   // 실시간 알림 메시지 처리: 동기화 중에는 버퍼, 이후에는 즉시 반영
   const handleNotificationMessage = useCallback(
@@ -62,7 +62,7 @@ export const useRealtimeNotifications = () => {
 
           const { targetNo } = data;
 
-          if (pathname === `/community-article/${targetNo}`) {
+          if (pathnameRef.current === `/community-article/${targetNo}`) {
             // 게시글 댓글 알림 처리
             void queryClient.invalidateQueries({
               queryKey: createQueryKey(
@@ -80,7 +80,7 @@ export const useRealtimeNotifications = () => {
         console.error("⚠️ 알림 메시지 파싱 실패", error);
       }
     },
-    [addNotification, queryClient, pathname]
+    [addNotification, queryClient]
   );
 
   // WebSocket 연결 + 구독(버퍼) + 초기 동기화 + 버퍼 플러시
@@ -183,6 +183,10 @@ export const useRealtimeNotifications = () => {
 
     return () => disconnectFromWebSocket();
   }, [isLoggedIn, connectToWebSocket, disconnectFromWebSocket, reset]);
+  // pathname 변경에 따른 pathnameRef 업데이트
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 };
 
 /**
