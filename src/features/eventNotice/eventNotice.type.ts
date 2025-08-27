@@ -13,3 +13,20 @@ export type noticeType = {
   content: string;
   createdAt: string;
 };
+
+export type eventDetailType = {
+  bannerUrl: string;
+  content: string;
+  endDate: string;
+  eventNo: number;
+  isActive: boolean;
+  startDate: string;
+};
+
+export type noticeDetailType = {
+  content: string;
+  createdAt: string;
+  noticeNo: number;
+  noticeType: string;
+  title: string;
+};

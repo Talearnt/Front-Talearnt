@@ -1,5 +1,9 @@
+import { useParams } from "react-router-dom";
+
 import {
+  getEventDetail,
   getEventList,
+  getNoticeDetail,
   getNoticeList,
 } from "@features/eventNotice/eventNotice.api";
 
@@ -14,15 +18,13 @@ import {
 
 import { queryKeys } from "@shared/constants/queryKeys";
 
-type useGetEventListProps = {
+type commonPropsType = {
   enabled?: boolean;
   size?: number;
 };
 
-export const useGetEventList = ({
-  enabled = true,
-  size,
-}: useGetEventListProps) => {
+// 이벤트 리스트 조회
+export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
   const page = useEventPageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -42,19 +44,12 @@ export const useGetEventList = ({
       queryFn: () => getEventList({ page, size }),
       enabled,
     },
-    createQueryKey([queryKeys.EVENT], { isList: true })
+    createQueryKey([queryKeys.EVENT, size], { isList: true })
   );
 };
 
-type useGetNoticeListProps = {
-  enabled?: boolean;
-  size?: number;
-};
-
-export const useGetNoticeList = ({
-  enabled = true,
-  size,
-}: useGetNoticeListProps) => {
+// 공지사항 리스트 조회
+export const useGetNoticeList = ({ enabled = true, size }: commonPropsType) => {
   const page = useNoticePageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -76,6 +71,49 @@ export const useGetNoticeList = ({
       queryFn: () => getNoticeList({ page, size }),
       enabled,
     },
-    createQueryKey([queryKeys.NOTICE], { isList: true })
+    createQueryKey([queryKeys.NOTICE, size], { isList: true })
+  );
+};
+
+// 이벤트 상세 조회
+export const useGetEventDetail = () => {
+  const { eventNo } = useParams();
+
+  const no = Number(eventNo);
+
+  return useQueryWithInitial(
+    {
+      bannerUrl: "",
+      content: "",
+      endDate: "",
+      eventNo: 0,
+      isActive: true,
+      startDate: "",
+    },
+    {
+      queryKey: createQueryKey([queryKeys.EVENT, no]),
+      queryFn: () => getEventDetail(no),
+    }
+  );
+};
+
+// 공지사항 상세 조회
+export const useGetNoticeDetail = () => {
+  const { noticeNo } = useParams();
+
+  const no = Number(noticeNo);
+
+  return useQueryWithInitial(
+    {
+      noticeNo: 0,
+      title: "",
+      content: "",
+      noticeType: "",
+      createdAt: "",
+    },
+    {
+      queryKey: createQueryKey([queryKeys.NOTICE, no]),
+      queryFn: () => getNoticeDetail(no),
+    }
   );
 };
