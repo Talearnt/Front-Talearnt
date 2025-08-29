@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -26,7 +26,7 @@ import {
   eventNoticeTabType,
 } from "@features/eventNotice/eventNotice.constants";
 
-function EventNoticePage() {
+function EventNoticeList() {
   const { tab } = useParams();
   const navigator = useNavigate();
 
@@ -78,6 +78,10 @@ function EventNoticePage() {
     setPage(page);
     window.scrollTo({ top: 0 });
   };
+
+  useEffect(() => {
+    setSelectedTab(tab as eventNoticeTabType);
+  }, [tab]);
 
   return (
     <div className={classNames("flex flex-col", "w-[848px] pt-8")}>
@@ -139,4 +143,4 @@ function EventNoticePage() {
   );
 }
 
-export default EventNoticePage;
+export default EventNoticeList;
