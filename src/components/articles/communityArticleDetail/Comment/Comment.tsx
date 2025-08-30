@@ -94,42 +94,55 @@ function Comment({
         isDeleted,
       }}
     >
-      <div className={"flex gap-4"}>
-        {isLoggedIn && (
-          <ActionButton onClick={() => setIsReplyWriting(true)} withDot={false}>
-            <ChatIcon size={20} />
-            답글달기
-          </ActionButton>
-        )}
-        {nickname === commentAuthorNickname && (
-          <>
-            <ActionButton onClick={() => setIsEdit(true)}>
-              수정하기
-            </ActionButton>
-            <ActionButton
-              onClick={() => deleteCommunityArticleComment(commentNo)}
-            >
-              삭제하기
-            </ActionButton>
-          </>
-        )}
-      </div>
-      {isReplyWriting && (
-        <UserContentWrite
-          className={"mt-2"}
-          onCancelHandler={() => setIsReplyWriting(false)}
-          onSubmitHandler={async content => {
-            await postCommunityArticleReply(content);
+      {!isDeleted && (
+        <>
+          <div className={"flex gap-4"}>
+            {isLoggedIn && (
+              <ActionButton
+                onClick={() => setIsReplyWriting(true)}
+                withDot={false}
+              >
+                <ChatIcon size={20} />
+                답글달기
+              </ActionButton>
+            )}
+            {nickname === commentAuthorNickname && (
+              <>
+                <ActionButton onClick={() => setIsEdit(true)}>
+                  수정하기
+                </ActionButton>
+                <ActionButton
+                  onClick={() => deleteCommunityArticleComment(commentNo)}
+                >
+                  삭제하기
+                </ActionButton>
+              </>
+            )}
+          </div>
+          {isReplyWriting && (
+            <UserContentWrite
+              className={"mt-2"}
+              onCancelHandler={() => setIsReplyWriting(false)}
+              onSubmitHandler={async content => {
+                await postCommunityArticleReply(content);
 
-            if (!isOpen) {
-              setIsOpen(true);
-            }
-          }}
-          maxLength={300}
-        />
+                if (!isOpen) {
+                  setIsOpen(true);
+                }
+              }}
+              maxLength={300}
+            />
+          )}
+        </>
       )}
       {replyCount > 0 && (
-        <div className={classNames("flex flex-col gap-4", "mt-2")}>
+        <div
+          className={classNames(
+            "flex flex-col gap-4",
+            "mt-2",
+            isDeleted && "ml-[66px]"
+          )}
+        >
           <button
             className={classNames(
               "group/button",

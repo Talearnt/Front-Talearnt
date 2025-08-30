@@ -109,7 +109,7 @@ function CommunityArticleDetail() {
       title: "게시물 삭제",
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
-      confirmOnClickHandler: () => deleteCommunityArticle(communityPostNo),
+      confirmOnClickHandler: deleteCommunityArticle,
     });
 
   useEffect(() => {

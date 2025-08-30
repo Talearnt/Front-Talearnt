@@ -61,7 +61,7 @@ function Reply({
           deletedText: "작성자가 삭제한 답글입니다.",
         }}
       >
-        {nickname === authorNickname && (
+        {nickname === authorNickname && !isDeleted && (
           <div className={"flex items-center gap-2"}>
             <button
               className={"text-caption2_12_semibold text-talearnt_Text_03"}
