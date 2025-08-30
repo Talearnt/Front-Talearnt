@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -8,7 +8,7 @@ import { classNames } from "@shared/utils/classNames";
 import { useGetMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.hook";
 
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
-import { useHasNewMatchingArticleStore } from "@features/articles/shared/articles.store";
+import { useWriteMatchingArticleStore } from "@features/articles/shared/articles.store";
 
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { DropdownLabeled } from "@components/common/dropdowns/DropdownLabeled/DropdownLabeled";
@@ -55,11 +55,11 @@ function MatchingArticleList() {
       resetFilters: state.resetFilters,
     }))
   );
-  const { hasNewMatchingArticle, setHasNewMatchingArticle } =
-    useHasNewMatchingArticleStore(
+  const { writeMatchingArticleId, setWriteMatchingArticleId } =
+    useWriteMatchingArticleStore(
       useShallow(state => ({
-        hasNewMatchingArticle: state.hasNewMatchingArticle,
-        setHasNewMatchingArticle: state.setHasNewMatchingArticle,
+        writeMatchingArticleId: state.writeMatchingArticleId,
+        setWriteMatchingArticleId: state.setWriteMatchingArticleId,
       }))
     );
 
@@ -80,19 +80,54 @@ function MatchingArticleList() {
     duration !== undefined ||
     type !== undefined ||
     status !== undefined;
+  const isFirstPage = page === 1;
 
-  // 애니메이션 완료 후 플래그 제거
+  // 새로 작성한 글을 목록의 최상단으로 보이도록 재정렬 (1페이지이면서 쿼리 성공 시에만)
+  const displayResults = useMemo(() => {
+    if (!writeMatchingArticleId || !isFirstPage || !isSuccess) {
+      return results;
+    }
+
+    const idx = results.findIndex(
+      item => item.exchangePostNo === writeMatchingArticleId
+    );
+
+    if (idx <= 0) {
+      return results;
+    }
+
+    const moved = results[idx];
+
+    return [moved, ...results.slice(0, idx), ...results.slice(idx + 1)];
+  }, [isFirstPage, isSuccess, results, writeMatchingArticleId]);
+
+  // 애니메이션 완료 후 타깃 ID 제거(리스트에 새 글이 포함된 경우에만 1초 후 초기화)
   useEffect(() => {
-    if (!hasNewMatchingArticle) {
+    if (!writeMatchingArticleId || !isFirstPage || !isSuccess) {
       return;
     }
 
-    // 다른 페이지네이션 갔다가 1페이지로 돌아왔을때 애니메이션 방지
-    setTimeout(() => setHasNewMatchingArticle(false), 1000);
+    if (!results.some(item => item.exchangePostNo === writeMatchingArticleId)) {
+      return;
+    }
 
-    // 페이지 이탈 후 복귀시 애니메이션 방지
-    return () => setHasNewMatchingArticle(false);
-  }, [hasNewMatchingArticle, setHasNewMatchingArticle]);
+    const timer = setTimeout(() => setWriteMatchingArticleId(null), 1000);
+
+    return () => {
+      clearTimeout(timer);
+      setWriteMatchingArticleId(null);
+    };
+  }, [
+    isFirstPage,
+    isSuccess,
+    results,
+    setWriteMatchingArticleId,
+    writeMatchingArticleId,
+  ]);
+  // 페이지 이탈 시 필터 초기화
+  useEffect(() => {
+    return () => resetFilters();
+  }, [resetFilters]);
 
   return (
     <div
@@ -184,19 +219,19 @@ function MatchingArticleList() {
       {/*매칭 게시물 목록 결과*/}
       <div
         className={
-          results.length > 0
+          displayResults.length > 0
             ? "grid grid-cols-[repeat(4,305px)] gap-5"
             : classNames("flex flex-col items-center", "mt-[72px]")
         }
       >
         {/*목록 있는 경우*/}
-        {results.length > 0
-          ? results.map(({ exchangePostNo, ...article }, index) => (
+        {displayResults.length > 0
+          ? displayResults.map(({ exchangePostNo, ...article }, index) => (
               <MatchingArticleCard
                 {...article}
                 className={classNames(
-                  hasNewMatchingArticle &&
-                    (index === 0
+                  writeMatchingArticleId &&
+                    (exchangePostNo === writeMatchingArticleId
                       ? "animate-new_matching_article_reveal"
                       : index < 4 && "animate-new_matching_article_slide")
                 )}
@@ -242,7 +277,7 @@ function MatchingArticleList() {
             className={classNames(
               "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             )}
-            isGray={results.length > 0}
+            isGray={displayResults.length > 0}
           />
         </div>
       )}

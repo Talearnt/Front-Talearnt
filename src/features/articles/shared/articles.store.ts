@@ -5,16 +5,15 @@ import { matchingArticleDetailType } from "@features/articles/matchingArticleDet
 import { communityArticleFormDataType } from "@features/articles/writeCommunityArticle/writeCommunityArticle.type";
 import { matchingArticleFormDataType } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 
-type hasNewMatchingArticleStoreType = {
-  hasNewMatchingArticle: boolean;
-  setHasNewMatchingArticle: (hasNewMatchingArticle: boolean) => void;
+type writeMatchingArticleStoreType = {
+  writeMatchingArticleId: number | null;
+  setWriteMatchingArticleId: (id: number | null) => void;
 };
 
-export const useHasNewMatchingArticleStore =
-  create<hasNewMatchingArticleStoreType>(set => ({
-    hasNewMatchingArticle: false,
-    setHasNewMatchingArticle: hasNewMatchingArticle =>
-      set({ hasNewMatchingArticle }),
+export const useWriteMatchingArticleStore =
+  create<writeMatchingArticleStoreType>(set => ({
+    writeMatchingArticleId: null,
+    setWriteMatchingArticleId: id => set({ writeMatchingArticleId: id }),
   }));
 
 type editMatchingArticleDataStoreType = {
