@@ -36,14 +36,17 @@ function UserContentSection({
   } = useGetProfile();
 
   return deletedData?.isDeleted ? (
-    <span
-      className={classNames(
-        "rounded-xl bg-talearnt_BG_Up_01 p-4",
-        "text-body2_16_medium text-talearnt_Text_03"
-      )}
-    >
-      {deletedData.deletedText ?? "작성자가 삭제한 댓글입니다."}
-    </span>
+    <div className={"flex flex-col gap-4"}>
+      <span
+        className={classNames(
+          "rounded-xl bg-talearnt_BG_Up_01 p-4",
+          "text-body2_16_medium text-talearnt_Text_03"
+        )}
+      >
+        {deletedData.deletedText ?? "작성자가 삭제한 댓글입니다."}
+      </span>
+      {children}
+    </div>
   ) : (
     <div className={"flex gap-4"}>
       <Avatar imageUrl={profileImg} />
