@@ -26,7 +26,7 @@ export const postCommunityArticleComment = (
   comment: Pick<communityArticleDetailType, "communityPostNo"> &
     Pick<baseContentType, "content">
 ) =>
-  postAPI<paginationType<commentType>>("/v1/communities/comments", comment, {
+  postAPI<commentType>("/v1/communities/comments", comment, {
     withCredentials: true,
   });
 
@@ -36,7 +36,6 @@ export const getCommunityArticleCommentList = ({
   ...data
 }: Pick<communityArticleDetailType, "communityPostNo"> & {
   page: number;
-  deletedAt: string | undefined;
 }) =>
   getAPI<paginationType<commentType>>(
     `/v1/communities/${communityPostNo}/comments`,
