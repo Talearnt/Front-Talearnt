@@ -7,7 +7,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useShallow } from "zustand/shallow";
 
 import {
   deleteCommunityArticle,
@@ -21,7 +20,6 @@ import {
   putEditCommunityArticleComment,
   putEditCommunityArticleReply,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.api";
-import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 
 import { createQueryKey } from "@shared/utils/createQueryKey";
 
@@ -31,12 +29,12 @@ import {
   useCommunityArticleCommentDeletedAtStore,
   useCommunityArticleCommentPageStore,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.store";
-import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
 import { useToastStore } from "@store/toast.store";
 
 import { queryKeys } from "@shared/constants/queryKeys";
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
+import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
 import {
   commentType,
   replyType,
@@ -49,6 +47,9 @@ export const useGetCommunityArticleDetail = () => {
 
   const postNo = Number(communityPostNo);
 
+  // 상세 조회
+  // - 커뮤니티 글은 댓글/좋아요 등이 자주 변경되므로 짧은 staleTime 적용
+  // - 초기 데이터로 첫 렌더 깜빡임을 줄입니다
   return useQueryWithInitial(
     {
       commentLastPage: 0,
@@ -70,40 +71,106 @@ export const useGetCommunityArticleDetail = () => {
       queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),
       queryFn: () => getCommunityArticleDetail(postNo),
       enabled: communityPostNo !== undefined,
+      staleTime: 1 * 60 * 1000, // 1 minute - 댓글/좋아요 등이 자주 변경되므로 짧게
+      gcTime: 10 * 60 * 1000, // 10 minutes - 상세 페이지는 재방문 가능성이 높음
     }
   );
 };
 
 // 커뮤니티 게시글 제거
 export const useDeleteCommunityArticle = () => {
+  const { communityPostNo } = useParams();
   const navigator = useNavigate();
 
   const queryClient = useQueryClient();
 
-  const filter = useCommunityArticleListFilterStore(
-    useShallow(state => ({
-      postType: state.postType,
-      page: state.page,
-    }))
-  );
   const setToast = useToastStore(state => state.setToast);
 
+  const postNo = Number(communityPostNo);
+
+  // 삭제 낙관적 업데이트 흐름
+  // 1) 활성 쿼리 취소 → 깜빡임/경합 최소화
+  // 2) 상세/리스트 스냅샷 저장 → 실패 시 정확히 롤백
+  // 3) 상세 캐시 제거 + 모든 리스트에서 해당 아이템 낙관적 제거
+  // 4) 성공 시 안내 후 목록으로 이동, onSettled에서 최종 재검증
   return useMutation({
-    mutationFn: deleteCommunityArticle,
-    onSuccess: async () => {
-      // 모든 커뮤니티 게시물 목록 캐시 제거
-      queryClient.removeQueries({
+    mutationFn: () => deleteCommunityArticle(postNo),
+    onMutate: async () => {
+      // 1) 활성 쿼리 취소
+      await queryClient.cancelQueries({
+        queryKey: createQueryKey([queryKeys.COMMUNITY]),
+      });
+
+      // 2) 스냅샷 저장
+      const prevDetail = queryClient.getQueryData(
+        createQueryKey([queryKeys.COMMUNITY, postNo])
+      );
+      const listQueries = queryClient.getQueriesData({
         queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true }),
       });
-      // 커뮤니티 게시물 목록 프리패치
-      await queryClient.prefetchQuery({
-        queryKey: createQueryKey([queryKeys.COMMUNITY, filter], {
-          isList: true,
-        }),
-        queryFn: async () => await getCommunityArticleList(filter),
+      const prevLists = listQueries.map(([key, data]) => [key, data] as const);
+
+      // 3-a) 상세 캐시 제거(삭제 후 상세 접근 방지)
+      queryClient.removeQueries({
+        queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),
       });
-      navigator("/community");
+
+      // 3-b) 모든 리스트에서 해당 아이템 낙관적 제거 + totalCount 보정
+      listQueries.forEach(([key]) => {
+        queryClient.setQueryData<
+          customAxiosResponseType<paginationType<communityArticleType>>
+        >(key, oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.filter(
+                article => article.communityPostNo !== postNo
+              ),
+              pagination: {
+                ...oldData.data.pagination,
+                totalCount: Math.max(0, oldData.data.pagination.totalCount - 1),
+              },
+            },
+          };
+        });
+      });
+
+      // 2)에서 저장한 스냅샷 반환 → onError에서 롤백에 사용
+      return { prevDetail, prevLists };
+    },
+    onError: (_err, _variables, context) => {
+      // 실패 시 상세/리스트 모두 정확히 원복
+      if (context?.prevDetail) {
+        queryClient.setQueryData(
+          createQueryKey([queryKeys.COMMUNITY, postNo]),
+          context.prevDetail
+        );
+      }
+
+      context?.prevLists.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
+    },
+    onSuccess: () => {
+      // 사용자 피드백 + 목록으로 이동
       setToast({ message: "게시물이 삭제되었습니다" });
+      navigator("/community");
+    },
+    onSettled: async () => {
+      // 상세/리스트를 한 번 더 재검증하여 서버 정답으로 최종 동기화
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: createQueryKey([queryKeys.COMMUNITY, postNo]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true }),
+        }),
+      ]);
     },
   });
 };

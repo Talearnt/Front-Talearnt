@@ -35,16 +35,15 @@ export const useEditMatchingArticleDataStore =
     setEditMatchingArticle: editMatchingArticle => set({ editMatchingArticle }),
   }));
 
-type hasNewCommunityArticleStoreType = {
-  hasNewCommunityArticle: boolean;
-  setHasNewCommunityArticle: (hasNewCommunityArticle: boolean) => void;
+type writeCommunityArticleStoreType = {
+  writeCommunityArticleId: number | null;
+  setWriteCommunityArticleId: (id: number | null) => void;
 };
 
-export const useHasNewCommunityArticleStore =
-  create<hasNewCommunityArticleStoreType>(set => ({
-    hasNewCommunityArticle: false,
-    setHasNewCommunityArticle: hasNewCommunityArticle =>
-      set({ hasNewCommunityArticle }),
+export const useWriteCommunityArticleStore =
+  create<writeCommunityArticleStoreType>(set => ({
+    writeCommunityArticleId: null,
+    setWriteCommunityArticleId: id => set({ writeCommunityArticleId: id }),
   }));
 
 type editCommunityArticleDataStoreType = {

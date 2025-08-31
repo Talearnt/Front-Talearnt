@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
@@ -9,7 +9,7 @@ import { classNames } from "@shared/utils/classNames";
 import { useGetCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.hook";
 
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
-import { useHasNewCommunityArticleStore } from "@features/articles/shared/articles.store";
+import { useWriteCommunityArticleStore } from "@features/articles/shared/articles.store";
 
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { Badge } from "@components/common/Badge/Badge";
@@ -31,11 +31,11 @@ function CommunityArticleList() {
       resetFilters: state.resetFilters,
     }))
   );
-  const { hasNewCommunityArticle, setHasNewCommunityArticle } =
-    useHasNewCommunityArticleStore(
+  const { writeCommunityArticleId, setWriteCommunityArticleId } =
+    useWriteCommunityArticleStore(
       useShallow(state => ({
-        hasNewCommunityArticle: state.hasNewCommunityArticle,
-        setHasNewCommunityArticle: state.setHasNewCommunityArticle,
+        writeCommunityArticleId: state.writeCommunityArticleId,
+        setWriteCommunityArticleId: state.setWriteCommunityArticleId,
       }))
     );
 
@@ -47,20 +47,55 @@ function CommunityArticleList() {
       },
     },
     isLoading,
+    isSuccess,
   } = useGetCommunityArticleList();
 
-  // 애니메이션 완료 후 플래그 제거
+  const isFirstPage = page === 1;
+
+  // 새로 작성한 글을 목록의 최상단으로 보이도록 재정렬 (전체 게시판 1페이지이면서 쿼리 성공 시에만)
+  const displayResults = useMemo(() => {
+    if (!writeCommunityArticleId || !isFirstPage || !isSuccess) {
+      return results;
+    }
+
+    const idx = results.findIndex(
+      item => item.communityPostNo === writeCommunityArticleId
+    );
+
+    if (idx <= 0) {
+      return results;
+    }
+
+    const moved = results[idx];
+
+    return [moved, ...results.slice(0, idx), ...results.slice(idx + 1)];
+  }, [isFirstPage, isSuccess, results, writeCommunityArticleId]);
+
+  // 애니메이션 완료 후 타깃 ID 제거(리스트에 새 글이 포함된 경우에만 1초 후 초기화)
   useEffect(() => {
-    if (!hasNewCommunityArticle) {
+    if (!writeCommunityArticleId || !isFirstPage || !isSuccess) {
       return;
     }
 
-    // 다른 페이지네이션 갔다가 1페이지로 돌아왔을때 애니메이션 방지
-    setTimeout(() => setHasNewCommunityArticle(false), 1000);
+    if (
+      !results.some(item => item.communityPostNo === writeCommunityArticleId)
+    ) {
+      return;
+    }
 
-    // 페이지 이탈 후 복귀시 애니메이션 방지
-    return () => setHasNewCommunityArticle(false);
-  }, [hasNewCommunityArticle, setHasNewCommunityArticle]);
+    const timer = setTimeout(() => setWriteCommunityArticleId(null), 1000);
+
+    return () => {
+      clearTimeout(timer);
+      setWriteCommunityArticleId(null);
+    };
+  }, [
+    isFirstPage,
+    isSuccess,
+    results,
+    setWriteCommunityArticleId,
+    writeCommunityArticleId,
+  ]);
 
   return (
     <div
@@ -157,26 +192,22 @@ function CommunityArticleList() {
           </tr>
         </thead>
         <tbody>
-          {results.map(
-            (
-              {
-                nickname,
-                communityPostNo,
-                createdAt,
-                title,
-                postType,
-                count,
-                likeCount,
-              },
-              index
-            ) => (
+          {displayResults.map(
+            ({
+              nickname,
+              communityPostNo,
+              createdAt,
+              title,
+              postType,
+              count,
+              likeCount,
+            }) => (
               <tr
                 className={classNames(
                   "flex items-center gap-6",
                   "mb-2 h-[60px] px-4",
                   "cursor-pointer",
-                  hasNewCommunityArticle &&
-                    index === 0 &&
+                  communityPostNo === writeCommunityArticleId &&
                     "animate-new_community_article_slide rounded-lg border border-transparent"
                 )}
                 onClick={() =>

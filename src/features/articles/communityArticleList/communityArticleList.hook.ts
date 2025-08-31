@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-
-import { useQueryClient } from "@tanstack/react-query";
 import { useShallow } from "zustand/shallow";
 
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
@@ -13,16 +10,8 @@ import { useCommunityArticleListFilterStore } from "@features/articles/community
 
 import { queryKeys } from "@shared/constants/queryKeys";
 
-import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
-import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
-
-const communityArticleListQueryKey = createQueryKey([queryKeys.COMMUNITY], {
-  isList: true,
-});
-
 export const useGetCommunityArticleList = () => {
-  const queryClient = useQueryClient();
-
+  // 현재 화면의 필터 상태(쿼리 키의 일부가 됩니다)
   const filter = useCommunityArticleListFilterStore(
     useShallow(state => ({
       postType: state.postType,
@@ -30,11 +19,10 @@ export const useGetCommunityArticleList = () => {
     }))
   );
 
-  const queryKey = createQueryKey([queryKeys.COMMUNITY, filter], {
-    isList: true,
-  });
-
-  const queryResult = useQueryWithInitial(
+  // 리스트 조회
+  // - per-query staleTime/gcTime으로 최신성/메모리 사용을 균형 있게
+  // - 초기 데이터로 첫 렌더 깜빡임 최소화
+  return useQueryWithInitial(
     {
       results: [],
       pagination: {
@@ -47,53 +35,15 @@ export const useGetCommunityArticleList = () => {
       },
     },
     {
-      queryKey,
+      queryKey: createQueryKey([queryKeys.COMMUNITY, filter], {
+        isList: true,
+      }),
       queryFn: async () => await getCommunityArticleList(filter),
+      staleTime: 30 * 1000, // 30 seconds
+      gcTime: 5 * 60 * 1000, // 5 minutes
     },
-    communityArticleListQueryKey
+    createQueryKey([queryKeys.COMMUNITY], {
+      isList: true,
+    })
   );
-
-  useEffect(() => {
-    if (queryResult.isSuccess && filter.page > 1) {
-      const previousPageData = queryClient
-        .getQueriesData<
-          customAxiosResponseType<paginationType<communityArticleType>>
-        >({
-          queryKey: communityArticleListQueryKey,
-        })
-        .reverse()
-        .find(
-          // 현재 로딩중인 쿼리와 다른 쿼리 중 값이 있는 제일 첫 캐시
-          ([key]) => JSON.stringify(key) !== JSON.stringify(queryKey)
-        )?.[1];
-
-      if (!previousPageData) {
-        return;
-      }
-
-      const { totalCount, latestCreatedAt } = previousPageData.data.pagination;
-      const { totalCount: newTotalCount, latestCreatedAt: newLatestCreatedAt } =
-        queryResult.data.data.pagination;
-
-      if (
-        newTotalCount !== totalCount ||
-        latestCreatedAt !== newLatestCreatedAt
-      ) {
-        // 새로 불러온 쿼리의 값과 다르다면 기존 캐시 제거
-        queryClient.removeQueries({
-          queryKey: communityArticleListQueryKey,
-          predicate: query =>
-            JSON.stringify(query.queryKey) !== JSON.stringify(queryKey),
-        });
-      }
-    }
-  }, [
-    filter.page,
-    queryClient,
-    queryKey,
-    queryResult.data.data.pagination,
-    queryResult.isSuccess,
-  ]);
-
-  return queryResult;
 };
