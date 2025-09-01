@@ -69,6 +69,9 @@ export default [
             // 3. api 파일
             ["^.+\\.api$"],
 
+            // 4.
+            ["^@shared/cache/"],
+
             // 4. util 함수
             ["^@shared/utils/.*|^.*/(util|.*.util)$"],
 

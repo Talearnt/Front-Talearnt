@@ -8,6 +8,10 @@ import type { UseQueryResult } from "@tanstack/react-query/src/types";
 
 import { customAxiosResponseType } from "@shared/type/api.type";
 
+/**
+ * useQueryWithInitial
+ * - 초기 데이터를 제공하여 첫 렌더 깜빡임을 줄이고, 캐시 정책을 적용합니다.
+ */
 export const useQueryWithInitial = <T>(
   initialData: T,
   options: UseQueryOptions<
