@@ -23,6 +23,11 @@ import { Badge } from "@components/common/Badge/Badge";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
+/**
+ * MatchingArticleDetail
+ * - 매칭 게시물 상세 정보를 표시하고, 수정/삭제를 수행합니다.
+ * - 상세 조회, 삭제 확인 프롬프트, 이미지 확대 캐러셀을 포함합니다.
+ */
 function MatchingArticleDetail() {
   const navigator = useNavigate();
 
@@ -95,7 +100,7 @@ function MatchingArticleDetail() {
       title: "게시물 삭제",
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
-      confirmOnClickHandler: () => mutate(exchangePostNo),
+      confirmOnClickHandler: mutate,
     });
 
   useEffect(() => {
@@ -187,7 +192,7 @@ function MatchingArticleDetail() {
             </div>
             <div className={"flex flex-col gap-2"}>
               <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
-                주고 싶은 나의 재능
+                받고 싶은 나의 재능
               </label>
               <div className={"flex flex-wrap gap-2"}>
                 {receiveTalents.map(talentName => (

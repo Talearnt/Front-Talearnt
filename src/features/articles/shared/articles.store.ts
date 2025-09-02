@@ -5,16 +5,19 @@ import { matchingArticleDetailType } from "@features/articles/matchingArticleDet
 import { communityArticleFormDataType } from "@features/articles/writeCommunityArticle/writeCommunityArticle.type";
 import { matchingArticleFormDataType } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 
-type hasNewMatchingArticleStoreType = {
-  hasNewMatchingArticle: boolean;
-  setHasNewMatchingArticle: (hasNewMatchingArticle: boolean) => void;
+type writeMatchingArticleStoreType = {
+  writeMatchingArticleId: number | null;
+  setWriteMatchingArticleId: (id: number | null) => void;
 };
 
-export const useHasNewMatchingArticleStore =
-  create<hasNewMatchingArticleStoreType>(set => ({
-    hasNewMatchingArticle: false,
-    setHasNewMatchingArticle: hasNewMatchingArticle =>
-      set({ hasNewMatchingArticle }),
+/**
+ * useWriteMatchingArticleStore
+ * - 새로 작성된 매칭 게시물의 ID를 저장해 목록에서 하이라이트/애니메이션에 활용합니다.
+ */
+export const useWriteMatchingArticleStore =
+  create<writeMatchingArticleStoreType>(set => ({
+    writeMatchingArticleId: null,
+    setWriteMatchingArticleId: id => set({ writeMatchingArticleId: id }),
   }));
 
 type editMatchingArticleDataStoreType = {
@@ -30,6 +33,10 @@ type editMatchingArticleDataStoreType = {
   ) => void;
 };
 
+/**
+ * useEditMatchingArticleDataStore
+ * - 매칭 게시물 편집 시, 폼에 전달할 초기값과 대상 게시물 ID를 보관합니다.
+ */
 export const useEditMatchingArticleDataStore =
   create<editMatchingArticleDataStoreType>(set => ({
     editMatchingArticle: null,
