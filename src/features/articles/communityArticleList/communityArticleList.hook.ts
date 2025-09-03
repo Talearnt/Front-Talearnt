@@ -2,13 +2,11 @@ import { useShallow } from "zustand/shallow";
 
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useCommunityArticleListFilterStore } from "@features/articles/communityArticleList/communityArticleList.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 export const useGetCommunityArticleList = () => {
   // 현재 화면의 필터 상태(쿼리 키의 일부가 됩니다)
@@ -35,15 +33,11 @@ export const useGetCommunityArticleList = () => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.COMMUNITY, filter], {
-        isList: true,
-      }),
+      queryKey: QueryKeyFactory.community.list(filter),
       queryFn: async () => await getCommunityArticleList(filter),
-      staleTime: 30 * 1000, // 30 seconds
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: CACHE_POLICIES.ARTICLE_LIST.staleTime,
+      gcTime: CACHE_POLICIES.ARTICLE_LIST.gcTime,
     },
-    createQueryKey([queryKeys.COMMUNITY], {
-      isList: true,
-    })
+    QueryKeyFactory.community.lists()
   );
 };

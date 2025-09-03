@@ -7,7 +7,7 @@ import {
   getNoticeList,
 } from "@features/eventNotice/eventNotice.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
@@ -15,8 +15,6 @@ import {
   useEventPageStore,
   useNoticePageStore,
 } from "@features/eventNotice/eventNotice.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 type commonPropsType = {
   enabled?: boolean;
@@ -40,11 +38,13 @@ export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.EVENT, size, page], { isList: true }),
+      queryKey: QueryKeyFactory.event.list({ size, page }),
       queryFn: () => getEventList({ page, size }),
       enabled,
+      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
+      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
     },
-    createQueryKey([queryKeys.EVENT, size], { isList: true })
+    QueryKeyFactory.event.lists()
   );
 };
 
@@ -65,13 +65,13 @@ export const useGetNoticeList = ({ enabled = true, size }: commonPropsType) => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.NOTICE, size, page], {
-        isList: true,
-      }),
+      queryKey: QueryKeyFactory.notice.list({ size, page }),
       queryFn: () => getNoticeList({ page, size }),
       enabled,
+      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
+      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
     },
-    createQueryKey([queryKeys.NOTICE, size], { isList: true })
+    QueryKeyFactory.notice.lists()
   );
 };
 
@@ -91,8 +91,10 @@ export const useGetEventDetail = () => {
       startDate: "",
     },
     {
-      queryKey: createQueryKey([queryKeys.EVENT, no]),
+      queryKey: QueryKeyFactory.event.detail(no),
       queryFn: () => getEventDetail(no),
+      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
+      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
     }
   );
 };
@@ -112,8 +114,10 @@ export const useGetNoticeDetail = () => {
       createdAt: "",
     },
     {
-      queryKey: createQueryKey([queryKeys.NOTICE, no]),
+      queryKey: QueryKeyFactory.notice.detail(no),
       queryFn: () => getNoticeDetail(no),
+      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
+      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
     }
   );
 };

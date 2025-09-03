@@ -7,13 +7,15 @@ import {
   putProfile,
 } from "@features/user/profile/profile.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import {
+  CACHE_POLICIES,
+  getCacheManager,
+  QueryKeyFactory,
+} from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 import { profileType } from "@features/user/profile/profile.type";
 
@@ -31,11 +33,11 @@ export const useGetProfile = (enabled = true) => {
       userNo: 0,
     },
     {
-      queryKey: createQueryKey([queryKeys.USER, "profile"], {
-        isLoggedIn: true,
-      }),
+      queryKey: QueryKeyFactory.user.profile(),
       queryFn: async () => await getProfile(),
       enabled: enabled && isLoggedIn,
+      staleTime: CACHE_POLICIES.USER_PROFILE.staleTime,
+      gcTime: CACHE_POLICIES.USER_PROFILE.gcTime,
     }
   );
 };
@@ -72,29 +74,13 @@ export const usePutProfile = () => {
       return await putProfile({ ...data, profileImg: origin + pathname });
     },
     onSuccess: async data => {
-      await queryClient.invalidateQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY], { isList: true }),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true }),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY_COMMENT], {
-          isList: true,
-        }),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY], {
-          isList: true,
-        }),
-      });
+      const cacheManager = getCacheManager(queryClient);
 
-      queryClient.setQueryData(
-        createQueryKey([queryKeys.USER, "profile"], {
-          isLoggedIn: true,
-        }),
-        data
-      );
+      // 선택적 무효화로 개선 - 프로필 이미지/닉네임 변경만 영향
+      await cacheManager.invalidation.invalidateUserProfile();
+
+      // 프로필 캐시 직접 업데이트
+      queryClient.setQueryData(QueryKeyFactory.user.profile(), data);
     },
   });
 };
@@ -110,11 +96,11 @@ export const useGetActivityCounts = (enabled = true) => {
       myCommentCount: 0,
     },
     {
-      queryKey: createQueryKey([queryKeys.USER, "activity-counts"], {
-        isLoggedIn: true,
-      }),
+      queryKey: QueryKeyFactory.user.activityCounts(),
       queryFn: getActivityCounts,
       enabled: enabled && isLoggedIn,
+      staleTime: CACHE_POLICIES.USER_PROFILE.staleTime,
+      gcTime: CACHE_POLICIES.USER_PROFILE.gcTime,
     }
   );
 };

@@ -1,14 +1,12 @@
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 import { getMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
 
 import { useGetProfile } from "@features/user/profile/profile.hook";
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 const MAIN_ARTICLES_LIST_SIZE = 10;
 
@@ -23,11 +21,7 @@ export const useGetPersonalizedMatchingArticleList = () => {
     isSuccess,
   } = useGetProfile();
 
-  const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.MATCHING], {
-    isLoggedIn: true,
-    isList: true,
-  });
-
+  // 맞춤 매칭 게시물 - 개인화된 데이터로 변동성 중간
   return useQueryWithInitial(
     {
       results: [],
@@ -41,7 +35,7 @@ export const useGetPersonalizedMatchingArticleList = () => {
       },
     },
     {
-      queryKey,
+      queryKey: QueryKeyFactory.main.matchingPersonalized(),
       queryFn: async () =>
         await getMatchingArticleList({
           giveTalents,
@@ -50,16 +44,15 @@ export const useGetPersonalizedMatchingArticleList = () => {
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
       enabled: isLoggedIn && isSuccess,
+      staleTime: CACHE_POLICIES.MAIN_PERSONALIZED.staleTime,
+      gcTime: CACHE_POLICIES.MAIN_PERSONALIZED.gcTime,
     }
   );
 };
 
 // 신규 매칭 게시물 목록
 export const useGetRecentMatchingArticleList = () => {
-  const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.MATCHING], {
-    isList: true,
-  });
-
+  // 신규 매칭 게시물 - 최신 순으로 변동성이 높음
   return useQueryWithInitial(
     {
       results: [],
@@ -73,22 +66,21 @@ export const useGetRecentMatchingArticleList = () => {
       },
     },
     {
-      queryKey,
+      queryKey: QueryKeyFactory.main.matchingRecent(),
       queryFn: async () =>
         await getMatchingArticleList({
           order: "recent",
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
+      staleTime: CACHE_POLICIES.MAIN_RECENT.staleTime,
+      gcTime: CACHE_POLICIES.MAIN_RECENT.gcTime,
     }
   );
 };
 
 // BEST 커뮤니티 게시물 목록
 export const useGetBestCommunityArticleList = () => {
-  const queryKey = createQueryKey([queryKeys.MAIN, queryKeys.COMMUNITY], {
-    isList: true,
-  });
-
+  // 메인 페이지 커뮤니티 목록 - 인기 글 기준으로 변동성 중간
   return useQueryWithInitial(
     {
       results: [],
@@ -102,12 +94,14 @@ export const useGetBestCommunityArticleList = () => {
       },
     },
     {
-      queryKey,
+      queryKey: QueryKeyFactory.main.communityBest(),
       queryFn: async () =>
         await getCommunityArticleList({
           order: "hot",
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
+      staleTime: CACHE_POLICIES.MAIN_BEST.staleTime,
+      gcTime: CACHE_POLICIES.MAIN_BEST.gcTime,
     }
   );
 };

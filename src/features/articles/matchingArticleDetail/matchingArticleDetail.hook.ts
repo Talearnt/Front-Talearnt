@@ -7,16 +7,17 @@ import {
   getMatchingArticleDetail,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import {
+  CACHE_POLICIES,
+  getCacheManager,
+  QueryKeyFactory,
+} from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useToastStore } from "@store/toast.store";
 
-import { queryKeys } from "@shared/constants/queryKeys";
-
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
-import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
 export const useGetMatchingArticleDetail = () => {
   const { exchangePostNo } = useParams();
@@ -46,11 +47,11 @@ export const useGetMatchingArticleDetail = () => {
       count: 0,
     },
     {
-      queryKey: createQueryKey([queryKeys.MATCHING, postNo]),
+      queryKey: QueryKeyFactory.matching.detail(postNo),
       queryFn: async () => await getMatchingArticleDetail(postNo),
       enabled: exchangePostNo !== undefined,
-      staleTime: 2 * 60 * 1000,
-      gcTime: 30 * 60 * 1000,
+      staleTime: CACHE_POLICIES.ARTICLE_DETAIL.staleTime,
+      gcTime: CACHE_POLICIES.ARTICLE_DETAIL.gcTime,
     }
   );
 };
@@ -65,89 +66,59 @@ export const useDeleteMatchingArticle = () => {
 
   const postNo = Number(exchangePostNo);
 
-  // 삭제 낙관적 업데이트 흐름
-  // 1) 활성 쿼리 취소 → 깜빡임/경합 최소화
-  // 2) 상세/리스트 스냅샷 저장 → 실패 시 정확히 롤백
-  // 3) 상세 캐시 제거 + 모든 리스트에서 해당 아이템 낙관적 제거
-  // 4) 성공 시 안내 후 목록으로 이동, onSettled에서 최종 재검증
+  // 삭제 낙관적 업데이트 흐름 - 새로운 캐시 관리자 사용
   return useMutation({
     mutationFn: () => deleteMatchingArticle(postNo),
     onMutate: async () => {
+      const cacheManager = getCacheManager(queryClient);
+
       // 1) 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING]),
+        queryKey: QueryKeyFactory.matching.all(),
       });
 
-      // 2) 스냅샷 저장
+      // 2) 스냅샷 저장 및 3) 낙관적 제거
       const prevDetail = queryClient.getQueryData(
-        createQueryKey([queryKeys.MATCHING, postNo])
+        QueryKeyFactory.matching.detail(postNo)
       );
-      const listQueries = queryClient.getQueriesData({
-        queryKey: createQueryKey([queryKeys.MATCHING], { isList: true }),
-      });
-      const prevLists = listQueries.map(([key, data]) => [key, data] as const);
+
+      const prevLists =
+        cacheManager.optimistic.removeOptimisticArticle<matchingArticleType>(
+          QueryKeyFactory.matching.lists(),
+          postNo,
+          "exchangePostNo"
+        );
 
       // 3-a) 상세 캐시 제거(삭제 후 상세 접근 방지)
       queryClient.removeQueries({
-        queryKey: createQueryKey([queryKeys.MATCHING, postNo]),
+        queryKey: QueryKeyFactory.matching.detail(postNo),
       });
 
-      // 3-b) 모든 리스트에서 해당 아이템 낙관적 제거 + totalCount 보정
-      listQueries.forEach(([key]) => {
-        queryClient.setQueryData<
-          customAxiosResponseType<paginationType<matchingArticleType>>
-        >(key, oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              results: oldData.data.results.filter(
-                article => article.exchangePostNo !== postNo
-              ),
-              pagination: {
-                ...oldData.data.pagination,
-                totalCount: Math.max(0, oldData.data.pagination.totalCount - 1),
-              },
-            },
-          };
-        });
-      });
-
-      // 2)에서 저장한 스냅샷 반환 → onError에서 롤백에 사용
       return { prevDetail, prevLists };
     },
-    onError: (_err, exchangePostNo, context) => {
+    onError: (_err, _variables, context) => {
+      const cacheManager = getCacheManager(queryClient);
+
       // 실패 시 상세/리스트 모두 정확히 원복
       if (context?.prevDetail) {
         queryClient.setQueryData(
-          createQueryKey([queryKeys.MATCHING, exchangePostNo]),
+          QueryKeyFactory.matching.detail(postNo),
           context.prevDetail
         );
       }
 
-      context?.prevLists.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      });
+      if (context?.prevLists) {
+        cacheManager.optimistic.rollbackToSnapshot(context.prevLists);
+      }
     },
     onSuccess: () => {
       // 사용자 피드백 + 목록으로 이동
       setToast({ message: "게시물이 삭제되었습니다" });
       navigator("/matching");
     },
-    onSettled: async exchangePostNo => {
-      // 상세/리스트를 한 번 더 재검증하여 서버 정답으로 최종 동기화
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: createQueryKey([queryKeys.MATCHING, exchangePostNo]),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: createQueryKey([queryKeys.MATCHING], { isList: true }),
-        }),
-      ]);
+    onSettled: async () => {
+      const cacheManager = getCacheManager(queryClient);
+      await cacheManager.invalidation.invalidateMatchingArticle(postNo);
     },
   });
 };

@@ -10,7 +10,7 @@ import {
   markNotificationAsRead,
 } from "@features/notifications/notifications.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { getCacheManager } from "@shared/utils/cacheManager";
 import {
   connectWebSocket,
   disconnectWebSocket,
@@ -21,8 +21,6 @@ import {
 
 import { useNotificationStore } from "@features/notifications/notifications.store";
 import { useAuthStore } from "@store/user.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 import { notificationType } from "@features/notifications/notifications.type";
 
@@ -63,17 +61,16 @@ export const useRealtimeNotifications = () => {
           const { targetNo } = data;
 
           if (pathnameRef.current === `/community-article/${targetNo}`) {
-            // 게시글 댓글 알림 처리
-            void queryClient.invalidateQueries({
-              queryKey: createQueryKey(
-                [queryKeys.COMMUNITY_COMMENT, targetNo],
-                { isList: true }
-              ),
-            });
-            // 게시글 답글 알림 처리
-            void queryClient.invalidateQueries({
-              queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY]),
-            });
+            const cacheManager = getCacheManager(queryClient);
+
+            // 실시간 알림에 따른 정확한 캐시 무효화
+            if (data.notificationType === "댓글") {
+              // 댓글 알림: 해당 게시물의 댓글 목록 무효화
+              void cacheManager.invalidation.invalidateComment(targetNo);
+            } else if (data.notificationType === "답글") {
+              // 답글 알림: 해당 게시물의 댓글 목록 무효화 (더 안전한 접근)
+              void cacheManager.invalidation.invalidateComment(targetNo);
+            }
           }
         }
       } catch (error) {

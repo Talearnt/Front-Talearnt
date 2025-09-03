@@ -1,12 +1,10 @@
 import { getFavoriteMatchingArticleList } from "@features/user/favoriteMatchingArticleList/favoriteMatchingArticleList.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useFavoriteMatchingArticlePageStore } from "@features/user/favoriteMatchingArticleList/favoriteMatchingArticleList.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 export const useGetFavoriteMatchingArticleList = () => {
   const page = useFavoriteMatchingArticlePageStore(state => state.page);
@@ -24,11 +22,11 @@ export const useGetFavoriteMatchingArticleList = () => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.FAVORITE_MATCHING, page], {
-        isList: true,
-      }),
+      queryKey: QueryKeyFactory.user.favoriteMatching.list(page),
       queryFn: () => getFavoriteMatchingArticleList({ page, size: 9 }),
+      staleTime: CACHE_POLICIES.FAVORITE_LIST.staleTime,
+      gcTime: CACHE_POLICIES.FAVORITE_LIST.gcTime,
     },
-    createQueryKey([queryKeys.FAVORITE_MATCHING], { isList: true })
+    QueryKeyFactory.user.favoriteMatching.all()
   );
 };

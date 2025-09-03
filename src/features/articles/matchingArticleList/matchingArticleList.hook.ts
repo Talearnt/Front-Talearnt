@@ -2,13 +2,11 @@ import { useShallow } from "zustand/shallow";
 
 import { getMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 export const useGetMatchingArticleList = () => {
   // 현재 화면의 필터 상태(쿼리 키의 일부가 됩니다)
@@ -40,15 +38,11 @@ export const useGetMatchingArticleList = () => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.MATCHING, filter], {
-        isList: true,
-      }),
+      queryKey: QueryKeyFactory.matching.list(filter),
       queryFn: async () => await getMatchingArticleList(filter),
-      staleTime: 30 * 1000, // 30 seconds
-      gcTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: CACHE_POLICIES.ARTICLE_LIST.staleTime,
+      gcTime: CACHE_POLICIES.ARTICLE_LIST.gcTime,
     },
-    createQueryKey([queryKeys.MATCHING], {
-      isList: true,
-    })
+    QueryKeyFactory.matching.lists()
   );
 };
