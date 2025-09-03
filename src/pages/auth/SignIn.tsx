@@ -1,15 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { boolean, object, string } from "yup";
 
-import { postSignIn } from "@features/auth/signIn/signIn.api";
+import { useSignIn } from "@features/auth/auth.hook";
 
-import { checkObjectType } from "@shared/utils/checkObjectType";
 import { classNames } from "@shared/utils/classNames";
-
-import { useAuthStore } from "@store/user.store";
 
 import { Button } from "@components/common/Button/Button";
 import { Checkbox } from "@components/common/Checkbox/Checkbox";
@@ -28,9 +23,7 @@ const REDIRECT_URI = `${import.meta.env.VITE_BASE_URL}kakao/oauth`;
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 function SignIn() {
-  const navigator = useNavigate();
-
-  const setAccessToken = useAuthStore(state => state.setAccessToken);
+  const signInMutation = useSignIn();
 
   const {
     formState: { errors },
@@ -45,23 +38,20 @@ function SignIn() {
 
   const [userId, pw] = watch(["userId", "pw"]);
 
-  const handleSignIn = async ({ userId, pw, autoLogin }: signInBodyType) => {
-    try {
-      const { data } = await postSignIn({ userId, pw, autoLogin });
-
-      setAccessToken(data.accessToken);
-      navigator("/");
-    } catch (e) {
-      if (checkObjectType(e) && "errorMessage" in e) {
-        setError("userId", { message: "" });
-        setError("pw", { message: e.errorMessage as string });
-        return;
-      }
-
-      setError("pw", {
-        message: "예기치 못한 오류가 발생했습니다.",
-      });
-    }
+  const handleSignIn = (data: signInBodyType) => {
+    signInMutation.mutate(data, {
+      onError: (error: any) => {
+        // React Hook Form에 특정 에러 설정
+        if (error?.errorMessage) {
+          setError("userId", { message: "" });
+          setError("pw", { message: error.errorMessage });
+        } else {
+          setError("pw", {
+            message: "예기치 못한 오류가 발생했습니다.",
+          });
+        }
+      },
+    });
   };
 
   return (
@@ -146,14 +136,14 @@ function SignIn() {
         <Button
           buttonStyle={"outlined"}
           className={"w-full"}
-          onClick={() => navigator("/find-account/id")}
+          onClick={() => (window.location.href = "/find-account/id")}
         >
           아이디/비밀번호 찾기
         </Button>
         <Button
           buttonStyle={"outlined"}
           className={"w-full"}
-          onClick={() => navigator("/sign-up/agreements")}
+          onClick={() => (window.location.href = "/sign-up/agreements")}
         >
           회원가입
         </Button>

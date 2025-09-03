@@ -66,6 +66,12 @@ export const CACHE_POLICIES = {
     staleTime: 30 * 60 * 1000, // 30분
     gcTime: 2 * 60 * 60 * 1000, // 2시간
   },
+
+  // 인증 관련 (중복체크, 닉네임 등)
+  AUTH_VALIDATION: {
+    staleTime: 5 * 60 * 1000, // 5분 (중복체크 결과는 어느정도 유지)
+    gcTime: 10 * 60 * 1000, // 10분
+  },
 } as const;
 
 enum queryKeys {
@@ -148,6 +154,17 @@ export const QueryKeyFactory = {
         isList: true,
       }),
     detail: (id: number) => createQueryKey([queryKeys.NOTICE, id]),
+  },
+
+  /**
+   * 인증 관련
+   */
+  auth: {
+    nicknameCheck: (nickname?: string) =>
+      createQueryKey(["AUTH", "nicknameCheck", nickname]),
+    userIdCheck: (userId?: string) =>
+      createQueryKey(["AUTH", "userIdCheck", userId]),
+    randomNickname: () => createQueryKey(["AUTH", "randomNickname"]),
   },
 
   // 매칭 게시물

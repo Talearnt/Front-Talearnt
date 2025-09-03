@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -9,23 +8,17 @@ import {
   postConfirmVerificationCode,
   postSendVerificationCode,
 } from "@features/auth/shared/verificationCode.api";
-import {
-  getRandomNickName,
-  postSignUp,
-} from "@features/auth/signUp/signUp.api";
-
-import { checkObjectType } from "@shared/utils/checkObjectType";
 import { classNames } from "@shared/utils/classNames";
 
 import {
   useCheckNickname,
   useCheckUserId,
-} from "@features/auth/signUp/signUp.hook";
+  useGetRandomNickname,
+  useSignUp,
+} from "@features/auth/auth.hook";
 import { useDebounce } from "@shared/hooks/useDebounce";
 
 import { useAgreementStore } from "@features/auth/signUp/signUp.store";
-import { usePromptStore } from "@store/prompt.store";
-import { useToastStore } from "@store/toast.store";
 
 import { VerificationCode } from "@components/auth/VerificationCode/VerificationCode";
 import { Button } from "@components/common/Button/Button";
@@ -64,7 +57,6 @@ const infoFieldsSchema = object({
 
 function InfoFields() {
   const nickNameRef = useRef<string>("");
-  const navigator = useNavigate();
 
   const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
@@ -72,8 +64,8 @@ function InfoFields() {
   });
 
   const agreements = useAgreementStore(state => state.agreements);
-  const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
+  const signUpMutation = useSignUp();
+  const randomNicknameQuery = useGetRandomNickname();
 
   const {
     formState: { errors },
@@ -120,59 +112,36 @@ function InfoFields() {
     userIdData?.data !== false || // 아이디 중복인 경우
     Object.keys(errors).length > 0; // 그 외 에러가 있는 경우(matches 등)
 
-  const handleSignUp = async () => {
+  const handleSignUp = () => {
     if (!verification.phone || doneButtonDisable) {
       return;
     }
 
-    try {
-      await postSignUp({
-        userId,
-        pw,
-        checkedPw,
-        name,
-        nickname,
-        gender,
-        phone: verification.phone,
-        agreeReqDTOS: agreements.map(({ agreeCodeId, agree }) => ({
-          agreeCodeId,
-          agree,
-        })),
-      });
-
-      navigator("/sign-up/complete");
-    } catch (e) {
-      if (checkObjectType(e) && "errorMessage" in e) {
-        setToast({
-          message: e.errorMessage as string,
-        });
-        return;
-      }
-
-      setPrompt({
-        title: "서버 오류",
-        content:
-          "알 수 없는 이유로 회원가입에 실패하였습니다.\n다시 시도해 주세요.",
-        onlyConfirm: true,
-      });
-    }
+    signUpMutation.mutate({
+      userId,
+      pw,
+      checkedPw,
+      name,
+      nickname,
+      gender,
+      phone: verification.phone,
+      agreeReqDTOS: agreements.map(({ agreeCodeId, agree }) => ({
+        agreeCodeId,
+        agree,
+      })),
+    });
   };
 
+  // 랜덤 닉네임 설정
   useEffect(() => {
-    if (!canProceed) {
+    if (!canProceed || !randomNicknameQuery.data) {
       return;
     }
 
-    // nickName 인풋에 random nickname 적용
-    getRandomNickName()
-      .then(({ data }) => {
-        const nickname = data;
-
-        setValue("nickname", nickname);
-        nickNameRef.current = nickname;
-      })
-      .catch(() => setValue("nickname", ""));
-  }, [canProceed, setValue]);
+    const nickname = randomNicknameQuery.data.data;
+    setValue("nickname", nickname);
+    nickNameRef.current = nickname;
+  }, [canProceed, randomNicknameQuery.data, setValue]);
 
   useEffect(() => {
     if (data?.data === true) {
@@ -309,10 +278,10 @@ function InfoFields() {
             />
             <Button
               className={"mt-[32px]"}
-              disabled={doneButtonDisable}
+              disabled={doneButtonDisable || signUpMutation.isPending}
               onClick={handleSignUp}
             >
-              가입하기
+              {signUpMutation.isPending ? "처리 중..." : "가입하기"}
             </Button>
           </>
         ) : (
@@ -327,10 +296,11 @@ function InfoFields() {
                   });
                   return true;
                 } catch (e) {
-                  if (checkObjectType(e) && "errorCode" in e) {
-                    return e.errorCode === "400-AUTH-05"
+                  if (typeof e === "object" && e !== null && "errorCode" in e) {
+                    const error = e as any;
+                    return error.errorCode === "400-AUTH-05"
                       ? "400-AUTH-05"
-                      : (e.errorMessage as string);
+                      : error.errorMessage || "인증에 실패했습니다.";
                   }
                   return "예기치 못한 오류가 발생했습니다.";
                 }
