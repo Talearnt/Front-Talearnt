@@ -25,6 +25,11 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 const detailQueryKey = (exchangePostNo: number) =>
   QueryKeyFactory.matching.detail(exchangePostNo);
 
+/**
+ * usePostMatchingArticle
+ * - 매칭 게시물 작성 요청을 담당하는 훅입니다.
+ * - 상세/리스트 캐시를 낙관적 업데이트로 동기화하고, 실패 시 스냅샷으로 롤백합니다.
+ */
 export const usePostMatchingArticle = () => {
   const navigator = useNavigate();
 
@@ -196,7 +201,7 @@ export const usePostMatchingArticle = () => {
       navigator("/matching");
     },
     onSettled: () =>
-      /* [onSettled] 성공/실패와 무관하게 최종 재검증 */
+      /* [onSettled] 매칭 게시물 전체 무효화 */
       queryClient.invalidateQueries({
         queryKey: QueryKeyFactory.matching.all(),
       }),
