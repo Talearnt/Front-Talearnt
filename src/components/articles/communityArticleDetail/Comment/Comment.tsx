@@ -4,10 +4,12 @@ import { classNames } from "@shared/utils/classNames";
 
 import {
   useDeleteCommunityArticleComment,
+  usePutEditCommunityArticleComment,
+} from "@features/articles/communityArticleComment/communityArticleComment.hook";
+import {
   useGetCommunityArticleReplyList,
   usePostCommunityArticleReply,
-  usePutEditCommunityArticleComment,
-} from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
+} from "@features/articles/communityArticleReply/communityArticleReply.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useAuthStore } from "@store/user.store";

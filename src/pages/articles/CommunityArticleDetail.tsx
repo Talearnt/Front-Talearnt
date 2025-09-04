@@ -7,14 +7,16 @@ import { useShallow } from "zustand/shallow";
 import { classNames } from "@shared/utils/classNames";
 
 import {
-  useDeleteCommunityArticle,
   useGetCommunityArticleCommentList,
-  useGetCommunityArticleDetail,
   usePostCommunityArticleComment,
+} from "@features/articles/communityArticleComment/communityArticleComment.hook";
+import {
+  useDeleteCommunityArticle,
+  useGetCommunityArticleDetail,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
-import { useCommunityArticleCommentPageStore } from "@features/articles/communityArticleDetail/communityArticleDetail.store";
+import { useCommunityArticleCommentPageStore } from "@features/articles/communityArticleComment/communityArticleComment.store";
 import { useEditCommunityArticleDataStore } from "@features/articles/shared/articles.store";
 import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";

@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   useDeleteCommunityArticleReply,
   usePutEditCommunityArticleReply,
-} from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
+} from "@features/articles/communityArticleReply/communityArticleReply.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { UserContentSection } from "@components/articles/communityArticleDetail/UserContentSection/UserContentSection";

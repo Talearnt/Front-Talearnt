@@ -23,6 +23,11 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 const detailQueryKey = (communityPostNo: number) =>
   QueryKeyFactory.community.detail(communityPostNo);
 
+/**
+ * usePostCommunityArticle
+ * - 커뮤니티 게시물 작성 요청을 담당하는 훅입니다.
+ * - 상세/리스트 캐시를 낙관적 업데이트로 동기화하고, 실패 시 스냅샷으로 롤백합니다.
+ */
 export const usePostCommunityArticle = () => {
   const navigator = useNavigate();
 
