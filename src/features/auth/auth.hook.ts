@@ -1,17 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import {
-  getCheckNickName,
-  getCheckUserId,
-  getRandomNickName,
-  postKakaoSignUp,
-  postSignUp,
-} from "@features/auth/signUp/signUp.api";
-import {
-  getKakaoAccessToken,
-  postSignIn,
-} from "@features/auth/signIn/signIn.api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import {
   postFindPwEmail,
   putChangePw,
@@ -20,20 +10,33 @@ import {
   postConfirmVerificationCode,
   postSendVerificationCode,
 } from "@features/auth/shared/verificationCode.api";
+import {
+  getKakaoAccessToken,
+  postSignIn,
+} from "@features/auth/signIn/signIn.api";
+import {
+  getCheckNickName,
+  getCheckUserId,
+  getRandomNickName,
+  postKakaoSignUp,
+  postSignUp,
+} from "@features/auth/signUp/signUp.api";
 
-import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
-import { useAuthStore } from "@store/user.store";
-import { useToastStore } from "@store/toast.store";
 import { usePromptStore } from "@store/prompt.store";
+import { useToastStore } from "@store/toast.store";
+import { useAuthStore } from "@store/user.store";
 
+import { findIdResponseType } from "@features/auth/findAccount/findAccount.type";
+import { verificationBodyType } from "@features/auth/shared/verificationCode.type";
+import { signInBodyType } from "@features/auth/signIn/signIn.type";
+import { signUpBodyType } from "@features/auth/signUp/signUp.type";
 import {
   customAxiosResponseType,
   responseDataType,
 } from "@shared/type/api.type";
-import { signUpBodyType } from "@features/auth/signUp/signUp.type";
-import { signInBodyType } from "@features/auth/signIn/signIn.type";
-import { verificationBodyType } from "@features/auth/shared/verificationCode.type";
-import { findIdResponseType } from "@features/auth/findAccount/findAccount.type";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 /**
  * 닉네임 중복 체크

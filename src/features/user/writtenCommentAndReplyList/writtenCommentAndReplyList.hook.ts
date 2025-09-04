@@ -3,14 +3,15 @@ import {
   getWrittenReplyList,
 } from "@features/user/writtenCommentAndReplyList/writtenCommentAndReplyList.api";
 
-import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
-
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import {
   useWrittenCommentPageStore,
   useWrittenReplyPageStore,
 } from "@features/user/writtenCommentAndReplyList/writtenCommentAndReplyList.store";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 // 작성한 댓글 목록 조회
 export const useGetWrittenCommentList = (enabled: boolean) => {
@@ -32,8 +33,7 @@ export const useGetWrittenCommentList = (enabled: boolean) => {
       queryKey: QueryKeyFactory.user.written.comment.list(page),
       queryFn: () => getWrittenCommentList({ page }),
       enabled,
-      staleTime: CACHE_POLICIES.WRITTEN_LIST.staleTime,
-      gcTime: CACHE_POLICIES.WRITTEN_LIST.gcTime,
+      ...CACHE_POLICIES.WRITTEN_LIST,
     },
     QueryKeyFactory.user.written.comment.all()
   );
@@ -59,8 +59,7 @@ export const useGetWrittenReplyList = (enabled: boolean) => {
       queryKey: QueryKeyFactory.user.written.reply.list(page),
       queryFn: () => getWrittenReplyList({ page }),
       enabled,
-      staleTime: CACHE_POLICIES.WRITTEN_LIST.staleTime,
-      gcTime: CACHE_POLICIES.WRITTEN_LIST.gcTime,
+      ...CACHE_POLICIES.WRITTEN_LIST,
     },
     QueryKeyFactory.user.written.reply.all()
   );

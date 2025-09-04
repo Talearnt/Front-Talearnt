@@ -9,15 +9,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
+
 import {
   useCheckNickname,
   useCheckUserId,
+  useGetRandomNickname,
   useSignIn,
   useSignUp,
-  useGetRandomNickname,
 } from "@features/auth/auth.hook";
-
-import { QueryKeyFactory, CACHE_POLICIES } from "@shared/utils/cacheManager";
 
 // Mock API 모듈들
 vi.mock("@features/auth/signUp/signUp.api", () => ({

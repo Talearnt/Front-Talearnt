@@ -1,12 +1,13 @@
 import { getCommunityArticleList } from "@features/articles/communityArticleList/communityArticleList.api";
 import { getMatchingArticleList } from "@features/articles/matchingArticleList/matchingArticleList.api";
 
-import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
-
 import { useGetProfile } from "@features/user/profile/profile.hook";
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 const MAIN_ARTICLES_LIST_SIZE = 10;
 
@@ -44,8 +45,7 @@ export const useGetPersonalizedMatchingArticleList = () => {
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
       enabled: isLoggedIn && isSuccess,
-      staleTime: CACHE_POLICIES.MAIN_PERSONALIZED.staleTime,
-      gcTime: CACHE_POLICIES.MAIN_PERSONALIZED.gcTime,
+      ...CACHE_POLICIES.MAIN_PERSONALIZED,
     }
   );
 };
@@ -72,8 +72,7 @@ export const useGetRecentMatchingArticleList = () => {
           order: "recent",
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
-      staleTime: CACHE_POLICIES.MAIN_RECENT.staleTime,
-      gcTime: CACHE_POLICIES.MAIN_RECENT.gcTime,
+      ...CACHE_POLICIES.MAIN_RECENT,
     }
   );
 };
@@ -100,8 +99,7 @@ export const useGetBestCommunityArticleList = () => {
           order: "hot",
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
-      staleTime: CACHE_POLICIES.MAIN_BEST.staleTime,
-      gcTime: CACHE_POLICIES.MAIN_BEST.gcTime,
+      ...CACHE_POLICIES.MAIN_BEST,
     }
   );
 };

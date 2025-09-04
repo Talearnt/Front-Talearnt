@@ -3,14 +3,15 @@ import {
   getWrittenMatchingArticleList,
 } from "@features/user/writtenArticleList/writtenArticleList.api";
 
-import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
-
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import {
   useWrittenCommunityArticlePageStore,
   useWrittenMatchingArticlePageStore,
 } from "@features/user/writtenArticleList/writtenArticleList.store";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 // 작성한 커뮤니티 게시글 목록 조회
 export const useGetWrittenCommunityArticleList = (enabled: boolean) => {
@@ -32,8 +33,7 @@ export const useGetWrittenCommunityArticleList = (enabled: boolean) => {
       queryKey: QueryKeyFactory.user.written.community.list(page),
       queryFn: () => getWrittenCommunityArticleList({ page }),
       enabled,
-      staleTime: CACHE_POLICIES.WRITTEN_LIST.staleTime,
-      gcTime: CACHE_POLICIES.WRITTEN_LIST.gcTime,
+      ...CACHE_POLICIES.WRITTEN_LIST,
     },
     QueryKeyFactory.user.written.community.all()
   );
@@ -59,8 +59,7 @@ export const useGetWrittenMatchingArticleList = (enabled: boolean) => {
       queryKey: QueryKeyFactory.user.written.matching.list(page),
       queryFn: () => getWrittenMatchingArticleList({ page }),
       enabled,
-      staleTime: CACHE_POLICIES.WRITTEN_LIST.staleTime,
-      gcTime: CACHE_POLICIES.WRITTEN_LIST.gcTime,
+      ...CACHE_POLICIES.WRITTEN_LIST,
     },
     QueryKeyFactory.user.written.matching.all()
   );

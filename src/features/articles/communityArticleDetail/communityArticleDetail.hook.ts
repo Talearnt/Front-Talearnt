@@ -20,12 +20,6 @@ import {
   putEditCommunityArticleReply,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.api";
 
-import {
-  CACHE_POLICIES,
-  getCacheManager,
-  QueryKeyFactory,
-} from "@shared/utils/cacheManager";
-
 import { useGetProfile } from "@features/user/profile/profile.hook";
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
@@ -39,6 +33,9 @@ import {
   replyType,
 } from "@features/articles/shared/articles.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 // 커뮤니티 게시글 상세 정보
 export const useGetCommunityArticleDetail = () => {
@@ -70,8 +67,7 @@ export const useGetCommunityArticleDetail = () => {
       queryKey: QueryKeyFactory.community.detail(postNo),
       queryFn: () => getCommunityArticleDetail(postNo),
       enabled: communityPostNo !== undefined,
-      staleTime: CACHE_POLICIES.ARTICLE_DETAIL.staleTime,
-      gcTime: CACHE_POLICIES.ARTICLE_DETAIL.gcTime,
+      ...CACHE_POLICIES.ARTICLE_DETAIL,
     }
   );
 };
@@ -91,36 +87,61 @@ export const useDeleteCommunityArticle = () => {
   return useMutation({
     mutationFn: () => deleteCommunityArticle(postNo),
     onMutate: async () => {
-      const cacheManager = getCacheManager(queryClient);
-
       // 1) 활성 쿼리 취소
       await queryClient.cancelQueries({
         queryKey: QueryKeyFactory.community.all(),
       });
 
-      // 2) 스냅샷 저장 및 3) 낙관적 제거
+      // 2) 스냅샷 저장
       const prevDetail = queryClient.getQueryData(
         QueryKeyFactory.community.detail(postNo)
       );
-
-      const prevLists =
-        cacheManager.optimistic.removeOptimisticArticle<communityArticleType>(
-          QueryKeyFactory.community.lists(),
-          postNo,
-          "communityPostNo"
-        );
+      const prevComments = queryClient.getQueryData(
+        QueryKeyFactory.comment.lists(postNo)
+      );
+      const listQueries = queryClient.getQueriesData({
+        queryKey: QueryKeyFactory.community.lists(),
+      });
+      const prevLists = listQueries.map(([key, data]) => [key, data] as const);
 
       // 3-a) 상세 캐시 제거(삭제 후 상세 접근 방지)
       queryClient.removeQueries({
         queryKey: QueryKeyFactory.community.detail(postNo),
       });
+      queryClient.removeQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
 
-      return { prevDetail, prevLists };
+      // 3-b) 모든 리스트에서 해당 아이템 낙관적 제거 + totalCount 보정
+      listQueries.forEach(([key]) => {
+        queryClient.setQueryData<
+          customAxiosResponseType<paginationType<communityArticleType>>
+        >(key, oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.filter(
+                article => article.communityPostNo !== postNo
+              ),
+              pagination: {
+                ...oldData.data.pagination,
+                totalCount: Math.max(0, oldData.data.pagination.totalCount - 1),
+              },
+            },
+          };
+        });
+      });
+
+      // 2)에서 저장한 스냅샷 반환 → onError에서 롤백에 사용
+      return { prevDetail, prevLists, prevComments };
     },
     onError: (_err, _variables, context) => {
-      const cacheManager = getCacheManager(queryClient);
-
-      // 실패 시 상세/리스트 모두 정확히 원복
+      // 실패 시 모두 정확히 원복
       if (context?.prevDetail) {
         queryClient.setQueryData(
           QueryKeyFactory.community.detail(postNo),
@@ -128,18 +149,29 @@ export const useDeleteCommunityArticle = () => {
         );
       }
 
-      if (context?.prevLists) {
-        cacheManager.optimistic.rollbackToSnapshot(context.prevLists);
+      if (context?.prevComments) {
+        queryClient.setQueryData(
+          QueryKeyFactory.comment.lists(postNo),
+          context.prevComments
+        );
       }
+
+      context?.prevLists.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
     },
     onSuccess: () => {
       // 사용자 피드백 + 목록으로 이동
       setToast({ message: "게시물이 삭제되었습니다" });
       navigator("/community");
     },
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateCommunityArticle(postNo);
+    onSettled: () => {
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.community.detail(postNo),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.community.lists(),
+      });
     },
   });
 };
@@ -173,25 +205,25 @@ export const usePostCommunityArticleComment = () => {
     onMutate: async (content: string) => {
       // 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
       await queryClient.cancelQueries({
         queryKey: QueryKeyFactory.community.detail(postNo),
       });
 
       // 스냅샷 저장
-      const prevDetail = queryClient.getQueryData<
-        customAxiosResponseType<communityArticleDetailType>
-      >(QueryKeyFactory.community.detail(postNo));
+      const prevDetail = queryClient.getQueryData(
+        QueryKeyFactory.community.detail(postNo)
+      );
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
       );
 
       // 마지막 페이지가 가득 찬 경우 다음 페이지 확인
-      const lastPageKey = QueryKeyFactory.comments.list(
+      const lastPageKey = QueryKeyFactory.comment.list(
         postNo,
         commentLastPage || 1
       );
@@ -206,7 +238,24 @@ export const usePostCommunityArticleComment = () => {
           ? (commentLastPage || 1) + 1
           : commentLastPage || 1;
 
-      const targetKey = QueryKeyFactory.comments.list(postNo, targetPage);
+      // 상세 페이지 댓글 마지막 페이지 업데이트
+      queryClient.setQueryData<
+        customAxiosResponseType<communityArticleDetailType>
+      >(QueryKeyFactory.community.detail(postNo), oldData => {
+        if (!oldData) {
+          return oldData;
+        }
+
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            commentLastPage: targetPage,
+          },
+        };
+      });
+
+      const targetKey = QueryKeyFactory.comment.list(postNo, targetPage);
 
       queryClient.setQueryData<
         customAxiosResponseType<paginationType<commentType>>
@@ -257,7 +306,7 @@ export const usePostCommunityArticleComment = () => {
         };
       });
 
-      return { prevDetail, prevComments, targetPage };
+      return { prevDetail, prevComments, targetKey };
     },
     // onError: 실패 시 스냅샷으로 롤백
     onError: (_err, _variables, context) => {
@@ -273,64 +322,36 @@ export const usePostCommunityArticleComment = () => {
       });
     },
     // onSuccess: 서버 응답으로 정확한 데이터 저장 + 상세 페이지 댓글 마지막 페이지 업데이트
-    onSuccess: ({ data: newComment }, _variables, context) => {
-      // 새 댓글이 추가된 페이지를 찾아서 임시 댓글을 실제 댓글로 교체
-      const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
-      });
-
-      // 임시 댓글(-1)을 실제 댓글로 교체
-      commentQueries.forEach(([key]) => {
-        queryClient.setQueryData<
-          customAxiosResponseType<paginationType<commentType>>
-        >(key, oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          const hasOptimisticComment = oldData.data.results.some(
-            comment => comment.commentNo === -1
-          );
-
-          if (hasOptimisticComment) {
-            return {
-              ...oldData,
-              data: {
-                ...oldData.data,
-                results: oldData.data.results.map(comment =>
-                  comment.commentNo === -1 ? newComment : comment
-                ),
-              },
-            };
-          }
-
+    onSuccess: ({ data: newComment }, _variables, { targetKey }) => {
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<commentType>>
+      >(targetKey, oldData => {
+        if (!oldData) {
           return oldData;
-        });
+        }
+
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            results: oldData.data.results.map(comment =>
+              comment.commentNo === -1 ? newComment : comment
+            ),
+          },
+        };
       });
-
-      // 상세 페이지의 댓글 마지막 페이지 정보 업데이트
-      if (context.targetPage) {
-        queryClient.setQueryData<
-          customAxiosResponseType<communityArticleDetailType>
-        >(QueryKeyFactory.community.detail(postNo), oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              commentLastPage: context.targetPage,
-            },
-          };
-        });
-      }
     },
     // onSettled: 최종 재검증
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateComment(postNo);
+    onSettled: () => {
+      // 댓글 목록 무효화
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
+
+      // 게시물 상세 정보도 무효화 (댓글 수 변경)
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.community.detail(postNo),
+      });
     },
   });
 };
@@ -359,17 +380,16 @@ export const useGetCommunityArticleCommentList = () => {
       },
     },
     {
-      queryKey: QueryKeyFactory.comments.list(postNo, page),
+      queryKey: QueryKeyFactory.comment.list(postNo, page),
       queryFn: () =>
         getCommunityArticleCommentList({
           communityPostNo: postNo,
           page,
         }),
       enabled: communityPostNo !== undefined && page !== 0,
-      staleTime: CACHE_POLICIES.COMMENT_LIST.staleTime,
-      gcTime: CACHE_POLICIES.COMMENT_LIST.gcTime,
+      ...CACHE_POLICIES.COMMENT_LIST,
     },
-    QueryKeyFactory.comments.lists(postNo)
+    QueryKeyFactory.comment.lists(postNo)
   );
 };
 
@@ -387,12 +407,12 @@ export const usePutEditCommunityArticleComment = () => {
     onMutate: async ({ commentNo, content }) => {
       // 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
 
       // 스냅샷 저장
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -429,10 +449,11 @@ export const usePutEditCommunityArticleComment = () => {
         queryClient.setQueryData(key, data);
       }),
     // onSettled: 최종 재검증
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateComment(postNo);
-    },
+    onSettled: () =>
+      // 댓글 목록 무효화
+      queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      }),
   });
 };
 
@@ -445,7 +466,7 @@ export const useDeleteCommunityArticleComment = () => {
   const page = useCommunityArticleCommentPageStore(state => state.page);
 
   const postNo = Number(communityPostNo);
-  const commentKey = QueryKeyFactory.comments.list(postNo, page);
+  const commentKey = QueryKeyFactory.comment.list(postNo, page);
   const communityKey = QueryKeyFactory.community.detail(postNo);
 
   return useMutation({
@@ -529,9 +550,16 @@ export const useDeleteCommunityArticleComment = () => {
         queryClient.setQueryData(commentKey, context.prevComments);
       }
     },
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateComment(postNo);
+    onSettled: () => {
+      // 댓글 목록 무효화
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
+
+      // 게시물 상세 정보도 무효화 (댓글 수 변경)
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.community.detail(postNo),
+      });
     },
   });
 };
@@ -563,13 +591,13 @@ export const usePostCommunityArticleReply = (
     onMutate: async (content: string) => {
       // 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
 
       // 답글이 열려있는 경우에만 답글 목록 쿼리 취소
       if (isOpen) {
         await queryClient.cancelQueries({
-          queryKey: QueryKeyFactory.replies.lists(commentNo),
+          queryKey: QueryKeyFactory.reply.lists(commentNo),
         });
       }
 
@@ -577,11 +605,11 @@ export const usePostCommunityArticleReply = (
       const prevReplies = isOpen
         ? queryClient.getQueryData<
             InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-          >(QueryKeyFactory.replies.lists(commentNo))
+          >(QueryKeyFactory.reply.lists(commentNo))
         : undefined;
 
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -591,7 +619,7 @@ export const usePostCommunityArticleReply = (
       if (isOpen) {
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-        >(QueryKeyFactory.replies.lists(commentNo), oldData => {
+        >(QueryKeyFactory.reply.lists(commentNo), oldData => {
           if (!oldData) {
             return oldData;
           }
@@ -654,7 +682,7 @@ export const usePostCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       if (context?.prevReplies) {
         queryClient.setQueryData(
-          QueryKeyFactory.replies.lists(commentNo),
+          QueryKeyFactory.reply.lists(commentNo),
           context.prevReplies
         );
       }
@@ -669,7 +697,7 @@ export const usePostCommunityArticleReply = (
         // 답글 목록 정규화 (마지막 페이지에 실제 답글로 교체)
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-        >(QueryKeyFactory.replies.lists(commentNo), oldData => {
+        >(QueryKeyFactory.reply.lists(commentNo), oldData => {
           if (!oldData) {
             return oldData;
           }
@@ -695,9 +723,16 @@ export const usePostCommunityArticleReply = (
       }
     },
     // onSettled: 최종 재검증
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateReply(commentNo, postNo);
+    onSettled: () => {
+      // 답글 목록 무효화
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.reply.lists(commentNo),
+      });
+
+      // 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
     },
   });
 };
@@ -715,7 +750,7 @@ export const useGetCommunityArticleReplyList = (
     number | undefined // pageParam 타입
   >({
     enabled,
-    queryKey: QueryKeyFactory.replies.lists(commentNo),
+    queryKey: QueryKeyFactory.reply.lists(commentNo),
     queryFn: ({ pageParam }) =>
       getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
     getPreviousPageParam: lastPage =>
@@ -726,8 +761,7 @@ export const useGetCommunityArticleReplyList = (
     select: data => data.pages.flatMap(page => page.data.results),
     initialPageParam: undefined,
     // 답글 목록 캐시 정책 - 댓글보다 더 실시간성이 중요한 대화형 컨텐츠
-    staleTime: CACHE_POLICIES.REPLY_LIST.staleTime,
-    gcTime: CACHE_POLICIES.REPLY_LIST.gcTime,
+    ...CACHE_POLICIES.REPLY_LIST,
   });
 
 // 커뮤니티 게시글 답글 수정
@@ -748,18 +782,18 @@ export const usePutEditCommunityArticleReply = (
     onMutate: async (content: string) => {
       // 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.replies.lists(commentNo),
+        queryKey: QueryKeyFactory.reply.lists(commentNo),
       });
 
       // 스냅샷 저장
       const prevReplies = queryClient.getQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.replies.lists(commentNo));
+      >(QueryKeyFactory.reply.lists(commentNo));
 
       // 답글 목록에서 해당 답글 수정 (낙관적)
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.replies.lists(commentNo), oldData => {
+      >(QueryKeyFactory.reply.lists(commentNo), oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -786,15 +820,22 @@ export const usePutEditCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       if (context?.prevReplies) {
         queryClient.setQueryData(
-          QueryKeyFactory.replies.lists(commentNo),
+          QueryKeyFactory.reply.lists(commentNo),
           context.prevReplies
         );
       }
     },
     // onSettled: 최종 재검증
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateReply(commentNo, postNo);
+    onSettled: () => {
+      // 답글 목록 무효화
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.reply.lists(commentNo),
+      });
+
+      // 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
     },
   });
 };
@@ -816,19 +857,19 @@ export const useDeleteCommunityArticleReply = (
     onMutate: async () => {
       // 활성 쿼리 취소
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.replies.lists(commentNo),
+        queryKey: QueryKeyFactory.reply.lists(commentNo),
       });
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
 
       // 스냅샷 저장
       const prevReplies = queryClient.getQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.replies.lists(commentNo));
+      >(QueryKeyFactory.reply.lists(commentNo));
 
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comments.lists(postNo),
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -837,7 +878,7 @@ export const useDeleteCommunityArticleReply = (
       // 답글 목록에서 해당 답글 삭제 표시 (낙관적)
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.replies.lists(commentNo), oldData => {
+      >(QueryKeyFactory.reply.lists(commentNo), oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -890,7 +931,7 @@ export const useDeleteCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       if (context?.prevReplies) {
         queryClient.setQueryData(
-          QueryKeyFactory.replies.lists(commentNo),
+          QueryKeyFactory.reply.lists(commentNo),
           context.prevReplies
         );
       }
@@ -900,9 +941,16 @@ export const useDeleteCommunityArticleReply = (
       });
     },
     // onSettled: 최종 재검증
-    onSettled: async () => {
-      const cacheManager = getCacheManager(queryClient);
-      await cacheManager.invalidation.invalidateReply(commentNo, postNo);
+    onSettled: () => {
+      // 답글 목록 무효화
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.reply.lists(commentNo),
+      });
+
+      // 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나
+      void queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.comment.lists(postNo),
+      });
     },
   });
 };

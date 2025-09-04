@@ -7,14 +7,15 @@ import {
   getNoticeList,
 } from "@features/eventNotice/eventNotice.api";
 
-import { CACHE_POLICIES, QueryKeyFactory } from "@shared/utils/cacheManager";
-
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import {
   useEventPageStore,
   useNoticePageStore,
 } from "@features/eventNotice/eventNotice.store";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 type commonPropsType = {
   enabled?: boolean;
@@ -41,8 +42,7 @@ export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
       queryKey: QueryKeyFactory.event.list({ size, page }),
       queryFn: () => getEventList({ page, size }),
       enabled,
-      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
-      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     },
     QueryKeyFactory.event.lists()
   );
@@ -68,8 +68,7 @@ export const useGetNoticeList = ({ enabled = true, size }: commonPropsType) => {
       queryKey: QueryKeyFactory.notice.list({ size, page }),
       queryFn: () => getNoticeList({ page, size }),
       enabled,
-      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
-      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     },
     QueryKeyFactory.notice.lists()
   );
@@ -93,8 +92,7 @@ export const useGetEventDetail = () => {
     {
       queryKey: QueryKeyFactory.event.detail(no),
       queryFn: () => getEventDetail(no),
-      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
-      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     }
   );
 };
@@ -116,8 +114,7 @@ export const useGetNoticeDetail = () => {
     {
       queryKey: QueryKeyFactory.notice.detail(no),
       queryFn: () => getNoticeDetail(no),
-      staleTime: CACHE_POLICIES.EVENT_NOTICE.staleTime,
-      gcTime: CACHE_POLICIES.EVENT_NOTICE.gcTime,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     }
   );
 };

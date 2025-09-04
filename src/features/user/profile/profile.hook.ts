@@ -7,17 +7,14 @@ import {
   putProfile,
 } from "@features/user/profile/profile.api";
 
-import {
-  CACHE_POLICIES,
-  getCacheManager,
-  QueryKeyFactory,
-} from "@shared/utils/cacheManager";
-
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useAuthStore } from "@store/user.store";
 
 import { profileType } from "@features/user/profile/profile.type";
+
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 // 프로필 조회
 export const useGetProfile = (enabled = true) => {
@@ -36,8 +33,7 @@ export const useGetProfile = (enabled = true) => {
       queryKey: QueryKeyFactory.user.profile(),
       queryFn: async () => await getProfile(),
       enabled: enabled && isLoggedIn,
-      staleTime: CACHE_POLICIES.USER_PROFILE.staleTime,
-      gcTime: CACHE_POLICIES.USER_PROFILE.gcTime,
+      ...CACHE_POLICIES.USER_PROFILE,
     }
   );
 };
@@ -74,10 +70,10 @@ export const usePutProfile = () => {
       return await putProfile({ ...data, profileImg: origin + pathname });
     },
     onSuccess: async data => {
-      const cacheManager = getCacheManager(queryClient);
-
       // 선택적 무효화로 개선 - 프로필 이미지/닉네임 변경만 영향
-      await cacheManager.invalidation.invalidateUserProfile();
+      await queryClient.invalidateQueries({
+        queryKey: QueryKeyFactory.user.profile(),
+      });
 
       // 프로필 캐시 직접 업데이트
       queryClient.setQueryData(QueryKeyFactory.user.profile(), data);
@@ -99,8 +95,7 @@ export const useGetActivityCounts = (enabled = true) => {
       queryKey: QueryKeyFactory.user.activityCounts(),
       queryFn: getActivityCounts,
       enabled: enabled && isLoggedIn,
-      staleTime: CACHE_POLICIES.USER_PROFILE.staleTime,
-      gcTime: CACHE_POLICIES.USER_PROFILE.gcTime,
+      ...CACHE_POLICIES.USER_PROFILE,
     }
   );
 };

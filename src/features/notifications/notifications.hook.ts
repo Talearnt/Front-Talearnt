@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
 
 import { IMessage } from "@stomp/stompjs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import {
   deleteNotification,
@@ -10,7 +9,6 @@ import {
   markNotificationAsRead,
 } from "@features/notifications/notifications.api";
 
-import { getCacheManager } from "@shared/utils/cacheManager";
 import {
   connectWebSocket,
   disconnectWebSocket,
@@ -34,12 +32,9 @@ const WEBSOCKET_ENDPOINT = "https://api.talearnt.net/ws";
  * - 버퍼 플러시 → 이후 실시간은 즉시 반영
  */
 export const useRealtimeNotifications = () => {
-  const { pathname } = useLocation();
-  const queryClient = useQueryClient();
   const subscriptionIdRef = useRef<string | null>(null);
   const isSyncingRef = useRef<boolean>(true);
   const bufferRef = useRef<notificationType[]>([]);
-  const pathnameRef = useRef<string>(pathname);
 
   const { isLoggedIn } = useAuthStore();
   const { addNotification, setLoading, setNotifications, reset } =
@@ -57,27 +52,12 @@ export const useRealtimeNotifications = () => {
         } else {
           console.log("📩 실시간 알림 수신", data);
           addNotification(data);
-
-          const { targetNo } = data;
-
-          if (pathnameRef.current === `/community-article/${targetNo}`) {
-            const cacheManager = getCacheManager(queryClient);
-
-            // 실시간 알림에 따른 정확한 캐시 무효화
-            if (data.notificationType === "댓글") {
-              // 댓글 알림: 해당 게시물의 댓글 목록 무효화
-              void cacheManager.invalidation.invalidateComment(targetNo);
-            } else if (data.notificationType === "답글") {
-              // 답글 알림: 해당 게시물의 댓글 목록 무효화 (더 안전한 접근)
-              void cacheManager.invalidation.invalidateComment(targetNo);
-            }
-          }
         }
       } catch (error) {
         console.error("⚠️ 알림 메시지 파싱 실패", error);
       }
     },
-    [addNotification, queryClient]
+    [addNotification]
   );
 
   // WebSocket 연결 + 구독(버퍼) + 초기 동기화 + 버퍼 플러시
@@ -180,10 +160,6 @@ export const useRealtimeNotifications = () => {
 
     return () => disconnectFromWebSocket();
   }, [isLoggedIn, connectToWebSocket, disconnectFromWebSocket, reset]);
-  // pathname 변경에 따른 pathnameRef 업데이트
-  useEffect(() => {
-    pathnameRef.current = pathname;
-  }, [pathname]);
 };
 
 /**
