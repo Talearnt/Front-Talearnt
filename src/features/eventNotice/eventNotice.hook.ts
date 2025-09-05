@@ -7,7 +7,8 @@ import {
   getNoticeList,
 } from "@features/eventNotice/eventNotice.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
@@ -15,8 +16,6 @@ import {
   useEventPageStore,
   useNoticePageStore,
 } from "@features/eventNotice/eventNotice.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 type commonPropsType = {
   enabled?: boolean;
@@ -40,11 +39,12 @@ export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.EVENT, size, page], { isList: true }),
+      queryKey: QueryKeyFactory.event.list({ size, page }),
       queryFn: () => getEventList({ page, size }),
       enabled,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     },
-    createQueryKey([queryKeys.EVENT, size], { isList: true })
+    QueryKeyFactory.event.lists({ size })
   );
 };
 
@@ -65,13 +65,12 @@ export const useGetNoticeList = ({ enabled = true, size }: commonPropsType) => {
       },
     },
     {
-      queryKey: createQueryKey([queryKeys.NOTICE, size, page], {
-        isList: true,
-      }),
+      queryKey: QueryKeyFactory.notice.list({ size, page }),
       queryFn: () => getNoticeList({ page, size }),
       enabled,
+      ...CACHE_POLICIES.EVENT_NOTICE,
     },
-    createQueryKey([queryKeys.NOTICE, size], { isList: true })
+    QueryKeyFactory.notice.lists({ size })
   );
 };
 
@@ -91,8 +90,9 @@ export const useGetEventDetail = () => {
       startDate: "",
     },
     {
-      queryKey: createQueryKey([queryKeys.EVENT, no]),
+      queryKey: QueryKeyFactory.event.detail(no),
       queryFn: () => getEventDetail(no),
+      ...CACHE_POLICIES.EVENT_NOTICE,
     }
   );
 };
@@ -112,8 +112,9 @@ export const useGetNoticeDetail = () => {
       createdAt: "",
     },
     {
-      queryKey: createQueryKey([queryKeys.NOTICE, no]),
+      queryKey: QueryKeyFactory.notice.detail(no),
       queryFn: () => getNoticeDetail(no),
+      ...CACHE_POLICIES.EVENT_NOTICE,
     }
   );
 };
