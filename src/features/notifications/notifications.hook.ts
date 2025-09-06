@@ -10,7 +10,8 @@ import {
   markNotificationAsRead,
 } from "@features/notifications/notifications.api";
 
-import { createQueryKey } from "@shared/utils/createQueryKey";
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
+
 import {
   connectWebSocket,
   disconnectWebSocket,
@@ -21,8 +22,6 @@ import {
 
 import { useNotificationStore } from "@features/notifications/notifications.store";
 import { useAuthStore } from "@store/user.store";
-
-import { queryKeys } from "@shared/constants/queryKeys";
 
 import { notificationType } from "@features/notifications/notifications.type";
 
@@ -37,11 +36,12 @@ const WEBSOCKET_ENDPOINT = "https://api.talearnt.net/ws";
  */
 export const useRealtimeNotifications = () => {
   const { pathname } = useLocation();
-  const queryClient = useQueryClient();
   const subscriptionIdRef = useRef<string | null>(null);
   const isSyncingRef = useRef<boolean>(true);
   const bufferRef = useRef<notificationType[]>([]);
   const pathnameRef = useRef<string>(pathname);
+
+  const queryClient = useQueryClient();
 
   const { isLoggedIn } = useAuthStore();
   const { addNotification, setLoading, setNotifications, reset } =
@@ -60,19 +60,19 @@ export const useRealtimeNotifications = () => {
           console.log("📩 실시간 알림 수신", data);
           addNotification(data);
 
-          const { targetNo } = data;
+          const { notificationType, targetNo } = data;
 
-          if (pathnameRef.current === `/community-article/${targetNo}`) {
-            // 게시글 댓글 알림 처리
+          if (notificationType === "관심 키워드") {
             void queryClient.invalidateQueries({
-              queryKey: createQueryKey(
-                [queryKeys.COMMUNITY_COMMENT, targetNo],
-                { isList: true }
-              ),
+              queryKey: QueryKeyFactory.matching.lists(),
             });
-            // 게시글 답글 알림 처리
+          } else if (notificationType === "댓글") {
             void queryClient.invalidateQueries({
-              queryKey: createQueryKey([queryKeys.COMMUNITY_REPLY]),
+              queryKey: QueryKeyFactory.comment.lists(targetNo),
+            });
+          } else {
+            void queryClient.invalidateQueries({
+              queryKey: QueryKeyFactory.reply.all(targetNo),
             });
           }
         }

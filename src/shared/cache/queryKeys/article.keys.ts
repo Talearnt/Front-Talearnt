@@ -46,8 +46,8 @@ export const ArticleQueryKeys = {
    * 답글
    */
   reply: {
-    all: () => createQueryKey([QueryKeyEnum.REPLY]),
-    lists: (commentNo: number) =>
-      createQueryKey([QueryKeyEnum.REPLY, commentNo], { isList: true }),
+    all: (postNo: number) => createQueryKey([QueryKeyEnum.REPLY, postNo]),
+    lists: (postNo: number, commentNo: number) =>
+      createQueryKey([QueryKeyEnum.REPLY, postNo, commentNo], { isList: true }),
   },
 } as const;
