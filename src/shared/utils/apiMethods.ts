@@ -5,6 +5,7 @@ import { checkObjectType } from "@shared/utils/checkObjectType";
 import { useAuthStore } from "@store/user.store";
 
 import {
+  bodyDataType,
   customAxiosResponseType,
   responseDataType,
 } from "@shared/type/api.type";
@@ -49,15 +50,12 @@ instance.interceptors.response.use(
 
 export const getAPI = async <T>(
   url: string,
-  queryData?: Record<
-    string,
-    string | number | Record<string, unknown> | unknown[] | undefined | null
-  >,
+  queryData?: bodyDataType,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   let queryParameter = "";
 
-  if (queryData) {
+  if (queryData && checkObjectType(queryData)) {
     queryParameter = Object.keys(queryData)
       .reduce((acc, cur) => {
         const value = queryData[cur];
@@ -85,12 +83,7 @@ export const getAPI = async <T>(
 
 export const postAPI = async <T>(
   url: string,
-  body?:
-    | Record<
-        string,
-        string | number | boolean | Record<string, unknown> | unknown[]
-      >
-    | unknown[],
+  body?: bodyDataType,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.post<responseDataType<T>>(
@@ -103,10 +96,7 @@ export const postAPI = async <T>(
 
 export const putAPI = async <T>(
   url: string,
-  body?: Record<
-    string,
-    string | number | null | Record<string, unknown> | unknown[]
-  >,
+  body?: bodyDataType,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.put<responseDataType<T>>(
@@ -120,7 +110,7 @@ export const putAPI = async <T>(
 
 export const patchAPI = async <T>(
   url: string,
-  body?: Record<string, string | number | Record<string, unknown> | unknown[]>,
+  body?: bodyDataType,
   config?: AxiosRequestConfig
 ): Promise<customAxiosResponseType<T>> => {
   const { data, status } = await instance.patch<responseDataType<T>>(

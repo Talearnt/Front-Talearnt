@@ -19,4 +19,10 @@ export const USER_CACHE_POLICIES = {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 15 * 60 * 1000, // 15분
   },
+
+  // 알림 설정 - 변경 빈도 낮음
+  NOTIFICATION_SETTING: {
+    staleTime: 10 * 60 * 1000, // 10분
+    gcTime: 30 * 60 * 1000, // 30분
+  },
 } as const;

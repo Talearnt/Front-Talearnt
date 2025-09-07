@@ -50,11 +50,11 @@ function EventNoticeList() {
   // 이벤트 목록
   const {
     data: { data: eventList },
-  } = useGetEventList({ enabled: selectedTab === "event", size: 6 });
+  } = useGetEventList({ enabled: selectedTab === "event" });
   // 공지사항 목록
   const {
     data: { data: noticeList },
-  } = useGetNoticeList({ enabled: selectedTab === "notice", size: 4 });
+  } = useGetNoticeList({ enabled: selectedTab === "notice" });
 
   const {
     results,

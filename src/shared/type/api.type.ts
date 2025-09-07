@@ -1,3 +1,16 @@
+export type bodyDataType =
+  | Record<
+      string,
+      | string
+      | number
+      | null
+      | Record<string, unknown>
+      | unknown[]
+      | boolean
+      | undefined
+    >
+  | unknown[];
+
 export type responseDataType<T> = {
   data: T;
   errorCode: string | null;

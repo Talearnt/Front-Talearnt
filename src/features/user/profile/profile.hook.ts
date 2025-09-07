@@ -31,7 +31,7 @@ export const useGetProfile = (enabled = true) => {
     },
     {
       queryKey: QueryKeyFactory.user.profile(),
-      queryFn: async () => await getProfile(),
+      queryFn: getProfile,
       enabled: enabled && isLoggedIn,
       ...CACHE_POLICIES.USER_PROFILE,
     }
