@@ -23,7 +23,10 @@ type commonPropsType = {
 };
 
 // 이벤트 리스트 조회
-export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
+export const useGetEventList = ({
+  enabled = true,
+  size = 6,
+}: commonPropsType) => {
   const page = useEventPageStore(state => state.page);
 
   return useQueryWithInitial(
@@ -49,7 +52,10 @@ export const useGetEventList = ({ enabled = true, size }: commonPropsType) => {
 };
 
 // 공지사항 리스트 조회
-export const useGetNoticeList = ({ enabled = true, size }: commonPropsType) => {
+export const useGetNoticeList = ({
+  enabled = true,
+  size = 6,
+}: commonPropsType) => {
   const page = useNoticePageStore(state => state.page);
 
   return useQueryWithInitial(

@@ -24,6 +24,10 @@ export const UserQueryKeys = {
       ],
       { isLoggedIn: true }
     ),
+  notificationSetting: () =>
+    createQueryKey([QueryKeyEnum.USER, "notificationSetting"], {
+      isLoggedIn: true,
+    }),
 
   /**
    * 사용자 작성글

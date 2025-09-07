@@ -13,6 +13,9 @@ const WrittenArticleList = lazy(() => import("@pages/user/WrittenArticleList"));
 const WrittenCommentAndReplyList = lazy(
   () => import("@pages/user/WrittenCommentAndReplyList")
 );
+const NotificationSetting = lazy(
+  () => import("@pages/user/NotificationSetting")
+);
 
 const userRouter: RouteObject[] = [
   {
@@ -54,6 +57,15 @@ const userRouter: RouteObject[] = [
           </Suspense>
         ),
         path: "comments",
+      },
+
+      {
+        element: (
+          <Suspense>
+            <NotificationSetting />
+          </Suspense>
+        ),
+        path: "notification",
       },
     ],
   },
