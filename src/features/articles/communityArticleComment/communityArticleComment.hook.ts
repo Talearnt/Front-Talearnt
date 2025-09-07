@@ -20,6 +20,7 @@ import { useCommunityArticleCommentPageStore } from "@features/articles/communit
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import { commentType } from "@features/articles/shared/articles.type";
+import { activityCountsType } from "@features/user/profile/profile.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
 /**
@@ -206,8 +207,8 @@ export const usePostCommunityArticleComment = () => {
         queryClient.setQueryData(key, data);
       });
     },
-    onSuccess: ({ data: newComment }, _variables, { targetKey }) =>
-      /* [onSuccess] 서버 응답으로 정확한 데이터 저장 + 상세 페이지 댓글 마지막 페이지 업데이트 */
+    onSuccess: ({ data: newComment }, _variables, { targetKey }) => {
+      /* [onSuccess] 상세 페이지 댓글 마지막 페이지 업데이트 + 활동 counts 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<paginationType<commentType>>
       >(targetKey, oldData => {
@@ -224,7 +225,26 @@ export const usePostCommunityArticleComment = () => {
             ),
           },
         };
-      }),
+      });
+
+      /* [onSuccess] 활동 counts 업데이트 */
+      queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
+        QueryKeyFactory.user.activityCounts(),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              myCommentCount: oldData.data.myCommentCount + 1,
+            },
+          };
+        }
+      );
+    },
     onSettled: () => {
       /* [onSettled] 댓글 목록 무효화 */
       void queryClient.invalidateQueries({
