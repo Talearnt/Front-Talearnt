@@ -18,6 +18,7 @@ import {
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
+import { activityCountsType } from "@features/user/profile/profile.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
 const detailQueryKey = (communityPostNo: number) =>
@@ -156,6 +157,24 @@ export const usePostCommunityArticle = () => {
           },
         };
       });
+
+      /* [onSuccess] 활동 counts 업데이트 */
+      queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
+        QueryKeyFactory.user.activityCounts(),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              myPostCount: oldData.data.myPostCount + 1,
+            },
+          };
+        }
+      );
 
       /* [onSuccess] 목록 화면에서 새 게시물 애니메이션 타깃을 위해 ID 저장 */
       setWriteCommunityArticleId(communityPostNo);
