@@ -11,10 +11,18 @@ export const MainQueryKeys = {
    * 메인페이지 추천
    */
   matchingPersonalized: () =>
-    createQueryKey([QueryKeyEnum.MAIN, QueryKeyEnum.MATCHING, "personalized"], {
-      isLoggedIn: true,
-      isList: true,
-    }),
+    createQueryKey(
+      [
+        QueryKeyEnum.MAIN,
+        QueryKeyEnum.MATCHING,
+        QueryKeyEnum.USER,
+        "personalized",
+      ],
+      {
+        isLoggedIn: true,
+        isList: true,
+      }
+    ),
 
   matchingRecent: () =>
     createQueryKey([QueryKeyEnum.MAIN, QueryKeyEnum.MATCHING, "recent"], {

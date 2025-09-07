@@ -37,7 +37,7 @@ export const useGetCommunityArticleReplyList = (
 
   const postNo = Number(communityPostNo);
 
-  useInfiniteQuery<
+  return useInfiniteQuery<
     customAxiosResponseType<paginationType<replyType>>,
     Error, // error 타입
     replyType[],
