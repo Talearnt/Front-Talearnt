@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { classNames } from "@shared/utils/classNames";
 
 import { useOutsideClick } from "@components/common/dropdowns/dropdown.hook";
+import { useSignOut } from "@features/auth/auth.hook";
 
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
@@ -12,13 +13,18 @@ import { profileType } from "@features/user/profile/profile.type";
 const menuItems = [
   { label: "마이페이지", value: "/user" },
   { label: "찜 목록", value: "/user/favorites" },
-  { label: "로그아웃", value: "/logout" },
 ];
+const dropdownItemStyle = classNames(
+  "rounded-lg bg-talearnt_BG_Background p-2",
+  "text-body3_14_medium text-talearnt_Text_02 text-left",
+  "hover:bg-talearnt_BG_Up_01"
+);
 
 function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
 
+  const { mutate: signOut } = useSignOut();
   useOutsideClick(wrapperRef, checkboxRef);
 
   return (
@@ -60,11 +66,7 @@ function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
       >
         {menuItems.map(({ label, value }) => (
           <NavLink
-            className={classNames(
-              "rounded-lg bg-talearnt_BG_Background p-2",
-              "text-body3_14_medium text-talearnt_Text_02",
-              "hover:bg-talearnt_BG_Up_01"
-            )}
+            className={dropdownItemStyle}
             onClick={() => {
               if (!checkboxRef.current) {
                 return;
@@ -78,6 +80,9 @@ function AvatarDropdown({ profileImg }: Pick<profileType, "profileImg">) {
             {label}
           </NavLink>
         ))}
+        <button className={dropdownItemStyle} onClick={() => signOut()}>
+          로그아웃
+        </button>
       </div>
     </div>
   );
