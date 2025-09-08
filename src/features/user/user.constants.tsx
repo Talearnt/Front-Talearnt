@@ -1,6 +1,5 @@
 import { AccountIcon } from "@components/common/icons/styled/AccountIcon";
 import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
-import { HeadsetIcon } from "@components/common/icons/styled/HeadsetIcon";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
 import { NoteIcon } from "@components/common/icons/styled/NoteIcon";
 import { NotificationIcon } from "@components/common/icons/styled/NotificationIcon";
@@ -108,26 +107,6 @@ export const userSidebarArray = [
               }`}
             >
               알림 설정
-            </span>
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    category: "기타",
-    items: [
-      {
-        path: "support",
-        content: ({ isActive }: { isActive: boolean }) => (
-          <>
-            <HeadsetIcon iconType={isActive ? "filled-blue" : "outlined"} />
-            <span
-              className={`text-body1_18_semibold ${
-                isActive ? "text-talearnt_Primary_01" : "text-talearnt_Text_02"
-              }`}
-            >
-              문의하기
             </span>
           </>
         ),
