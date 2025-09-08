@@ -8,8 +8,12 @@ import {
 
 import { classNames } from "@shared/utils/classNames";
 
-const Textarea = forwardRef<HTMLTextAreaElement, ComponentProps<"textarea">>(
-  ({ className, onChange, maxLength, value, ...props }, ref) => {
+type TextareaProps = ComponentProps<"textarea"> & {
+  autoHeight?: boolean;
+};
+
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, onChange, maxLength, value, autoHeight, ...props }, ref) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     // 외부 ref 연결
@@ -19,17 +23,19 @@ const Textarea = forwardRef<HTMLTextAreaElement, ComponentProps<"textarea">>(
     const handleWrapperClick = () => textareaRef.current?.focus();
     // textarea 값이 바뀔 때 높이를 변경
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-      const textarea = e.target;
-      // 높이 자동 조절
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+      if (autoHeight) {
+        const textarea = e.target;
+        // 높이 자동 조절
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
       onChange?.(e);
     };
 
     return (
       <div
         className={classNames(
-          "flex",
+          "flex items-end gap-4",
           "w-full rounded-lg border border-talearnt_Line_01 bg-talearnt_BG_Background px-[15px] py-[11px]",
           "cursor-text",
           "focus-within:border-talearnt_Primary_01 hover:border-talearnt_Primary_01",

@@ -15,7 +15,7 @@ const buttonVariants = cva(
     variants: {
       buttonStyle: {
         filled:
-          "bg-talearnt_Primary_01 text-talearnt_BG_Background hover:bg-talearnt_PrimaryBG_02 disabled:bg-talearnt_BG_Up_02",
+          "bg-talearnt_Primary_01 text-talearnt_BG_Background hover:bg-talearnt_PrimaryBG_02 disabled:bg-talearnt_BG_Up_02 disabled:text-talearnt_Text_04",
         outlined:
           "bg-talearnt_BG_Background text-talearnt_Text_02 border border-talearnt_Icon_03",
         "outlined-blue":
