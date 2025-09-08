@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useShallow } from "zustand/shallow";
 
 import { postSignOut } from "@features/auth/auth.api";
 
@@ -14,18 +13,11 @@ import { useAuthStore } from "@store/user.store";
 export const useSignOut = () => {
   const queryClient = useQueryClient();
 
-  const { setAccessToken, setLogoutRedirect } = useAuthStore(
-    useShallow(state => ({
-      setAccessToken: state.setAccessToken,
-      setLogoutRedirect: state.setLogoutRedirect,
-    }))
-  );
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
 
   return useMutation({
     mutationFn: postSignOut,
     onSuccess: () => {
-      /** 로그아웃 후 홈으로 이동은 PrivateRoute에서 처리 */
-      setLogoutRedirect({ path: "/" });
       /** 사용자 관련 캐시 제거 */
       queryClient.removeQueries({ queryKey: QueryKeyFactory.user.all() });
       /** accessToken 제거 */
