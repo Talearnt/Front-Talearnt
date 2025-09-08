@@ -25,9 +25,10 @@ function Checkbox({ className, children, formData, ...props }: InputProps) {
         {...props}
       />
       <CircleCheckIcon
-        className={
+        className={classNames(
+          "shrink-0",
           "peer-checked:fill-talearnt_Primary_01 peer-checked:stroke-white"
-        }
+        )}
       />
       {children}
     </label>
