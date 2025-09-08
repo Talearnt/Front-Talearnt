@@ -6,7 +6,7 @@ import KakaoLayout from "@layout/auth/KakaoLayout";
 import SignUpLayout from "@layout/auth/SignUpLayout";
 
 // 공통
-const CompleteSignUp = lazy(() => import("@pages/auth/CompleteSignUp"));
+const SignUpComplete = lazy(() => import("@pages/auth/SignUpComplete"));
 
 // 계정 찾기
 const ChangePassword = lazy(() => import("@pages/auth/ChangePassword"));
@@ -56,7 +56,7 @@ const authRouter: RouteObject[] = [
       {
         element: (
           <Suspense>
-            <CompleteSignUp />
+            <SignUpComplete />
           </Suspense>
         ),
         path: "complete",
@@ -86,7 +86,7 @@ const authRouter: RouteObject[] = [
       {
         element: (
           <Suspense>
-            <CompleteSignUp />
+            <SignUpComplete />
           </Suspense>
         ),
         path: "complete",
