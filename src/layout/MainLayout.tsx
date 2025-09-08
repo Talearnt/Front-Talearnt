@@ -71,9 +71,7 @@ function MainLayout() {
   useEffect(() => {
     if (accessToken === null) {
       getAccessTokenUseRefreshToken()
-        .then(({ data }) => {
-          setAccessToken(data.accessToken);
-        })
+        .then(({ data }) => setAccessToken(data.accessToken))
         .catch((error: unknown) => console.error("Token refresh failed", error))
         .finally(() => setIsLoading(false));
     }

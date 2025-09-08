@@ -5,7 +5,7 @@ import { classNames } from "@shared/utils/classNames";
 import { Button } from "@components/common/Button/Button";
 import { CircleCheckIcon } from "@components/common/icons/CircleCheckIcon/CircleCheckIcon";
 
-function CompleteSignUp() {
+function SignUpComplete() {
   const navigator = useNavigate();
 
   return (
@@ -20,7 +20,7 @@ function CompleteSignUp() {
         <p
           className={classNames(
             "flex items-center justify-center",
-            "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 px-[31px]",
+            "w-full rounded-xl border border-talearnt_Line_01 bg-talearnt_BG_Up_01 px-[23px] py-[31px]",
             "text-body2_16_medium"
           )}
         >
@@ -43,4 +43,4 @@ function CompleteSignUp() {
   );
 }
 
-export default CompleteSignUp;
+export default SignUpComplete;
