@@ -1,38 +1,18 @@
-import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-
-import { useShallow } from "zustand/shallow";
 
 import { useAuthStore } from "@store/user.store";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn, logoutRedirect, setLogoutRedirect } = useAuthStore(
-    useShallow(state => ({
-      isLoggedIn: state.isLoggedIn,
-      logoutRedirect: state.logoutRedirect,
-      setLogoutRedirect: state.setLogoutRedirect,
-    }))
-  );
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
-  useEffect(() => {
-    if (!isLoggedIn && logoutRedirect) {
-      return () => {
-        setLogoutRedirect(null);
-      };
-    }
-    return;
-  }, [isLoggedIn, logoutRedirect, setLogoutRedirect]);
+  console.log("🔍 PrivateRoute - isLoggedIn:", isLoggedIn);
 
   if (!isLoggedIn) {
-    if (logoutRedirect) {
-      const { path, state } = logoutRedirect;
-
-      return <Navigate to={path} state={state} replace />;
-    }
-
+    console.log("🚨 PrivateRoute - 로그인 안됨, sign-in으로 리다이렉트");
     return <Navigate to="/sign-in" replace />;
   }
 
+  console.log("✅ PrivateRoute - 로그인됨, children 렌더링");
   return <>{children}</>;
 }
 

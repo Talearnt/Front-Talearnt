@@ -1,8 +1,14 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
+import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
+
 import { classNames } from "@shared/utils/classNames";
+
+import { useAuthStore } from "@store/user.store";
 
 import { Button } from "@components/common/Button/Button";
 import { CircleCheckIcon } from "@components/common/icons/CircleCheckIcon/CircleCheckIcon";
@@ -12,6 +18,16 @@ import { withdrawalResponseType } from "@features/user/withdrawAccount/withdrawA
 function WithdrawComplete() {
   const navigator = useNavigate();
   const { userId, withdrawnAt } = useLocation().state as withdrawalResponseType;
+
+  const queryClient = useQueryClient();
+
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
+
+  useEffect(() => {
+    /** 사용자 관련 캐시 제거 */
+    queryClient.removeQueries({ queryKey: QueryKeyFactory.user.all() });
+    setAccessToken(null);
+  }, [queryClient, setAccessToken]);
 
   return (
     <div
