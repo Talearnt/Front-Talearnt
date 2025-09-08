@@ -5,8 +5,10 @@ import { create } from "zustand/react";
 type promptType = {
   title: ReactNode;
   content: ReactNode;
-  confirmOnClickHandler?: () => void;
   cancelOnClickHandler?: () => void;
+  confirmOnClickHandler?: () => void;
+  cancelText?: ReactNode;
+  confirmText?: ReactNode;
   onlyConfirm?: boolean;
 };
 

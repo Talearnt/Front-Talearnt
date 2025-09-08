@@ -47,7 +47,7 @@ function Prompt() {
                 setPrompt();
               }}
             >
-              취소
+              {promptData.cancelText ?? "취소"}
             </Button>
           )}
           <Button
@@ -57,7 +57,7 @@ function Prompt() {
               setPrompt();
             }}
           >
-            확인
+            {promptData.confirmText ?? "확인"}
           </Button>
         </div>
       </div>
