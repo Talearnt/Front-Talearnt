@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -24,11 +24,12 @@ const signInSchema = object({
 }).required();
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
-const REDIRECT_URI = `${import.meta.env.VITE_BASE_URL}kakao/oauth`;
-const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+const KAKAO_AUTH_URL = (redirect: string | null) =>
+  `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${import.meta.env.VITE_BASE_URL}kakao/oauth${redirect ? `&redirect_uri=${redirect}` : ""}&response_type=code`;
 
 function SignIn() {
   const navigator = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const setAccessToken = useAuthStore(state => state.setAccessToken);
 
@@ -44,13 +45,15 @@ function SignIn() {
   });
 
   const [userId, pw] = watch(["userId", "pw"]);
+  const redirect = searchParams.get("redirect");
+  const decodedRedirect = redirect ? decodeURIComponent(redirect) : null;
 
   const handleSignIn = async ({ userId, pw, autoLogin }: signInBodyType) => {
     try {
       const { data } = await postSignIn({ userId, pw, autoLogin });
 
       setAccessToken(data.accessToken);
-      navigator("/");
+      navigator(decodedRedirect || "/", { replace: true });
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
         setError("userId", { message: "" });
@@ -126,7 +129,7 @@ function SignIn() {
           "text-[#212121]",
           "hover:bg-[#FAE100]"
         )}
-        onClick={() => (window.location.href = KAKAO_AUTH_URL)}
+        onClick={() => (window.location.href = KAKAO_AUTH_URL(decodedRedirect))}
       >
         <svg
           width="24"
