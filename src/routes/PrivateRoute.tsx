@@ -1,18 +1,21 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import { useAuthStore } from "@store/user.store";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { pathname, search } = useLocation();
+
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
-  console.log("🔍 PrivateRoute - isLoggedIn:", isLoggedIn);
-
   if (!isLoggedIn) {
-    console.log("🚨 PrivateRoute - 로그인 안됨, sign-in으로 리다이렉트");
-    return <Navigate to="/sign-in" replace />;
+    return (
+      <Navigate
+        to={`/sign-in?redirect=${encodeURIComponent(pathname + search)}`}
+        replace
+      />
+    );
   }
 
-  console.log("✅ PrivateRoute - 로그인됨, children 렌더링");
   return <>{children}</>;
 }
 

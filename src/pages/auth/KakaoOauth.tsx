@@ -18,6 +18,8 @@ function KakaoOauth() {
   const setResponse = useKakaoAuthResponseStore(state => state.setResponse);
 
   const code = searchParams.get("code");
+  const redirect = searchParams.get("redirect");
+  const decodedRedirect = redirect ? decodeURIComponent(redirect) : null;
 
   useEffect(() => {
     if (code === null) {
@@ -28,7 +30,7 @@ function KakaoOauth() {
       .then(({ data: { accessToken, isRegistered, ...data } }) => {
         if (isRegistered) {
           setAccessToken(accessToken);
-          navigator("/");
+          navigator(decodedRedirect || "/");
         } else {
           setResponse(data);
           navigator("/kakao/info-fields");
@@ -56,7 +58,7 @@ function KakaoOauth() {
 
         navigator("/sign-in");
       });
-  }, [code, navigator, setAccessToken, setPrompt, setResponse]);
+  }, [code, navigator, redirect, setAccessToken, setPrompt, setResponse]);
 
   return (
     <div className={"flex flex-col items-center gap-10"}>

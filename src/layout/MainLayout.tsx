@@ -39,7 +39,7 @@ const linkArray = [
 
 function MainLayout() {
   const navigator = useNavigate();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
@@ -139,13 +139,24 @@ function MainLayout() {
                 buttonStyle={"outlined"}
                 className={classNames("w-[100px]", "text-body2_16_semibold")}
                 size={"small"}
-                onClick={() =>
-                  navigator(
-                    isLoggedIn
-                      ? `write-article/${pathname.includes("community") ? "community" : "matching"}`
-                      : "sign-in"
-                  )
-                }
+                onClick={() => {
+                  if (isLoggedIn) {
+                    navigator(
+                      `write-article/${pathname.includes("community") ? "community" : "matching"}`
+                    );
+                  } else {
+                    const noRedirectPage =
+                      pathname === "/" ||
+                      pathname === "sign-in" ||
+                      pathname.startsWith("/kakao") ||
+                      pathname.startsWith("/sign-up") ||
+                      pathname.startsWith("/find-account");
+
+                    navigator(
+                      `sign-in${noRedirectPage ? "" : `?redirect=${encodeURIComponent(pathname + search)}`}`
+                    );
+                  }
+                }}
               >
                 {isLoggedIn ? "글쓰기" : "로그인"}
               </Button>

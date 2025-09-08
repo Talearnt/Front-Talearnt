@@ -110,7 +110,11 @@ export function ArticleSection({
           buttonData={{
             buttonText: "게시물 작성하기",
             buttonOnClick: () =>
-              navigator(isLoggedIn ? "write-article/matching" : "sign-in"),
+              navigator(
+                isLoggedIn
+                  ? "/write-article/matching"
+                  : "/sign-in?redirect=write-article/matching"
+              ),
           }}
         />
       )}
