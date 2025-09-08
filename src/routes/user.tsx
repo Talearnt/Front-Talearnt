@@ -13,6 +13,9 @@ const WrittenArticleList = lazy(() => import("@pages/user/WrittenArticleList"));
 const WrittenCommentAndReplyList = lazy(
   () => import("@pages/user/WrittenCommentAndReplyList")
 );
+const AccountSetting = lazy(() => import("@pages/user/AccountSetting"));
+const WithdrawAccount = lazy(() => import("@pages/user/WithdrawAccount"));
+const WithdrawComplete = lazy(() => import("@pages/user/WithdrawComplete"));
 const NotificationSetting = lazy(
   () => import("@pages/user/NotificationSetting")
 );
@@ -58,7 +61,14 @@ const userRouter: RouteObject[] = [
         ),
         path: "comments",
       },
-
+      {
+        element: (
+          <Suspense>
+            <AccountSetting />
+          </Suspense>
+        ),
+        path: "account",
+      },
       {
         element: (
           <Suspense>
@@ -68,6 +78,24 @@ const userRouter: RouteObject[] = [
         path: "notification",
       },
     ],
+  },
+  {
+    element: (
+      <Suspense>
+        <PrivateRoute>
+          <WithdrawAccount />
+        </PrivateRoute>
+      </Suspense>
+    ),
+    path: "withdrawal",
+  },
+  {
+    element: (
+      <Suspense>
+        <WithdrawComplete />
+      </Suspense>
+    ),
+    path: "withdrawal-complete",
   },
 ];
 
