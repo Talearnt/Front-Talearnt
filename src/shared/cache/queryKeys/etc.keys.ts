@@ -13,22 +13,14 @@ export const EtcQueryKeys = {
   event: {
     all: () => createQueryKey([QueryKeyEnum.EVENT]),
     lists: (filter?: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.EVENT, filter], { isList: true }),
-    list: (filter: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.EVENT, filter], {
-        isList: true,
-      }),
+      createQueryKey([QueryKeyEnum.EVENT], { isList: true }, filter),
     detail: (id: number) => createQueryKey([QueryKeyEnum.EVENT, id]),
   },
 
   notice: {
     all: () => createQueryKey([QueryKeyEnum.NOTICE]),
     lists: (filter?: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.NOTICE, filter], { isList: true }),
-    list: (filter: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.NOTICE, filter], {
-        isList: true,
-      }),
+      createQueryKey([QueryKeyEnum.NOTICE], { isList: true }, filter),
     detail: (id: number) => createQueryKey([QueryKeyEnum.NOTICE, id]),
   },
 } as const;

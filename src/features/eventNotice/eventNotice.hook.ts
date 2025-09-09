@@ -42,12 +42,12 @@ export const useGetEventList = ({
       },
     },
     {
-      queryKey: QueryKeyFactory.event.list({ size, page }),
+      queryKey: QueryKeyFactory.event.lists({ size, page }),
       queryFn: () => getEventList({ page, size }),
       enabled,
       ...CACHE_POLICIES.EVENT_NOTICE,
     },
-    QueryKeyFactory.event.lists({ size })
+    QueryKeyFactory.event.lists()
   );
 };
 
@@ -71,12 +71,12 @@ export const useGetNoticeList = ({
       },
     },
     {
-      queryKey: QueryKeyFactory.notice.list({ size, page }),
+      queryKey: QueryKeyFactory.notice.lists({ size, page }),
       queryFn: () => getNoticeList({ page, size }),
       enabled,
       ...CACHE_POLICIES.EVENT_NOTICE,
     },
-    QueryKeyFactory.notice.lists({ size })
+    QueryKeyFactory.notice.lists()
   );
 };
 

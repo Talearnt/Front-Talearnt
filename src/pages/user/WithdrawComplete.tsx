@@ -25,7 +25,10 @@ function WithdrawComplete() {
 
   useEffect(() => {
     /** 사용자 관련 캐시 제거 */
-    queryClient.removeQueries({ queryKey: QueryKeyFactory.user.all() });
+    queryClient.removeQueries({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.user.all().every(key => queryKey.includes(key)),
+    });
     setAccessToken(null);
   }, [queryClient, setAccessToken]);
 

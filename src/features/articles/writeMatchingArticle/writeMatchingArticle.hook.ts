@@ -66,7 +66,8 @@ export const usePostMatchingArticle = () => {
     }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.matching.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 리스트 */
@@ -121,13 +122,7 @@ export const usePostMatchingArticle = () => {
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.previous) {
-        const recentListKey = QueryKeyFactory.matching.list({
-          giveTalents: [],
-          receiveTalents: [],
-          order: "recent",
-          page: 1,
-        });
-        queryClient.setQueryData(recentListKey, context.previous);
+        queryClient.setQueryData(firstPageListKey, context.previous);
       }
     },
     onSuccess: (
@@ -222,7 +217,8 @@ export const usePostMatchingArticle = () => {
     onSettled: () =>
       /* [onSettled] 매칭 게시물 전체 무효화 */
       queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.matching.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
       }),
   });
 };
@@ -255,7 +251,8 @@ export const usePutEditMatchingArticle = () => {
     }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.matching.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 상세/리스트 */
@@ -263,7 +260,8 @@ export const usePutEditMatchingArticle = () => {
         customAxiosResponseType<matchingArticleDetailType>
       >(detailQueryKey(exchangePostNo));
       const listQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.matching.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
       });
       const prevLists = listQueries.map(([key, data]) => [key, data] as const);
 
@@ -340,7 +338,8 @@ export const usePutEditMatchingArticle = () => {
     onSettled: () =>
       /* [onSettled] 성공/실패와 무관하게 최종 재검증 */
       queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.matching.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       }),
   });
 };

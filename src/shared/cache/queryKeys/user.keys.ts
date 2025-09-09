@@ -42,11 +42,12 @@ export const UserQueryKeys = {
         }),
       list: (page: number) =>
         createQueryKey(
-          [QueryKeyEnum.USER, QueryKeyEnum.COMMUNITY, "written", page],
+          [QueryKeyEnum.USER, QueryKeyEnum.COMMUNITY, "written"],
           {
             isList: true,
             isLoggedIn: true,
-          }
+          },
+          { page }
         ),
     },
     matching: {
@@ -57,11 +58,12 @@ export const UserQueryKeys = {
         }),
       list: (page: number) =>
         createQueryKey(
-          [QueryKeyEnum.USER, QueryKeyEnum.MATCHING, "written", page],
+          [QueryKeyEnum.USER, QueryKeyEnum.MATCHING, "written"],
           {
             isList: true,
             isLoggedIn: true,
-          }
+          },
+          { page }
         ),
     },
     comment: {
@@ -72,11 +74,12 @@ export const UserQueryKeys = {
         }),
       list: (page: number) =>
         createQueryKey(
-          [QueryKeyEnum.USER, QueryKeyEnum.COMMENT, "written", page],
+          [QueryKeyEnum.USER, QueryKeyEnum.COMMENT, "written"],
           {
             isList: true,
             isLoggedIn: true,
-          }
+          },
+          { page }
         ),
     },
     reply: {
@@ -87,11 +90,12 @@ export const UserQueryKeys = {
         }),
       list: (page: number) =>
         createQueryKey(
-          [QueryKeyEnum.USER, QueryKeyEnum.REPLY, "written", page],
+          [QueryKeyEnum.USER, QueryKeyEnum.REPLY, "written"],
           {
             isList: true,
             isLoggedIn: true,
-          }
+          },
+          { page }
         ),
     },
   },
@@ -107,11 +111,12 @@ export const UserQueryKeys = {
       }),
     list: (page: number) =>
       createQueryKey(
-        [QueryKeyEnum.USER, QueryKeyEnum.MATCHING, "favorite", page],
+        [QueryKeyEnum.USER, QueryKeyEnum.MATCHING, "favorite"],
         {
           isList: true,
           isLoggedIn: true,
-        }
+        },
+        { page }
       ),
   },
 } as const;

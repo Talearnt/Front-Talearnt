@@ -68,33 +68,35 @@ export const useDeleteCommunityArticle = () => {
   const setToast = useToastStore(state => state.setToast);
 
   const postNo = Number(communityPostNo);
+  const detailQueryKey = QueryKeyFactory.community.detail(postNo);
+  const commentQueryKey = QueryKeyFactory.comment.lists(postNo);
 
   return useMutation({
     mutationFn: () => deleteCommunityArticle(postNo),
     onMutate: async () => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.community.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community.all().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 상세/댓글/리스트 */
-      const prevDetail = queryClient.getQueryData(
-        QueryKeyFactory.community.detail(postNo)
-      );
-      const prevComments = queryClient.getQueryData(
-        QueryKeyFactory.comment.lists(postNo)
-      );
+      const prevDetail = queryClient.getQueryData(detailQueryKey);
+      const prevComments = queryClient.getQueryData(commentQueryKey);
       const listQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.community.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       });
       const prevLists = listQueries.map(([key, data]) => [key, data] as const);
 
       /* [onMutate] 3-a) 상세 캐시 제거(삭제 후 상세 접근 방지) */
       queryClient.removeQueries({
-        queryKey: QueryKeyFactory.community.detail(postNo),
+        queryKey: detailQueryKey,
       });
       queryClient.removeQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
 
       /* [onMutate] 3-b) 모든 리스트에서 해당 아이템 낙관적 제거 + totalCount 보정 */
@@ -128,17 +130,11 @@ export const useDeleteCommunityArticle = () => {
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevDetail) {
-        queryClient.setQueryData(
-          QueryKeyFactory.community.detail(postNo),
-          context.prevDetail
-        );
+        queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
 
       if (context?.prevComments) {
-        queryClient.setQueryData(
-          QueryKeyFactory.comment.lists(postNo),
-          context.prevComments
-        );
+        queryClient.setQueryData(commentQueryKey, context.prevComments);
       }
 
       context?.prevLists.forEach(([key, data]) => {
@@ -153,10 +149,13 @@ export const useDeleteCommunityArticle = () => {
     onSettled: () => {
       /* [onSettled] 성공/실패와 무관하게 최종 재검증 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.detail(postNo),
+        queryKey: detailQueryKey,
       });
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       });
     },
   });

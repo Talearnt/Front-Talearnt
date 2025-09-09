@@ -55,7 +55,10 @@ export const usePostCommunityArticle = () => {
     onMutate: async ({ title, content, postType }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.community.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 리스트 */
@@ -185,7 +188,10 @@ export const usePostCommunityArticle = () => {
     /* [onSettled] 성공/실패와 무관하게 한 번만 재검증 → 서버 정답으로 최종 동기화 */
     onSettled: () =>
       queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       }),
   });
 };
@@ -215,7 +221,8 @@ export const usePutEditCommunityArticle = () => {
     }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.community.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community.all().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 상세/리스트 */
@@ -223,7 +230,10 @@ export const usePutEditCommunityArticle = () => {
         customAxiosResponseType<communityArticleDetailType>
       >(detailQueryKey(communityPostNo));
       const listQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.community.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       });
       const prevLists = listQueries.map(([key, data]) => [key, data] as const);
 
@@ -293,7 +303,8 @@ export const usePutEditCommunityArticle = () => {
     onSettled: (_data, _error, { communityPostNo }) => {
       /* [onSettled] 성공/실패와 무관하게 최종 재검증 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.community.all().every(key => queryKey.includes(key)),
       });
 
       void queryClient.invalidateQueries({

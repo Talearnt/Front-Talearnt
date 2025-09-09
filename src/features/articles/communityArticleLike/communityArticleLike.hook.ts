@@ -21,7 +21,6 @@ export const usePostCommunityArticleLike = () => {
     onMutate: async (communityPostNo: number) => {
       /* [onMutate] 1) 관련 쿼리 키 */
       const detailQueryKey = QueryKeyFactory.community.detail(communityPostNo);
-      const listsQueryKey = QueryKeyFactory.community.lists();
 
       /* [onMutate] 2) 관련 쿼리 취소 */
       await queryClient.cancelQueries({
@@ -29,14 +28,16 @@ export const usePostCommunityArticleLike = () => {
       });
       await queryClient.cancelQueries({
         predicate: ({ queryKey }) =>
-          listsQueryKey.every(key => queryKey.includes(key)),
+          QueryKeyFactory.community.all().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 3) 현재 상태 스냅샷 저장 */
       const previousDetail = queryClient.getQueryData(detailQueryKey);
       const previousLists = queryClient.getQueriesData({
         predicate: ({ queryKey }) =>
-          listsQueryKey.every(key => queryKey.includes(key)),
+          QueryKeyFactory.community
+            .lists()
+            .every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 4) Optimistic Update - 상세 페이지 */
