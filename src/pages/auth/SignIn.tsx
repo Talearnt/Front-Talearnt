@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,6 +32,8 @@ function SignIn() {
   const navigator = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const setAccessToken = useAuthStore(state => state.setAccessToken);
 
   const {
@@ -50,6 +53,7 @@ function SignIn() {
 
   const handleSignIn = async ({ userId, pw, autoLogin }: signInBodyType) => {
     try {
+      setIsLoading(true);
       const { data } = await postSignIn({ userId, pw, autoLogin });
 
       setAccessToken(data.accessToken);
@@ -64,6 +68,8 @@ function SignIn() {
       setError("pw", {
         message: "예기치 못한 오류가 발생했습니다.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,6 +95,7 @@ function SignIn() {
           label={"아이디"}
           placeholder={"이메일을 입력해 주세요."}
           wrapperClassName={"mb-6"}
+          disabled={isLoading}
         />
         <Input
           error={errors.pw?.message}
@@ -102,14 +109,16 @@ function SignIn() {
           placeholder={"비밀번호를 입력해 주세요."}
           type={"password"}
           wrapperClassName={"mb-4"}
+          disabled={isLoading}
         />
         <Checkbox
           className={"mb-6 mr-auto"}
           formData={{ ...register("autoLogin") }}
+          disabled={isLoading}
         >
           자동 로그인
         </Checkbox>
-        <Button className={"mb-10 w-full"} type={"submit"}>
+        <Button className={"mb-10 w-full"} type={"submit"} disabled={isLoading}>
           로그인
         </Button>
       </form>
@@ -130,6 +139,7 @@ function SignIn() {
           "hover:bg-[#FAE100]"
         )}
         onClick={() => (window.location.href = KAKAO_AUTH_URL(decodedRedirect))}
+        disabled={isLoading}
       >
         <svg
           width="24"
@@ -150,6 +160,7 @@ function SignIn() {
           buttonStyle={"outlined"}
           className={"w-full"}
           onClick={() => navigator("/find-account/id")}
+          disabled={isLoading}
         >
           아이디/비밀번호 찾기
         </Button>
@@ -157,6 +168,7 @@ function SignIn() {
           buttonStyle={"outlined"}
           className={"w-full"}
           onClick={() => navigator("/sign-up/agreements")}
+          disabled={isLoading}
         >
           회원가입
         </Button>

@@ -15,6 +15,7 @@ function Checkbox({ className, children, formData, ...props }: InputProps) {
     <label
       className={classNames(
         "flex cursor-pointer items-center gap-2",
+        "has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50",
         className
       )}
     >
