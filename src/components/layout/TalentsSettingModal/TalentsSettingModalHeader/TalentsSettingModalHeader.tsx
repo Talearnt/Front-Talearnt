@@ -1,5 +1,7 @@
 import { useShallow } from "zustand/shallow";
 
+import { useSetTalents } from "@features/talentsSettingModal/talentsSettingModal.hook";
+
 import { useTalentsSettingModalStore } from "@features/talentsSettingModal/talentsSettingModal.store";
 
 import { ModalHeader } from "@components/common/modal/parts/ModalHeader";
@@ -14,8 +16,10 @@ function TalentsSettingModalHeader() {
     }))
   );
 
+  const setTalentsData = useSetTalents();
+
   return (
-    <ModalHeader>
+    <ModalHeader onCloseHandler={isSuccess ? setTalentsData : undefined}>
       <div className={"flex flex-col items-center gap-1"}>
         <h1 className={"text-heading3_22_semibold text-talearnt_Text_Strong"}>
           {isSuccess
