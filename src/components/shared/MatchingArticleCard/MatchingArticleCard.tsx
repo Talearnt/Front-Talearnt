@@ -10,6 +10,7 @@ import { findTalentList } from "@shared/utils/findTalent";
 import { usePostMatchingArticleFavorite } from "@features/articles/matchingArticleFavorite/matchingArticleFavorite.hook";
 
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
+import { useAuthStore } from "@store/user.store";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
@@ -47,6 +48,7 @@ function MatchingArticleCard({
       receiveTalents: state.receiveTalents,
     }))
   );
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const { mutate } = usePostMatchingArticleFavorite();
 
@@ -115,7 +117,11 @@ function MatchingArticleCard({
           size={28}
           onClick={e => {
             e.stopPropagation();
-            mutate(exchangePostNo);
+            if (isLoggedIn) {
+              mutate(exchangePostNo);
+            } else {
+              navigator("/sign-in");
+            }
           }}
         />
       </div>

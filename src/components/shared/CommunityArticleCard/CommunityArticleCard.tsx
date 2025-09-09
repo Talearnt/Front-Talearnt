@@ -6,6 +6,8 @@ import { classNames } from "@shared/utils/classNames";
 
 import { usePostCommunityArticleLike } from "@features/articles/communityArticleLike/communityArticleLike.hook";
 
+import { useAuthStore } from "@store/user.store";
+
 import { Badge } from "@components/common/Badge/Badge";
 import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
 import { ThumbsUpIcon } from "@components/common/icons/styled/ThumbsUpIcon";
@@ -32,6 +34,8 @@ function CommunityArticleCard({
   index?: number;
 }) {
   const navigator = useNavigate();
+
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
 
   const { mutate } = usePostCommunityArticleLike();
 
@@ -60,7 +64,11 @@ function CommunityArticleCard({
           size={28}
           onClick={e => {
             e.stopPropagation();
-            mutate(communityPostNo);
+            if (isLoggedIn) {
+              mutate(communityPostNo);
+            } else {
+              navigator("/sign-in");
+            }
           }}
         />
       </div>
