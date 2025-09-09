@@ -185,6 +185,7 @@ function VerificationCode({
       // 인증번호 확인 완료
       setVerification({ isCodeVerified: true, phone });
       setIsLoading(undefined);
+      stopTimer();
       return;
     }
 
@@ -304,18 +305,20 @@ function VerificationCode({
         label={"인증번호 확인"}
         maxLength={4}
         placeholder={"인증번호 4자리를 입력해 주세요"}
+        insideNode={
+          isRunning && (
+            <p
+              className={classNames(
+                "flex items-center justify-center",
+                "h-8 w-[60px]",
+                "text-body2_16_medium text-talearnt_Primary_01"
+              )}
+            >
+              {time}
+            </p>
+          )
+        }
       >
-        {/*인증번호 전송 후 3분 타이머*/}
-        {isRunning && (
-          <p
-            className={classNames(
-              "absolute right-[119px] top-1/2 -translate-y-1/2",
-              "text-body2_16_medium text-talearnt_Primary_01"
-            )}
-          >
-            {time}
-          </p>
-        )}
         {/*인증번호 확인 button*/}
         <Button
           buttonStyle={"outlined-blue"}
