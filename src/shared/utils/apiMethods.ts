@@ -39,7 +39,7 @@ instance.interceptors.response.use(
   res => res,
   async (error: AxiosError<responseDataType<unknown>>) => {
     if (!error.response) {
-      return error;
+      return Promise.reject(error);
     }
 
     const { data, status } = error.response;
