@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 import dayjs from "dayjs";
 
 import { classNames } from "@shared/utils/classNames";
+
+import { usePostCommunityArticleLike } from "@features/articles/communityArticleLike/communityArticleLike.hook";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
@@ -11,6 +15,7 @@ import { Avatar } from "@components/shared/Avatar/Avatar";
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
 
 function CommunityArticleCard({
+  communityPostNo,
   commentCount,
   content,
   count,
@@ -19,15 +24,17 @@ function CommunityArticleCard({
   isLike,
   likeCount,
   nickname,
-  onClickHandler,
   postType,
   profileImg,
   title,
   updatedAt,
-}: Omit<communityArticleType, "communityPostNo"> & {
-  onClickHandler?: () => void;
+}: communityArticleType & {
   index?: number;
 }) {
+  const navigator = useNavigate();
+
+  const { mutate } = usePostCommunityArticleLike();
+
   return (
     <div
       className={classNames(
@@ -35,7 +42,7 @@ function CommunityArticleCard({
         "cursor-pointer rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]",
         "hover:border-talearnt_Primary_01"
       )}
-      onClick={onClickHandler}
+      onClick={() => navigator(`/community-article/${communityPostNo}`)}
     >
       <div className={"flex items-center"}>
         <Avatar imageUrl={profileImg} size={40} />
@@ -51,6 +58,10 @@ function CommunityArticleCard({
           className={"ml-auto"}
           iconType={isLike ? "filled-blue" : "outlined"}
           size={28}
+          onClick={e => {
+            e.stopPropagation();
+            mutate(communityPostNo);
+          }}
         />
       </div>
       <div className={"flex flex-col gap-2"}>

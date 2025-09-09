@@ -135,14 +135,11 @@ function WrittenArticleList() {
               return isMatching ? (
                 <MatchingArticleCard
                   {...(article as matchingArticleType)}
-                  exchangePostNo={postNo}
-                  onClickHandler={() => navigator(`/${tab}-article/${postNo}`)}
                   key={postNo}
                 />
               ) : (
                 <CommunityArticleCard
                   {...(article as communityArticleType)}
-                  onClickHandler={() => navigator(`/${tab}-article/${postNo}`)}
                   key={postNo}
                 />
               );
