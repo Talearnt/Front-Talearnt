@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteMatchingArticle,
   getMatchingArticleDetail,
+  postChangeMatchingArticleStatus,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.api";
 
 import { CACHE_POLICIES } from "@shared/cache/policies/cachePolicies";
@@ -14,6 +15,7 @@ import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useToastStore } from "@store/toast.store";
 
+import { matchingArticleDetailType } from "@features/articles/matchingArticleDetail/matchingArticleDetail.type";
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
 import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 
@@ -154,5 +156,101 @@ export const useDeleteMatchingArticle = () => {
         predicate: ({ queryKey }) =>
           QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       }),
+  });
+};
+
+export const usePostChangeMatchingArticleStatus = () => {
+  const { exchangePostNo } = useParams();
+
+  const queryClient = useQueryClient();
+
+  const postNo = Number(exchangePostNo);
+
+  return useMutation({
+    mutationFn: ({ status }: Pick<matchingArticleType, "status">) =>
+      postChangeMatchingArticleStatus({ exchangePostNo: postNo, status }),
+    onMutate: async ({ status }) => {
+      /* [onMutate] 1) 관련 쿼리 키 */
+      const detailQueryKey = QueryKeyFactory.matching.detail(postNo);
+
+      /* [onMutate] 2) 관련 쿼리 취소 */
+      await queryClient.cancelQueries({
+        queryKey: detailQueryKey,
+      });
+      await queryClient.cancelQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
+      });
+
+      /* [onMutate] 3) 현재 상태 스냅샷 저장 */
+      const previousDetail =
+        queryClient.getQueryData<
+          customAxiosResponseType<matchingArticleDetailType>
+        >(detailQueryKey);
+      const previousLists = queryClient.getQueriesData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
+      });
+
+      /* [onMutate] 4) Optimistic Update - 상세 페이지 */
+      queryClient.setQueryData<
+        customAxiosResponseType<matchingArticleDetailType>
+      >(detailQueryKey, oldData => {
+        if (!oldData) {
+          return oldData;
+        }
+
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            status,
+          },
+        };
+      });
+
+      /* [onMutate] 5) Optimistic Update - 리스트 페이지들 */
+      previousLists.forEach(([queryKey]) => {
+        queryClient.setQueryData<
+          customAxiosResponseType<paginationType<matchingArticleType>>
+        >(queryKey, oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              results: oldData.data.results.map(article =>
+                article.exchangePostNo === postNo
+                  ? {
+                      ...article,
+                      status,
+                    }
+                  : article
+              ),
+            },
+          };
+        });
+      });
+
+      return { previousDetail, previousLists };
+    },
+    onError: (_err, _variables, context) => {
+      /* [onError] 스냅샷으로 롤백 */
+      if (context?.previousDetail) {
+        queryClient.setQueryData(
+          QueryKeyFactory.matching.detail(postNo),
+          context.previousDetail
+        );
+      }
+
+      context?.previousLists.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+    },
   });
 };

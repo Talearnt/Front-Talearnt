@@ -9,19 +9,25 @@ import { findTalentList } from "@shared/utils/findTalent";
 import {
   useDeleteMatchingArticle,
   useGetMatchingArticleDetail,
+  usePostChangeMatchingArticleStatus,
 } from "@features/articles/matchingArticleDetail/matchingArticleDetail.hook";
+import { usePostMatchingArticleFavorite } from "@features/articles/matchingArticleFavorite/matchingArticleFavorite.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useEditMatchingArticleDataStore } from "@features/articles/shared/articles.store";
 import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";
+import { useAuthStore } from "@store/user.store";
 
 import { ImageCarousel } from "@components/common/modal/ImageCarousel/ImageCarousel";
 
 import { AnimatedLoader } from "@components/common/AnimatedLoader/AnimatedLoader";
 import { Badge } from "@components/common/Badge/Badge";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
+import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { Avatar } from "@components/shared/Avatar/Avatar";
+
+import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
 
 /**
  * MatchingArticleDetail
@@ -35,6 +41,7 @@ function MatchingArticleDetail() {
     undefined
   );
 
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const setEditMatchingArticle = useEditMatchingArticleDataStore(
     state => state.setEditMatchingArticle
   );
@@ -71,7 +78,11 @@ function MatchingArticleDetail() {
     isError,
     isLoading,
   } = useGetMatchingArticleDetail();
-  const { mutate } = useDeleteMatchingArticle();
+  const { mutate: mutateDeleteArticle } = useDeleteMatchingArticle();
+  const { mutate: mutateFavorite } = usePostMatchingArticleFavorite();
+  const { mutate: mutateChangeStatus } = usePostChangeMatchingArticleStatus();
+
+  const isMyArticle = userNo === profileUserNo;
 
   const handleEdit = () => {
     const parser = new DOMParser();
@@ -100,7 +111,7 @@ function MatchingArticleDetail() {
       title: "게시물 삭제",
       content:
         "정말 게시물을 삭제하시겠어요? 삭제한 게시물은 되돌릴 수 없어요.",
-      confirmOnClickHandler: mutate,
+      confirmOnClickHandler: mutateDeleteArticle,
     });
 
   useEffect(() => {
@@ -119,7 +130,7 @@ function MatchingArticleDetail() {
         <AnimatedLoader />
       ) : (
         <>
-          {userNo === profileUserNo && (
+          {isMyArticle && (
             <div className={"flex justify-end gap-4"}>
               <button
                 className={classNames(
@@ -160,18 +171,41 @@ function MatchingArticleDetail() {
               color={status === "모집중" ? "skyblue" : "lightgray"}
               size={"medium"}
             />
-            <div
+            {isMyArticle && (
+              <TabSlider<matchingArticleType["status"]>
+                className={"h-[60px]"}
+                currentValue={status}
+                onClickHandler={status => mutateChangeStatus({ status })}
+                options={[
+                  {
+                    label: "모집중",
+                    value: "모집중",
+                  },
+                  {
+                    label: "모집 완료",
+                    value: "모집 완료",
+                  },
+                ]}
+                type={"shadow"}
+              />
+            )}
+            <button
               className={classNames(
                 "ml-auto rounded-lg border border-talearnt_Line_01 p-2",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
+              onClick={() =>
+                isLoggedIn
+                  ? mutateFavorite(exchangePostNo)
+                  : navigator("/sign-in")
+              }
             >
               <HeartIcon
                 iconType={isFavorite ? "filled-blue" : "outlined"}
                 size={32}
               />
-            </div>
+            </button>
           </div>
           <div className={"grid grid-cols-2 gap-6"}>
             <div className={"flex flex-col gap-2"}>
