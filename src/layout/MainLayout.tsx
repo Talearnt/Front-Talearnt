@@ -147,7 +147,7 @@ function MainLayout() {
                   } else {
                     const noRedirectPage =
                       pathname === "/" ||
-                      pathname === "sign-in" ||
+                      pathname === "/sign-in" ||
                       pathname.startsWith("/kakao") ||
                       pathname.startsWith("/sign-up") ||
                       pathname.startsWith("/find-account");
