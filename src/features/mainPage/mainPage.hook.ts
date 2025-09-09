@@ -43,7 +43,11 @@ export const useGetPersonalizedMatchingArticleList = () => {
           order: "recent",
           size: MAIN_ARTICLES_LIST_SIZE,
         }),
-      enabled: isLoggedIn && isSuccess,
+      enabled:
+        isLoggedIn &&
+        isSuccess &&
+        giveTalents.length > 0 &&
+        receiveTalents.length > 0,
       ...CACHE_POLICIES.MAIN_PERSONALIZED,
     }
   );
