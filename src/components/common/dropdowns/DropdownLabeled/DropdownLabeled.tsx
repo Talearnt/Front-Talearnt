@@ -15,6 +15,7 @@ type DropdownSearchableProps<T> = {
   options: dropdownOptionType<T>[];
   onSelectHandler: ({ checked, value }: { checked: boolean; value: T }) => void;
   selectedValue: T[] | T | undefined;
+  width?: number;
 };
 
 function DropdownLabeled<T = string>({
@@ -22,6 +23,7 @@ function DropdownLabeled<T = string>({
   options,
   onSelectHandler,
   selectedValue,
+  width,
 }: DropdownSearchableProps<T>) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -39,11 +41,14 @@ function DropdownLabeled<T = string>({
   );
 
   return (
-    <div ref={wrapperRef} className={"relative w-fit"}>
+    <div
+      ref={wrapperRef}
+      className={classNames("relative w-fit", width && `w-[${width}px]`)}
+    >
       <label
         className={classNames(
           "peer/label group/label",
-          "flex items-center gap-2",
+          "flex items-center justify-between gap-2",
           "rounded-full border border-talearnt_Icon_03 py-[7px] pl-[23px] pr-[11px]",
           "cursor-pointer",
           "has-[:checked]:border-talearnt_Primary_01",

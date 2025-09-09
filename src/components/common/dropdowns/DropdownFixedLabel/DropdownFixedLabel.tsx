@@ -61,6 +61,7 @@ function DropdownFixedLabel<T = string>({
               onSelectHandler({ checked: target.checked, value })
             }
             label={label}
+            key={`fixed-label-dropdown-option-${label}`}
           />
         ))}
       </div>
