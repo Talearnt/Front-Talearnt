@@ -166,6 +166,7 @@ function MatchingArticleList() {
           }
           selectedValue={duration}
           label={"진행 기간"}
+          width={150}
         />
         <DropdownLabeled<exchangeType | "">
           options={[
@@ -180,6 +181,7 @@ function MatchingArticleList() {
           }
           selectedValue={type}
           label={"진행 방식"}
+          width={150}
         />
         <label
           className={classNames(
@@ -219,6 +221,7 @@ function MatchingArticleList() {
             setFilter(prev => ({ ...prev, order: value }))
           }
           selectedValue={order}
+          width={110}
         />
       </div>
       {/*매칭 게시물 목록 결과*/}
@@ -240,9 +243,6 @@ function MatchingArticleList() {
                       ? "animate-new_matching_article_reveal"
                       : index < 4 && "animate-new_matching_article_slide")
                 )}
-                onClickHandler={() =>
-                  navigator(`/matching-article/${exchangePostNo}`)
-                }
                 exchangePostNo={exchangePostNo}
                 key={exchangePostNo}
               />

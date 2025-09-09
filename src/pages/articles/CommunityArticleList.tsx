@@ -137,6 +137,7 @@ function CommunityArticleList() {
           }
           selectedValue={postType}
           label={"전체 게시판"}
+          width={180}
         />
       </div>
       {/*매칭 게시물 목록 결과*/}
