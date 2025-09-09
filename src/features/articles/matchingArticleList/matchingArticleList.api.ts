@@ -10,7 +10,11 @@ export const getMatchingArticleList = ({
   size = 12,
   ...filter
 }: Partial<matchingArticleListFilterType>) =>
-  getAPI<paginationType<matchingArticleType>>("v1/posts/exchanges", {
-    size,
-    ...filter,
-  });
+  getAPI<paginationType<matchingArticleType>>(
+    "v1/posts/exchanges",
+    {
+      size,
+      ...filter,
+    },
+    { withCredentials: true }
+  );

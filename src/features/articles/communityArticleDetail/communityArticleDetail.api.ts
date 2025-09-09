@@ -4,7 +4,11 @@ import { communityArticleDetailType } from "@features/articles/communityArticleD
 
 // 커뮤니티 게시물 상세 정보 조회
 export const getCommunityArticleDetail = (communityPostNo: number) =>
-  getAPI<communityArticleDetailType>(`v1/posts/communities/${communityPostNo}`);
+  getAPI<communityArticleDetailType>(
+    `v1/posts/communities/${communityPostNo}`,
+    undefined,
+    { withCredentials: true }
+  );
 
 // 커뮤니티 게시물 삭제
 export const deleteCommunityArticle = (communityPostNo: number) =>

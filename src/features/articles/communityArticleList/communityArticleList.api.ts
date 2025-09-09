@@ -10,7 +10,11 @@ export const getCommunityArticleList = ({
   size = 12,
   ...filter
 }: Partial<communityArticleListFilterType> & { size?: number }) =>
-  getAPI<paginationType<communityArticleType>>("v1/posts/communities", {
-    size,
-    ...filter,
-  });
+  getAPI<paginationType<communityArticleType>>(
+    "v1/posts/communities",
+    {
+      size,
+      ...filter,
+    },
+    { withCredentials: true }
+  );

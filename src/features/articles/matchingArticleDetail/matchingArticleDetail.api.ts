@@ -4,7 +4,11 @@ import { matchingArticleDetailType } from "@features/articles/matchingArticleDet
 
 // 매칭 게시물 상세 정보 조회
 export const getMatchingArticleDetail = (exchangePostNo: number) =>
-  getAPI<matchingArticleDetailType>(`v1/posts/exchanges/${exchangePostNo}`);
+  getAPI<matchingArticleDetailType>(
+    `v1/posts/exchanges/${exchangePostNo}`,
+    undefined,
+    { withCredentials: true }
+  );
 
 // 매칭 게시물 삭제
 export const deleteMatchingArticle = (exchangePostNo: number) =>
