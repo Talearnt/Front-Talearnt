@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { postSignOut } from "@features/auth/auth.api";
@@ -11,6 +13,8 @@ import { useAuthStore } from "@store/user.store";
  * - 로그아웃을 수행합니다.
  */
 export const useSignOut = () => {
+  const navigator = useNavigate();
+
   const queryClient = useQueryClient();
 
   const setAccessToken = useAuthStore(state => state.setAccessToken);
@@ -18,13 +22,17 @@ export const useSignOut = () => {
   return useMutation({
     mutationFn: postSignOut,
     onSuccess: () => {
+      /** 로그인 페이지로 이동 */
+      navigator("/sign-in", { replace: true });
       /** 사용자 관련 캐시 제거 */
       queryClient.removeQueries({
         predicate: ({ queryKey }) =>
           QueryKeyFactory.user.all().every(key => queryKey.includes(key)),
       });
-      /** accessToken 제거 */
-      setAccessToken(null);
+      setTimeout(() => {
+        /** accessToken 제거 */
+        setAccessToken(null);
+      }, 0);
     },
   });
 };
