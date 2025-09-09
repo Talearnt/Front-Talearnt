@@ -1,4 +1,4 @@
-import { deleteAPI, getAPI } from "@shared/utils/apiMethods";
+import { deleteAPI, getAPI, patchAPI } from "@shared/utils/apiMethods";
 
 import { matchingArticleDetailType } from "@features/articles/matchingArticleDetail/matchingArticleDetail.type";
 
@@ -15,3 +15,14 @@ export const deleteMatchingArticle = (exchangePostNo: number) =>
   deleteAPI(`v1/posts/exchanges/${exchangePostNo}`, {
     withCredentials: true,
   });
+
+// 매칭 게시물 상태 변경
+export const postChangeMatchingArticleStatus = ({
+  exchangePostNo,
+  status,
+}: Pick<matchingArticleDetailType, "exchangePostNo" | "status">) =>
+  patchAPI(
+    `/v1/posts/exchanges/${exchangePostNo}/status`,
+    { status },
+    { withCredentials: true }
+  );

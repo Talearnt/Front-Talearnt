@@ -14,12 +14,14 @@ import {
   useDeleteCommunityArticle,
   useGetCommunityArticleDetail,
 } from "@features/articles/communityArticleDetail/communityArticleDetail.hook";
+import { usePostCommunityArticleLike } from "@features/articles/communityArticleLike/communityArticleLike.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useCommunityArticleCommentPageStore } from "@features/articles/communityArticleComment/communityArticleComment.store";
 import { useEditCommunityArticleDataStore } from "@features/articles/shared/articles.store";
 import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";
+import { useAuthStore } from "@store/user.store";
 
 import { ImageCarousel } from "@components/common/modal/ImageCarousel/ImageCarousel";
 
@@ -44,6 +46,7 @@ function CommunityArticleDetail() {
       setPage: state.setPage,
     }))
   );
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const setEditCommunityArticle = useEditCommunityArticleDataStore(
     state => state.setEditCommunityArticle
   );
@@ -90,6 +93,7 @@ function CommunityArticleDetail() {
   const { mutate: deleteCommunityArticle } = useDeleteCommunityArticle();
   const { mutate: postCommunityArticleComment } =
     usePostCommunityArticleComment();
+  const { mutate: mutateLike } = usePostCommunityArticleLike();
 
   const handleEdit = () => {
     const parser = new DOMParser();
@@ -178,18 +182,21 @@ function CommunityArticleDetail() {
               {dayjs(createdAt).format("YYYY-MM-DD")}
             </span>
             <Badge label={postType} size={"medium"} />
-            <div
+            <button
               className={classNames(
                 "ml-auto rounded-lg border border-talearnt_Line_01 p-2",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
+              onClick={() =>
+                isLoggedIn ? mutateLike(communityPostNo) : navigator("/sign-in")
+              }
             >
               <ThumbsUpIcon
                 iconType={isLike ? "filled-blue" : "outlined"}
                 size={34}
               />
-            </div>
+            </button>
           </div>
           {/*TODO 매칭/커뮤니티 상세, 게시물 작성 미리보기 컴포넌트 통합*/}
           {imageUrls.length > 0 && (

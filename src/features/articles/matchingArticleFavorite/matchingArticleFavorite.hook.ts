@@ -4,6 +4,8 @@ import { postMatchingArticleFavorite } from "@features/articles/matchingArticleF
 
 import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
+import { useToastStore } from "@store/toast.store";
+
 import { matchingArticleDetailType } from "@features/articles/matchingArticleDetail/matchingArticleDetail.type";
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
 import { activityCountsType } from "@features/user/profile/profile.type";
@@ -16,6 +18,8 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
  */
 export const usePostMatchingArticleFavorite = () => {
   const queryClient = useQueryClient();
+
+  const setToast = useToastStore(state => state.setToast);
 
   const activityCountsQueryKey = QueryKeyFactory.user.activityCounts();
 
@@ -105,10 +109,10 @@ export const usePostMatchingArticleFavorite = () => {
       });
 
       /* [onMutate] 6) Optimistic Update - 활동 counts (증감량 반영) */
-      let delta = 0;
+      let isFavorite = true;
 
       if (previousDetail) {
-        delta = previousDetail.data.isFavorite ? -1 : 1;
+        isFavorite = previousDetail.data.isFavorite;
       } else {
         for (const [, data] of previousLists) {
           const found = data?.data.results.find(
@@ -116,14 +120,10 @@ export const usePostMatchingArticleFavorite = () => {
           );
 
           if (found) {
-            delta = found.isFavorite ? -1 : 1;
+            isFavorite = found.isFavorite;
             break;
           }
         }
-      }
-
-      if (delta === 0) {
-        delta = 1; // 기본값: 찜 추가로 간주
       }
 
       queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
@@ -137,14 +137,24 @@ export const usePostMatchingArticleFavorite = () => {
             ...oldData,
             data: {
               ...oldData.data,
-              favoritePostCount: oldData.data.favoritePostCount + delta,
+              favoritePostCount:
+                oldData.data.favoritePostCount + (isFavorite ? 1 : -1),
             },
           };
         }
       );
 
-      return { previousDetail, previousLists, previousActivityCounts };
+      return {
+        previousDetail,
+        previousLists,
+        previousActivityCounts,
+        isFavorite,
+      };
     },
+    onSuccess: (_data, _variables, { isFavorite }) =>
+      setToast({
+        message: `찜목록에 ${isFavorite ? "추가했습니다" : "제외됐습니다"}`,
+      }),
     onError: (_err, exchangePostNo, context) => {
       /* [onError] 스냅샷으로 롤백 */
       if (context?.previousDetail) {
@@ -164,6 +174,11 @@ export const usePostMatchingArticleFavorite = () => {
           context.previousActivityCounts
         );
       }
+
+      setToast({
+        message: `서버 오류로 찜목록에 ${context?.isFavorite ? "추가" : "제외"}할 수 없습니다. 잠시 후 다시 시도해 주세요.`,
+        type: "error",
+      });
     },
   });
 };
