@@ -24,11 +24,13 @@ export enum QueryKeyEnum {
  */
 export const createQueryKey = (
   key: unknown[],
-  { isLoggedIn, isList }: { isLoggedIn?: boolean; isList?: boolean } = {}
+  { isLoggedIn, isList }: { isLoggedIn?: boolean; isList?: boolean } = {},
+  filter?: Record<string, unknown>
 ) => [
+  ...key,
   ...(isLoggedIn ? ["AFTER_LOGIN"] : []),
   ...(isList ? ["LIST"] : []),
-  ...key,
+  ...(filter ? [filter] : []),
 ];
 
 // 통합된 쿼리키 팩토리

@@ -14,7 +14,7 @@ export const ArticleQueryKeys = {
     all: () => createQueryKey([QueryKeyEnum.MATCHING]),
     lists: () => createQueryKey([QueryKeyEnum.MATCHING], { isList: true }),
     list: (filter: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.MATCHING, filter], { isList: true }),
+      createQueryKey([QueryKeyEnum.MATCHING], { isList: true }, filter),
     detail: (exchangePostNo: number) =>
       createQueryKey([QueryKeyEnum.MATCHING, exchangePostNo]),
   },
@@ -26,7 +26,7 @@ export const ArticleQueryKeys = {
     all: () => createQueryKey([QueryKeyEnum.COMMUNITY]),
     lists: () => createQueryKey([QueryKeyEnum.COMMUNITY], { isList: true }),
     list: (filter: Record<string, unknown>) =>
-      createQueryKey([QueryKeyEnum.COMMUNITY, filter], { isList: true }),
+      createQueryKey([QueryKeyEnum.COMMUNITY], { isList: true }, filter),
     detail: (communityPostNo: number) =>
       createQueryKey([QueryKeyEnum.COMMUNITY, communityPostNo]),
   },
@@ -35,19 +35,26 @@ export const ArticleQueryKeys = {
    * 댓글
    */
   comment: {
-    all: () => createQueryKey([QueryKeyEnum.COMMENT]),
     lists: (postNo: number) =>
       createQueryKey([QueryKeyEnum.COMMENT, postNo], { isList: true }),
     list: (postNo: number, page: number) =>
-      createQueryKey([QueryKeyEnum.COMMENT, postNo, page], { isList: true }),
+      createQueryKey(
+        [QueryKeyEnum.COMMENT, postNo],
+        { isList: true },
+        { page }
+      ),
   },
 
   /**
    * 답글
    */
   reply: {
-    all: (postNo: number) => createQueryKey([QueryKeyEnum.REPLY, postNo]),
-    lists: (postNo: number, commentNo: number) =>
-      createQueryKey([QueryKeyEnum.REPLY, postNo, commentNo], { isList: true }),
+    lists: (postNo: number) => createQueryKey([QueryKeyEnum.REPLY, postNo]),
+    list: (postNo: number, commentNo: number) =>
+      createQueryKey(
+        [QueryKeyEnum.REPLY, postNo],
+        { isList: true },
+        { commentNo }
+      ),
   },
 } as const;

@@ -64,7 +64,10 @@ export const useRealtimeNotifications = () => {
 
           if (notificationType === "관심 키워드") {
             void queryClient.invalidateQueries({
-              queryKey: QueryKeyFactory.matching.lists(),
+              predicate: ({ queryKey }) =>
+                QueryKeyFactory.matching
+                  .lists()
+                  .every(key => queryKey.includes(key)),
             });
           } else if (notificationType === "댓글") {
             void queryClient.invalidateQueries({
@@ -72,7 +75,7 @@ export const useRealtimeNotifications = () => {
             });
           } else {
             void queryClient.invalidateQueries({
-              queryKey: QueryKeyFactory.reply.all(targetNo),
+              queryKey: QueryKeyFactory.reply.lists(targetNo),
             });
           }
         }

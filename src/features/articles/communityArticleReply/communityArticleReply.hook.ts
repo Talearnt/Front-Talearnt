@@ -45,7 +45,7 @@ export const useGetCommunityArticleReplyList = (
     number | undefined
   >({
     enabled,
-    queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+    queryKey: QueryKeyFactory.reply.list(postNo, commentNo),
     queryFn: ({ pageParam }) =>
       getCommunityArticleReplyList({ commentNo, lastNo: pageParam }),
     getPreviousPageParam: lastPage =>
@@ -79,6 +79,8 @@ export const usePostCommunityArticleReply = (
   } = useGetProfile();
 
   const postNo = Number(communityPostNo);
+  const commentQueryKey = QueryKeyFactory.comment.lists(postNo);
+  const replyQueryKey = QueryKeyFactory.reply.list(postNo, commentNo);
 
   return useMutation({
     mutationFn: async (content: string) =>
@@ -86,13 +88,13 @@ export const usePostCommunityArticleReply = (
     onMutate: async (content: string) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
 
       /* [onMutate] 2) 답글이 열려있는 경우에만 답글 목록 쿼리 취소 */
       if (isOpen) {
         await queryClient.cancelQueries({
-          queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+          queryKey: replyQueryKey,
         });
       }
 
@@ -100,11 +102,11 @@ export const usePostCommunityArticleReply = (
       const prevReplies = isOpen
         ? queryClient.getQueryData<
             InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-          >(QueryKeyFactory.reply.lists(postNo, commentNo))
+          >(replyQueryKey)
         : undefined;
 
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -114,7 +116,7 @@ export const usePostCommunityArticleReply = (
       if (isOpen) {
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-        >(QueryKeyFactory.reply.lists(postNo, commentNo), oldData => {
+        >(replyQueryKey, oldData => {
           if (!oldData) {
             return oldData;
           }
@@ -177,10 +179,7 @@ export const usePostCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevReplies) {
-        queryClient.setQueryData(
-          QueryKeyFactory.reply.lists(postNo, commentNo),
-          context.prevReplies
-        );
+        queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
 
       context?.prevComments.forEach(([key, data]) => {
@@ -193,7 +192,7 @@ export const usePostCommunityArticleReply = (
         /* [onSuccess] 답글 목록 정규화 (마지막 페이지에 실제 답글로 교체) */
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-        >(QueryKeyFactory.reply.lists(postNo, commentNo), oldData => {
+        >(replyQueryKey, oldData => {
           if (!oldData) {
             return oldData;
           }
@@ -221,12 +220,12 @@ export const usePostCommunityArticleReply = (
     onSettled: () => {
       /* [onSettled] 답글 목록 무효화 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+        queryKey: replyQueryKey,
       });
 
       /* [onSettled] 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
     },
   });
@@ -246,6 +245,7 @@ export const usePutEditCommunityArticleReply = (
   const queryClient = useQueryClient();
 
   const postNo = Number(communityPostNo);
+  const replyQueryKey = QueryKeyFactory.reply.list(postNo, commentNo);
 
   return useMutation({
     mutationFn: (content: string) =>
@@ -253,18 +253,19 @@ export const usePutEditCommunityArticleReply = (
     onMutate: async (content: string) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+        queryKey: replyQueryKey,
       });
 
       /* [onMutate] 2) 스냅샷 저장: 답글 */
-      const prevReplies = queryClient.getQueryData<
-        InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.reply.lists(postNo, commentNo));
+      const prevReplies =
+        queryClient.getQueryData<
+          InfiniteData<customAxiosResponseType<paginationType<replyType>>>
+        >(replyQueryKey);
 
       /* [onMutate] 3) 답글 목록에서 해당 답글 수정 (낙관적) */
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.reply.lists(postNo, commentNo), oldData => {
+      >(replyQueryKey, oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -291,16 +292,13 @@ export const usePutEditCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevReplies) {
-        queryClient.setQueryData(
-          QueryKeyFactory.reply.lists(postNo, commentNo),
-          context.prevReplies
-        );
+        queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
     },
     onSettled: () => {
       /* [onSettled] 답글 목록 무효화 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+        queryKey: replyQueryKey,
       });
 
       // 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나
@@ -325,25 +323,28 @@ export const useDeleteCommunityArticleReply = (
   const queryClient = useQueryClient();
 
   const postNo = Number(communityPostNo);
+  const commentQueryKey = QueryKeyFactory.comment.lists(postNo);
+  const replyQueryKey = QueryKeyFactory.reply.list(postNo, commentNo);
 
   return useMutation({
     mutationFn: () => deleteCommunityArticleReply(replyNo),
     onMutate: async () => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+        queryKey: replyQueryKey,
       });
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
 
       /* [onMutate] 2) 스냅샷 저장: 답글/댓글 */
-      const prevReplies = queryClient.getQueryData<
-        InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.reply.lists(postNo, commentNo));
+      const prevReplies =
+        queryClient.getQueryData<
+          InfiniteData<customAxiosResponseType<paginationType<replyType>>>
+        >(replyQueryKey);
 
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -352,7 +353,7 @@ export const useDeleteCommunityArticleReply = (
       /* [onMutate] 3) 답글 목록에서 해당 답글 삭제 표시 (낙관적) */
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-      >(QueryKeyFactory.reply.lists(postNo, commentNo), oldData => {
+      >(replyQueryKey, oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -405,10 +406,7 @@ export const useDeleteCommunityArticleReply = (
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevReplies) {
-        queryClient.setQueryData(
-          QueryKeyFactory.reply.lists(postNo, commentNo),
-          context.prevReplies
-        );
+        queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
 
       context?.prevComments.forEach(([key, data]) => {
@@ -418,12 +416,12 @@ export const useDeleteCommunityArticleReply = (
     onSettled: () => {
       /* [onSettled] 답글 목록 무효화 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.reply.lists(postNo, commentNo),
+        queryKey: replyQueryKey,
       });
 
       /* [onSettled] 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentQueryKey,
       });
     },
   });

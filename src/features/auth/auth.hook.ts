@@ -19,7 +19,10 @@ export const useSignOut = () => {
     mutationFn: postSignOut,
     onSuccess: () => {
       /** 사용자 관련 캐시 제거 */
-      queryClient.removeQueries({ queryKey: QueryKeyFactory.user.all() });
+      queryClient.removeQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.all().every(key => queryKey.includes(key)),
+      });
       /** accessToken 제거 */
       setAccessToken(null);
     },

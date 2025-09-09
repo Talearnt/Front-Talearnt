@@ -82,6 +82,8 @@ export const usePostCommunityArticleComment = () => {
   } = useGetProfile();
 
   const postNo = Number(communityPostNo);
+  const detailQueryKey = QueryKeyFactory.community.detail(postNo);
+  const listQueryKey = QueryKeyFactory.comment.lists(postNo);
 
   return useMutation({
     mutationFn: (content: string) =>
@@ -89,18 +91,16 @@ export const usePostCommunityArticleComment = () => {
     onMutate: async (content: string) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: listQueryKey,
       });
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.community.detail(postNo),
+        queryKey: detailQueryKey,
       });
 
       /* [onMutate] 2) 스냅샷 저장: 상세/댓글 */
-      const prevDetail = queryClient.getQueryData(
-        QueryKeyFactory.community.detail(postNo)
-      );
+      const prevDetail = queryClient.getQueryData(detailQueryKey);
       const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: listQueryKey,
       });
       const prevComments = commentQueries.map(
         ([key, data]) => [key, data] as const
@@ -125,7 +125,7 @@ export const usePostCommunityArticleComment = () => {
       /* [onMutate] 5) 상세 페이지 댓글 마지막 페이지 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<communityArticleDetailType>
-      >(QueryKeyFactory.community.detail(postNo), oldData => {
+      >(detailQueryKey, oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -197,10 +197,7 @@ export const usePostCommunityArticleComment = () => {
     /* [onError] 실패 시 스냅샷으로 롤백 */
     onError: (_err, _variables, context) => {
       if (context?.prevDetail) {
-        queryClient.setQueryData(
-          QueryKeyFactory.community.detail(postNo),
-          context.prevDetail
-        );
+        queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
 
       context?.prevComments.forEach(([key, data]) => {
@@ -248,12 +245,12 @@ export const usePostCommunityArticleComment = () => {
     onSettled: () => {
       /* [onSettled] 댓글 목록 무효화 */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: listQueryKey,
       });
 
       /* [onSettled] 게시물 상세 정보도 무효화 (댓글 수 변경) */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.detail(postNo),
+        queryKey: detailQueryKey,
       });
     },
   });
@@ -269,59 +266,56 @@ export const usePutEditCommunityArticleComment = () => {
 
   const queryClient = useQueryClient();
 
+  const page = useCommunityArticleCommentPageStore(state => state.page);
+
   const postNo = Number(communityPostNo);
+  const commentKey = QueryKeyFactory.comment.list(postNo, page);
 
   return useMutation({
     mutationFn: putEditCommunityArticleComment,
     onMutate: async ({ commentNo, content }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentKey,
       });
 
       /* [onMutate] 2) 스냅샷 저장: 댓글 */
-      const commentQueries = queryClient.getQueriesData({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
-      });
-      const prevComments = commentQueries.map(
-        ([key, data]) => [key, data] as const
-      );
+      const prevComments = queryClient.getQueryData(commentKey);
 
       /* [onMutate] 3) 모든 댓글 목록에서 해당 댓글 수정 (낙관적) */
-      commentQueries.forEach(([key]) => {
-        queryClient.setQueryData<
-          customAxiosResponseType<paginationType<commentType>>
-        >(key, oldData => {
-          if (!oldData) {
-            return oldData;
-          }
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<commentType>>
+      >(commentKey, oldData => {
+        if (!oldData) {
+          return oldData;
+        }
 
-          return {
-            ...oldData,
-            data: {
-              ...oldData.data,
-              results: oldData.data.results.map(comment =>
-                comment.commentNo === commentNo
-                  ? { ...comment, content, updatedAt: new Date().toISOString() }
-                  : comment
-              ),
-            },
-          };
-        });
+        return {
+          ...oldData,
+          data: {
+            ...oldData.data,
+            results: oldData.data.results.map(comment =>
+              comment.commentNo === commentNo
+                ? { ...comment, content, updatedAt: new Date().toISOString() }
+                : comment
+            ),
+          },
+        };
       });
 
       /* [onMutate] 4) 반환: 롤백용 스냅샷 */
       return { prevComments };
     },
-    onError: (_err, _variables, context) =>
+    onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
-      context?.prevComments.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      }),
+      if (context?.prevComments) {
+        queryClient.setQueryData(commentKey, context.prevComments);
+      }
+    },
     onSettled: () =>
       /* [onSettled] 댓글 목록 무효화 */
       queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.comment.lists(postNo),
+        queryKey: commentKey,
       }),
   });
 };
@@ -340,7 +334,7 @@ export const useDeleteCommunityArticleComment = () => {
 
   const postNo = Number(communityPostNo);
   const commentKey = QueryKeyFactory.comment.list(postNo, page);
-  const communityKey = QueryKeyFactory.community.detail(postNo);
+  const detailQueryKey = QueryKeyFactory.community.detail(postNo);
 
   return useMutation({
     mutationFn: deleteCommunityArticleComment,
@@ -350,7 +344,7 @@ export const useDeleteCommunityArticleComment = () => {
         queryKey: commentKey,
       });
       await queryClient.cancelQueries({
-        queryKey: communityKey,
+        queryKey: detailQueryKey,
       });
 
       /* [onMutate] 2) 스냅샷 저장: 댓글/상세 */
@@ -361,7 +355,7 @@ export const useDeleteCommunityArticleComment = () => {
       const prevDetail =
         queryClient.getQueryData<
           customAxiosResponseType<communityArticleDetailType>
-        >(communityKey);
+        >(detailQueryKey);
 
       /* [onMutate] 3) 댓글에 답글이 있는지 확인 */
       const hasReply = prevComments?.data.results.some(
@@ -400,7 +394,7 @@ export const useDeleteCommunityArticleComment = () => {
       /* [onMutate] 6) 상세 페이지 댓글 마지막 페이지 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<communityArticleDetailType>
-      >(communityKey, oldData => {
+      >(detailQueryKey, oldData => {
         if (!oldData) {
           return oldData;
         }
@@ -423,7 +417,7 @@ export const useDeleteCommunityArticleComment = () => {
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevDetail) {
-        queryClient.setQueryData(communityKey, context.prevDetail);
+        queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
 
       if (context?.prevComments) {
@@ -438,7 +432,7 @@ export const useDeleteCommunityArticleComment = () => {
 
       /* [onSettled] 게시물 상세 정보도 무효화 (댓글 수 변경) */
       void queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.community.detail(postNo),
+        queryKey: detailQueryKey,
       });
     },
   });

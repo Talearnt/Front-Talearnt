@@ -70,29 +70,30 @@ export const useDeleteMatchingArticle = () => {
   const setToast = useToastStore(state => state.setToast);
 
   const postNo = Number(exchangePostNo);
+  const detailQueryKey = QueryKeyFactory.matching.detail(postNo);
 
   return useMutation({
     mutationFn: () => deleteMatchingArticle(postNo),
     onMutate: async () => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
-        queryKey: QueryKeyFactory.matching.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       });
 
       /* [onMutate] 2) 스냅샷 저장: 상세/리스트 */
-      const prevDetail = queryClient.getQueryData(
-        QueryKeyFactory.matching.detail(postNo)
-      );
+      const prevDetail = queryClient.getQueryData(detailQueryKey);
       const listQueries = queryClient.getQueriesData<
         customAxiosResponseType<paginationType<matchingArticleType>>
       >({
-        queryKey: QueryKeyFactory.matching.lists(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
       });
       const prevLists = listQueries.map(([key, data]) => [key, data] as const);
 
       /* [onMutate] 3-a) 상세 캐시 제거(삭제 후 상세 접근 방지) */
       queryClient.removeQueries({
-        queryKey: QueryKeyFactory.matching.detail(postNo),
+        queryKey: detailQueryKey,
       });
 
       /* [onMutate] 3-b) 리스트에서 항목 낙관적 제거 + totalCount 보정 */
@@ -135,10 +136,7 @@ export const useDeleteMatchingArticle = () => {
     onError: (_err, _variables, context) => {
       /* [onError] 이전 스냅샷으로 정확히 롤백 */
       if (context?.prevDetail) {
-        queryClient.setQueryData(
-          QueryKeyFactory.matching.detail(postNo),
-          context.prevDetail
-        );
+        queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
 
       context?.prevLists.forEach(([key, data]) => {
@@ -153,7 +151,8 @@ export const useDeleteMatchingArticle = () => {
     onSettled: () =>
       /* [onSettled] 성공/실패와 무관하게 최종 재검증 */
       queryClient.invalidateQueries({
-        queryKey: QueryKeyFactory.matching.all(),
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       }),
   });
 };

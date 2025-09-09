@@ -17,20 +17,21 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
 export const usePostMatchingArticleFavorite = () => {
   const queryClient = useQueryClient();
 
+  const activityCountsQueryKey = QueryKeyFactory.user.activityCounts();
+
   return useMutation({
     mutationFn: postMatchingArticleFavorite,
     onMutate: async (exchangePostNo: number) => {
       /* [onMutate] 1) 관련 쿼리 키 */
       const detailQueryKey = QueryKeyFactory.matching.detail(exchangePostNo);
-      const listsQueryKey = QueryKeyFactory.matching.lists();
-      const activityCountsQueryKey = QueryKeyFactory.user.activityCounts();
 
       /* [onMutate] 2) 관련 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: detailQueryKey,
       });
       await queryClient.cancelQueries({
-        queryKey: listsQueryKey,
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       });
       await queryClient.cancelQueries({
         queryKey: activityCountsQueryKey,
@@ -44,7 +45,8 @@ export const usePostMatchingArticleFavorite = () => {
       const previousLists = queryClient.getQueriesData<
         customAxiosResponseType<paginationType<matchingArticleType>>
       >({
-        queryKey: listsQueryKey,
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
       });
       const previousActivityCounts = queryClient.getQueryData(
         activityCountsQueryKey
@@ -72,7 +74,7 @@ export const usePostMatchingArticleFavorite = () => {
           },
         };
       });
-      console.log("previousLists", previousLists, listsQueryKey);
+
       /* [onMutate] 5) Optimistic Update - 리스트 페이지들 */
       previousLists.forEach(([queryKey]) => {
         queryClient.setQueryData<
@@ -158,7 +160,7 @@ export const usePostMatchingArticleFavorite = () => {
 
       if (context?.previousActivityCounts) {
         queryClient.setQueryData(
-          QueryKeyFactory.user.activityCounts(),
+          activityCountsQueryKey,
           context.previousActivityCounts
         );
       }
