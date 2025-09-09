@@ -1,9 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 import { useShallow } from "zustand/shallow";
 
 import { postTalents } from "@features/talentsSettingModal/talentsSettingModal.api";
 
 import { checkObjectType } from "@shared/utils/checkObjectType";
 import { classNames } from "@shared/utils/classNames";
+
+import { useSetTalents } from "@features/talentsSettingModal/talentsSettingModal.hook";
 
 import { useTalentsSettingModalStore } from "@features/talentsSettingModal/talentsSettingModal.store";
 import { useToastStore } from "@store/toast.store";
@@ -15,6 +19,8 @@ import { Spinner } from "@components/common/Spinner/Spinner";
 import { talentsType } from "@features/talentsSettingModal/talentsSettingModal.type";
 
 function TalentsSettingModalBottom() {
+  const navigator = useNavigate();
+
   const {
     scrollRef,
     currentTalentsType,
@@ -35,6 +41,8 @@ function TalentsSettingModalBottom() {
     }))
   );
   const setToast = useToastStore(state => state.setToast);
+
+  const setTalentsData = useSetTalents();
 
   // 다음/이전 누를 때 드롭다운 닫힘 처리, 스크롤 최상단 이동
   const handleTypeChange = (type: talentsType) => {
@@ -86,7 +94,15 @@ function TalentsSettingModalBottom() {
     <ModalBottom>
       <div className={classNames("flex justify-between", "w-full px-[30px]")}>
         {isSuccess ? (
-          <Button className={"w-full"}>매칭 게시물 보러 가기</Button>
+          <Button
+            className={"w-full"}
+            onClick={() => {
+              navigator("/matching");
+              setTalentsData();
+            }}
+          >
+            매칭 게시물 보러 가기
+          </Button>
         ) : (
           <>
             {currentTalentsType === "giveTalents" && (
