@@ -6,6 +6,15 @@ import { HeadsetIcon } from "@components/common/icons/styled/HeadsetIcon";
 
 import { userSidebarArray } from "@features/user/user.constants";
 
+const mailtoBody =
+  `* 아래 양식에 맞춰 내용을 작성해 주시면 더 빠르고 정확한 답변을 드릴 수 있습니다.
+-------------------
+1) 사용중인 닉네임:
+2) 답변 받으실 이메일 주소:
+3) 문의 종류 (예: 제휴 문의, 서비스 개선 제안, 기타 의견):
+- 문의 내용:
+-------------------`.replace(/\n/g, "\r\n");
+
 function UserLayout() {
   return (
     <div className={classNames("grid grid-cols-[277px_1fr] gap-12", "pt-8")}>
@@ -55,7 +64,11 @@ function UserLayout() {
               )}
               onClick={() =>
                 (window.location.href =
-                  "mailto:woong9421@nate.com?subject=제목&body=내용")
+                  "mailto:woong9421@nate.com" +
+                  "?subject=" +
+                  encodeURIComponent("문의하기") +
+                  "&body=" +
+                  encodeURIComponent(mailtoBody))
               }
             >
               <HeadsetIcon />
