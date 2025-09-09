@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@shared/utils/classNames";
 import { findTalentList } from "@shared/utils/findTalent";
+
+import { usePostMatchingArticleFavorite } from "@features/articles/matchingArticleFavorite/matchingArticleFavorite.hook";
 
 import { useMatchingArticleListFilterStore } from "@features/articles/matchingArticleList/matchingArticleList.store";
 
@@ -29,8 +32,9 @@ function MatchingArticleCard({
   receiveTalents,
   createdAt,
   favoriteCount,
-  onClickHandler,
-}: matchingArticleType & { className?: string; onClickHandler?: () => void }) {
+}: matchingArticleType & { className?: string }) {
+  const navigator = useNavigate();
+
   const giveTalentsRef = useRef<HTMLDivElement>(null);
   const receiveTalentsRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +47,8 @@ function MatchingArticleCard({
       receiveTalents: state.receiveTalents,
     }))
   );
+
+  const { mutate } = usePostMatchingArticleFavorite();
 
   const giveTalentsList = findTalentList(giveTalents);
   const receiveTalentsList = findTalentList(receiveTalents);
@@ -91,7 +97,7 @@ function MatchingArticleCard({
         "hover:border-talearnt_Primary_01",
         className
       )}
-      onClick={onClickHandler}
+      onClick={() => navigator(`/matching-article/${exchangePostNo}`)}
     >
       <div className={classNames("flex items-center", "mb-6")}>
         <Avatar imageUrl={profileImg} size={40} />
@@ -107,6 +113,10 @@ function MatchingArticleCard({
           className={"ml-auto"}
           iconType={isFavorite ? "filled-blue" : "outlined"}
           size={28}
+          onClick={e => {
+            e.stopPropagation();
+            mutate(exchangePostNo);
+          }}
         />
       </div>
       <div className={classNames("flex gap-1", "mb-2")}>

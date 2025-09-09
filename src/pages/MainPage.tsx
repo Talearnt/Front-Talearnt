@@ -72,31 +72,18 @@ function MainPage() {
                 </>
               }
             >
-              {personalizedMatchingArticleList.map(
-                ({ exchangePostNo, ...article }) => (
-                  <MatchingArticleCard
-                    {...article}
-                    onClickHandler={() =>
-                      navigator(`/matching-article/${exchangePostNo}`)
-                    }
-                    exchangePostNo={exchangePostNo}
-                    key={exchangePostNo}
-                  />
-                )
-              )}
+              {personalizedMatchingArticleList.map(article => (
+                <MatchingArticleCard
+                  {...article}
+                  key={article.exchangePostNo}
+                />
+              ))}
             </ArticleSection>
           )}
           {/* 신규 매칭 게시물 목록 */}
           <ArticleSection title={"신규 매칭 게시물이 올라왔어요!"}>
-            {recentMatchingArticleList.map(({ exchangePostNo, ...article }) => (
-              <MatchingArticleCard
-                {...article}
-                onClickHandler={() =>
-                  navigator(`/matching-article/${exchangePostNo}`)
-                }
-                exchangePostNo={exchangePostNo}
-                key={exchangePostNo}
-              />
+            {recentMatchingArticleList.map(article => (
+              <MatchingArticleCard {...article} key={article.exchangePostNo} />
             ))}
           </ArticleSection>
           {/* BEST 커뮤니티 게시물 목록 */}
@@ -104,18 +91,9 @@ function MainPage() {
             title={"BEST 커뮤니티 게시물이 올라왔어요!"}
             articleType={"community"}
           >
-            {bestCommunityArticleList.map(
-              ({ communityPostNo, ...article }, index) => (
-                <CommunityArticleCard
-                  {...article}
-                  onClickHandler={() =>
-                    navigator(`/community-article/${communityPostNo}`)
-                  }
-                  index={index}
-                  key={index}
-                />
-              )
-            )}
+            {bestCommunityArticleList.map((article, index) => (
+              <CommunityArticleCard {...article} index={index} key={index} />
+            ))}
           </ArticleSection>
         </>
       )}
