@@ -83,7 +83,7 @@ function InfoFields() {
     trigger,
     watch,
   } = useForm({
-    defaultValues: { gender: "남자" },
+    defaultValues: { gender: "남자", nickname: "" },
     mode: "onChange",
     resolver: yupResolver(infoFieldsSchema),
   });

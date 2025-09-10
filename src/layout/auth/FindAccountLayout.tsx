@@ -25,10 +25,11 @@ function FindAccountLayout() {
   return (
     <AuthLayout>
       <TabSlider
-        className={"h-[50px]"}
+        className={"h-[60px]"}
         currentValue={currentPage === "change" ? "pw" : currentPage}
         onClickHandler={value => navigator(`/find-account/${value}`)}
         options={options}
+        type={"shadow"}
       />
       <Outlet />
     </AuthLayout>

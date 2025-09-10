@@ -109,31 +109,33 @@ function Input({
         </label>
       )}
       <div className={"relative flex"}>
-        <input
-          className={classNames(
-            inputVariants({ size }),
-            error !== undefined
-              ? "border-talearnt_Error_02 focus:border-talearnt_Error_02"
-              : "border-talearnt_Line_01",
-            className
-          )}
-          id={id}
-          {...formData}
-          {...props}
-          ref={combinedRef}
-        />
-        {children}
-        {insideNode && (
-          <div
+        <div className={"relative flex-1"}>
+          <input
             className={classNames(
-              "absolute right-2 top-1/2 -translate-y-1/2",
-              size === "large" && "right-6"
+              inputVariants({ size }),
+              error !== undefined
+                ? "border-talearnt_Error_02 focus:border-talearnt_Error_02"
+                : "border-talearnt_Line_01",
+              className
             )}
-            ref={insideNodeRef}
-          >
-            {insideNode}
-          </div>
-        )}
+            id={id}
+            {...formData}
+            {...props}
+            ref={combinedRef}
+          />
+          {insideNode && (
+            <div
+              className={classNames(
+                "absolute right-2 top-1/2 -translate-y-1/2",
+                size === "large" && "right-6"
+              )}
+              ref={insideNodeRef}
+            >
+              {insideNode}
+            </div>
+          )}
+        </div>
+        {children}
       </div>
       {(hasComplete || hasError) && (
         <div className={"mt-1 flex items-center gap-1"}>

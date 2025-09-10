@@ -38,7 +38,7 @@ function Agreements() {
         <Checkbox
           className={classNames(
             "gap-4",
-            "h-[72px] border-b border-b-talearnt_Line_01"
+            "h-[72px] border-b border-b-talearnt_Line_01 px-4"
           )}
           checked={isAllAgreementsAgreed()}
           onChange={({ target }) => setAllAgreement(target.checked)}
