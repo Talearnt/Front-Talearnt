@@ -22,6 +22,11 @@ const tabSliderVariants = cva(
           "text-body1_18_medium",
           "has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-shadow_02"
         ),
+        "shadow-small": classNames(
+          "px-[7px] py-[3px] rounded-lg border border-transparent",
+          "text-body3_14_semibold",
+          "has-[:checked]:bg-talearnt_BG_Background has-[:checked]:border-talearnt_Line_02 has-[:checked]:shadow-shadow_02"
+        ),
       },
     },
     defaultVariants: {
@@ -30,12 +35,12 @@ const tabSliderVariants = cva(
   }
 );
 
-type TabSliderProps = VariantProps<typeof tabSliderVariants> & {
+type TabSliderProps<T> = VariantProps<typeof tabSliderVariants> & {
   className?: string;
-  currentValue: string;
+  currentValue: T;
   disabled?: boolean;
-  onClickHandler?: (value: string) => void;
-  options: { label: string; value: string }[];
+  onClickHandler?: (value: T) => void;
+  options: { label: string; value: T }[];
 };
 
 const defaultStyle = ({
@@ -50,24 +55,26 @@ const defaultStyle = ({
   classNames(
     disabled &&
       "!text-talearnt_Text_04 has-[:checked]:bg-talearnt_BG_Up_01 has-[:checked]:shadow-talearnt_Line_01",
-    index === 0 ? "rounded-l-xl" : "-ml-px",
-    index === maxLength && "rounded-r-xl"
+    index === 0 ? "rounded-l-lg" : "-ml-px",
+    index === maxLength && "rounded-r-lg"
   );
 
-function TabSlider({
+function TabSlider<T = string>({
   className,
   currentValue,
   disabled,
   onClickHandler,
   options,
-  type,
-}: TabSliderProps) {
+  type = "default",
+}: TabSliderProps<T>) {
   return (
     <div
       className={classNames(
         "flex",
-        type === "shadow" &&
-          "gap-4 rounded-xl border border-talearnt_Line_02 bg-talearnt_BG_Up_01 p-[7px]",
+        type?.startsWith("shadow") &&
+          "border border-talearnt_Line_02 bg-talearnt_BG_Up_01",
+        type === "shadow" && "gap-4 rounded-xl p-[7px]",
+        type === "shadow-small" && "gap-1 rounded-lg p-[3px]",
         className
       )}
     >
@@ -78,7 +85,7 @@ function TabSlider({
             type === "default" &&
               defaultStyle({ disabled, index, maxLength: array.length - 1 })
           )}
-          key={`${value}-${index}`}
+          key={`${String(value)}-${index}`}
         >
           <input
             checked={currentValue === value}
