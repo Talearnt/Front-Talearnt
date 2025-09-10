@@ -184,7 +184,8 @@ function CommunityArticleDetail() {
             <Badge label={postType} size={"medium"} />
             <button
               className={classNames(
-                "ml-auto rounded-lg border border-talearnt_Line_01 p-2",
+                "flex items-center gap-1",
+                "ml-auto rounded-lg border border-talearnt_Line_01 p-[7px]",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
@@ -192,6 +193,9 @@ function CommunityArticleDetail() {
                 isLoggedIn ? mutateLike(communityPostNo) : navigator("/sign-in")
               }
             >
+              <span className="text-caption2_12_medium text-talearnt_Text_03">
+                {likeCount}
+              </span>
               <ThumbsUpIcon
                 iconType={isLike ? "filled-blue" : "outlined"}
                 size={34}
