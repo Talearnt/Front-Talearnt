@@ -166,16 +166,16 @@ function MatchingArticleDetail() {
             <span className={"text-body1_18_semibold text-talearnt_Text_04"}>
               {dayjs(createdAt).format("YYYY-MM-DD")}
             </span>
-            <Badge
-              label={status}
-              color={status === "모집중" ? "skyblue" : "lightgray"}
-              size={"medium"}
-            />
-            {isMyArticle && (
+            {isMyArticle ? (
               <TabSlider<matchingArticleType["status"]>
-                className={"h-[60px]"}
                 currentValue={status}
-                onClickHandler={status => mutateChangeStatus({ status })}
+                onClickHandler={status =>
+                  setPrompt({
+                    title: `${status}으로 변경`,
+                    content: `${status}으로 변경할까요?\n변경하면 새로운 신청을 받을 수 ${status === "모집중" ? "있어요" : "없어요"}.`,
+                    confirmOnClickHandler: () => mutateChangeStatus({ status }),
+                  })
+                }
                 options={[
                   {
                     label: "모집중",
@@ -186,7 +186,13 @@ function MatchingArticleDetail() {
                     value: "모집 완료",
                   },
                 ]}
-                type={"shadow"}
+                type={"shadow-small"}
+              />
+            ) : (
+              <Badge
+                label={status}
+                color={status === "모집중" ? "skyblue" : "lightgray"}
+                size={"medium"}
               />
             )}
             <button
