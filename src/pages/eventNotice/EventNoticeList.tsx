@@ -84,7 +84,7 @@ function EventNoticeList() {
   }, [tab]);
 
   return (
-    <div className={classNames("flex flex-col", "w-[848px] pt-8")}>
+    <div className={classNames("flex flex-col", "w-[848px]")}>
       <TabSlider
         currentValue={selectedTab}
         options={eventNoticeTabOptions}

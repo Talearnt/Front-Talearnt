@@ -135,9 +135,7 @@ function MatchingArticleList() {
   }, [resetFilters]);
 
   return (
-    <div
-      className={classNames("relative", "flex flex-col items-center", "pt-8")}
-    >
+    <div className={classNames("relative", "flex flex-col items-center")}>
       {/*상단 필터*/}
       <div ref={filterRef} className={classNames("flex gap-4", "mb-6 w-full")}>
         <DropdownWithCategories

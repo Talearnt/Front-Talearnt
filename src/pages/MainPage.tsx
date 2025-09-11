@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-import { classNames } from "@shared/utils/classNames";
-
 import {
   useGetBestCommunityArticleList,
   useGetPersonalizedMatchingArticleList,
@@ -46,7 +44,7 @@ function MainPage() {
   } = useGetBestCommunityArticleList();
 
   return (
-    <div className={classNames("flex flex-col gap-14", "pt-10")}>
+    <div className={"flex flex-col gap-14"}>
       {/* 배너 */}
       <BannerCarousel />
       {personalizedMatchingArticleList.length === 0 &&

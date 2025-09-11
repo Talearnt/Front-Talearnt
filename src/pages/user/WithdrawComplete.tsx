@@ -36,7 +36,7 @@ function WithdrawComplete() {
     <div
       className={classNames(
         "flex flex-col items-center",
-        "mt-[96px] w-[632px] space-y-6"
+        "w-[632px] space-y-6"
       )}
     >
       <h1 className={"text-center text-heading1_30_semibold"}>

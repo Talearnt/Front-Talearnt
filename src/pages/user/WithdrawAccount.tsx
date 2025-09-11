@@ -41,12 +41,7 @@ function WithdrawAccount() {
   const { mutate: withdrawAccount } = useWithdrawAccount();
 
   return (
-    <div
-      className={classNames(
-        "flex flex-col justify-center",
-        "w-[632px] pt-[96px]"
-      )}
-    >
+    <div className={classNames("flex flex-col justify-center", "w-[632px]")}>
       <p
         className={classNames(
           "mb-2",
