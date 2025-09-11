@@ -15,8 +15,7 @@ import {
   replyType,
 } from "@features/articles/shared/articles.type";
 
-type ReplyProps = Pick<commentType, "commentNo"> &
-  Omit<replyType, "userNo" | "updatedAt">;
+type ReplyProps = Pick<commentType, "commentNo"> & Omit<replyType, "userNo">;
 
 function Reply({
   commentNo,
@@ -26,6 +25,7 @@ function Reply({
   content,
   createdAt,
   isDeleted,
+  updatedAt,
 }: ReplyProps) {
   const [isEdit, setIsEdit] = useState(false);
 
@@ -55,6 +55,7 @@ function Reply({
         profileImg={profileImg}
         authorNickname={authorNickname}
         createdAt={createdAt}
+        updatedAt={updatedAt}
         content={content}
         deletedData={{
           isDeleted,

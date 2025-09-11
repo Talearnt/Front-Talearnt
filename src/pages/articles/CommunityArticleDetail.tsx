@@ -74,6 +74,7 @@ function CommunityArticleDetail() {
         profileImg,
         title,
         userNo,
+        updatedAt,
       },
     },
     error,
@@ -180,6 +181,7 @@ function CommunityArticleDetail() {
             <div className={"h-5 w-px bg-talearnt_Line_01"} />
             <span className={"text-body1_18_semibold text-talearnt_Text_04"}>
               {dayjs(createdAt).format("YYYY-MM-DD")}
+              {updatedAt && ` (${dayjs(updatedAt).format("YYYY-MM-DD")} 수정)`}
             </span>
             <Badge label={postType} size={"medium"} />
             <button

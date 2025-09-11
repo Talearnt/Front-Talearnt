@@ -65,7 +65,7 @@ function WrittenCommentAndReplyList() {
       writtenReplyPageStore.setPage(1);
     }
   };
-  const handleEmptyStateButtonClick = () => navigator("community");
+  const handleEmptyStateButtonClick = () => navigator("/community");
   const handlePageChange = (page: number) => {
     currentPageStore.setPage(page);
     window.scrollTo({ top: 0 });
@@ -162,6 +162,7 @@ function WrittenCommentAndReplyList() {
                   </p>
                   <span className="text-caption1_14_medium text-talearnt_Text_03">
                     {dayjs(updatedAt ?? createdAt).format("YYYY.MM.DD HH:mm")}
+                    {updatedAt && ` (수정됨)`}
                   </span>
                 </div>
               );
