@@ -13,6 +13,7 @@ import { profileType } from "@features/user/profile/profile.type";
 type UserContentSectionProps = Pick<profileType, "profileImg"> & {
   authorNickname: string;
   createdAt: string;
+  updatedAt?: string;
   content: string;
   children?: ReactNode;
   deletedData?: {
@@ -24,6 +25,7 @@ type UserContentSectionProps = Pick<profileType, "profileImg"> & {
 function UserContentSection({
   profileImg,
   createdAt,
+  updatedAt,
   authorNickname,
   content,
   children,
@@ -34,6 +36,8 @@ function UserContentSection({
       data: { nickname },
     },
   } = useGetProfile();
+
+  const time = updatedAt ?? createdAt;
 
   return deletedData?.isDeleted ? (
     <div className={"flex flex-col gap-4"}>
@@ -68,15 +72,16 @@ function UserContentSection({
           <div className={"mx-2 h-[20px] w-px bg-talearnt_Line_01"} />
           <time
             className={"text-caption1_14_medium text-talearnt_Text_03"}
-            dateTime={dayjs(createdAt).format("YYYY.MM.DD")}
+            dateTime={dayjs(time).format("YYYY.MM.DD")}
           >
-            {dayjs(createdAt).format("YYYY.MM.DD")}
+            {dayjs(time).format("YYYY.MM.DD")}
           </time>
           <time
             className={"text-caption1_14_medium text-talearnt_Text_03"}
-            dateTime={dayjs(createdAt).format("HH:mm")}
+            dateTime={dayjs(time).format("HH:mm")}
           >
-            {dayjs(createdAt).format("HH:mm")}
+            {dayjs(time).format("HH:mm")}
+            {updatedAt && ` (수정됨)`}
           </time>
         </div>
         <p className={"text-body2_16_medium text-talearnt_Text_02"}>

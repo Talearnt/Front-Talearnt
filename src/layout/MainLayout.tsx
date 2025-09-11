@@ -142,7 +142,7 @@ function MainLayout() {
                 onClick={() => {
                   if (isLoggedIn) {
                     navigator(
-                      `write-article/${pathname.includes("community") ? "community" : "matching"}`
+                      `/write-article/${pathname.includes("community") ? "community" : "matching"}`
                     );
                   } else {
                     const noRedirectPage =
@@ -153,7 +153,7 @@ function MainLayout() {
                       pathname.startsWith("/find-account");
 
                     navigator(
-                      `sign-in${noRedirectPage ? "" : `?redirect=${encodeURIComponent(pathname + search)}`}`
+                      `/sign-in${noRedirectPage ? "" : `?redirect=${encodeURIComponent(pathname + search)}`}`
                     );
                   }
                 }}

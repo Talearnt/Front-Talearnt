@@ -23,7 +23,7 @@ import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
 
 import { commentType } from "@features/articles/shared/articles.type";
 
-type CommentProps = Omit<commentType, "updatedAt" | "userNo">;
+type CommentProps = Omit<commentType, "userNo">;
 
 const ActionButton = ({
   children,
@@ -46,6 +46,7 @@ function Comment({
   content,
   commentNo,
   createdAt,
+  updatedAt,
   isDeleted,
   nickname: commentAuthorNickname,
   profileImg,
@@ -91,6 +92,7 @@ function Comment({
       profileImg={profileImg}
       authorNickname={commentAuthorNickname}
       createdAt={createdAt}
+      updatedAt={updatedAt}
       content={content}
       deletedData={{
         isDeleted,

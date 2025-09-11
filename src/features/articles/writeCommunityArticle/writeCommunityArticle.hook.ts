@@ -298,7 +298,7 @@ export const usePutEditCommunityArticle = () => {
     onSuccess: (_data, { communityPostNo }) => {
       /* [onSuccess] 편집 상태 해제 후 이전 화면으로 복귀 */
       setEditCommunityArticle(null);
-      navigator(`community-article/${communityPostNo}`);
+      navigator(`/community-article/${communityPostNo}`);
     },
     onSettled: (_data, _error, { communityPostNo }) => {
       /* [onSettled] 성공/실패와 무관하게 최종 재검증 */

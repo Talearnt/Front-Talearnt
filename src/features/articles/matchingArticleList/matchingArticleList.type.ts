@@ -1,4 +1,5 @@
 import {
+  commonArticleDataType,
   durationType,
   exchangeType,
 } from "@features/articles/shared/articles.type";
@@ -10,9 +11,9 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
   Omit<
     matchingArticleBodyType,
     "giveTalents" | "receiveTalents" | "imageUrls"
-  > & {
+  > &
+  Pick<commonArticleDataType, "createdAt" | "updatedAt"> & {
     exchangePostNo: number;
-    createdAt: string;
     giveTalents: string[];
     receiveTalents: string[];
     status: "모집중" | "모집 완료";
@@ -24,6 +25,7 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
 //   "profileImg": null,
 //   "exchangePostNo": 0,
 //   "createdAt": "",
+//   "updatedAt": "",
 //   "title": "",
 //   "content": "",
 //   "giveTalents": [],
