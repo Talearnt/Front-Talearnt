@@ -17,7 +17,7 @@ const mailtoBody =
 
 function UserLayout() {
   return (
-    <div className={classNames("grid grid-cols-[277px_1fr] gap-12", "pt-8")}>
+    <div className={"grid grid-cols-[277px_1fr] gap-12"}>
       <div className={"flex flex-col gap-6"}>
         {userSidebarArray.map(({ category, items }) => (
           <div className={"flex flex-col gap-3"} key={category}>

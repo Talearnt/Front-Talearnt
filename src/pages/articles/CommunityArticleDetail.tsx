@@ -141,7 +141,7 @@ function CommunityArticleDetail() {
   }, [commentLastPage, isSuccess, setPage]);
 
   return (
-    <div className={classNames("flex flex-col gap-6", "h-full w-[848px] pt-8")}>
+    <div className={classNames("flex flex-col gap-6", "h-full w-[848px]")}>
       {isLoading ? (
         <AnimatedLoader />
       ) : (

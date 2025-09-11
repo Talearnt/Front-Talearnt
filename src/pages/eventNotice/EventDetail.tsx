@@ -19,7 +19,7 @@ function EventDetail() {
   } = useGetEventDetail();
 
   return (
-    <div className={classNames("flex flex-col", "h-full w-[848px] pt-8")}>
+    <div className={classNames("flex flex-col", "h-full w-[848px]")}>
       <span
         className={classNames(
           "mb-14",

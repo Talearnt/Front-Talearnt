@@ -64,6 +64,11 @@ function MainLayout() {
   useRealtimeNotifications();
 
   const unreadCount = getUnreadCount();
+  const isAuthPage =
+    pathname.startsWith("/sign-") ||
+    pathname.startsWith("/find-account") ||
+    pathname.startsWith("/kakao") ||
+    pathname.startsWith("/withdrawal");
 
   const handleScroll = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -145,12 +150,7 @@ function MainLayout() {
                       `/write-article/${pathname.includes("community") ? "community" : "matching"}`
                     );
                   } else {
-                    const noRedirectPage =
-                      pathname === "/" ||
-                      pathname === "/sign-in" ||
-                      pathname.startsWith("/kakao") ||
-                      pathname.startsWith("/sign-up") ||
-                      pathname.startsWith("/find-account");
+                    const noRedirectPage = pathname === "/" || isAuthPage;
 
                     navigator(
                       `/sign-in${noRedirectPage ? "" : `?redirect=${encodeURIComponent(pathname + search)}`}`
@@ -197,7 +197,12 @@ function MainLayout() {
       <div
         className={classNames("grid grid-rows-[1fr_208px]", "min-w-[1440px]")}
       >
-        <main className={"mx-auto w-[1440px] px-20"}>
+        <main
+          className={classNames(
+            "mx-auto w-[1440px] px-20",
+            isAuthPage ? "mt-24" : "mt-10"
+          )}
+        >
           <Outlet />
         </main>
         <footer

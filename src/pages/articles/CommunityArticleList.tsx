@@ -102,7 +102,7 @@ function CommunityArticleList() {
       className={classNames(
         "relative",
         "flex flex-col items-center",
-        "h-full w-[1284px] pt-8"
+        "h-full w-[1284px]"
       )}
     >
       {/*상단 필터*/}
