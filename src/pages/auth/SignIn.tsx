@@ -26,7 +26,7 @@ const signInSchema = object({
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
 const KAKAO_AUTH_URL = (redirect: string | null) =>
-  `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${import.meta.env.VITE_BASE_URL}kakao/oauth${redirect ? `&redirect_uri=${redirect}` : ""}&response_type=code`;
+  `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${window.location.origin}/kakao/oauth${redirect ? `&redirect_uri=${redirect}` : ""}&response_type=code`;
 
 function SignIn() {
   const navigator = useNavigate();
