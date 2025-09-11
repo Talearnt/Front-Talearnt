@@ -108,7 +108,7 @@ function WithdrawAccount() {
       <ul className={"mb-14 mt-6 space-y-4"}>
         {deletedItemsList.map(item => (
           <li className={"flex items-center gap-2"} key={item}>
-            <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_01"} />
+            <Dot className={"h-[6px] w-[6px] bg-talearnt_Text_02"} />
             <p className="text-body1_18_medium text-talearnt_Text_02">{item}</p>
           </li>
         ))}
@@ -125,7 +125,7 @@ function WithdrawAccount() {
         <ul className={"space-y-4"}>
           {withdrawalCautionList.map(caution => (
             <li className={"flex items-center gap-2"} key={caution}>
-              <Dot className={"h-[6px] w-[6px] bg-talearnt_Icon_03"} />
+              <Dot className={"h-[6px] w-[6px] bg-talearnt_Text_03"} />
               <p className="text-body2_16_medium text-talearnt_Text_03">
                 {caution}
               </p>
