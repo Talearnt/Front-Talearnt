@@ -21,7 +21,7 @@ export const usePostMatchingArticleFavorite = () => {
 
   return useMutation({
     mutationFn: postMatchingArticleFavorite,
-    onMutate: async (exchangePostNo: number) => {
+    onMutate: async ({ exchangePostNo, isFavorite }) => {
       /* [onMutate] 1) 관련 쿼리 키 */
       const detailQueryKey = QueryKeyFactory.matching.detail(exchangePostNo);
 
@@ -60,17 +60,12 @@ export const usePostMatchingArticleFavorite = () => {
           return oldData;
         }
 
-        const currentIsFavorite = oldData.data.isFavorite;
-        const currentFavoriteCount = oldData.data.favoriteCount;
-
         return {
           ...oldData,
           data: {
             ...oldData.data,
-            isFavorite: !currentIsFavorite,
-            favoriteCount: currentIsFavorite
-              ? currentFavoriteCount - 1
-              : currentFavoriteCount + 1,
+            isFavorite,
+            favoriteCount: oldData.data.favoriteCount + (isFavorite ? 1 : -1),
           },
         };
       });
@@ -92,10 +87,9 @@ export const usePostMatchingArticleFavorite = () => {
                 article.exchangePostNo === exchangePostNo
                   ? {
                       ...article,
-                      isFavorite: !article.isFavorite,
-                      favoriteCount: article.isFavorite
-                        ? article.favoriteCount - 1
-                        : article.favoriteCount + 1,
+                      isFavorite,
+                      favoriteCount:
+                        article.favoriteCount + (isFavorite ? 1 : -1),
                     }
                   : article
               ),
@@ -105,23 +99,6 @@ export const usePostMatchingArticleFavorite = () => {
       });
 
       /* [onMutate] 6) Optimistic Update - 활동 counts (증감량 반영) */
-      let isFavorite = true;
-
-      if (previousDetail) {
-        isFavorite = previousDetail.data.isFavorite;
-      } else {
-        for (const [, data] of previousLists) {
-          const found = data?.data.results.find(
-            article => article.exchangePostNo === exchangePostNo
-          );
-
-          if (found) {
-            isFavorite = found.isFavorite;
-            break;
-          }
-        }
-      }
-
       queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
         activityCountsQueryKey,
         oldData => {
@@ -140,14 +117,9 @@ export const usePostMatchingArticleFavorite = () => {
         }
       );
 
-      return {
-        previousDetail,
-        previousLists,
-        previousActivityCounts,
-        isFavorite,
-      };
+      return { previousDetail, previousLists, previousActivityCounts };
     },
-    onError: (_err, exchangePostNo, context) => {
+    onError: (_err, { exchangePostNo }, context) => {
       /* [onError] 스냅샷으로 롤백 */
       if (context?.previousDetail) {
         queryClient.setQueryData(

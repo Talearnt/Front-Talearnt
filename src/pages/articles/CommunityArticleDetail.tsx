@@ -192,7 +192,9 @@ function CommunityArticleDetail() {
                 "hover:bg-talearnt_BG_Up_01"
               )}
               onClick={() =>
-                isLoggedIn ? mutateLike(communityPostNo) : navigator("/sign-in")
+                isLoggedIn
+                  ? mutateLike({ communityPostNo, isLike: !isLike })
+                  : navigator("/sign-in")
               }
             >
               <span className="text-caption2_12_medium text-talearnt_Text_03">

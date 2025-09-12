@@ -205,7 +205,7 @@ function MatchingArticleDetail() {
               )}
               onClick={() =>
                 isLoggedIn
-                  ? mutateFavorite(exchangePostNo)
+                  ? mutateFavorite({ exchangePostNo, isFavorite: !isFavorite })
                   : navigator("/sign-in")
               }
             >

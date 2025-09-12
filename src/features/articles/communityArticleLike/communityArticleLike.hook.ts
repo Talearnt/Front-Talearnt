@@ -18,7 +18,7 @@ export const usePostCommunityArticleLike = () => {
 
   return useMutation({
     mutationFn: postCommunityArticleLike,
-    onMutate: async (communityPostNo: number) => {
+    onMutate: async ({ communityPostNo, isLike }) => {
       /* [onMutate] 1) 관련 쿼리 키 */
       const detailQueryKey = QueryKeyFactory.community.detail(communityPostNo);
 
@@ -48,17 +48,12 @@ export const usePostCommunityArticleLike = () => {
           return oldData;
         }
 
-        const currentIsLike = oldData.data.isLike;
-        const currentLikeCount = oldData.data.likeCount;
-
         return {
           ...oldData,
           data: {
             ...oldData.data,
-            isLike: !currentIsLike,
-            likeCount: currentIsLike
-              ? currentLikeCount - 1
-              : currentLikeCount + 1,
+            isLike,
+            likeCount: oldData.data.likeCount + (isLike ? 1 : -1),
           },
         };
       });
@@ -80,10 +75,8 @@ export const usePostCommunityArticleLike = () => {
                 article.communityPostNo === communityPostNo
                   ? {
                       ...article,
-                      isLike: !article.isLike,
-                      likeCount: article.isLike
-                        ? article.likeCount - 1
-                        : article.likeCount + 1,
+                      isLike,
+                      likeCount: article.likeCount + (isLike ? 1 : -1),
                     }
                   : article
               ),
@@ -94,7 +87,7 @@ export const usePostCommunityArticleLike = () => {
 
       return { previousDetail, previousLists };
     },
-    onError: (_err, communityPostNo, context) => {
+    onError: (_err, { communityPostNo }, context) => {
       /* [onError] 스냅샷으로 롤백 */
       if (context?.previousDetail) {
         queryClient.setQueryData(
