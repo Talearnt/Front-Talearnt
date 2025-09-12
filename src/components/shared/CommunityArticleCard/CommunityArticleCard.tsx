@@ -65,7 +65,7 @@ function CommunityArticleCard({
           onClick={e => {
             e.stopPropagation();
             if (isLoggedIn) {
-              mutate(communityPostNo);
+              mutate({ communityPostNo, isLike: !isLike });
             } else {
               navigator("/sign-in");
             }

@@ -118,7 +118,7 @@ function MatchingArticleCard({
           onClick={e => {
             e.stopPropagation();
             if (isLoggedIn) {
-              mutate(exchangePostNo);
+              mutate({ exchangePostNo, isFavorite: !isFavorite });
             } else {
               navigator("/sign-in");
             }
