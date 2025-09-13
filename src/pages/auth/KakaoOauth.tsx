@@ -18,8 +18,7 @@ function KakaoOauth() {
   const setResponse = useKakaoAuthResponseStore(state => state.setResponse);
 
   const code = searchParams.get("code");
-  const redirect = searchParams.get("redirect");
-  const decodedRedirect = redirect ? decodeURIComponent(redirect) : null;
+  const redirect = searchParams.get("state");
 
   useEffect(() => {
     if (code === null) {
@@ -29,8 +28,11 @@ function KakaoOauth() {
     getKakaoAccessToken(code)
       .then(({ data: { accessToken, isRegistered, ...data } }) => {
         if (isRegistered) {
-          setAccessToken(accessToken);
-          navigator(decodedRedirect || "/");
+          navigator(redirect ? decodeURIComponent(redirect) : "/");
+          // AuthLayout에서 /으로 이동되는 것을 방지하기 위해 setTimeout 사용
+          setTimeout(() => {
+            setAccessToken(accessToken);
+          }, 0);
         } else {
           setResponse(data);
           navigator("/kakao/info-fields");
@@ -56,7 +58,7 @@ function KakaoOauth() {
           });
         }
 
-        navigator("/sign-in");
+        navigator(`/sign-in${redirect ? `?redirect=${redirect}` : ""}`);
       });
   }, [code, navigator, redirect, setAccessToken, setPrompt, setResponse]);
 

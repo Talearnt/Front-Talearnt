@@ -76,7 +76,7 @@ function KakaoExtraInfo() {
     agreements[0] === false || // 필수 이용약관 동의 안 한 경우
     agreements[1] === false || // 필수 이용약관 동의 안 한 경우
     !nickname || // 닉네임 없는 경우
-    data?.data !== false; // 닉네임 중복인 경우
+    (data?.data !== undefined && data.data); // 닉네임 중복인 경우
 
   const handleAllCheckboxChange = ({
     target,

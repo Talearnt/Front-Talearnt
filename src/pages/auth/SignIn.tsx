@@ -26,7 +26,7 @@ const signInSchema = object({
 
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
 const KAKAO_AUTH_URL = (redirect: string | null) =>
-  `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${window.location.origin}/kakao/oauth${redirect ? `&redirect_uri=${redirect}` : ""}&response_type=code`;
+  `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${window.location.origin}/kakao/oauth&response_type=code${redirect ? `&state=${redirect}` : ""}`;
 
 function SignIn() {
   const navigator = useNavigate();
@@ -49,7 +49,6 @@ function SignIn() {
 
   const [userId, pw] = watch(["userId", "pw"]);
   const redirect = searchParams.get("redirect");
-  const decodedRedirect = redirect ? decodeURIComponent(redirect) : null;
 
   const handleSignIn = async ({ userId, pw, autoLogin }: signInBodyType) => {
     try {
@@ -57,7 +56,9 @@ function SignIn() {
       const { data } = await postSignIn({ userId, pw, autoLogin });
 
       setAccessToken(data.accessToken);
-      navigator(decodedRedirect || "/", { replace: true });
+      navigator(redirect ? decodeURIComponent(redirect) : "/", {
+        replace: true,
+      });
     } catch (e) {
       if (checkObjectType(e) && "errorMessage" in e) {
         setError("userId", { message: "" });
@@ -136,7 +137,7 @@ function SignIn() {
           "text-[#212121]",
           "hover:bg-[#FAE100]"
         )}
-        onClick={() => (window.location.href = KAKAO_AUTH_URL(decodedRedirect))}
+        onClick={() => (window.location.href = KAKAO_AUTH_URL(redirect))}
         disabled={isLoading}
       >
         <svg
