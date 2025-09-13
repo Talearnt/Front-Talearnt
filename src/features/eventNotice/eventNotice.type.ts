@@ -30,3 +30,5 @@ export type noticeDetailType = {
   noticeType: string;
   title: string;
 };
+
+export type eventNoticeTabType = "event" | "notice";

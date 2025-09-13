@@ -10,7 +10,7 @@ import { useGetProfile } from "@features/user/profile/profile.hook";
 import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { ArticleSection } from "@components/mainPage/ArticleSection/ArticleSection";
 import { BannerCarousel } from "@components/mainPage/BannerCarousel/BannerCarousel";
-import { NoticeEventTabSection } from "@components/mainPage/NoticeEventTabSection/NoticeEventTabSection";
+import { EventNoticeTabSection } from "@components/mainPage/EventNoticeTabSection/EventNoticeTabSection";
 import { CommunityArticleCard } from "@components/shared/CommunityArticleCard/CommunityArticleCard";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
@@ -96,7 +96,7 @@ function MainPage() {
         </>
       )}
       {/* 이벤트, 공지사항 */}
-      <NoticeEventTabSection />
+      <EventNoticeTabSection />
     </div>
   );
 }
