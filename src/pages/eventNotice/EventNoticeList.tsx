@@ -21,10 +21,9 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
 
-import {
-  eventNoticeTabOptions,
-  eventNoticeTabType,
-} from "@features/eventNotice/eventNotice.constants";
+import { eventNoticeTabOptions } from "@features/eventNotice/eventNotice.constants";
+
+import { eventNoticeTabType } from "@features/eventNotice/eventNotice.type";
 
 function EventNoticeList() {
   const { tab } = useParams();

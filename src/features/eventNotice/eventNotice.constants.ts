@@ -1,4 +1,4 @@
-export type eventNoticeTabType = "event" | "notice";
+import { eventNoticeTabType } from "./eventNotice.type";
 
 export const eventNoticeTabOptions: {
   label: string;

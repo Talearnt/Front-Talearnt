@@ -11,12 +11,11 @@ import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
 
-import {
-  eventNoticeTabOptions,
-  eventNoticeTabType,
-} from "@features/eventNotice/eventNotice.constants";
+import { eventNoticeTabOptions } from "@features/eventNotice/eventNotice.constants";
 
-function NoticeEventTabSection() {
+import { eventNoticeTabType } from "@features/eventNotice/eventNotice.type";
+
+function EventNoticeTabSection() {
   const [selectedTab, setSelectedTab] = useState<eventNoticeTabType>("event");
 
   // 공지사항 목록
@@ -31,6 +30,9 @@ function NoticeEventTabSection() {
       data: { results: eventList },
     },
   } = useGetEventList({ enabled: selectedTab === "event", size: 2 });
+
+  const hasList =
+    selectedTab === "event" ? eventList.length > 0 : noticeList.length > 0;
 
   return (
     <div
@@ -81,26 +83,41 @@ function NoticeEventTabSection() {
             text={"전체 보기"}
           />
         </div>
-        <div
-          className={classNames(
-            "grid gap-4",
-            selectedTab === "event" && "grid-cols-2 grid-rows-[248px]",
-            selectedTab === "notice" &&
-              "grid-cols-[repeat(4,214px)] grid-rows-[214px]"
-          )}
-        >
-          {selectedTab === "event" &&
-            eventList.map(event => (
-              <EventBanner {...event} key={event.eventNo} />
-            ))}
-          {selectedTab === "notice" &&
-            noticeList.map(notice => (
-              <NoticeCard {...notice} key={notice.noticeNo} />
-            ))}
-        </div>
+        {hasList ? (
+          <div
+            className={classNames(
+              "grid gap-4",
+              selectedTab === "event" && "grid-cols-2 grid-rows-[248px]",
+              selectedTab === "notice" &&
+                "grid-cols-[repeat(4,214px)] grid-rows-[214px]"
+            )}
+          >
+            {selectedTab === "event" &&
+              eventList.map(event => (
+                <EventBanner {...event} key={event.eventNo} />
+              ))}
+            {selectedTab === "notice" &&
+              noticeList.map(notice => (
+                <NoticeCard {...notice} key={notice.noticeNo} />
+              ))}
+          </div>
+        ) : (
+          <div
+            className={"flex flex-1 flex-col items-center justify-center gap-1"}
+          >
+            <p className={"text-heading2_24_semibold text-talearnt_Text_01"}>
+              등록된 {selectedTab === "event" ? "이벤트가" : "공지사항이"}&nbsp;
+              없어요
+            </p>
+            <p className={"text-body2_16_medium text-talearnt_Text_02"}>
+              좋은 {selectedTab === "event" ? "이벤트를" : "공지사항을"}&nbsp;
+              가져올게요 조금만 기다려 주세요
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export { NoticeEventTabSection };
+export { EventNoticeTabSection };
