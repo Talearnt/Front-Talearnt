@@ -14,78 +14,38 @@ function Footer() {
     >
       <div className={"flex justify-between"}>
         <LogoIcon />
-        <div className={"flex gap-14"}>
-          <div className={"flex flex-col gap-4"}>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                개인정보보호책임자 성명
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                정운만
-              </span>
-            </div>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                개인정보보호책임자 연락처
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                010-0000-0000
-              </span>
-            </div>
+        <div className={"flex gap-8"}>
+          <div className={"flex flex-col gap-1"}>
+            <span className="text-caption2_12_semibold text-talearnt_Text_03">
+              회사명
+            </span>
+            <span className="text-caption1_14_medium text-talearnt_Text_02">
+              세븐피커
+            </span>
           </div>
-          <div className={"flex flex-col gap-4"}>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                회사명
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                (주)탤런트
-              </span>
-            </div>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                대표 이사
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                정운만
-              </span>
-            </div>
+          <div className={"flex flex-col gap-1"}>
+            <span className="text-caption2_12_semibold text-talearnt_Text_03">
+              사업자등록번호
+            </span>
+            <span className="text-caption1_14_medium text-talearnt_Text_02">
+              418-35-01518
+            </span>
           </div>
-          <div className={"flex flex-col gap-4"}>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                대표 전화번호
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                02-0000-0000
-              </span>
-            </div>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                대표 이메일
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                talearnt@gmail.com
-              </span>
-            </div>
+          <div className={"flex flex-col gap-1"}>
+            <span className="text-caption2_12_semibold text-talearnt_Text_03">
+              대표자
+            </span>
+            <span className="text-caption1_14_medium text-talearnt_Text_02">
+              정운만
+            </span>
           </div>
-          <div className={"flex flex-col gap-4"}>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                사업자등록번호
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                000-00-00000
-              </span>
-            </div>
-            <div className={"flex flex-col gap-1"}>
-              <span className="text-caption2_12_semibold text-talearnt_Text_03">
-                주소
-              </span>
-              <span className="text-caption1_14_medium text-talearnt_Text_02">
-                서울특별시 강남구 어쩌구 저쩌구 OO로 00-00
-              </span>
-            </div>
+          <div className={"flex flex-col gap-1"}>
+            <span className="text-caption2_12_semibold text-talearnt_Text_03">
+              대표 이메일
+            </span>
+            <span className="text-caption1_14_medium text-talearnt_Text_02">
+              woong9421@nate.com
+            </span>
           </div>
         </div>
       </div>
