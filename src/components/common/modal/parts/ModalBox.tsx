@@ -5,9 +5,10 @@ import { classNames } from "@shared/utils/classNames";
 type ModalBoxProps = {
   className?: string;
   children: ReactNode;
+  width: number;
 };
 
-function ModalBox({ className, children }: ModalBoxProps) {
+function ModalBox({ className, children, width }: ModalBoxProps) {
   return (
     <div
       className={classNames(
@@ -15,6 +16,11 @@ function ModalBox({ className, children }: ModalBoxProps) {
         "h-fit overflow-hidden rounded-3xl bg-talearnt_BG_Background shadow-shadow_03",
         className
       )}
+      style={{
+        width,
+        minWidth: width,
+        maxWidth: width,
+      }}
     >
       {children}
     </div>

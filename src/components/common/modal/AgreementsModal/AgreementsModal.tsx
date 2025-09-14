@@ -43,7 +43,7 @@ function AgreementsModal({
 
   return (
     <ModalContainer>
-      <ModalBox className="max-h-[80vh] w-[500px]">
+      <ModalBox width={500}>
         <ModalHeader onCloseHandler={onClose}>
           <h1 className="text-heading3_22_semibold text-talearnt_Text_Strong">
             {title}

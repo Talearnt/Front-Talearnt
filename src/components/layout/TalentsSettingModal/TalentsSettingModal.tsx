@@ -7,7 +7,7 @@ import { TalentsSettingModalHeader } from "@components/layout/TalentsSettingModa
 function TalentsSettingModal() {
   return (
     <ModalContainer>
-      <ModalBox className={"w-[600px]"}>
+      <ModalBox width={600}>
         <TalentsSettingModalHeader />
         <TalentsSettingModalBody />
         <TalentsSettingModalBottom />
