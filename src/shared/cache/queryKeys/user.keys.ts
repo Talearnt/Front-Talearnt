@@ -28,6 +28,10 @@ export const UserQueryKeys = {
     createQueryKey([QueryKeyEnum.USER, "notificationSetting"], {
       isLoggedIn: true,
     }),
+  agreements: () =>
+    createQueryKey([QueryKeyEnum.USER, "agreements"], {
+      isLoggedIn: true,
+    }),
 
   /**
    * 사용자 작성글

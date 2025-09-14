@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import articlesRouter from "@routes/articles";
 import authRouter from "@routes/auth";
+import etcRouter from "@routes/etc";
 import eventNoticeRouter from "@routes/eventNotice";
 import userRouter from "@routes/user";
 
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       ...articlesRouter,
       ...eventNoticeRouter,
       ...userRouter,
+      ...etcRouter,
     ],
   },
 ]);

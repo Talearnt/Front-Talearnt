@@ -25,4 +25,10 @@ export const USER_CACHE_POLICIES = {
     staleTime: 10 * 60 * 1000, // 10분
     gcTime: 30 * 60 * 1000, // 30분
   },
+
+  // 약관 동의 - 변경 빈도 낮음
+  AGREEMENTS: {
+    staleTime: 10 * 60 * 1000, // 10분
+    gcTime: 30 * 60 * 1000, // 30분
+  },
 } as const;
