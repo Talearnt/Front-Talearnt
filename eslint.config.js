@@ -100,7 +100,7 @@ export default [
             ["^@shared/constants/.*|^.+\\.(json|constants)$"],
 
             // 13. 이미지
-            ["^.+\\.(svg)$"],
+            ["^.+\\.(svg|png|png)$"],
 
             // 14. 타입
             ["^.+\\.type$"],

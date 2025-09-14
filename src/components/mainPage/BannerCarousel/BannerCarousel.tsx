@@ -4,12 +4,17 @@ import { useCarousel } from "@shared/hooks/useCarousel";
 
 import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 
+import banner from "@assets/banner.png";
+
 const caretIconClass = classNames(
   "absolute top-1/2 -translate-y-1/2",
   "rounded-full bg-talearnt_BG_Background stroke-talearnt_Icon_01 shadow-shadow_03"
 );
 
 function BannerCarousel() {
+  const bannerList = [banner];
+  const isMultiple = bannerList.length > 1;
+
   const {
     emblaRef,
     currentIndex,
@@ -18,61 +23,69 @@ function BannerCarousel() {
     scrollNext,
     toggleAutoplay,
   } = useCarousel({
-    autoplay: true,
+    autoplay: isMultiple,
     autoplayOptions: { playOnInit: false, delay: 500 },
-    carouselOptions: { loop: true },
-    trackIndexStates: true,
+    carouselOptions: { loop: isMultiple },
+    trackIndexStates: isMultiple,
   });
 
   return (
     <div className={"relative"}>
       <div className={"overflow-hidden"} ref={emblaRef}>
         <div className={"flex"}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div
+          {bannerList.map((src, index) => (
+            <img
               className={classNames(
                 "flex-shrink-0 flex-grow-0 basis-full",
-                "mr-5 min-w-0"
+                "min-w-0 rounded-[20px]",
+                "cursor-pointer",
+                isMultiple && "mr-5"
               )}
+              src={src}
+              alt={`banner-${index}`}
+              onClick={() =>
+                window.open(
+                  "https://www.notion.so/26f4336bc4c080a2b3eaccc4728f3f91",
+                  "_blank"
+                )
+              }
               key={`banner-${index}`}
-            >
-              <div
-                className={classNames(
-                  "flex items-center justify-center",
-                  "h-[300px] rounded-[20px] bg-[#1B76FF]",
-                  "text-heading1_30_semibold text-talearnt_On_Primary"
-                )}
-              >
-                배너 {index + 1}
-              </div>
-            </div>
+            />
           ))}
         </div>
       </div>
-      <div
-        className={classNames(
-          "absolute bottom-4 left-1/2 -translate-x-1/2",
-          "flex items-center gap-[10px]"
-        )}
-      >
-        <span className={"text-body3_14_semibold text-talearnt_Text_02"}>
-          {currentIndex + 1}/3
-        </span>
-        <button onClick={toggleAutoplay}>
-          {isAutoPlaying ? <PauseIcon /> : <StartIcon />}
-        </button>
-      </div>
-      <CaretIcon
-        className={classNames(caretIconClass, "left-[-25px]")}
-        onClick={scrollPrev}
-        direction={"left"}
-        size={50}
-      />
-      <CaretIcon
-        className={classNames(caretIconClass, "right-[-25px]")}
-        onClick={scrollNext}
-        size={50}
-      />
+      {isMultiple && (
+        <>
+          <div
+            className={classNames(
+              "absolute bottom-4 left-1/2 -translate-x-1/2",
+              "flex items-center gap-[10px]"
+            )}
+          >
+            <span className={"text-body3_14_semibold text-talearnt_Text_02"}>
+              {currentIndex + 1}/{bannerList.length}
+            </span>
+            <button onClick={toggleAutoplay}>
+              {isAutoPlaying ? <PauseIcon /> : <StartIcon />}
+            </button>
+          </div>
+          {currentIndex > 0 && (
+            <CaretIcon
+              className={classNames(caretIconClass, "left-[-25px]")}
+              onClick={scrollPrev}
+              direction={"left"}
+              size={50}
+            />
+          )}
+          {currentIndex < bannerList.length - 1 && (
+            <CaretIcon
+              className={classNames(caretIconClass, "right-[-25px]")}
+              onClick={scrollNext}
+              size={50}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }
