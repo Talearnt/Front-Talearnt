@@ -79,7 +79,7 @@ function MainLayout() {
       <Header />
       <div
         className={classNames(
-          "grid grid-rows-[1fr_min-content]",
+          "grid flex-1 grid-rows-[1fr_min-content]",
           "min-w-[1440px]"
         )}
       >

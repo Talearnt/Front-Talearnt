@@ -3,6 +3,17 @@
 @import "tailwindcss/utilities";
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
   * {
     letter-spacing: -0.02em;
     font-family: "Pretendard", sans-serif;
