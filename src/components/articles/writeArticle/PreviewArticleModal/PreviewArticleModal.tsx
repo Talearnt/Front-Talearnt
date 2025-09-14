@@ -54,7 +54,7 @@ function PreviewArticleModal({
 
   return (
     <ModalContainer>
-      <ModalBox className={"w-[800px]"}>
+      <ModalBox width={800}>
         <ModalHeader>
           <h1 className={"text-heading3_22_semibold text-talearnt_Text_Strong"}>
             미리보기
