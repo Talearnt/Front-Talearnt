@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,6 +23,8 @@ import {
 import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";
 
+import { AgreementsModal } from "@components/common/modal/AgreementsModal/AgreementsModal";
+
 import { Button } from "@components/common/Button/Button";
 import { Checkbox } from "@components/common/Checkbox/Checkbox";
 import { Input } from "@components/common/inputs/Input/Input";
@@ -33,6 +35,8 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { nicknameRegex } from "@features/auth/shared/authRegex.constants";
 import { genderOptions } from "@features/auth/signUp/signUp.constants";
 
+import { agreementIdType } from "@features/auth/signUp/signUp.type";
+
 const kakaoExtraInfoSchema = object({
   nickname: string().matches(nicknameRegex, "match"),
 }).required();
@@ -41,12 +45,24 @@ function KakaoExtraInfo() {
   const navigator = useNavigate();
   const nickNameRef = useRef<string>("");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentAgreementsType, setCurrentAgreementsType] =
+    useState<agreementIdType | null>(null);
+
   const agreementsList = useAgreementStore(state => state.agreements);
   const kakaoAuthResponse = useKakaoAuthResponseStore(
     state => state.kakaoAuthResponse
   );
   const setToast = useToastStore(state => state.setToast);
   const setPrompt = usePromptStore(state => state.setPrompt);
+
+  const handleOpenModal = (termsType: agreementIdType) => {
+    setCurrentAgreementsType(termsType);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const {
     formState: { errors },
@@ -228,7 +244,7 @@ function KakaoExtraInfo() {
             전체 동의하기 (선택 정보를 포함합니다.)
           </span>
         </Checkbox>
-        {agreementsList.map(({ agreeCodeId, required, title }) => (
+        {agreementsList.map(({ agreeCodeId, required, title, id }) => (
           <Checkbox
             className={classNames(
               "gap-4",
@@ -239,7 +255,7 @@ function KakaoExtraInfo() {
             }}
             key={agreeCodeId}
           >
-            <span className={classNames("w-full", "text-body2_16_semibold")}>
+            <span className={"text-body2_16_semibold"}>
               {required ? (
                 <span className={"text-talearnt_Error_01"}>(필수)</span>
               ) : (
@@ -248,12 +264,25 @@ function KakaoExtraInfo() {
               &nbsp;
               {title}
             </span>
+            <Button
+              className={"ml-auto w-[95px]"}
+              onClick={() => handleOpenModal(id)}
+              buttonStyle={"outlined"}
+              size={"small"}
+            >
+              보기
+            </Button>
           </Checkbox>
         ))}
       </div>
       <Button disabled={buttonIsDisabled} onClick={handleSignUp}>
         가입하기
       </Button>
+      <AgreementsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        agreementsType={currentAgreementsType}
+      />
     </>
   );
 }

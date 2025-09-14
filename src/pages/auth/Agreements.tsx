@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/shallow";
@@ -6,11 +7,19 @@ import { classNames } from "@shared/utils/classNames";
 
 import { useAgreementStore } from "@features/auth/signUp/signUp.store";
 
+import { AgreementsModal } from "@components/common/modal/AgreementsModal/AgreementsModal";
+
 import { Button } from "@components/common/Button/Button";
 import { Checkbox } from "@components/common/Checkbox/Checkbox";
 
+import { agreementIdType } from "@features/auth/signUp/signUp.type";
+
 function Agreements() {
   const navigator = useNavigate();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentAgreementsType, setCurrentAgreementsType] =
+    useState<agreementIdType | null>(null);
 
   const {
     agreements,
@@ -27,6 +36,12 @@ function Agreements() {
       setAgreement: state.setAgreement,
     }))
   );
+
+  const handleOpenModal = (termsType: agreementIdType) => {
+    setCurrentAgreementsType(termsType);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <>
@@ -47,7 +62,7 @@ function Agreements() {
             전체 동의하기 (선택 정보를 포함합니다.)
           </span>
         </Checkbox>
-        {agreements.map(({ agreeCodeId, agree, required, title }) => (
+        {agreements.map(({ agreeCodeId, agree, required, title, id }) => (
           <Checkbox
             className={classNames(
               "gap-4",
@@ -57,7 +72,7 @@ function Agreements() {
             onChange={({ target }) => setAgreement(agreeCodeId, target.checked)}
             key={agreeCodeId}
           >
-            <p className={"w-full text-body2_16_semibold"}>
+            <p className={"text-body2_16_semibold"}>
               {required ? (
                 <span className={"text-talearnt_Error_01"}>(필수)</span>
               ) : (
@@ -66,6 +81,14 @@ function Agreements() {
               &nbsp;
               {title}
             </p>
+            <Button
+              className={"ml-auto w-[95px]"}
+              onClick={() => handleOpenModal(id)}
+              buttonStyle={"outlined"}
+              size={"small"}
+            >
+              보기
+            </Button>
           </Checkbox>
         ))}
       </div>
@@ -75,6 +98,11 @@ function Agreements() {
       >
         시작하기
       </Button>
+      <AgreementsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        agreementsType={currentAgreementsType}
+      />
     </>
   );
 }

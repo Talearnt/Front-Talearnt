@@ -217,9 +217,7 @@ function PreviewArticleModal({
           </div>
         </ModalBody>
         <ModalBottom className={"justify-center"}>
-          <Button onClick={onCloseHandler} size={"large"}>
-            확인
-          </Button>
+          <Button onClick={onCloseHandler}>확인</Button>
         </ModalBottom>
       </ModalBox>
     </ModalContainer>

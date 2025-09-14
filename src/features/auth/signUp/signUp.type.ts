@@ -1,11 +1,14 @@
 // 이용 약관
 import { accountType } from "@features/auth/shared/account.type";
 
+export type agreementIdType = "terms" | "privacy" | "marketing" | "advertising";
+
 export type agreementType = {
   agreeCodeId: number;
   agree: boolean;
   required: boolean;
   title: string;
+  id: agreementIdType;
 };
 
 // 회원가입 body

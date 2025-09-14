@@ -116,7 +116,7 @@ function Footer() {
               "px-3 py-[11px]",
               "text-body3_14_medium text-talearnt_Text_02"
             )}
-            to={"event-notice/event"}
+            to={"/event-notice/event"}
           >
             이벤트
           </Link>
@@ -126,7 +126,7 @@ function Footer() {
               "px-3 py-[11px]",
               "text-body3_14_medium text-talearnt_Text_02"
             )}
-            to={"event-notice/notice"}
+            to={"/event-notice/notice"}
           >
             공지사항
           </Link>
@@ -136,7 +136,7 @@ function Footer() {
               "px-3 py-[11px]",
               "text-body3_14_medium text-talearnt_Text_02"
             )}
-            to={"event-notice/notice"}
+            to={"/agreements/terms"}
           >
             이용약관
           </Link>
@@ -146,7 +146,7 @@ function Footer() {
               "px-3 py-[11px]",
               "text-body3_14_medium text-talearnt_Text_02"
             )}
-            to={"event-notice/notice"}
+            to={"/agreements/privacy"}
           >
             개인정보처리방침
           </Link>
