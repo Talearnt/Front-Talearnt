@@ -11,13 +11,13 @@ import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 
-interface ArticleSectionProps {
+type ArticleSectionProps = {
   children: ReactElement[] | null;
   title: ReactNode;
   articleType?: "matching" | "community";
-}
+};
 
-export function ArticleSection({
+function ArticleSection({
   children,
   title,
   articleType = "matching",
@@ -35,7 +35,7 @@ export function ArticleSection({
       trackButtonStates: true,
     });
 
-  const hasChildren = children.length > 0;
+  const hasChildren = children && children.length > 0;
   const type = articleType === "community" ? "커뮤니티" : "매칭";
 
   return (
@@ -121,3 +121,5 @@ export function ArticleSection({
     </div>
   );
 }
+
+export { ArticleSection };
