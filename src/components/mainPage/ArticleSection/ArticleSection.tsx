@@ -12,7 +12,7 @@ import { CaretIcon } from "@components/common/icons/caret/CaretIcon";
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 
 interface ArticleSectionProps {
-  children: ReactElement[];
+  children: ReactElement[] | null;
   title: ReactNode;
   articleType?: "matching" | "community";
 }

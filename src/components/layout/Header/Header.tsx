@@ -121,7 +121,7 @@ function Header() {
                 {unreadCount > 0 && (
                   <span
                     className={classNames(
-                      "absolute right-[1px] top-[1px]",
+                      "absolute right-px top-px",
                       "grid place-items-center",
                       "h-[13px] min-w-[13px] rounded-full bg-talearnt_Error_03 px-1",
                       "text-label1_10_semibold text-talearnt_On_Primary"

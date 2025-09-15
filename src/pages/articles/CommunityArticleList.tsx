@@ -147,7 +147,7 @@ function CommunityArticleList() {
             className={classNames(
               "relative", // z-index 를 적용하기 위함
               "flex items-center gap-6",
-              "z-10 mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_02 px-6"
+              "z-[1] mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_02 px-6"
             )}
           >
             <th
@@ -273,16 +273,12 @@ function CommunityArticleList() {
         // dim
         <div
           className={classNames(
-            "fixed top-[90px]",
-            "h-[calc(100vh-90px)] w-full bg-white/70"
+            "absolute left-0 top-0",
+            "grid place-items-center",
+            "z-[49] h-full w-full bg-white/70"
           )}
         >
-          <AnimatedLoader
-            className={classNames(
-              "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            )}
-            isGray={results.length > 0}
-          />
+          <AnimatedLoader isGray={results.length > 0} />
         </div>
       )}
       {/*페이지네이션*/}

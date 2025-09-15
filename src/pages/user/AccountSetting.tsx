@@ -107,7 +107,7 @@ function AccountSetting() {
               />
             </div>
           </div>
-          <div className="h-[1px] w-full bg-talearnt_Line_01" />
+          <div className="h-px w-full bg-talearnt_Line_01" />
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2">
               <span className="text-heading4_20_semibold text-talearnt_Text_01">

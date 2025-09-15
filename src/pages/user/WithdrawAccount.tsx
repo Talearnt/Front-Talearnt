@@ -60,7 +60,7 @@ function WithdrawAccount() {
       >
         이유를 알려주실 수 있나요? 서비스 개선에 큰 도움이 돼요
       </p>
-      <div className="mb-6 h-[1px] w-full bg-talearnt_Line_01" />
+      <div className="mb-6 h-px w-full bg-talearnt_Line_01" />
       <span className="text-heading3_22_semibold text-talearnt_Text_Strong">
         탈퇴 사유 (선택)
       </span>
@@ -96,7 +96,7 @@ function WithdrawAccount() {
           setWithdrawal(prev => ({ ...prev, detailedReason: target.value }))
         }
       />
-      <div className="mb-6 h-[1px] w-full bg-talearnt_Line_01" />
+      <div className="mb-6 h-px w-full bg-talearnt_Line_01" />
       <span className="text-heading3_22_semibold text-talearnt_Text_Strong">
         삭제되는 항목
       </span>

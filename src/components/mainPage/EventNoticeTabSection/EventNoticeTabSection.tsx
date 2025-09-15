@@ -10,6 +10,8 @@ import {
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
+import { SkeletonEventBanner } from "@components/shared/SkeletonEventBanner/SkeletonEventBanner";
+import { SkeletonNoticeCard } from "@components/shared/SkeletonNoticeCard/SkeletonNoticeCard";
 
 import { eventNoticeTabOptions } from "@features/eventNotice/eventNotice.constants";
 
@@ -23,16 +25,22 @@ function EventNoticeTabSection() {
     data: {
       data: { results: noticeList },
     },
+    isSuccess: isNoticeListSuccess,
+    isLoading: isNoticeListLoading,
   } = useGetNoticeList({ enabled: selectedTab === "notice", size: 4 });
   // 이벤트 목록
   const {
     data: {
       data: { results: eventList },
     },
+    isSuccess: isEventListSuccess,
+    isLoading: isEventListLoading,
   } = useGetEventList({ enabled: selectedTab === "event", size: 2 });
 
   const hasList =
-    selectedTab === "event" ? eventList.length > 0 : noticeList.length > 0;
+    selectedTab === "event"
+      ? eventList.length > 0 && isEventListSuccess
+      : noticeList.length > 0 && isNoticeListSuccess;
 
   return (
     <div
@@ -93,13 +101,21 @@ function EventNoticeTabSection() {
             )}
           >
             {selectedTab === "event" &&
-              eventList.map(event => (
-                <EventBanner {...event} key={event.eventNo} />
-              ))}
+              (isEventListLoading
+                ? Array.from({ length: 2 }).map((_, index) => (
+                    <SkeletonEventBanner key={index} />
+                  ))
+                : eventList.map(event => (
+                    <EventBanner {...event} key={event.eventNo} />
+                  )))}
             {selectedTab === "notice" &&
-              noticeList.map(notice => (
-                <NoticeCard {...notice} key={notice.noticeNo} />
-              ))}
+              (isNoticeListLoading
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <SkeletonNoticeCard key={index} />
+                  ))
+                : noticeList.map(notice => (
+                    <NoticeCard {...notice} type="main" key={notice.noticeNo} />
+                  )))}
           </div>
         ) : (
           <div

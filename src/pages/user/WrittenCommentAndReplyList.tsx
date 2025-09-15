@@ -20,6 +20,7 @@ import { Badge } from "@components/common/Badge/Badge";
 import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { Pagination } from "@components/common/Pagination/Pagination";
 import { TabSlider } from "@components/common/TabSlider/TabSlider";
+import { SkeletonCommentCard } from "@components/shared/SkeletonCommentCard/SkeletonCommentCard";
 
 import {
   writtenCommentType,
@@ -51,9 +52,11 @@ function WrittenCommentAndReplyList() {
 
   const {
     data: { data: writtenCommentList },
+    isLoading: isCommentLoading,
   } = useGetWrittenCommentList(tab === "comment");
   const {
     data: { data: writtenReplyList },
+    isLoading: isReplyLoading,
   } = useGetWrittenReplyList(tab === "reply");
 
   const handleTabChange = (value: string) => {
@@ -76,6 +79,8 @@ function WrittenCommentAndReplyList() {
   const currentPageStore =
     tab === "comment" ? writtenCommentPageStore : writtenReplyPageStore;
   const currentTabLabel = tab === "comment" ? "댓글" : "답변";
+  const isCurrentTabLoading =
+    tab === "comment" ? isCommentLoading : isReplyLoading;
 
   return (
     <div className={"flex flex-col"}>
@@ -85,7 +90,20 @@ function WrittenCommentAndReplyList() {
         onClickHandler={handleTabChange}
         type={"shadow"}
       />
-      {results.length === 0 ? (
+      {isCurrentTabLoading ? (
+        <>
+          <div className={classNames("flex items-center", "my-4 h-10")}>
+            <div className="h-6 w-8 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="ml-1 h-7 w-12 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="h-6 w-[150px] animate-pulse rounded-sm bg-talearnt_Icon_04" />
+          </div>
+          <div className={"flex flex-col gap-6"}>
+            {Array.from({ length: 6 }, (_, index) => (
+              <SkeletonCommentCard key={index} />
+            ))}
+          </div>
+        </>
+      ) : results.length === 0 ? (
         <div
           className={classNames(
             "grid place-items-center",
