@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { RouteObject } from "react-router-dom";
 
+import PublicRoute from "@routes/PublicRoute";
+
 import FindAccountLayout from "@layout/auth/FindAccountLayout";
 import KakaoLayout from "@layout/auth/KakaoLayout";
 import SignUpLayout from "@layout/auth/SignUpLayout";
@@ -27,14 +29,20 @@ const InfoFields = lazy(() => import("@pages/auth/InfoFields"));
 const authRouter: RouteObject[] = [
   {
     element: (
-      <Suspense>
-        <SignIn />
-      </Suspense>
+      <PublicRoute>
+        <Suspense>
+          <SignIn />
+        </Suspense>
+      </PublicRoute>
     ),
     path: "sign-in",
   },
   {
-    element: <KakaoLayout />,
+    element: (
+      <PublicRoute>
+        <KakaoLayout />
+      </PublicRoute>
+    ),
     path: "kakao",
     children: [
       {
@@ -64,7 +72,11 @@ const authRouter: RouteObject[] = [
     ],
   },
   {
-    element: <SignUpLayout />,
+    element: (
+      <PublicRoute>
+        <SignUpLayout />
+      </PublicRoute>
+    ),
     path: "sign-up",
     children: [
       {
@@ -94,7 +106,11 @@ const authRouter: RouteObject[] = [
     ],
   },
   {
-    element: <FindAccountLayout />,
+    element: (
+      <PublicRoute>
+        <FindAccountLayout />
+      </PublicRoute>
+    ),
     path: "find-account",
     children: [
       {
