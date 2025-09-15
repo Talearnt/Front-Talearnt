@@ -43,7 +43,8 @@ function DropdownLabeled<T = string>({
   return (
     <div
       ref={wrapperRef}
-      className={classNames("relative w-fit", width && `w-[${width}px]`)}
+      className={classNames("relative w-fit")}
+      style={{ width }}
     >
       <label
         className={classNames(

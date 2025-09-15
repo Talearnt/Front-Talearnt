@@ -272,16 +272,12 @@ function MatchingArticleList() {
         // dim
         <div
           className={classNames(
-            "fixed top-[90px]",
-            "h-[calc(100vh-90px)] w-full bg-white/70"
+            "absolute left-0 top-0",
+            "grid place-items-center",
+            "z-[49] h-full w-full bg-white/70"
           )}
         >
-          <AnimatedLoader
-            className={classNames(
-              "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            )}
-            isGray={displayResults.length > 0}
-          />
+          <AnimatedLoader isGray={displayResults.length > 0} />
         </div>
       )}
       {/*페이지네이션*/}

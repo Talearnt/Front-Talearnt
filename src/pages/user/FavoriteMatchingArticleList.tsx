@@ -9,6 +9,7 @@ import { useFavoriteMatchingArticlePageStore } from "@features/user/favoriteMatc
 import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { Pagination } from "@components/common/Pagination/Pagination";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
+import { SkeletonMatchingArticleCard } from "@components/shared/SkeletonMatchingArticleCard/SkeletonMatchingArticleCard";
 
 function FavoriteMatchingArticleList() {
   const navigator = useNavigate();
@@ -20,9 +21,27 @@ function FavoriteMatchingArticleList() {
         pagination: { totalCount, totalPages },
       },
     },
+    isLoading,
   } = useGetFavoriteMatchingArticleList();
 
   const { page, setPage } = useFavoriteMatchingArticlePageStore();
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col">
+        <div className={classNames("flex items-center", "mb-4 h-10")}>
+          <div className="h-6 w-8 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+          <div className="ml-1 h-7 w-12 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+          <div className="h-6 w-[180px] animate-pulse rounded-sm bg-talearnt_Icon_04" />
+        </div>
+        <div className={"grid grid-cols-[repeat(3,305px)] gap-5"}>
+          {Array.from({ length: 9 }, (_, index) => (
+            <SkeletonMatchingArticleCard key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

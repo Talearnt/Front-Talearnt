@@ -20,7 +20,7 @@ import {
 import "./Toolbar.css";
 
 function Divider() {
-  return <div className={"h-6 w-[1px] bg-talearnt_Line_01"} />;
+  return <div className={"h-6 w-px bg-talearnt_Line_01"} />;
 }
 
 function Toolbar() {

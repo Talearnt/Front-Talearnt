@@ -51,7 +51,7 @@ function NotificationSetting() {
             }}
           />
         </div>
-        <div className="h-[1px] w-full bg-talearnt_Line_01" />
+        <div className="h-px w-full bg-talearnt_Line_01" />
         <div className="flex items-center justify-between">
           <span className="text-heading4_20_semibold text-talearnt_Text_01">
             댓글 알림 허용

@@ -20,6 +20,8 @@ import { Pagination } from "@components/common/Pagination/Pagination";
 import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
+import { SkeletonEventBanner } from "@components/shared/SkeletonEventBanner/SkeletonEventBanner";
+import { SkeletonNoticeCard } from "@components/shared/SkeletonNoticeCard/SkeletonNoticeCard";
 
 import { eventNoticeTabOptions } from "@features/eventNotice/eventNotice.constants";
 
@@ -49,10 +51,12 @@ function EventNoticeList() {
   // 이벤트 목록
   const {
     data: { data: eventList },
+    isLoading: isEventLoading,
   } = useGetEventList({ enabled: selectedTab === "event" });
   // 공지사항 목록
   const {
     data: { data: noticeList },
+    isLoading: isNoticeLoading,
   } = useGetNoticeList({ enabled: selectedTab === "notice" });
 
   const {
@@ -62,6 +66,8 @@ function EventNoticeList() {
   const { page, setPage } =
     selectedTab === "event" ? eventPageStore : noticePageStore;
   const currentTabLabel = selectedTab === "event" ? "이벤트가" : "공지사항이";
+  const isCurrentTabLoading =
+    selectedTab === "event" ? isEventLoading : isNoticeLoading;
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value as eventNoticeTabType);
@@ -90,7 +96,28 @@ function EventNoticeList() {
         onClickHandler={handleTabChange}
         type={"shadow"}
       />
-      {results.length === 0 ? (
+      {isCurrentTabLoading ? (
+        <>
+          <div className={classNames("flex items-center", "my-4 h-10")}>
+            <div className="h-6 w-8 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="ml-1 h-7 w-12 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="h-6 w-[180px] animate-pulse rounded-sm bg-talearnt_Icon_04" />
+          </div>
+          {selectedTab === "event" ? (
+            <div className={"grid grid-cols-2 gap-x-5 gap-y-6"}>
+              {Array.from({ length: 6 }, (_, index) => (
+                <SkeletonEventBanner key={index} />
+              ))}
+            </div>
+          ) : (
+            <div className={"flex flex-col gap-6"}>
+              {Array.from({ length: 6 }, (_, index) => (
+                <SkeletonNoticeCard key={index} />
+              ))}
+            </div>
+          )}
+        </>
+      ) : results.length === 0 ? (
         <div
           className={classNames("grid place-items-center", "mt-6 h-[756px]")}
         >
@@ -126,7 +153,7 @@ function EventNoticeList() {
           ) : (
             <div className={"flex flex-col gap-6"}>
               {noticeList.results.map(notice => (
-                <NoticeCard {...notice} key={notice.noticeNo} />
+                <NoticeCard {...notice} type="list" key={notice.noticeNo} />
               ))}
             </div>
           )}

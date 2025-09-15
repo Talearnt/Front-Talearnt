@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import { classNames } from "@shared/utils/classNames";
 
@@ -10,6 +11,8 @@ import {
 import { ChatIcon } from "@components/common/icons/styled/ChatIcon";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
 import { NoteIcon } from "@components/common/icons/styled/NoteIcon";
+import { SkeletonActivityCard } from "@components/shared/SkeletonActivityCard/SkeletonActivityCard";
+import { SkeletonProfileCard } from "@components/shared/SkeletonProfileCard/SkeletonProfileCard";
 import { ProfileEditForm } from "@components/user/profile/ProfileEditForm";
 import { ProfileView } from "@components/user/profile/ProfileView";
 
@@ -30,11 +33,14 @@ function Profile() {
     data: {
       data: { nickname, profileImg, giveTalents, receiveTalents },
     },
+    isSuccess: isProfileSuccess,
+    isLoading: isProfileLoading,
   } = useGetProfile();
   const {
     data: {
       data: { favoritePostCount, myPostCount, myCommentCount },
     },
+    isLoading: isActivityLoading,
   } = useGetActivityCounts();
 
   const profileButtons = [
@@ -42,16 +48,19 @@ function Profile() {
       label: "찜 목록",
       icon: <HeartIcon iconType="filled-blue" size={24} />,
       count: favoritePostCount,
+      to: "/user/favorites",
     },
     {
       label: "작성한 게시물",
       icon: <NoteIcon iconType="filled-blue" size={24} />,
       count: myPostCount,
+      to: "/user/articles",
     },
     {
       label: "작성한 댓글",
       icon: <ChatIcon iconType="filled-blue" size={24} />,
       count: myCommentCount,
+      to: "/user/comments",
     },
   ];
 
@@ -66,7 +75,7 @@ function Profile() {
           >
             내 프로필
           </span>
-          {!isEditProfile && (
+          {!isEditProfile && isProfileSuccess && (
             <button
               className={classNames(
                 "h-10 rounded-lg px-3",
@@ -87,33 +96,37 @@ function Profile() {
             </button>
           )}
         </div>
-        <div
-          className={classNames(
-            "flex flex-col gap-6",
-            "rounded-2xl border border-talearnt_Line_01 p-[23px]"
-          )}
-        >
-          {isEditProfile ? (
-            <ProfileEditForm
-              originalProfileData={{
-                profileImg,
-                nickname,
-                giveTalents,
-                receiveTalents,
-              }}
-              editProfileData={editProfileData}
-              setEditProfileData={setEditProfileData}
-              setIsEditProfile={setIsEditProfile}
-            />
-          ) : (
-            <ProfileView
-              profileImg={profileImg}
-              nickname={nickname}
-              giveTalents={giveTalents}
-              receiveTalents={receiveTalents}
-            />
-          )}
-        </div>
+        {isProfileLoading ? (
+          <SkeletonProfileCard />
+        ) : (
+          <div
+            className={classNames(
+              "flex flex-col gap-6",
+              "rounded-2xl border border-talearnt_Line_01 p-[23px]"
+            )}
+          >
+            {isEditProfile ? (
+              <ProfileEditForm
+                originalProfileData={{
+                  profileImg,
+                  nickname,
+                  giveTalents,
+                  receiveTalents,
+                }}
+                editProfileData={editProfileData}
+                setEditProfileData={setEditProfileData}
+                setIsEditProfile={setIsEditProfile}
+              />
+            ) : (
+              <ProfileView
+                profileImg={profileImg}
+                nickname={nickname}
+                giveTalents={giveTalents}
+                receiveTalents={receiveTalents}
+              />
+            )}
+          </div>
+        )}
       </div>
       <div className={"flex flex-col gap-4"}>
         <span
@@ -124,32 +137,37 @@ function Profile() {
           내 활동
         </span>
         <div className={"grid grid-cols-3 gap-5"}>
-          {profileButtons.map(({ label, icon, count }) => (
-            <button
-              key={label}
-              className={classNames(
-                "flex flex-col gap-[14px]",
-                "rounded-2xl border border-talearnt_Line_01 p-[23px]",
-                "hover:bg-talearnt_BG_Up_01"
-              )}
-            >
-              <div className={"flex items-center justify-between"}>
-                <span
-                  className={"text-body2_16_semibold text-talearnt_Text_01"}
+          {isActivityLoading
+            ? Array.from({ length: 3 }, (_, index) => (
+                <SkeletonActivityCard key={index} />
+              ))
+            : profileButtons.map(({ label, icon, count, to }) => (
+                <NavLink
+                  className={classNames(
+                    "flex flex-col gap-[14px]",
+                    "rounded-2xl border border-talearnt_Line_01 p-[23px]",
+                    "hover:bg-talearnt_BG_Up_01"
+                  )}
+                  to={to}
+                  key={label}
                 >
-                  {label}
-                </span>
-                {icon}
-              </div>
-              <span
-                className={
-                  "text-left text-heading2_24_semibold text-talearnt_Text_01"
-                }
-              >
-                {count}
-              </span>
-            </button>
-          ))}
+                  <div className={"flex items-center justify-between"}>
+                    <span
+                      className={"text-body2_16_semibold text-talearnt_Text_01"}
+                    >
+                      {label}
+                    </span>
+                    {icon}
+                  </div>
+                  <span
+                    className={
+                      "text-left text-heading2_24_semibold text-talearnt_Text_01"
+                    }
+                  >
+                    {count}
+                  </span>
+                </NavLink>
+              ))}
         </div>
       </div>
     </div>

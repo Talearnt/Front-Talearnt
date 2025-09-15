@@ -20,6 +20,8 @@ import { Pagination } from "@components/common/Pagination/Pagination";
 import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { CommunityArticleCard } from "@components/shared/CommunityArticleCard/CommunityArticleCard";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
+import { SkeletonCommunityArticleCard } from "@components/shared/SkeletonCommunityArticleCard/SkeletonCommunityArticleCard";
+import { SkeletonMatchingArticleCard } from "@components/shared/SkeletonMatchingArticleCard/SkeletonMatchingArticleCard";
 
 import { communityArticleType } from "@features/articles/communityArticleList/communityArticleList.type";
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
@@ -49,9 +51,11 @@ function WrittenArticleList() {
 
   const {
     data: { data: writtenMatchingArticleList },
+    isLoading: isMatchingLoading,
   } = useGetWrittenMatchingArticleList(tab === "matching");
   const {
     data: { data: writtenCommunityArticleList },
+    isLoading: isCommunityLoading,
   } = useGetWrittenCommunityArticleList(tab === "community");
 
   const handleTabChange = (value: string) => {
@@ -78,6 +82,8 @@ function WrittenArticleList() {
       ? writtenMatchingArticlePageStore
       : writtenCommunityArticlePageStore;
   const currentTabLabel = tab === "matching" ? "매칭" : "커뮤니티";
+  const isCurrentTabLoading =
+    tab === "matching" ? isMatchingLoading : isCommunityLoading;
 
   return (
     <div className={"flex flex-col"}>
@@ -87,7 +93,24 @@ function WrittenArticleList() {
         onClickHandler={handleTabChange}
         type={"shadow"}
       />
-      {results.length === 0 ? (
+      {isCurrentTabLoading ? (
+        <>
+          <div className={classNames("flex items-center", "my-4 h-10")}>
+            <div className="h-6 w-8 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="ml-1 h-7 w-12 animate-pulse rounded-sm bg-talearnt_Icon_04" />
+            <div className="h-6 w-[200px] animate-pulse rounded-sm bg-talearnt_Icon_04" />
+          </div>
+          <div className={"grid grid-cols-[repeat(3,305px)] gap-5"}>
+            {Array.from({ length: 9 }, (_, index) =>
+              tab === "matching" ? (
+                <SkeletonMatchingArticleCard key={index} />
+              ) : (
+                <SkeletonCommunityArticleCard key={index} />
+              )
+            )}
+          </div>
+        </>
+      ) : results.length === 0 ? (
         <div
           className={classNames(
             "grid place-items-center",

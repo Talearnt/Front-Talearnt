@@ -8,13 +8,18 @@ import { Badge } from "@components/common/Badge/Badge";
 
 import { noticeType } from "@features/eventNotice/eventNotice.type";
 
+type NoticeCardProps = noticeType & {
+  type: "main" | "list";
+};
+
 function NoticeCard({
   noticeType,
   title,
   content,
   createdAt,
   noticeNo,
-}: noticeType) {
+  type,
+}: NoticeCardProps) {
   const navigator = useNavigate();
 
   return (
@@ -33,16 +38,20 @@ function NoticeCard({
         )}
       </div>
       <h2
-        className={
-          "line-clamp-1 text-heading4_20_semibold text-talearnt_Text_Strong"
-        }
+        className={classNames(
+          "text-heading4_20_semibold text-talearnt_Text_Strong",
+          type === "main" && "line-clamp-2 h-[52px]",
+          type === "list" && "line-clamp-1"
+        )}
       >
         {title}
       </h2>
       <p
         className={classNames(
           "mb-3",
-          "line-clamp-1 text-body3_14_medium text-talearnt_Text_03"
+          "text-body3_14_medium text-talearnt_Text_03",
+          type === "main" && "line-clamp-2 h-[36.4px]",
+          type === "list" && "line-clamp-1"
         )}
       >
         {content}
