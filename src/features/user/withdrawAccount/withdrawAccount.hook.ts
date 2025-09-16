@@ -14,8 +14,8 @@ export const useWithdrawAccount = () => {
 
   return useMutation({
     mutationFn: postWithdrawAccount,
-    onSuccess: () =>
+    onSuccess: ({ data }) =>
       /** 탈퇴 완료 페이지로 이동 */
-      navigator("/withdrawal-complete"),
+      navigator("/withdrawal-complete", { state: data }),
   });
 };
