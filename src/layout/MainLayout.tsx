@@ -77,12 +77,7 @@ function MainLayout() {
   return (
     <>
       <Header />
-      <div
-        className={classNames(
-          "grid flex-1 grid-rows-[1fr_min-content]",
-          "min-w-[1440px]"
-        )}
-      >
+      <div className={classNames("flex-1", "min-w-[1440px]")}>
         <main
           className={classNames(
             "mx-auto w-[1440px] px-20",
@@ -91,8 +86,8 @@ function MainLayout() {
         >
           <Outlet />
         </main>
-        <Footer />
       </div>
+      <Footer />
       <Toast />
       <Prompt />
       {isTopButtonVisible && <TopButton />}
