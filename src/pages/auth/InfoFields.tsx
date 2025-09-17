@@ -109,6 +109,7 @@ function InfoFields() {
     "pw",
     "checkedPw",
   ]);
+  const isDebounceNickname = debounceNickname !== nickname;
   const doneButtonDisable =
     !nickname || // 닉네임 없는 경우
     !name || // 이름 없는 경우
@@ -117,6 +118,7 @@ function InfoFields() {
     !checkedPw || // 확인 비밀번호 없는 경우
     pw !== checkedPw || // 비밀번호와 확인 비밀번호가 다른 경우
     (data?.data !== undefined && data.data) || // 닉네임 중복인 경우
+    isDebounceNickname || // 닉네임 디바운스 중인 경우
     userIdData?.data !== false || // 아이디 중복인 경우
     Object.keys(errors).length > 0; // 그 외 에러가 있는 경우(matches 등)
 
@@ -217,7 +219,7 @@ function InfoFields() {
                 }
                 formData={{ ...register("nickname") }}
                 insideNode={
-                  isLoading ? (
+                  isDebounceNickname ? undefined : isLoading ? (
                     <Spinner />
                   ) : data?.data ? (
                     <LabelText type={"error"}>사용불가</LabelText>

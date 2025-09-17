@@ -35,7 +35,7 @@ import { TabSlider } from "@components/common/TabSlider/TabSlider";
 import { nicknameRegex } from "@features/auth/shared/authRegex.constants";
 import { genderOptions } from "@features/auth/signUp/signUp.constants";
 
-import { agreementIdType } from "@features/auth/signUp/signUp.type";
+import type { agreementIdType } from "@features/auth/signUp/signUp.type";
 
 const kakaoExtraInfoSchema = object({
   nickname: string().matches(nicknameRegex, "match"),
@@ -88,10 +88,12 @@ function KakaoExtraInfo() {
     agreementsList.map(({ agreeCodeId }) => agreeCodeId.toString())
   );
   const [nickname] = watch(["nickname"]);
+  const isDebounceNickname = debounceNickname !== nickname;
   const buttonIsDisabled =
     agreements[0] === false || // 필수 이용약관 동의 안 한 경우
     agreements[1] === false || // 필수 이용약관 동의 안 한 경우
     !nickname || // 닉네임 없는 경우
+    isDebounceNickname || // 닉네임 디바운스 중인 경우
     (data?.data !== undefined && data.data); // 닉네임 중복인 경우
 
   const handleAllCheckboxChange = ({
@@ -192,7 +194,7 @@ function KakaoExtraInfo() {
             }
             formData={{ ...register("nickname") }}
             insideNode={
-              isLoading ? (
+              isDebounceNickname ? undefined : isLoading ? (
                 <Spinner />
               ) : data?.data ? (
                 <LabelText type={"error"}>사용불가</LabelText>
