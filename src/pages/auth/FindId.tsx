@@ -35,7 +35,7 @@ function FindId() {
   const navigator = useNavigate();
   const idData = useRef<findIdResponseType>({
     userId: "",
-    createdAt: "",
+    sentDate: "",
   });
 
   const [canProceed, setCanProceed] = useState(false);
@@ -129,7 +129,7 @@ function FindId() {
                 <span
                   className={"text-caption1_14_medium text-talearnt_Error_01"}
                 >
-                  {dayjs(idData.current.createdAt).format("YYYY-MM-DD HH:mm")}에
+                  {dayjs(idData.current.sentDate).format("YYYY-MM-DD HH:mm")}에
                   가입함
                 </span>
               </div>
