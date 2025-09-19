@@ -35,6 +35,7 @@ function FindPassword() {
     formState: { errors },
     register,
     setError,
+    clearErrors,
     watch,
   } = useForm({
     mode: "onChange",
@@ -110,7 +111,11 @@ function FindPassword() {
           <div className={"flex flex-col gap-6"}>
             <Input
               error={errors.userId?.message}
-              formData={{ ...register("userId") }}
+              formData={{
+                ...register("userId", {
+                  onChange: () => clearErrors(),
+                }),
+              }}
               label={"이메일"}
               placeholder={"이메일을 입력해 주세요"}
             />
@@ -124,7 +129,10 @@ function FindPassword() {
           </div>
           <Button
             disabled={
-              !userId || phone?.length !== 11 || Object.keys(errors).length > 0
+              !userId ||
+              phone?.length !== 11 ||
+              Object.keys(errors).length > 0 ||
+              isLoading
             }
             onClick={handleFindPassword}
           >
