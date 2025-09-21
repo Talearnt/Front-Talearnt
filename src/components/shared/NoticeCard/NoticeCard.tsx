@@ -27,7 +27,8 @@ function NoticeCard({
       className={classNames(
         "flex flex-col gap-2",
         "rounded-2xl border border-talearnt_Line_01 bg-talearnt_BG_Background p-[23px]",
-        "cursor-pointer"
+        "cursor-pointer",
+        "hover:border-talearnt_Primary_01 hover:shadow-shadow_02"
       )}
       onClick={() => navigator(`/event-notice/notice/${noticeNo}`)}
     >
