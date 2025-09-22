@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useShallow } from "zustand/react/shallow";
 
@@ -122,7 +122,9 @@ function Notifications({ onClose }: NotificationsProps) {
         <span className={"text-body1_18_semibold text-talearnt_Text_Strong"}>
           알림
         </span>
-        <SettingIcon className={"stroke-talearnt_Icon_01"} />
+        <Link onClick={onClose} to={"/user/notification"}>
+          <SettingIcon className={"stroke-talearnt_Icon_01"} />
+        </Link>
       </div>
       <div
         className={classNames(
