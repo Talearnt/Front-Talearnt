@@ -113,23 +113,24 @@ function Header() {
             <>
               <div className={classNames("relative", "flex")}>
                 <button
-                  className={"p-1"}
+                  className={classNames("relative", "p-1")}
                   onClick={() => setIsNotificationsOpen(prev => !prev)}
                 >
                   <NotificationIcon className={"stroke-talearnt_Icon_01"} />
+                  {unreadCount === 0 && (
+                    <span
+                      className={classNames(
+                        "absolute right-px top-px",
+                        "grid place-items-center",
+                        "h-[13px] min-w-[13px] rounded-full bg-talearnt_Error_03 px-1",
+                        "text-label1_10_semibold text-talearnt_On_Primary"
+                      )}
+                    >
+                      {/* {unreadCount > 99 ? "99+" : unreadCount} */}
+                      11
+                    </span>
+                  )}
                 </button>
-                {unreadCount > 0 && (
-                  <span
-                    className={classNames(
-                      "absolute right-px top-px",
-                      "grid place-items-center",
-                      "h-[13px] min-w-[13px] rounded-full bg-talearnt_Error_03 px-1",
-                      "text-label1_10_semibold text-talearnt_On_Primary"
-                    )}
-                  >
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
                 {isNotificationsOpen && (
                   <Notifications
                     onClose={() => setIsNotificationsOpen(false)}
