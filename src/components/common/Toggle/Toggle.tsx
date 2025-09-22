@@ -22,7 +22,7 @@ export function Toggle({ checked, ...props }: ComponentProps<"input">) {
       <span
         className={classNames(
           "absolute left-[3px] top-[3px]",
-          "h-[22px] w-[22px] rounded-full bg-talearnt_BG_Up_02 transition-transform duration-300",
+          "h-[22px] w-[22px] rounded-full bg-talearnt_On_Primary transition-transform duration-300",
           checked ? "translate-x-[20px]" : "translate-x-0"
         )}
       />
