@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode, useEffect, useRef } from "react";
+import { ComponentProps, FormEvent, ReactNode, useEffect, useRef } from "react";
 
 import { cva, VariantProps } from "class-variance-authority";
 import { UseFormRegisterReturn } from "react-hook-form/dist/types/form";
@@ -72,6 +72,8 @@ function Input({
   label,
   wrapperClassName,
   size,
+  maxLength,
+  onInput,
   ...props
 }: InputProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -85,6 +87,12 @@ function Input({
     if (formData?.ref) {
       formData.ref(node);
     }
+  };
+  const handleInput = (e: FormEvent<HTMLInputElement>) => {
+    if (maxLength && e.currentTarget.value.length > maxLength) {
+      e.currentTarget.value = e.currentTarget.value.slice(0, maxLength);
+    }
+    onInput?.(e);
   };
 
   useEffect(() => {
@@ -119,6 +127,7 @@ function Input({
               className
             )}
             id={id}
+            onInput={handleInput}
             {...formData}
             {...props}
             ref={combinedRef}
