@@ -66,7 +66,7 @@ function InfoFields() {
   const nickNameRef = useRef<string>("");
   const navigator = useNavigate();
 
-  const [canProceed, setCanProceed] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false,
   });
@@ -229,6 +229,7 @@ function InfoFields() {
                 }
                 label={"닉네임"}
                 placeholder={"닉네임을 입력해 주세요"}
+                maxLength={12}
               />
               {data?.data !== true && (
                 <>

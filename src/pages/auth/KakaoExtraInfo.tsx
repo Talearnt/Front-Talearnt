@@ -204,6 +204,7 @@ function KakaoExtraInfo() {
             }
             label={"닉네임"}
             placeholder={"닉네임을 입력해 주세요"}
+            maxLength={12}
           />
           {data?.data !== true && (
             <>
