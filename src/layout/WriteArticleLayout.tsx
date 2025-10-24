@@ -60,7 +60,7 @@ function WriteArticleLayout() {
       )}
     >
       <TabSlider
-        className={"mx-auto mb-2 w-min"}
+        className={"mx-auto mb-2 w-full"}
         currentValue={pathname}
         onClickHandler={value => navigator(value)}
         options={articleTypeOptions}

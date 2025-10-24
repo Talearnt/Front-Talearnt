@@ -67,7 +67,7 @@ function Pagination({
         return (
           <button
             className={classNames(
-              "h-8 w-8 rounded-sm bg-talearnt_BG_Background",
+              "h-8 w-8 rounded-s bg-talearnt_BG_Background",
               "text-body3_14_medium text-talearnt_Text_03",
               "hover:bg-talearnt_BG_Up_02",
               "cursor-pointer",

@@ -179,7 +179,7 @@ function CommunityArticleDetail() {
               {nickname}
             </span>
             <div className={"h-5 w-px bg-talearnt_Line_01"} />
-            <span className={"text-body1_18_semibold text-talearnt_Text_04"}>
+            <span className={"text-body1_18_medium text-talearnt_Text_04"}>
               {dayjs(createdAt).format("YYYY-MM-DD")}
               {updatedAt && ` (${dayjs(updatedAt).format("YYYY-MM-DD")} 수정)`}
             </span>
@@ -187,7 +187,7 @@ function CommunityArticleDetail() {
             <button
               className={classNames(
                 "flex items-center gap-1",
-                "ml-auto rounded-lg border border-talearnt_Line_01 p-[7px]",
+                "ml-auto rounded-lg p-2 shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
