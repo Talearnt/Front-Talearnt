@@ -164,7 +164,7 @@ function MatchingArticleDetail() {
               {nickname}
             </span>
             <div className={"h-5 w-px bg-talearnt_Line_01"} />
-            <span className={"text-body1_18_semibold text-talearnt_Text_04"}>
+            <span className={"text-body1_18_medium text-talearnt_Text_04"}>
               {dayjs(createdAt).format("YYYY-MM-DD")}
               {updatedAt && ` (${dayjs(updatedAt).format("YYYY-MM-DD")} 수정)`}
             </span>
@@ -199,7 +199,7 @@ function MatchingArticleDetail() {
             )}
             <button
               className={classNames(
-                "ml-auto rounded-lg border border-talearnt_Line_01 p-2",
+                "ml-auto rounded-lg p-2 shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
@@ -234,7 +234,7 @@ function MatchingArticleDetail() {
             </div>
             <div className={"flex flex-col gap-2"}>
               <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
-                받고 싶은 나의 재능
+                받고 싶은 상대의 재능
               </label>
               <div className={"flex flex-wrap gap-2"}>
                 {receiveTalents.map(talentName => (

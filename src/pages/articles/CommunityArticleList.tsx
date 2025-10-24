@@ -137,7 +137,7 @@ function CommunityArticleList() {
           }
           selectedValue={postType}
           label={"전체 게시판"}
-          width={180}
+          width={190}
         />
       </div>
       {/*매칭 게시물 목록 결과*/}
@@ -147,7 +147,7 @@ function CommunityArticleList() {
             className={classNames(
               "relative", // z-index 를 적용하기 위함
               "flex items-center gap-6",
-              "z-[1] mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_02 px-6"
+              "z-[1] mb-2 h-[55px] rounded-lg bg-talearnt_BG_Up_01 px-6"
             )}
           >
             <th
@@ -206,8 +206,9 @@ function CommunityArticleList() {
               <tr
                 className={classNames(
                   "flex items-center gap-6",
-                  "mb-2 h-[60px] px-4",
+                  "mb-2 h-[60px] bg-talearnt_BG_Background px-4",
                   "cursor-pointer",
+                  "hover:bg-talearnt_BG_Up_01",
                   communityPostNo === writeCommunityArticleId &&
                     "animate-new_community_article_slide rounded-lg border border-transparent"
                 )}
