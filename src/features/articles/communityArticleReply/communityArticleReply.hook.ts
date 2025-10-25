@@ -19,6 +19,8 @@ import { QueryKeyFactory } from "@shared/cache/queryKeys/queryKeyFactory";
 
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
+import { useToastStore } from "@store/toast.store";
+
 import {
   commentType,
   replyType,
@@ -322,6 +324,8 @@ export const useDeleteCommunityArticleReply = (
 
   const queryClient = useQueryClient();
 
+  const setToast = useToastStore(state => state.setToast);
+
   const postNo = Number(communityPostNo);
   const commentQueryKey = QueryKeyFactory.comment.lists(postNo);
   const replyQueryKey = QueryKeyFactory.reply.list(postNo, commentNo);
@@ -413,6 +417,7 @@ export const useDeleteCommunityArticleReply = (
         queryClient.setQueryData(key, data);
       });
     },
+    onSuccess: () => setToast({ message: "답글이 삭제되었습니다." }),
     onSettled: () => {
       /* [onSettled] 답글 목록 무효화 */
       void queryClient.invalidateQueries({

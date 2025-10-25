@@ -6,6 +6,8 @@ import {
 } from "@features/articles/communityArticleReply/communityArticleReply.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
+import { usePromptStore } from "@store/prompt.store";
+
 import { UserContentSection } from "@components/articles/communityArticleDetail/UserContentSection/UserContentSection";
 import { UserContentWrite } from "@components/articles/communityArticleDetail/UserContentWrite/UserContentWrite";
 import { Dot } from "@components/common/Dot/Dot";
@@ -28,6 +30,8 @@ function Reply({
   updatedAt,
 }: ReplyProps) {
   const [isEdit, setIsEdit] = useState(false);
+
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const {
     data: {
@@ -73,7 +77,16 @@ function Reply({
             <Dot />
             <button
               className={"text-caption2_12_semibold text-talearnt_Text_03"}
-              onClick={() => mutate()}
+              onClick={() =>
+                setPrompt({
+                  title: "답글 삭제",
+                  content:
+                    "정말 답글을 삭제하시겠어요? 삭제한 답글은 되돌릴 수 없어요.",
+                  cancelText: "취소",
+                  confirmText: "삭제",
+                  confirmOnClickHandler: () => mutate(),
+                })
+              }
             >
               삭제하기
             </button>

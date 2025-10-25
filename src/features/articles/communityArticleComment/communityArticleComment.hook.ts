@@ -17,6 +17,7 @@ import { useGetProfile } from "@features/user/profile/profile.hook";
 import { useQueryWithInitial } from "@shared/hooks/useQueryWithInitial";
 
 import { useCommunityArticleCommentPageStore } from "@features/articles/communityArticleComment/communityArticleComment.store";
+import { useToastStore } from "@store/toast.store";
 
 import { communityArticleDetailType } from "@features/articles/communityArticleDetail/communityArticleDetail.type";
 import { commentType } from "@features/articles/shared/articles.type";
@@ -331,6 +332,7 @@ export const useDeleteCommunityArticleComment = () => {
   const queryClient = useQueryClient();
 
   const page = useCommunityArticleCommentPageStore(state => state.page);
+  const setToast = useToastStore(state => state.setToast);
 
   const postNo = Number(communityPostNo);
   const commentKey = QueryKeyFactory.comment.list(postNo, page);
@@ -424,6 +426,7 @@ export const useDeleteCommunityArticleComment = () => {
         queryClient.setQueryData(commentKey, context.prevComments);
       }
     },
+    onSuccess: () => setToast({ message: "댓글이 삭제되었습니다" }),
     onSettled: () => {
       /* [onSettled] 댓글 목록 무효화 */
       void queryClient.invalidateQueries({

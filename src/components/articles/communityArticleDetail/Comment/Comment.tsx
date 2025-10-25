@@ -12,6 +12,7 @@ import {
 } from "@features/articles/communityArticleReply/communityArticleReply.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
+import { usePromptStore } from "@store/prompt.store";
 import { useAuthStore } from "@store/user.store";
 
 import { Reply } from "@components/articles/communityArticleDetail/Reply/Reply";
@@ -57,6 +58,7 @@ function Comment({
   const [isEdit, setIsEdit] = useState(false);
 
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const {
     data: {
@@ -116,7 +118,17 @@ function Comment({
                   수정하기
                 </ActionButton>
                 <ActionButton
-                  onClick={() => deleteCommunityArticleComment(commentNo)}
+                  onClick={() =>
+                    setPrompt({
+                      title: "댓글 삭제",
+                      content:
+                        "정말 댓글을 삭제하시겠어요? 삭제한 댓글은 되돌릴 수 없어요.",
+                      cancelText: "취소",
+                      confirmText: "삭제",
+                      confirmOnClickHandler: () =>
+                        deleteCommunityArticleComment(commentNo),
+                    })
+                  }
                 >
                   삭제하기
                 </ActionButton>
