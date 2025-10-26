@@ -57,7 +57,7 @@ function ProfileView({
       <div className={"h-px w-full bg-talearnt_Line_01"} />
       <div className={"flex flex-col gap-2"}>
         <span className={"text-body2_16_semibold text-talearnt_Text_01"}>
-          받고 싶은 나의 재능
+          받고 싶은 상대의 재능
         </span>
         <div className={"flex gap-3"}>
           {receiveTalentsList.map(({ talentCode, talentName }) => (

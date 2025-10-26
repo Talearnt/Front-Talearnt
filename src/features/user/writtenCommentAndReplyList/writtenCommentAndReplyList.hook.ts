@@ -39,7 +39,7 @@ export const useGetWrittenCommentList = (enabled: boolean) => {
   );
 };
 
-// 작성한 답변 목록 조회
+// 작성한 답글 목록 조회
 export const useGetWrittenReplyList = (enabled: boolean) => {
   const page = useWrittenReplyPageStore(state => state.page);
 

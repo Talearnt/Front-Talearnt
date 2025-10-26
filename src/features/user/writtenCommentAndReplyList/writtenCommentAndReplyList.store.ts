@@ -8,7 +8,7 @@ export const useWrittenCommentPageStore = create<pageStoreType>(set => ({
   setPage: page => set({ page }),
 }));
 
-// 작성한 답변 목록 페이지 스토어
+// 작성한 답글 목록 페이지 스토어
 export const useWrittenReplyPageStore = create<pageStoreType>(set => ({
   page: 1,
   setPage: page => set({ page }),

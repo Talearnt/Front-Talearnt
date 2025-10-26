@@ -16,7 +16,7 @@ export const getWrittenCommentList = ({ page }: paginationRequestType) =>
     }
   );
 
-// 작성한 답변 목록 조회
+// 작성한 답글 목록 조회
 export const getWrittenReplyList = ({ page }: paginationRequestType) =>
   getAPI<paginationType<writtenReplyType>>(
     "/v1/users/replies",

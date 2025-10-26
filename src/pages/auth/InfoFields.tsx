@@ -66,7 +66,7 @@ function InfoFields() {
   const nickNameRef = useRef<string>("");
   const navigator = useNavigate();
 
-  const [canProceed, setCanProceed] = useState(true);
+  const [canProceed, setCanProceed] = useState(false);
   const [verification, setVerification] = useState<verificationStateType>({
     isCodeVerified: false,
   });

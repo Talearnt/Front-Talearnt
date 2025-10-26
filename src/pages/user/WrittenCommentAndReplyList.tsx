@@ -29,7 +29,7 @@ import {
 
 const tabOptions = [
   { label: "댓글", value: "comment" },
-  { label: "답변", value: "reply" },
+  { label: "답글", value: "reply" },
 ];
 
 function WrittenCommentAndReplyList() {
@@ -78,7 +78,7 @@ function WrittenCommentAndReplyList() {
     tab === "comment" ? writtenCommentList : writtenReplyList;
   const currentPageStore =
     tab === "comment" ? writtenCommentPageStore : writtenReplyPageStore;
-  const currentTabLabel = tab === "comment" ? "댓글" : "답변";
+  const currentTabLabel = tab === "comment" ? "댓글" : "답글";
   const isCurrentTabLoading =
     tab === "comment" ? isCommentLoading : isReplyLoading;
 
