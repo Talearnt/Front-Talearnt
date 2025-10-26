@@ -70,6 +70,7 @@ function UserContentWrite({
           }}
           onChange={({ target: { value } }) => setEditContent(value)}
           value={editContent}
+          autoHeight
         />
         <div className={"flex justify-end gap-4"}>
           <Button

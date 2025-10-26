@@ -118,7 +118,7 @@ function PreviewArticleModal({
                     <label
                       className={"text-body2_16_semibold text-talearnt_Text_03"}
                     >
-                      받고 싶은 나의 재능
+                      받고 싶은 상대의 재능
                     </label>
                     <div className={"flex flex-wrap gap-2"}>
                       {findTalentList(

@@ -7,16 +7,16 @@ export const getAgreements = () =>
     withCredentials: true,
   });
 
-export const patchMarketingAgreement = (agree: boolean) =>
+export const patchMarketingAgreement = (isAgree: boolean) =>
   patchAPI(
     "/v1/users/agreements/marketing",
-    { agree },
+    { isAgree },
     { withCredentials: true }
   );
 
-export const patchAdvertisingAgreement = (agree: boolean) =>
+export const patchAdvertisingAgreement = (isAgree: boolean) =>
   patchAPI(
     "/v1/users/agreements/advertising",
-    { agree },
+    { isAgree },
     { withCredentials: true }
   );

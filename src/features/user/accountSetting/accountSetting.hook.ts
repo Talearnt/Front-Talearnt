@@ -34,7 +34,7 @@ export const usePatchMarketingAgreement = () => {
 
   return useMutation({
     mutationFn: patchMarketingAgreement,
-    onMutate: async agree => {
+    onMutate: async isAgree => {
       /* [onMutate] 1) 관련 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: agreementsQueryKey,
@@ -55,7 +55,7 @@ export const usePatchMarketingAgreement = () => {
           ...oldData,
           data: {
             ...oldData.data,
-            marketing: agree,
+            marketing: isAgree,
           },
         };
       });
@@ -79,7 +79,7 @@ export const usePatchAdvertisingAgreement = () => {
 
   return useMutation({
     mutationFn: patchAdvertisingAgreement,
-    onMutate: async agree => {
+    onMutate: async isAgree => {
       /* [onMutate] 1) 관련 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: agreementsQueryKey,
@@ -100,7 +100,7 @@ export const usePatchAdvertisingAgreement = () => {
           ...oldData,
           data: {
             ...oldData.data,
-            advertising: agree,
+            advertising: isAgree,
           },
         };
       });
