@@ -1,6 +1,5 @@
 import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
-import { useForm } from "react-hook-form";
 import { useShallow } from "zustand/shallow";
 
 import { classNames } from "@shared/utils/classNames";
@@ -39,6 +38,8 @@ function TalentsSettingModalBody() {
 
   // 현재 선택된 재능의 index
   const [selectedTalentIndex, setSelectedTalentIndex] = useState(0);
+  // 실제 input 값
+  const [searchInput, setSearchInput] = useState("");
 
   const {
     scrollRef,
@@ -56,29 +57,27 @@ function TalentsSettingModalBody() {
     }))
   );
   const setToast = useToastStore(state => state.setToast);
+  // debounced 검색어 (필터링에만 사용)
+  const debouncedSearch = useDebounce(searchInput);
 
-  const { register, reset, watch } = useForm<{ search: string }>();
-
-  // 검색한 값
-  const search = useDebounce(watch("search"));
   const currentTalentsList = findTalentList(talentsData[currentTalentsType]);
   const giveTalentsList = findTalentList(talentsData.giveTalents);
   const receiveTalentsList = findTalentList(talentsData.receiveTalents);
-  // 검색한 재능 키워드 목록
+  // 검색한 재능 키워드 목록 (debounced 값으로 필터링)
   const searchedTalentsList = useMemo(() => {
-    if (!search) {
+    if (!debouncedSearch) {
       return [];
     }
 
     // 검색한 값으로 공백 제거, 대소문자 구분 X 정규식 생성
-    const searchRegex = new RegExp(search.replace(/\s+/g, ""), "i");
+    const searchRegex = new RegExp(debouncedSearch.replace(/\s+/g, ""), "i");
 
     return TALENTS_LIST.filter(
       ({ talentCode, talentName }) =>
         searchRegex.test(talentName.replace(/\s+/g, "")) &&
         !talentsData[currentTalentsType].some(code => code === talentCode)
     );
-  }, [currentTalentsType, search, talentsData]);
+  }, [currentTalentsType, debouncedSearch, talentsData]);
 
   // 키워드가 최대 개수라면 토스트 노출
   const isTalentsExceedingLimit = () => {
@@ -98,7 +97,7 @@ function TalentsSettingModalBody() {
     key,
     nativeEvent,
   }: KeyboardEvent<HTMLInputElement>) => {
-    if (nativeEvent.isComposing || !search) {
+    if (nativeEvent.isComposing || !searchInput) {
       // 아직 글자가 조합중인 상태라면 return (한글 이슈)
       return;
     }
@@ -114,7 +113,7 @@ function TalentsSettingModalBody() {
         type: "add",
         talentCode,
       });
-      reset();
+      setSearchInput("");
 
       return;
     }
@@ -177,7 +176,7 @@ function TalentsSettingModalBody() {
 
     setSelectedTalentIndex(0);
     scrollRef.current.scrollTo({ top: 0 });
-  }, [scrollRef, search]);
+  }, [scrollRef, debouncedSearch]);
 
   return (
     <ModalBody className={"gap-6"}>
@@ -219,7 +218,8 @@ function TalentsSettingModalBody() {
               "text-caption1_14_medium"
             )}
             onKeyDown={handleKeyDown}
-            formData={{ ...register("search") }}
+            onChange={({ target: { value } }) => setSearchInput(value)}
+            value={searchInput}
             placeholder={"원하는 키워드를 검색해 보세요."}
             wrapperClassName={classNames("relative px-[30px]")}
             autoComplete={"off"}
@@ -237,13 +237,14 @@ function TalentsSettingModalBody() {
               "flex flex-col",
               "h-[344px] pl-[32px]",
               "scrollbar scrollbar-w12-10 overflow-y-scroll",
-              search &&
+              searchInput &&
+                debouncedSearch &&
                 searchedTalentsList.length === 0 &&
                 "h-full items-center justify-center gap-4"
             )}
             ref={scrollRef}
           >
-            {!search ? (
+            {!searchInput || !debouncedSearch ? (
               // 검색을 하지 않은 경우
               CATEGORIZED_TALENTS_DROPDOWN_OPTIONS.map(
                 ({ categoryCode, categoryName, options }) => (
@@ -287,7 +288,7 @@ function TalentsSettingModalBody() {
                       type: "add",
                       talentCode,
                     });
-                    reset();
+                    setSearchInput("");
                   }}
                   onMouseEnter={() => {
                     inputSourceRef.current = "mouse";
@@ -299,7 +300,7 @@ function TalentsSettingModalBody() {
               ))
             ) : (
               // 검색한 결과가 없는 경우
-              <EmptySearchOption search={search} />
+              <EmptySearchOption search={debouncedSearch} />
             )}
           </div>
           {talentsData[currentTalentsType].length > 0 && (
