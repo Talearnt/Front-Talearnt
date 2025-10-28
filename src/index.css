@@ -43,6 +43,8 @@
   }
 
   .scrollbar {
+    scrollbar-gutter: stable;
+
     &::-webkit-scrollbar {
       @apply block;
     }
