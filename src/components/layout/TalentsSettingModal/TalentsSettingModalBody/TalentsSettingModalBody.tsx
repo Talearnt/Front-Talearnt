@@ -235,7 +235,7 @@ function TalentsSettingModalBody() {
           <div
             className={classNames(
               "flex flex-col",
-              "h-[344px] pl-[32px]",
+              "h-[344px] pl-8",
               "scrollbar scrollbar-w12-10 overflow-y-scroll",
               searchInput &&
                 debouncedSearch &&

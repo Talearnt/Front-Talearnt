@@ -145,7 +145,7 @@ function DropdownWithCategories<T = string>({
         <div
           className={classNames(
             "flex flex-wrap content-start gap-2",
-            "h-[136px] pr-2",
+            "h-[136px]",
             "scrollbar-w10-5 scrollbar overflow-y-scroll"
           )}
         >

@@ -49,7 +49,7 @@ function AgreementsModal({
             {title}
           </h1>
         </ModalHeader>
-        <ModalBody className="scrollbar scrollbar-w12-10 my-6 max-h-[380px] overflow-y-auto px-8">
+        <ModalBody className="scrollbar scrollbar-w12-10 my-6 max-h-[380px] overflow-y-auto pl-8">
           {content}
         </ModalBody>
         <ModalBottom className={"justify-center"}>

@@ -37,7 +37,7 @@ type DropdownSearchableProps<T> = {
 
 const optionsStyle = classNames(
   "flex flex-col gap-2",
-  "p-[7px] w-full",
+  "pl-[7px] my-[7px] mr-[7px] w-full",
   "scrollbar scrollbar-w10-8 overflow-y-auto"
 );
 
@@ -342,7 +342,7 @@ function DropdownSearchable<T = string>({
             {/*서브 옵션*/}
             {hasSubOption && (
               <div
-                className={optionsStyle}
+                className={classNames(optionsStyle, "pl-2")}
                 ref={element => (scrollRefArray.current[1] = element)}
               >
                 {selectedCategoryIndex !== undefined &&
@@ -383,6 +383,7 @@ function DropdownSearchable<T = string>({
           <div
             className={classNames(
               optionsStyle,
+              "mr-2",
               searchedOptionsList.length === 0 &&
                 "h-[298px] items-center justify-center gap-4 px-4"
             )}
