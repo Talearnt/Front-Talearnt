@@ -8,6 +8,6 @@ type communityArticleCommentPageStoreType = {
 // 커뮤니티 게시글 댓글 페이지 스토어
 export const useCommunityArticleCommentPageStore =
   create<communityArticleCommentPageStoreType>(set => ({
-    page: 0,
+    page: 1,
     setPage: page => set({ page }),
   }));
