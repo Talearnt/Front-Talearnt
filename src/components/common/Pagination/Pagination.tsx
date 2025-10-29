@@ -30,7 +30,7 @@ function Pagination({
         : 5
       : totalPages; // 전체 페이지가 5 미만일 때
 
-  if (totalPages === 0) {
+  if (totalPages === 0 || currentPage === 0) {
     return null;
   }
 
