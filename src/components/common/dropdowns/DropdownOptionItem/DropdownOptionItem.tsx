@@ -32,7 +32,6 @@ function DropdownOptionItem({
       )}
       {...props}
     >
-      {children}
       <span
         className={classNames(
           "text-body2_16_medium text-talearnt_Text_04",
@@ -45,6 +44,7 @@ function DropdownOptionItem({
       >
         {label}
       </span>
+      {children}
     </button>
   );
 }
