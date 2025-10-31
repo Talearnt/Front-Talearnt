@@ -209,6 +209,9 @@ class QuillManager {
 
     // 컬러 피커 아이템 색상 설정 (DOM 요소 존재 확인 후)
     this.setupColorPickers();
+
+    // 한글 입력 시 placeholder 즉시 제거 설정
+    this.setupPlaceholderHandler();
   }
 
   /**
@@ -232,15 +235,48 @@ class QuillManager {
   }
 
   /**
-   * 사이즈 선택기 아이콘을 커스텀 아이콘으로 변경
+   * 사이즈 선택기 아이콘을 커스텀 아이콘으로 변경 (재시도 로직 포함)
    */
   private updateSizeIcon(): void {
-    const sizeIcon = document.querySelector(".ql-size .ql-picker-label svg");
+    const updateWithRetry = (maxRetries = 10) => {
+      const sizeIcon = document.querySelector(".ql-size .ql-picker-label svg");
 
-    if (sizeIcon) {
-      sizeIcon.outerHTML =
-        '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 7.5L10 12.5L5 7.5" class="ql-stroke" /></svg>';
-    }
+      if (sizeIcon) {
+        sizeIcon.outerHTML =
+          '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 7.5L10 12.5L5 7.5" class="ql-stroke" /></svg>';
+      } else if (maxRetries > 0) {
+        setTimeout(() => updateWithRetry(maxRetries - 1), 50);
+      } else {
+        console.warn("⚠️ Size icon not found after retries");
+      }
+    };
+
+    updateWithRetry();
+  }
+
+  /**
+   * 한글 입력 시 placeholder 즉시 제거 처리 (재시도 로직 포함)
+   */
+  private setupPlaceholderHandler(): void {
+    const setupWithRetry = (maxRetries = 10) => {
+      const editorElement = document.querySelector(".ql-editor");
+
+      if (editorElement) {
+        // input 이벤트로 한글 입력 즉시 감지
+        const handleInput = () => {
+          // input 시작 시 무조건 placeholder 제거
+          editorElement.classList.remove("ql-blank");
+        };
+
+        editorElement.addEventListener("input", handleInput);
+      } else if (maxRetries > 0) {
+        setTimeout(() => setupWithRetry(maxRetries - 1), 50);
+      } else {
+        console.warn("⚠️ Editor element not found after retries");
+      }
+    };
+
+    setupWithRetry();
   }
 
   /**

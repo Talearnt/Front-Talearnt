@@ -85,8 +85,8 @@
           }
         }
 
-        &:not(.ql-color-picker):not(.ql-icon-picker) {
-          width: 50px;
+        &.ql-size {
+          width: 64px;
           height: 24px;
 
           &.ql-expanded .ql-picker-label svg {
@@ -96,10 +96,11 @@
           .ql-picker-label {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 4px;
 
             &::before {
-              width: 26px;
+              width: fit-content;
               font-size: 16px;
               line-height: 24px;
               font-weight: 500;
