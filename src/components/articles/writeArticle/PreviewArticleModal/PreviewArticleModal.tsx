@@ -25,7 +25,7 @@ type communityArticlePreviewProps = {
 type matchingArticlePreviewProps = {
   type: "matching";
   duration: string;
-  exchangeType: string;
+  hyperLink: string;
   giveTalents: number[];
   receiveTalents: number[];
 };
@@ -138,12 +138,12 @@ function PreviewArticleModal({
                   <label
                     className={"text-body2_16_semibold text-talearnt_Text_03"}
                   >
-                    진행 방식
+                    오픈 링크
                   </label>
                   <span
                     className={"text-body2_16_semibold text-talearnt_Text_02"}
                   >
-                    {(data as matchingArticlePreviewProps).exchangeType}
+                    {(data as matchingArticlePreviewProps).hyperLink}
                   </span>
                 </div>
                 <div className={"flex gap-4"}>

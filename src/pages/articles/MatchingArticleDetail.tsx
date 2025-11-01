@@ -63,7 +63,7 @@ function MatchingArticleDetail() {
         title,
         content,
         duration,
-        exchangeType,
+        hyperLink,
         giveTalents,
         receiveTalents,
         status,
@@ -102,7 +102,7 @@ function MatchingArticleDetail() {
         ({ talentCode }) => talentCode
       ),
       duration,
-      exchangeType,
+      hyperLink,
     });
 
     navigator("/write-article/matching");
@@ -252,10 +252,10 @@ function MatchingArticleDetail() {
           <div className={"flex gap-16"}>
             <div className={"flex gap-4"}>
               <label className={"text-body2_16_semibold text-talearnt_Text_03"}>
-                진행 방식
+                오픈 링크
               </label>
               <span className={"text-body2_16_semibold text-talearnt_Text_02"}>
-                {exchangeType}
+                {hyperLink}
               </span>
             </div>
             <div className={"flex gap-4"}>

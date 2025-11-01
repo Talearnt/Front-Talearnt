@@ -62,7 +62,7 @@ export const usePostMatchingArticle = () => {
       giveTalents,
       receiveTalents,
       duration,
-      exchangeType,
+      hyperLink,
     }) => {
       /* [onMutate] 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
@@ -97,7 +97,7 @@ export const usePostMatchingArticle = () => {
             ({ talentName }) => talentName
           ),
           duration,
-          exchangeType,
+          hyperLink,
           status: "모집중",
           isFavorite: false,
           favoriteCount: 0,
@@ -133,7 +133,7 @@ export const usePostMatchingArticle = () => {
         giveTalents,
         receiveTalents,
         duration,
-        exchangeType,
+        hyperLink,
         imageUrls,
       }
     ) => {
@@ -157,7 +157,7 @@ export const usePostMatchingArticle = () => {
             ({ talentName }) => talentName
           ),
           duration,
-          exchangeType,
+          hyperLink,
           status: "모집중" as "모집중" | "모집 완료",
           isFavorite: false,
           count: 0,
@@ -242,7 +242,7 @@ export const usePutEditMatchingArticle = () => {
     onMutate: async ({
       exchangePostNo,
       duration,
-      exchangeType,
+      hyperLink,
       giveTalents,
       receiveTalents,
       title,
@@ -268,7 +268,7 @@ export const usePutEditMatchingArticle = () => {
       /* [onMutate] 3) 공통 데이터 구성 */
       const common = {
         duration,
-        exchangeType,
+        hyperLink,
         giveTalents: findTalentList(giveTalents).map(
           ({ talentName }) => talentName
         ),

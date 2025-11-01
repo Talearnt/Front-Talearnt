@@ -18,7 +18,7 @@ export type matchingArticleDetailType = Pick<profileType, "userNo"> &
 //   "giveTalents": [],
 //   "receiveTalents": [],
 //   "duration": "기간 미정",
-//   "exchangeType": "온라인",
+//   "hyperLink": "",
 //   "status": "모집중",
 //   "isFavorite": false,
 //   "count": 0,

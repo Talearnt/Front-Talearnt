@@ -25,7 +25,6 @@ function MatchingArticleCard({
   nickname,
   isFavorite,
   status,
-  exchangeType,
   duration,
   title,
   content,
@@ -127,7 +126,6 @@ function MatchingArticleCard({
       </div>
       <div className={classNames("flex gap-1", "mb-2")}>
         <Badge label={status} />
-        <Badge label={exchangeType} color={"gray"} />
         <Badge label={duration} color={"gray"} />
       </div>
       <h2

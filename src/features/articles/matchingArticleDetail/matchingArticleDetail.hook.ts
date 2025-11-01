@@ -37,7 +37,7 @@ export const useGetMatchingArticleDetail = () => {
       title: "",
       content: "",
       duration: "기간 미정",
-      exchangeType: "온라인",
+      hyperLink: "",
       giveTalents: [],
       receiveTalents: [],
       exchangePostNo: 0,

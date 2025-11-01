@@ -2,7 +2,6 @@ import { array, mixed, number, object, string } from "yup";
 
 import {
   durationList,
-  exchangeTypeList,
   postTypeList,
 } from "@features/articles/shared/articles.constants";
 
@@ -16,7 +15,7 @@ export const matchingArticleSchema = object({
     .min(1, "재능 키워드를 선택해 주세요")
     .required(),
   duration: string().oneOf(durationList).required("진행 기간을 선택해 주세요"),
-  exchangeType: string().oneOf(exchangeTypeList).required(),
+  hyperLink: string().required("오픈 링크를 입력해 주세요"),
   title: string()
     .required("제목을 입력해 주세요")
     .min(2, "제목을 2글자 이상 입력해 주세요"),
