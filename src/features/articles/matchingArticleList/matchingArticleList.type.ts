@@ -1,7 +1,6 @@
 import {
   commonArticleDataType,
   durationType,
-  exchangeType,
 } from "@features/articles/shared/articles.type";
 import { matchingArticleBodyType } from "@features/articles/writeMatchingArticle/writeMatchingArticle.type";
 import { profileType } from "@features/user/profile/profile.type";
@@ -31,7 +30,7 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
 //   "giveTalents": [],
 //   "receiveTalents": [],
 //   "duration": "기간 미정",
-//   "exchangeType": "온라인",
+//   "hyperLink": "",
 //   "status": "모집중",
 //   "isFavorite": false,
 //   "favoriteCount": 0,
@@ -41,7 +40,6 @@ export type matchingArticleListFilterType = paginationRequestType & {
   giveTalents: number[];
   receiveTalents: number[];
   duration?: durationType;
-  type?: exchangeType;
   status?: "모집중" | "모집_완료";
   order: "recent" | "popular";
 };

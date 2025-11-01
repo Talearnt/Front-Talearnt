@@ -1,15 +1,9 @@
 import { dropdownOptionType } from "@components/common/dropdowns/dropdown.type";
 import {
   durationType,
-  exchangeType,
   postType,
 } from "@features/articles/shared/articles.type";
 
-export const exchangeTypeList: exchangeType[] = [
-  "온라인",
-  "오프라인",
-  "온/오프라인",
-];
 export const postTypeList: postType[] = [
   "자유 게시판",
   "질문 게시판",

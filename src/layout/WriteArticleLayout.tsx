@@ -34,7 +34,7 @@ function WriteArticleLayout() {
       giveTalents: [],
       receiveTalents: [],
       duration: undefined,
-      exchangeType: "온라인",
+      hyperLink: "",
       title: "",
       content: "",
       pureText: "",

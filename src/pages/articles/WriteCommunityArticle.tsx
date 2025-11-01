@@ -159,7 +159,7 @@ function WriteCommunityArticle() {
         }
       >
         <div className={"flex flex-col gap-2"}>
-          <span className={"text-body2_16_medium"}>진행 방식</span>
+          <span className={"text-body2_16_medium"}>게시판 구분</span>
           <div className={"grid grid-cols-[repeat(3,156px)] gap-4"}>
             {postTypeList.map(type => (
               <Chip

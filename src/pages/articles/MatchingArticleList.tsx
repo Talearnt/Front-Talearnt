@@ -17,16 +17,10 @@ import { EmptyState } from "@components/common/EmptyState/EmptyState";
 import { Pagination } from "@components/common/Pagination/Pagination";
 import { MatchingArticleCard } from "@components/shared/MatchingArticleCard/MatchingArticleCard";
 
-import {
-  durationOptions,
-  exchangeTypeList,
-} from "@features/articles/shared/articles.constants";
+import { durationOptions } from "@features/articles/shared/articles.constants";
 import { talentsOptions } from "@shared/constants/talentsOptions";
 
-import {
-  durationType,
-  exchangeType,
-} from "@features/articles/shared/articles.type";
+import { durationType } from "@features/articles/shared/articles.type";
 
 /**
  * MatchingArticleList
@@ -41,7 +35,6 @@ function MatchingArticleList() {
     giveTalents,
     receiveTalents,
     duration,
-    type,
     status,
     order,
     page,
@@ -52,7 +45,6 @@ function MatchingArticleList() {
       giveTalents: state.giveTalents,
       receiveTalents: state.receiveTalents,
       duration: state.duration,
-      type: state.type,
       status: state.status,
       order: state.order,
       page: state.page,
@@ -83,7 +75,6 @@ function MatchingArticleList() {
     giveTalents.length > 0 ||
     receiveTalents.length > 0 ||
     duration !== undefined ||
-    type !== undefined ||
     status !== undefined;
   const isFirstPage = page === 1;
 
@@ -164,21 +155,6 @@ function MatchingArticleList() {
           }
           selectedValue={duration}
           label={"진행 기간"}
-          width={150}
-        />
-        <DropdownLabeled<exchangeType | "">
-          options={[
-            { label: "전체", value: "" },
-            ...exchangeTypeList.map(item => ({ label: item, value: item })),
-          ]}
-          onSelectHandler={({ value }) =>
-            setFilter(prev => ({
-              ...prev,
-              type: value === "" ? undefined : value,
-            }))
-          }
-          selectedValue={type}
-          label={"진행 방식"}
           width={150}
         />
         <label

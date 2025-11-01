@@ -24,16 +24,12 @@ import { PreviewArticleModal } from "@components/articles/writeArticle/PreviewAr
 import { TextEditor } from "@components/articles/writeArticle/TextEditor/TextEditor";
 import { TitledBox } from "@components/articles/writeArticle/TitledBox/TitledBox";
 import { Button } from "@components/common/Button/Button";
-import { Chip } from "@components/common/Chip/Chip";
 import { DropdownSearchable } from "@components/common/dropdowns/DropdownSearchable/DropdownSearchable";
 import { PencilIcon } from "@components/common/icons/textEditor/PencilIcon";
 import { Input } from "@components/common/inputs/Input/Input";
 import { Spinner } from "@components/common/Spinner/Spinner";
 
-import {
-  durationOptions,
-  exchangeTypeList,
-} from "@features/articles/shared/articles.constants";
+import { durationOptions } from "@features/articles/shared/articles.constants";
 import { TALENTS_LIST } from "@shared/constants/talentsList";
 import { talentsOptions } from "@shared/constants/talentsOptions";
 
@@ -79,7 +75,7 @@ function WriteMatchingArticle() {
     giveTalents,
     receiveTalents,
     duration,
-    exchangeType,
+    hyperLink,
     title,
     content,
     imageFileList,
@@ -87,7 +83,7 @@ function WriteMatchingArticle() {
     "giveTalents",
     "receiveTalents",
     "duration",
-    "exchangeType",
+    "hyperLink",
     "title",
     "content",
     "imageFileList",
@@ -97,6 +93,7 @@ function WriteMatchingArticle() {
     hasUnsavedChanges:
       title.trim() !== "" ||
       content.trim() !== "" ||
+      hyperLink.trim() !== "" ||
       duration !== undefined ||
       giveTalents.length > 0 ||
       receiveTalents.length > 0 ||
@@ -160,7 +157,7 @@ function WriteMatchingArticle() {
         await editMatchingArticle({
           title,
           content: newContent,
-          exchangeType,
+          hyperLink,
           duration: duration as durationType,
           giveTalents,
           receiveTalents,
@@ -171,7 +168,7 @@ function WriteMatchingArticle() {
         await postMatchingArticle({
           title,
           content: newContent,
-          exchangeType,
+          hyperLink,
           duration: duration as durationType,
           giveTalents,
           receiveTalents,
@@ -320,21 +317,15 @@ function WriteMatchingArticle() {
               />
             </div>
             <div className={classNames("flex flex-col gap-2", "w-full")}>
-              <span className={"text-body2_16_medium"}>진행 방식</span>
-              <div className={"grid grid-cols-3 gap-2"}>
-                {exchangeTypeList.map(type => (
-                  <Chip
-                    onClickHandler={() =>
-                      handleDataChange("exchangeType", type)
-                    }
-                    pressed={exchangeType === type}
-                    type={"default-large"}
-                    key={type}
-                  >
-                    {type}
-                  </Chip>
-                ))}
-              </div>
+              <span className={"text-body2_16_medium"}>오픈 링크</span>
+              <Input
+                onChange={({ target }) =>
+                  handleDataChange("hyperLink", target.value)
+                }
+                value={hyperLink}
+                error={errors.hyperLink?.message}
+                placeholder={"상대와 연락할 오픈채팅 링크를 입력해 주세요."}
+              />
             </div>
           </div>
         </div>
@@ -390,7 +381,7 @@ function WriteMatchingArticle() {
         <PreviewArticleModal
           type={"matching"}
           duration={duration as string}
-          exchangeType={exchangeType}
+          hyperLink={hyperLink}
           giveTalents={giveTalents}
           receiveTalents={receiveTalents}
           imageUrls={extractImageSrcList(content)}
