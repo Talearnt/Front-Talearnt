@@ -199,7 +199,7 @@ function MatchingArticleDetail() {
             )}
             <button
               className={classNames(
-                "ml-auto rounded-lg p-2 shadow-[inset_0_0_0_1px] shadow-talearnt_Line_01",
+                "ml-auto rounded-lg p-2 shadow-[inset_0_0_0_1.4px] shadow-talearnt_Line_01",
                 "cursor-pointer",
                 "hover:bg-talearnt_BG_Up_01"
               )}
