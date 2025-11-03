@@ -15,7 +15,7 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
     exchangePostNo: number;
     giveTalents: string[];
     receiveTalents: string[];
-    status: "모집중" | "모집 완료";
+    status: "모집중" | "모집 마감";
     isFavorite: boolean;
     favoriteCount: number;
   };
