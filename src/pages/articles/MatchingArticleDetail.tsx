@@ -184,8 +184,8 @@ function MatchingArticleDetail() {
                     value: "모집중",
                   },
                   {
-                    label: "모집 완료",
-                    value: "모집 완료",
+                    label: "모집 마감",
+                    value: "모집 마감",
                   },
                 ]}
                 type={"shadow-small"}

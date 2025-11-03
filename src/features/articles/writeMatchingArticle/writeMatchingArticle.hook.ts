@@ -158,7 +158,7 @@ export const usePostMatchingArticle = () => {
           ),
           duration,
           hyperLink,
-          status: "모집중" as "모집중" | "모집 완료",
+          status: "모집중",
           isFavorite: false,
           count: 0,
           favoriteCount: 0,
