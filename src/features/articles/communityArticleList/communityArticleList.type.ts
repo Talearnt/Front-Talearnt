@@ -18,7 +18,6 @@ export type communityArticleType = Pick<
   commonArticleDataType & {
     commentCount: number;
     communityPostNo: number;
-    count: number;
     isLike: boolean;
     likeCount: number;
     postType: postType;

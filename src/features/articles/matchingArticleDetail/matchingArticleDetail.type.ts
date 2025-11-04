@@ -4,7 +4,6 @@ import { profileType } from "@features/user/profile/profile.type";
 export type matchingArticleDetailType = Pick<profileType, "userNo"> &
   matchingArticleType & {
     imageUrls: string[];
-    count: number;
   };
 // {
 //   "userNo": 0,
