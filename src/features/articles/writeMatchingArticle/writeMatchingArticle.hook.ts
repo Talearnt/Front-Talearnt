@@ -90,6 +90,7 @@ export const usePostMatchingArticle = () => {
           createdAt: new Date().toString(),
           title,
           content,
+          count: 0,
           giveTalents: findTalentList(giveTalents).map(
             ({ talentName }) => talentName
           ),

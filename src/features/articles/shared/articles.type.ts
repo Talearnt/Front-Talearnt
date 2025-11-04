@@ -8,6 +8,7 @@ export type baseContentType = {
 };
 export type commonArticleDataType = baseContentType & {
   title: string;
+  count: number;
 };
 // 매칭 게시글 - 진행 기간
 export type durationType =

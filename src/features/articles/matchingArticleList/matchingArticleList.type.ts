@@ -7,11 +7,8 @@ import { profileType } from "@features/user/profile/profile.type";
 import { paginationRequestType } from "@shared/type/api.type";
 
 export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
-  Omit<
-    matchingArticleBodyType,
-    "giveTalents" | "receiveTalents" | "imageUrls"
-  > &
-  Pick<commonArticleDataType, "createdAt" | "updatedAt"> & {
+  Pick<matchingArticleBodyType, "duration" | "hyperLink"> &
+  commonArticleDataType & {
     exchangePostNo: number;
     giveTalents: string[];
     receiveTalents: string[];
@@ -25,6 +22,7 @@ export type matchingArticleType = Pick<profileType, "nickname" | "profileImg"> &
 //   "exchangePostNo": 0,
 //   "createdAt": "",
 //   "updatedAt": "",
+//   "count": 0,
 //   "title": "",
 //   "content": "",
 //   "giveTalents": [],

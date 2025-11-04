@@ -14,12 +14,14 @@ import { useAuthStore } from "@store/user.store";
 
 import { Badge } from "@components/common/Badge/Badge";
 import { HeartIcon } from "@components/common/icons/styled/HeartIcon";
+import { ViewsIcon } from "@components/common/icons/styled/ViewsIcon";
 import { Avatar } from "@components/shared/Avatar/Avatar";
 
 import { matchingArticleType } from "@features/articles/matchingArticleList/matchingArticleList.type";
 
 function MatchingArticleCard({
   className,
+  count,
   exchangePostNo,
   profileImg,
   nickname,
@@ -198,17 +200,19 @@ function MatchingArticleCard({
         >
           {dayjs(createdAt).format("YYYY.MM.DD")}
         </span>
-        {/*TODO 채팅방 2차 MVP*/}
-        {/*<div className={"flex items-center gap-1"}>*/}
-        {/*  <span className={"text-caption1_14_medium text-talearnt_Text_03"}>*/}
-        {/*    14*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-        <div className={"flex items-center gap-1"}>
-          <HeartIcon iconType={"filled-gray"} />
-          <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
-            {favoriteCount}
-          </span>
+        <div className={"flex gap-2"}>
+          <div className={"flex items-center gap-1"}>
+            <ViewsIcon iconType={"filled-gray"} />
+            <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
+              {count}
+            </span>
+          </div>
+          <div className={"flex items-center gap-1"}>
+            <HeartIcon iconType={"filled-gray"} />
+            <span className={"text-caption1_14_medium text-talearnt_Text_03"}>
+              {favoriteCount}
+            </span>
+          </div>
         </div>
       </div>
     </div>
