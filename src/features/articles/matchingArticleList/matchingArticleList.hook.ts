@@ -19,7 +19,6 @@ export const useGetMatchingArticleList = () => {
       giveTalents: state.giveTalents,
       receiveTalents: state.receiveTalents,
       duration: state.duration,
-      type: state.type,
       status: state.status,
       order: state.order,
       page: state.page,

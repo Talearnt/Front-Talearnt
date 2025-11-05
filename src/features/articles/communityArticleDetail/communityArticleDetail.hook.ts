@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,13 +22,16 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
  * useGetCommunityArticleDetail
  * - 커뮤니티 게시글 상세 정보를 조회합니다.
  * - 초기 데이터를 제공하여 첫 렌더 깜빡임을 줄이고, 캐시 정책을 적용합니다.
+ * - 상세 조회 성공 시 관련 리스트의 조회수도 함께 업데이트합니다.
  */
 export const useGetCommunityArticleDetail = () => {
   const { communityPostNo } = useParams();
 
+  const queryClient = useQueryClient();
+
   const postNo = Number(communityPostNo);
 
-  return useQueryWithInitial(
+  const result = useQueryWithInitial(
     {
       commentLastPage: 0,
       communityPostNo: 0,
@@ -51,6 +55,75 @@ export const useGetCommunityArticleDetail = () => {
       ...CACHE_POLICIES.ARTICLE_DETAIL,
     }
   );
+
+  // 상세 조회 성공 시 리스트의 조회수 업데이트
+  useEffect(() => {
+    if (!result.isSuccess) {
+      return;
+    }
+
+    const updatedCount = result.data.data.count;
+
+    // 1. 커뮤니티 게시글 리스트 캐시 업데이트
+    const communityListQueries = queryClient.getQueriesData<
+      customAxiosResponseType<paginationType<communityArticleType>>
+    >({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.community.lists().every(key => queryKey.includes(key)),
+    });
+
+    communityListQueries.forEach(([key, data]) => {
+      if (!data) {
+        return;
+      }
+
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<communityArticleType>>
+      >(key, {
+        ...data,
+        data: {
+          ...data.data,
+          results: data.data.results.map(article =>
+            article.communityPostNo === postNo
+              ? { ...article, count: updatedCount }
+              : article
+          ),
+        },
+      });
+    });
+
+    // 2. 내가 작성한 커뮤니티 글 리스트 캐시 업데이트
+    const writtenListQueries = queryClient.getQueriesData<
+      customAxiosResponseType<paginationType<communityArticleType>>
+    >({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.user.written.community
+          .all()
+          .every(key => queryKey.includes(key)),
+    });
+
+    writtenListQueries.forEach(([key, data]) => {
+      if (!data) {
+        return;
+      }
+
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<communityArticleType>>
+      >(key, {
+        ...data,
+        data: {
+          ...data.data,
+          results: data.data.results.map(article =>
+            article.communityPostNo === postNo
+              ? { ...article, count: updatedCount }
+              : article
+          ),
+        },
+      });
+    });
+  }, [result.isSuccess, result.data, postNo, queryClient]);
+
+  return result;
 };
 
 /**
