@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,13 +24,16 @@ import { customAxiosResponseType, paginationType } from "@shared/type/api.type";
  * useGetMatchingArticleDetail
  * - 매칭 게시물 상세 데이터를 조회합니다.
  * - 초기 데이터를 제공하여 첫 렌더 깜빡임을 줄이고, 캐시 정책을 적용합니다.
+ * - 상세 조회 성공 시 관련 리스트의 조회수도 함께 업데이트합니다.
  */
 export const useGetMatchingArticleDetail = () => {
   const { exchangePostNo } = useParams();
 
+  const queryClient = useQueryClient();
+
   const postNo = Number(exchangePostNo);
 
-  return useQueryWithInitial(
+  const result = useQueryWithInitial(
     {
       userNo: 0,
       nickname: "",
@@ -55,6 +59,105 @@ export const useGetMatchingArticleDetail = () => {
       ...CACHE_POLICIES.ARTICLE_DETAIL,
     }
   );
+
+  // 상세 조회 성공 시 리스트의 조회수 업데이트
+  useEffect(() => {
+    if (!result.isSuccess || !result.data.success) {
+      return;
+    }
+
+    const updatedCount = result.data.data.count;
+
+    // 1. 매칭 게시글 리스트 캐시 업데이트
+    const matchingListQueries = queryClient.getQueriesData<
+      customAxiosResponseType<paginationType<matchingArticleType>>
+    >({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
+    });
+
+    matchingListQueries.forEach(([key, data]) => {
+      if (!data) {
+        return;
+      }
+
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >(key, {
+        ...data,
+        data: {
+          ...data.data,
+          results: data.data.results.map(article =>
+            article.exchangePostNo === postNo
+              ? { ...article, count: updatedCount }
+              : article
+          ),
+        },
+      });
+    });
+
+    // 2. 내가 작성한 매칭 글 리스트 캐시 업데이트
+    const writtenListQueries = queryClient.getQueriesData<
+      customAxiosResponseType<paginationType<matchingArticleType>>
+    >({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.user.written.matching
+          .all()
+          .every(key => queryKey.includes(key)),
+    });
+
+    writtenListQueries.forEach(([key, data]) => {
+      if (!data) {
+        return;
+      }
+
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >(key, {
+        ...data,
+        data: {
+          ...data.data,
+          results: data.data.results.map(article =>
+            article.exchangePostNo === postNo
+              ? { ...article, count: updatedCount }
+              : article
+          ),
+        },
+      });
+    });
+
+    // 3. 즐겨찾기한 매칭 글 리스트 캐시 업데이트
+    const favoriteListQueries = queryClient.getQueriesData<
+      customAxiosResponseType<paginationType<matchingArticleType>>
+    >({
+      predicate: ({ queryKey }) =>
+        QueryKeyFactory.user.favoriteMatching
+          .all()
+          .every(key => queryKey.includes(key)),
+    });
+
+    favoriteListQueries.forEach(([key, data]) => {
+      if (!data) {
+        return;
+      }
+
+      queryClient.setQueryData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >(key, {
+        ...data,
+        data: {
+          ...data.data,
+          results: data.data.results.map(article =>
+            article.exchangePostNo === postNo
+              ? { ...article, count: updatedCount }
+              : article
+          ),
+        },
+      });
+    });
+  }, [result.isSuccess, result.data, postNo, queryClient]);
+
+  return result;
 };
 
 /**
