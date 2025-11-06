@@ -34,6 +34,12 @@ export const usePostMatchingArticleFavorite = () => {
           QueryKeyFactory.matching.all().every(key => queryKey.includes(key)),
       });
       await queryClient.cancelQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.favoriteMatching
+            .all()
+            .every(key => queryKey.includes(key)),
+      });
+      await queryClient.cancelQueries({
         queryKey: activityCountsQueryKey,
       });
 
@@ -47,6 +53,14 @@ export const usePostMatchingArticleFavorite = () => {
       >({
         predicate: ({ queryKey }) =>
           QueryKeyFactory.matching.lists().every(key => queryKey.includes(key)),
+      });
+      const previousFavoriteLists = queryClient.getQueriesData<
+        customAxiosResponseType<paginationType<matchingArticleType>>
+      >({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.favoriteMatching
+            .all()
+            .every(key => queryKey.includes(key)),
       });
       const previousActivityCounts = queryClient.getQueryData(
         activityCountsQueryKey
@@ -98,7 +112,43 @@ export const usePostMatchingArticleFavorite = () => {
         });
       });
 
-      /* [onMutate] 6) Optimistic Update - 활동 counts (증감량 반영) */
+      /**
+       * [onMutate] 6) Optimistic Update - 찜 목록 페이지들
+       *
+       * 찜 해제만 Optimistic Update 수행:
+       * - 찜 해제는 즉시 UI 반영하여 빠른 UX 제공 (refetch 불필요)
+       * - 찜 등록은 Optimistic Update 하지 않음 (onSettled에서 refetch로 정확한 데이터 반영)
+       */
+      if (!isFavorite) {
+        previousFavoriteLists.forEach(([queryKey]) => {
+          queryClient.setQueryData<
+            customAxiosResponseType<paginationType<matchingArticleType>>
+          >(queryKey, oldData => {
+            if (!oldData) {
+              return oldData;
+            }
+
+            return {
+              ...oldData,
+              data: {
+                ...oldData.data,
+                results: oldData.data.results.filter(
+                  article => article.exchangePostNo !== exchangePostNo
+                ),
+                pagination: {
+                  ...oldData.data.pagination,
+                  totalCount: Math.max(
+                    0,
+                    oldData.data.pagination.totalCount - 1
+                  ),
+                },
+              },
+            };
+          });
+        });
+      }
+
+      /* [onMutate] 7) Optimistic Update - 활동 counts (증감량 반영) */
       queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
         activityCountsQueryKey,
         oldData => {
@@ -117,7 +167,12 @@ export const usePostMatchingArticleFavorite = () => {
         }
       );
 
-      return { previousDetail, previousLists, previousActivityCounts };
+      return {
+        previousDetail,
+        previousLists,
+        previousFavoriteLists,
+        previousActivityCounts,
+      };
     },
     onError: (_err, { exchangePostNo }, context) => {
       /* [onError] 스냅샷으로 롤백 */
@@ -132,11 +187,37 @@ export const usePostMatchingArticleFavorite = () => {
         queryClient.setQueryData(queryKey, data);
       });
 
+      context?.previousFavoriteLists.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
       if (context?.previousActivityCounts) {
         queryClient.setQueryData(
           activityCountsQueryKey,
           context.previousActivityCounts
         );
+      }
+    },
+    onSettled: (_data, _error, { isFavorite }) => {
+      /**
+       * [onSettled] 찜 등록 시 찜 목록 refetch
+       *
+       * 찜 해제: Optimistic Update만으로 충분 (목록에서 제거는 간단)
+       * 찜 등록: refetch로 서버에서 최신 데이터 받아옴
+       *   - 이유: 새 항목 추가는 정렬/페이지네이션 고려가 복잡하여
+       *           서버를 단일 진실 공급원(Single Source of Truth)으로 사용
+       *
+       * 결과적으로:
+       * - 찜 해제: 즉시 UI 반영 (빠른 UX)
+       * - 찜 등록: 서버 응답 후 정확한 데이터 반영 (데이터 정합성)
+       */
+      if (isFavorite) {
+        void queryClient.invalidateQueries({
+          predicate: ({ queryKey }) =>
+            QueryKeyFactory.user.favoriteMatching
+              .all()
+              .every(key => queryKey.includes(key)),
+        });
       }
     },
   });
