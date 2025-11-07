@@ -88,19 +88,25 @@ export const usePostCommunityArticleReply = (
     mutationFn: async (content: string) =>
       await postCommunityArticleReply({ commentNo, content }),
     onMutate: async (content: string) => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 사용자가 작성한 답글을 즉시 UI에 표시 (답글이 열려있는 경우만)
+       * 동시성: onSettled에서 refetch하여 다른 사용자의 답글도 반영
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: commentQueryKey,
       });
 
-      /* [onMutate] 2) 답글이 열려있는 경우에만 답글 목록 쿼리 취소 */
       if (isOpen) {
         await queryClient.cancelQueries({
           queryKey: replyQueryKey,
         });
       }
 
-      /* [onMutate] 3) 스냅샷 저장: 답글/댓글 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevReplies = isOpen
         ? queryClient.getQueryData<
             InfiniteData<customAxiosResponseType<paginationType<replyType>>>
@@ -114,7 +120,7 @@ export const usePostCommunityArticleReply = (
         ([key, data]) => [key, data] as const
       );
 
-      /* [onMutate] 4) 답글이 열려있는 경우에만 답글 목록에 임시 답글 추가 (낙관적) */
+      /* 3) 답글이 열려있으면 임시 답글 추가 (ID: -1) */
       if (isOpen) {
         queryClient.setQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
@@ -136,7 +142,6 @@ export const usePostCommunityArticleReply = (
           return {
             ...oldData,
             pages: oldData.pages.map((page, idx, array) => {
-              // 마지막 페이지에 답글 추가
               if (idx === array.length - 1) {
                 return {
                   ...page,
@@ -152,7 +157,7 @@ export const usePostCommunityArticleReply = (
         });
       }
 
-      /* [onMutate] 5) 댓글의 답글 수는 항상 증가 (답글이 열려있지 않아도 답글 수는 보여지므로) */
+      /* 4) 댓글의 replyCount 증가 (답글 열림 여부와 관계없이) */
       commentQueries.forEach(([key]) => {
         queryClient.setQueryData<
           customAxiosResponseType<paginationType<commentType>>
@@ -175,11 +180,10 @@ export const usePostCommunityArticleReply = (
         });
       });
 
-      /* [onMutate] 6) 반환: 롤백용 스냅샷 */
       return { prevReplies, prevComments };
     },
     onError: (_err, _variables, context) => {
-      /* [onError] 이전 스냅샷으로 정확히 롤백 */
+      /* [onError] 실패 시 롤백 */
       if (context?.prevReplies) {
         queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
@@ -188,46 +192,34 @@ export const usePostCommunityArticleReply = (
         queryClient.setQueryData(key, data);
       });
     },
-    onSuccess: ({ data: reply }) => {
-      /* [onSuccess] 서버 응답으로 정확한 데이터 저장 */
-      if (isOpen) {
-        /* [onSuccess] 답글 목록 정규화 (마지막 페이지에 실제 답글로 교체) */
-        queryClient.setQueryData<
-          InfiniteData<customAxiosResponseType<paginationType<replyType>>>
-        >(replyQueryKey, oldData => {
-          if (!oldData) {
-            return oldData;
-          }
-
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page, idx, array) => {
-              if (idx === array.length - 1) {
-                return {
-                  ...page,
-                  data: {
-                    ...page.data,
-                    results: page.data.results.map(r =>
-                      r.replyNo === -1 ? reply : r
-                    ),
-                  },
-                };
-              }
-              return page;
-            }),
-          };
-        });
-      }
-    },
     onSettled: () => {
-      /* [onSettled] 답글 목록 무효화 */
+      /**
+       * [onSettled] 동시성을 고려한 refetch 전략
+       *
+       * ✅ 답글 목록: 작성 중 다른 사용자가 작성한 답글도 함께 가져오기 위해 refetch
+       * ✅ 댓글 목록: 서버의 정확한 답글 수(replyCount) 확인
+       * ✅ 내가 작성한 답글 목록: 최신순 정렬 보장
+       *
+       * [중요] 낙관적 업데이트만으로는 동시성 문제 발생:
+       * 내가 답글 작성 중에 다른 사람이 작성한 답글을 놓칠 수 있음
+       */
+
+      /* 답글 목록 refetch (다른 사용자의 답글도 반영) */
       void queryClient.invalidateQueries({
         queryKey: replyQueryKey,
       });
 
-      /* [onSettled] 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나 */
+      /* 댓글 목록 무효화 (서버의 정확한 답글 수 확인) */
       void queryClient.invalidateQueries({
         queryKey: commentQueryKey,
+      });
+
+      /* 내가 작성한 답글 목록 refetch (최신순 정렬 보장) */
+      void queryClient.invalidateQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.written.reply
+            .all()
+            .every(key => queryKey.includes(key)),
       });
     },
   });
@@ -253,18 +245,25 @@ export const usePutEditCommunityArticleReply = (
     mutationFn: (content: string) =>
       putEditCommunityArticleReply({ replyNo, content }),
     onMutate: async (content: string) => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 수정된 답글을 즉시 UI에 표시
+       * 동시성: 수정은 내 글만 영향, onSettled refetch로 추가 보장
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: replyQueryKey,
       });
 
-      /* [onMutate] 2) 스냅샷 저장: 답글 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevReplies =
         queryClient.getQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
         >(replyQueryKey);
 
-      /* [onMutate] 3) 답글 목록에서 해당 답글 수정 (낙관적) */
+      /* 3) 답글 내용 즉시 업데이트 */
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
       >(replyQueryKey, oldData => {
@@ -288,22 +287,24 @@ export const usePutEditCommunityArticleReply = (
         };
       });
 
-      /* [onMutate] 4) 반환: 롤백용 스냅샷 */
       return { prevReplies };
     },
     onError: (_err, _variables, context) => {
-      /* [onError] 이전 스냅샷으로 정확히 롤백 */
+      /* [onError] 실패 시 롤백 */
       if (context?.prevReplies) {
         queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
     },
     onSettled: () => {
-      /* [onSettled] 답글 목록 무효화 */
+      /**
+       * [onSettled] refetch로 최종 확인
+       *
+       * 수정 중 다른 변경사항도 함께 반영
+       */
       void queryClient.invalidateQueries({
         queryKey: replyQueryKey,
       });
 
-      // 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나
       void queryClient.invalidateQueries({
         queryKey: QueryKeyFactory.comment.lists(postNo),
       });
@@ -333,7 +334,14 @@ export const useDeleteCommunityArticleReply = (
   return useMutation({
     mutationFn: () => deleteCommunityArticleReply(replyNo),
     onMutate: async () => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 삭제된 답글을 즉시 UI에서 표시
+       * 동시성: onSettled에서 refetch하여 다른 사용자의 답글도 반영
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: replyQueryKey,
       });
@@ -341,7 +349,7 @@ export const useDeleteCommunityArticleReply = (
         queryKey: commentQueryKey,
       });
 
-      /* [onMutate] 2) 스냅샷 저장: 답글/댓글 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevReplies =
         queryClient.getQueryData<
           InfiniteData<customAxiosResponseType<paginationType<replyType>>>
@@ -354,7 +362,7 @@ export const useDeleteCommunityArticleReply = (
         ([key, data]) => [key, data] as const
       );
 
-      /* [onMutate] 3) 답글 목록에서 해당 답글 삭제 표시 (낙관적) */
+      /* 3) 답글 isDeleted 표시 */
       queryClient.setQueryData<
         InfiniteData<customAxiosResponseType<paginationType<replyType>>>
       >(replyQueryKey, oldData => {
@@ -378,7 +386,7 @@ export const useDeleteCommunityArticleReply = (
         };
       });
 
-      /* [onMutate] 4) 댓글의 답글 수 감소 (낙관적) */
+      /* 4) 댓글의 replyCount 감소 */
       commentQueries.forEach(([key]) => {
         queryClient.setQueryData<
           customAxiosResponseType<paginationType<commentType>>
@@ -404,11 +412,10 @@ export const useDeleteCommunityArticleReply = (
         });
       });
 
-      /* [onMutate] 5) 반환: 롤백용 스냅샷 */
       return { prevReplies, prevComments };
     },
     onError: (_err, _variables, context) => {
-      /* [onError] 이전 스냅샷으로 정확히 롤백 */
+      /* [onError] 실패 시 롤백 */
       if (context?.prevReplies) {
         queryClient.setQueryData(replyQueryKey, context.prevReplies);
       }
@@ -419,14 +426,32 @@ export const useDeleteCommunityArticleReply = (
     },
     onSuccess: () => setToast({ message: "답글이 삭제되었습니다." }),
     onSettled: () => {
-      /* [onSettled] 답글 목록 무효화 */
+      /**
+       * [onSettled] 동시성을 고려한 선택적 refetch
+       *
+       * ✅ 답글 목록: 삭제 중 다른 사용자가 작성한 답글도 함께 가져오기 (안전한 방식)
+       * ✅ 댓글 목록: 서버의 정확한 답글 수(replyCount) 확인
+       * ✅ 내가 작성한 답글 목록: 삭제된 항목 제거 확인
+       *
+       * [참고] 낙관적 업데이트만으로도 충분하지만, refetch로 완전한 동기화 보장
+       */
+
+      /* 답글 목록 refetch (삭제 중 작성된 다른 답글도 반영) */
       void queryClient.invalidateQueries({
         queryKey: replyQueryKey,
       });
 
-      /* [onSettled] 댓글 목록도 무효화 (답글 수 변경) TODO: CHECK 답글 썼을 때 댓글 목록 무효화 하면 답글 위치가 변경되지않나 */
+      /* 댓글 목록 무효화 (서버의 정확한 답글 수 확인) */
       void queryClient.invalidateQueries({
         queryKey: commentQueryKey,
+      });
+
+      /* 내가 작성한 답글 목록 refetch */
+      void queryClient.invalidateQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.written.reply
+            .all()
+            .every(key => queryKey.includes(key)),
       });
     },
   });
