@@ -90,7 +90,14 @@ export const usePostCommunityArticleComment = () => {
     mutationFn: (content: string) =>
       postCommunityArticleComment({ communityPostNo: postNo, content }),
     onMutate: async (content: string) => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 사용자가 작성한 댓글을 즉시 UI에 표시
+       * 동시성: onSettled에서 refetch하여 다른 사용자의 댓글도 반영
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: listQueryKey,
       });
@@ -98,7 +105,7 @@ export const usePostCommunityArticleComment = () => {
         queryKey: detailQueryKey,
       });
 
-      /* [onMutate] 2) 스냅샷 저장: 상세/댓글 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevDetail = queryClient.getQueryData(detailQueryKey);
       const commentQueries = queryClient.getQueriesData({
         queryKey: listQueryKey,
@@ -107,23 +114,17 @@ export const usePostCommunityArticleComment = () => {
         ([key, data]) => [key, data] as const
       );
 
-      /* [onMutate] 3) 마지막 페이지가 가득 찼는지 확인 */
-      const lastPageKey = QueryKeyFactory.comment.list(
-        postNo,
-        commentLastPage || 1
-      );
-      const lastPageData =
-        queryClient.getQueryData<
-          customAxiosResponseType<paginationType<commentType>>
-        >(lastPageKey);
+      /* 3) 마지막 페이지 확인 (30개 가득 찬 경우 새 페이지 생성) */
+      const lastPageData = queryClient.getQueryData<
+        customAxiosResponseType<paginationType<commentType>>
+      >(QueryKeyFactory.comment.list(postNo, commentLastPage || 1));
 
-      /* [onMutate] 4) 마지막 페이지가 30개로 가득 찬 경우 새 페이지에 추가 */
       const targetPage =
         lastPageData && lastPageData.data.results.length >= 30
           ? (commentLastPage || 1) + 1
           : commentLastPage || 1;
 
-      /* [onMutate] 5) 상세 페이지 댓글 마지막 페이지 업데이트 */
+      /* 4) 상세 페이지 commentLastPage 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<communityArticleDetailType>
       >(detailQueryKey, oldData => {
@@ -142,7 +143,7 @@ export const usePostCommunityArticleComment = () => {
 
       const targetKey = QueryKeyFactory.comment.list(postNo, targetPage);
 
-      /* [onMutate] 6) 새 페이지 댓글 추가 */
+      /* 5) 임시 댓글 추가 (ID: -1) */
       queryClient.setQueryData<
         customAxiosResponseType<paginationType<commentType>>
       >(targetKey, oldData => {
@@ -157,7 +158,6 @@ export const usePostCommunityArticleComment = () => {
           isDeleted: false,
         };
 
-        // 새 페이지인 경우 초기 데이터 구조 생성
         if (!oldData) {
           return {
             data: {
@@ -178,7 +178,6 @@ export const usePostCommunityArticleComment = () => {
           };
         }
 
-        // 기존 페이지인 경우 댓글 추가
         return {
           ...oldData,
           data: {
@@ -192,11 +191,10 @@ export const usePostCommunityArticleComment = () => {
         };
       });
 
-      /* [onMutate] 7) 반환: 롤백용 스냅샷 */
-      return { prevDetail, prevComments, targetKey };
+      return { prevDetail, prevComments };
     },
-    /* [onError] 실패 시 스냅샷으로 롤백 */
     onError: (_err, _variables, context) => {
+      /* [onError] 실패 시 롤백 */
       if (context?.prevDetail) {
         queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
@@ -205,27 +203,8 @@ export const usePostCommunityArticleComment = () => {
         queryClient.setQueryData(key, data);
       });
     },
-    onSuccess: ({ data: newComment }, _variables, { targetKey }) => {
-      /* [onSuccess] 상세 페이지 댓글 마지막 페이지 업데이트 + 활동 counts 업데이트 */
-      queryClient.setQueryData<
-        customAxiosResponseType<paginationType<commentType>>
-      >(targetKey, oldData => {
-        if (!oldData) {
-          return oldData;
-        }
-
-        return {
-          ...oldData,
-          data: {
-            ...oldData.data,
-            results: oldData.data.results.map(comment =>
-              comment.commentNo === -1 ? newComment : comment
-            ),
-          },
-        };
-      });
-
-      /* [onSuccess] 활동 counts 업데이트 */
+    onSuccess: () =>
+      /* activityCounts 업데이트 */
       queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
         QueryKeyFactory.user.activityCounts(),
         oldData => {
@@ -241,17 +220,35 @@ export const usePostCommunityArticleComment = () => {
             },
           };
         }
-      );
-    },
+      ),
     onSettled: () => {
-      /* [onSettled] 댓글 목록 무효화 */
+      /**
+       * [onSettled] 동시성을 고려한 refetch 전략
+       *
+       * ✅ 댓글 목록: 작성 중 다른 사용자가 작성한 댓글도 함께 가져오기 위해 refetch
+       * ✅ 상세 페이지: 서버의 정확한 댓글 수 확인
+       * ✅ 내가 작성한 댓글 목록: 최신순 정렬 보장
+       *
+       * [중요] 낙관적 업데이트만으로는 동시성 문제 발생:
+       * 내가 댓글 작성 중에 다른 사람이 작성한 댓글을 놓칠 수 있음
+       */
+
+      /* 댓글 목록 refetch (다른 사용자의 댓글도 반영) */
       void queryClient.invalidateQueries({
-        queryKey: listQueryKey,
+        queryKey: QueryKeyFactory.comment.lists(postNo),
       });
 
-      /* [onSettled] 게시물 상세 정보도 무효화 (댓글 수 변경) */
+      /* 게시물 상세 정보 무효화 (서버의 정확한 댓글 수 확인) */
       void queryClient.invalidateQueries({
-        queryKey: detailQueryKey,
+        queryKey: QueryKeyFactory.community.detail(postNo),
+      });
+
+      /* 내가 작성한 댓글 목록 refetch (최신순 정렬 보장) */
+      void queryClient.invalidateQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.written.comment
+            .all()
+            .every(key => queryKey.includes(key)),
       });
     },
   });
@@ -275,15 +272,22 @@ export const usePutEditCommunityArticleComment = () => {
   return useMutation({
     mutationFn: putEditCommunityArticleComment,
     onMutate: async ({ commentNo, content }) => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 수정된 내용을 즉시 UI에 표시
+       * 동시성: 수정은 내 글만 영향, onSettled refetch로 추가 보장
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: commentKey,
       });
 
-      /* [onMutate] 2) 스냅샷 저장: 댓글 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevComments = queryClient.getQueryData(commentKey);
 
-      /* [onMutate] 3) 모든 댓글 목록에서 해당 댓글 수정 (낙관적) */
+      /* 3) 댓글 내용 즉시 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<paginationType<commentType>>
       >(commentKey, oldData => {
@@ -304,20 +308,24 @@ export const usePutEditCommunityArticleComment = () => {
         };
       });
 
-      /* [onMutate] 4) 반환: 롤백용 스냅샷 */
       return { prevComments };
     },
     onError: (_err, _variables, context) => {
-      /* [onError] 이전 스냅샷으로 정확히 롤백 */
+      /* [onError] 실패 시 롤백 */
       if (context?.prevComments) {
         queryClient.setQueryData(commentKey, context.prevComments);
       }
     },
-    onSettled: () =>
-      /* [onSettled] 댓글 목록 무효화 */
-      queryClient.invalidateQueries({
+    onSettled: () => {
+      /**
+       * [onSettled] refetch로 최종 확인
+       *
+       * 수정 중 다른 변경사항도 함께 반영
+       */
+      void queryClient.invalidateQueries({
         queryKey: commentKey,
-      }),
+      });
+    },
   });
 };
 
@@ -341,7 +349,14 @@ export const useDeleteCommunityArticleComment = () => {
   return useMutation({
     mutationFn: deleteCommunityArticleComment,
     onMutate: async (commentNo: number) => {
-      /* [onMutate] 1) 활성 쿼리 취소 */
+      /**
+       * [onMutate] 낙관적 업데이트
+       *
+       * 즉각 반응: 삭제된 댓글을 즉시 UI에서 제거/표시
+       * 동시성: onSettled에서 refetch하여 다른 사용자의 댓글도 반영
+       */
+
+      /* 1) 활성 쿼리 취소 */
       await queryClient.cancelQueries({
         queryKey: commentKey,
       });
@@ -349,7 +364,7 @@ export const useDeleteCommunityArticleComment = () => {
         queryKey: detailQueryKey,
       });
 
-      /* [onMutate] 2) 스냅샷 저장: 댓글/상세 */
+      /* 2) 스냅샷 저장 (롤백용) */
       const prevComments =
         queryClient.getQueryData<
           customAxiosResponseType<paginationType<commentType>>
@@ -359,16 +374,16 @@ export const useDeleteCommunityArticleComment = () => {
           customAxiosResponseType<communityArticleDetailType>
         >(detailQueryKey);
 
-      /* [onMutate] 3) 댓글에 답글이 있는지 확인 */
+      /* 3) 답글 유무 확인 (답글 있으면 필터링, 없으면 isDeleted 표시) */
       const hasReply = prevComments?.data.results.some(
         comment => comment.replyCount > 0 && comment.commentNo === commentNo
       );
 
-      /* [onMutate] 4) 첫 번째 댓글인지 확인 */
+      /* 4) 첫 번째 댓글 확인 (페이지 조정용) */
       const isFirstComment =
         prevComments?.data.results[0].commentNo === commentNo;
 
-      /* [onMutate] 5) 댓글 목록에서 해당 댓글 삭제 (낙관적) */
+      /* 5) 댓글 삭제 처리 */
       queryClient.setQueryData<
         customAxiosResponseType<paginationType<commentType>>
       >(commentKey, oldData => {
@@ -393,7 +408,7 @@ export const useDeleteCommunityArticleComment = () => {
         };
       });
 
-      /* [onMutate] 6) 상세 페이지 댓글 마지막 페이지 업데이트 */
+      /* 6) 상세 페이지 commentLastPage 업데이트 */
       queryClient.setQueryData<
         customAxiosResponseType<communityArticleDetailType>
       >(detailQueryKey, oldData => {
@@ -413,11 +428,10 @@ export const useDeleteCommunityArticleComment = () => {
         };
       });
 
-      /* [onMutate] 7) 반환: 롤백용 스냅샷 */
       return { prevDetail, prevComments };
     },
     onError: (_err, _variables, context) => {
-      /* [onError] 이전 스냅샷으로 정확히 롤백 */
+      /* [onError] 실패 시 롤백 */
       if (context?.prevDetail) {
         queryClient.setQueryData(detailQueryKey, context.prevDetail);
       }
@@ -426,16 +440,54 @@ export const useDeleteCommunityArticleComment = () => {
         queryClient.setQueryData(commentKey, context.prevComments);
       }
     },
-    onSuccess: () => setToast({ message: "댓글이 삭제되었습니다" }),
+    onSuccess: () => {
+      setToast({ message: "댓글이 삭제되었습니다" });
+
+      /* [onSuccess] 활동 counts 업데이트 */
+      queryClient.setQueryData<customAxiosResponseType<activityCountsType>>(
+        QueryKeyFactory.user.activityCounts(),
+        oldData => {
+          if (!oldData) {
+            return oldData;
+          }
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              myCommentCount: Math.max(0, oldData.data.myCommentCount - 1),
+            },
+          };
+        }
+      );
+    },
     onSettled: () => {
-      /* [onSettled] 댓글 목록 무효화 */
+      /**
+       * [onSettled] 동시성을 고려한 선택적 refetch
+       *
+       * ✅ 댓글 목록: 삭제 중 다른 사용자가 작성한 댓글도 함께 가져오기 (안전한 방식)
+       * ✅ 상세 페이지: 서버의 정확한 댓글 수 확인
+       * ✅ 내가 작성한 댓글 목록: 삭제된 항목 제거 확인
+       *
+       * [참고] 낙관적 업데이트만으로도 충분하지만, refetch로 완전한 동기화 보장
+       */
+
+      /* 댓글 목록 refetch (삭제 중 작성된 다른 댓글도 반영) */
       void queryClient.invalidateQueries({
         queryKey: QueryKeyFactory.comment.lists(postNo),
       });
 
-      /* [onSettled] 게시물 상세 정보도 무효화 (댓글 수 변경) */
+      /* 게시물 상세 정보 무효화 (서버의 정확한 댓글 수 확인) */
       void queryClient.invalidateQueries({
-        queryKey: detailQueryKey,
+        queryKey: QueryKeyFactory.community.detail(postNo),
+      });
+
+      /* 내가 작성한 댓글 목록 refetch */
+      void queryClient.invalidateQueries({
+        predicate: ({ queryKey }) =>
+          QueryKeyFactory.user.written.comment
+            .all()
+            .every(key => queryKey.includes(key)),
       });
     },
   });
