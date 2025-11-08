@@ -2,7 +2,7 @@
   "compilerOptions": {
     // 기본 설정
     "esModuleInterop": true, // CommonJS 모듈에서 exports로 내보낸 객체를 ECMAScript 모듈에서 import 구문을 사용하여 가능
-    "lib": ["dom", "ES2017", "ES2019"], // 브라우저 환경에서는 DOM 및 ECMAScript 관련 라이브러리 필요
+    "lib": ["dom", "ES2017", "ES2019", "ES2020"], // 브라우저 환경에서는 DOM 및 ECMAScript 관련 라이브러리 필요
     "target": "ES2015", // 컴파일된 JavaScript의 대상 ECMAScript 버전 (ES5, ES6, ES2017 등)
 
     // 모듈 관련 설정

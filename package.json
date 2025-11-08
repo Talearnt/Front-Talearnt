@@ -11,13 +11,16 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "vitest": "vitest"
+    "vitest": "vitest",
+    "update:browserlist": "npx update-browserslist-db@latest --yes"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@stomp/stompjs": "^7.1.1",
     "@tanstack/react-query": "^5.62.8",
     "axios": "^1.8.2",
+    "baseline-browser-mapping": "^2.9.6",
+    "caniuse-lite": "^1.0.30001760",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -40,6 +43,7 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/eslint__js": "^8.42.3",
+    "@types/node": "^25.0.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@types/sockjs-client": "^1.5.4",

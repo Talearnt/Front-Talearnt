@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useVerificationCodeTimer(initialSecond = 180) {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [time, setTime] = useState(initialSecond);
   const [isFinished, setIsFinished] = useState(false);

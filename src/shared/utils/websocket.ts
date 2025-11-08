@@ -28,7 +28,7 @@ class WebSocketManager {
   private reconnectAttempts = 0;
   private readonly maxReconnectAttempts = 5;
   private reconnectInterval = 3000;
-  private reconnectTimer: NodeJS.Timeout | null = null;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * WebSocket 연결을 설정합니다.
