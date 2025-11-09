@@ -6,18 +6,22 @@ import { useShallow } from "zustand/shallow";
 import { getAccessTokenUseRefreshToken } from "@features/user/user.api";
 
 import { classNames } from "@shared/utils/classNames";
+import { getCookie } from "@shared/utils/getCookie";
 
 import { useRealtimeNotifications } from "@features/notifications/notifications.hook";
 import { useGetProfile } from "@features/user/profile/profile.hook";
 
 import { useAuthStore } from "@store/user.store";
 
+import { Spinner } from "@components/common/Spinner/Spinner";
 import { Footer } from "@components/layout/Footer/Footer";
 import { Header } from "@components/layout/Header/Header";
 import { Prompt } from "@components/layout/Prompt/Prompt";
 import { TalentsSettingModal } from "@components/layout/TalentsSettingModal/TalentsSettingModal";
 import { Toast } from "@components/layout/Toast/Toast";
 import { TopButton } from "@components/layout/TopButton/TopButton";
+
+const AUTH_COOKIE_NAME = "isLoggedIn";
 
 function MainLayout() {
   const { pathname } = useLocation();
@@ -49,11 +53,15 @@ function MainLayout() {
 
   // 메모리에 accessToken 저장
   useEffect(() => {
-    if (accessToken === null) {
+    // 서버가 설정한 쿠키로 로그인 여부 확인 (불필요한 API 호출 방지)
+    if (accessToken === null && getCookie(AUTH_COOKIE_NAME) === "true") {
       getAccessTokenUseRefreshToken()
         .then(({ data }) => setAccessToken(data.accessToken))
         .catch((error: unknown) => console.error("Token refresh failed", error))
         .finally(() => setIsLoading(false));
+    } else {
+      // 로그인하지 않은 사용자는 로딩 즉시 종료
+      setIsLoading(false);
     }
   }, [accessToken, setAccessToken]);
   // 페이지 이동 시 스크롤 초기화
@@ -70,23 +78,25 @@ function MainLayout() {
     return () => window.removeEventListener("scroll", handleWindowScroll);
   }, []);
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <>
       <Header />
-      <div className={classNames("flex-1", "min-w-[1440px]")}>
-        <main
-          className={classNames(
-            "mx-auto w-[1440px] px-20",
-            isAuthPage ? "mt-24" : "mt-10"
-          )}
-        >
-          <Outlet />
-        </main>
-      </div>
+      {isLoading ? (
+        <div className={classNames("flex flex-1 items-center justify-center")}>
+          <Spinner />
+        </div>
+      ) : (
+        <div className={classNames("flex-1", "min-w-[1440px]")}>
+          <main
+            className={classNames(
+              "mx-auto mb-[120px] w-[1440px] px-20",
+              isAuthPage ? "mt-24" : "mt-10"
+            )}
+          >
+            <Outlet />
+          </main>
+        </div>
+      )}
       <Footer />
       <Toast />
       <Prompt />

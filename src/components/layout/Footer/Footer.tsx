@@ -6,7 +6,7 @@ import { LogoIcon } from "@components/common/icons/LogoIcon/LogoIcon";
 
 function Footer() {
   return (
-    <footer className={"mt-[120px] min-w-[1440px] bg-talearnt_BG_Up_01"}>
+    <footer className={"min-w-[1440px] bg-talearnt_BG_Up_01"}>
       <div
         className={classNames(
           "flex flex-col gap-8",
