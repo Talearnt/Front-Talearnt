@@ -7,6 +7,7 @@ import {
   useGetNoticeList,
 } from "@features/eventNotice/eventNotice.hook";
 
+import { Button } from "@components/common/Button/Button";
 import { MoveButton } from "@components/mainPage/MoveButton/MoveButton";
 import { EventBanner } from "@components/shared/EventBanner/EventBanner";
 import { NoticeCard } from "@components/shared/NoticeCard/NoticeCard";
@@ -27,6 +28,8 @@ function EventNoticeTabSection() {
     },
     isSuccess: isNoticeListSuccess,
     isLoading: isNoticeListLoading,
+    isError: isNoticeListError,
+    refetch: refetchNoticeList,
   } = useGetNoticeList({ enabled: selectedTab === "notice", size: 4 });
   // 이벤트 목록
   const {
@@ -35,8 +38,16 @@ function EventNoticeTabSection() {
     },
     isSuccess: isEventListSuccess,
     isLoading: isEventListLoading,
+    isError: isEventListError,
+    refetch: refetchEventList,
   } = useGetEventList({ enabled: selectedTab === "event", size: 2 });
 
+  const isLoading =
+    selectedTab === "event" ? isEventListLoading : isNoticeListLoading;
+  const isError =
+    selectedTab === "event" ? isEventListError : isNoticeListError;
+  const refetch =
+    selectedTab === "event" ? refetchEventList : refetchNoticeList;
   const hasList =
     selectedTab === "event"
       ? eventList.length > 0 && isEventListSuccess
@@ -91,7 +102,7 @@ function EventNoticeTabSection() {
             text={"전체 보기"}
           />
         </div>
-        {hasList ? (
+        {isLoading ? (
           <div
             className={classNames(
               "grid gap-4",
@@ -101,21 +112,46 @@ function EventNoticeTabSection() {
             )}
           >
             {selectedTab === "event" &&
-              (isEventListLoading
-                ? Array.from({ length: 2 }).map((_, index) => (
-                    <SkeletonEventBanner key={index} />
-                  ))
-                : eventList.map(event => (
-                    <EventBanner {...event} key={event.eventNo} />
-                  )))}
+              Array.from({ length: 2 }).map((_, index) => (
+                <SkeletonEventBanner key={index} />
+              ))}
             {selectedTab === "notice" &&
-              (isNoticeListLoading
-                ? Array.from({ length: 4 }).map((_, index) => (
-                    <SkeletonNoticeCard key={index} />
-                  ))
-                : noticeList.map(notice => (
-                    <NoticeCard {...notice} type="main" key={notice.noticeNo} />
-                  )))}
+              Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonNoticeCard key={index} />
+              ))}
+          </div>
+        ) : isError ? (
+          <div
+            className={"flex flex-1 flex-col items-center justify-center gap-4"}
+          >
+            <p className={"text-heading2_24_semibold text-talearnt_Text_01"}>
+              {selectedTab === "event" ? "이벤트" : "공지사항"}를 불러오는 중
+              오류가 발생했어요
+            </p>
+            <p className={"text-body2_16_medium text-talearnt_Text_02"}>
+              잠시 후 다시 시도해 주세요
+            </p>
+            <Button onClick={() => refetch()} buttonStyle={"outlined"}>
+              다시 시도
+            </Button>
+          </div>
+        ) : hasList ? (
+          <div
+            className={classNames(
+              "grid gap-4",
+              selectedTab === "event" && "grid-cols-2 grid-rows-[248px]",
+              selectedTab === "notice" &&
+                "grid-cols-[repeat(4,214px)] grid-rows-[214px]"
+            )}
+          >
+            {selectedTab === "event" &&
+              eventList.map(event => (
+                <EventBanner {...event} key={event.eventNo} />
+              ))}
+            {selectedTab === "notice" &&
+              noticeList.map(notice => (
+                <NoticeCard {...notice} type="main" key={notice.noticeNo} />
+              ))}
           </div>
         ) : (
           <div
