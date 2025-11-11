@@ -64,11 +64,7 @@ export const getAPI = async <T>(
           return acc;
         }
 
-        return `${acc}${cur}=${
-          checkObjectType(queryData[cur])
-            ? JSON.stringify(queryData[cur])
-            : String(queryData[cur])
-        }&`;
+        return `${acc}${cur}=${checkObjectType(value) ? JSON.stringify(value) : String(value)}&`;
       }, "?")
       .slice(0, -1);
   }
