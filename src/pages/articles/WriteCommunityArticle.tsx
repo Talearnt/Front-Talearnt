@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 import { UseFormReturn } from "react-hook-form";
 
@@ -9,13 +9,13 @@ import {
 } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
 
+import { usePreventPageLeave } from "@features/articles/shared/writeArticle.hook";
 import {
   usePostCommunityArticle,
   usePutEditCommunityArticle,
 } from "@features/articles/writeCommunityArticle/writeCommunityArticle.hook";
 
 import { useEditCommunityArticleDataStore } from "@features/articles/shared/articles.store";
-import { usePromptStore } from "@store/prompt.store";
 import { useToastStore } from "@store/toast.store";
 
 import { PreviewArticleModal } from "@components/articles/writeArticle/PreviewArticleModal/PreviewArticleModal";
@@ -32,7 +32,6 @@ import { postTypeList } from "@features/articles/shared/articles.constants";
 import { communityArticleFormDataType } from "@features/articles/writeCommunityArticle/writeCommunityArticle.type";
 
 function WriteCommunityArticle() {
-  const navigator = useNavigate();
   const context = useOutletContext();
 
   const [isOpenPreview, setIsOpenPreview] = useState(false);
@@ -42,7 +41,6 @@ function WriteCommunityArticle() {
     state => state.editCommunityArticle
   );
   const setToast = useToastStore(state => state.setToast);
-  const setPrompt = usePromptStore(state => state.setPrompt);
 
   const { mutateAsync: postCommunityArticle } = usePostCommunityArticle();
   const { mutateAsync: editCommunityArticle } = usePutEditCommunityArticle();
@@ -63,6 +61,14 @@ function WriteCommunityArticle() {
     "imageFileList",
     "postType",
   ]);
+  // 페이지 이탈 방지
+  const { handleCancel } = usePreventPageLeave({
+    hasUnsavedChanges:
+      title.trim() !== "" || content.trim() !== "" || imageFileList.length > 0,
+    isProcessing: isPostInProgress,
+    isEditMode: !!editCommunityArticleData,
+    cancelNavigationPath: "/community",
+  });
 
   const handleDataChange = (
     field: keyof communityArticleFormDataType,
@@ -136,7 +142,7 @@ function WriteCommunityArticle() {
       reset(data);
       void trigger();
     }
-  }, [editCommunityArticleData]);
+  }, [editCommunityArticleData, reset, trigger]);
 
   return (
     <>
@@ -206,14 +212,7 @@ function WriteCommunityArticle() {
         </Button>
         <Button
           buttonStyle={"outlined-blue"}
-          onClick={() =>
-            setPrompt({
-              title: "게시물 작성 취소",
-              content:
-                "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
-              confirmOnClickHandler: () => navigator(-1),
-            })
-          }
+          onClick={handleCancel}
           disabled={isPostInProgress}
         >
           취소하기
