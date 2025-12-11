@@ -9,6 +9,7 @@ import {
 } from "@features/articles/shared/writeArticle.util";
 import { classNames } from "@shared/utils/classNames";
 
+import { usePreventPageLeave } from "@features/articles/shared/writeArticle.hook";
 import {
   usePostMatchingArticle,
   usePutEditMatchingArticle,
@@ -91,6 +92,19 @@ function WriteMatchingArticle() {
     "content",
     "imageFileList",
   ]);
+  // 페이지 이탈 방지
+  const { handleCancel } = usePreventPageLeave({
+    hasUnsavedChanges:
+      title.trim() !== "" ||
+      content.trim() !== "" ||
+      duration !== undefined ||
+      giveTalents.length > 0 ||
+      receiveTalents.length > 0 ||
+      imageFileList.length > 0,
+    isProcessing: isPostInProgress,
+    isEditMode: !!editMatchingArticleData,
+    cancelNavigationPath: "/matching",
+  });
 
   const giveTalentsOptions: dropdownOptionType<number>[] = useMemo(
     () =>
@@ -363,14 +377,7 @@ function WriteMatchingArticle() {
         </Button>
         <Button
           buttonStyle={"outlined-blue"}
-          onClick={() =>
-            setPrompt({
-              title: "게시물 작성 취소",
-              content:
-                "페이지를 나가면 작성된 내용이 모두 유실됩니다. 그래도 나가시겠어요?",
-              confirmOnClickHandler: () => navigator(-1),
-            })
-          }
+          onClick={handleCancel}
           disabled={isPostInProgress}
         >
           취소하기
